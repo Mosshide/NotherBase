@@ -24,6 +24,7 @@ mongoose.connection.on('disconnected', () => {
 });
 
 module.exports = {
-    chat: require("./chat/chat"),
-    projects: require("./projects/projects")
+    chat: require("./chat/chat.js"),
+    projects: require("./projects/projects.js"),
+    auth: require("./auth/auth.js")
 }

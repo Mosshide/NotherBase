@@ -35,6 +35,8 @@ app.get("/", function(req, res) {
     res.render("./index.ejs");
 });
 
+app.use("/", controllers.auth)
+
 app.use("/chat", controllers.chat);
 
 app.use("/projects", controllers.projects);
