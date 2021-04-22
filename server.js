@@ -1,5 +1,8 @@
-// Setup for Express
 const express = require("express");
+const session = require("express-session");
+const MongoStore = require("connect-mongo");
+
+// Setup for Express
 const app = express();
 app.set("view engine", "ejs");
 // allows us to delete
