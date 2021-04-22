@@ -14,6 +14,20 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static('public'));
 
 
+// set up session
+app.use(session({
+    store: MongoStore.create({
+        mongourl: "mongodb://localhost:27017/nother_base"
+    }),
+    secret: "nothr",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24 * 7 * 2 //two weeks
+    }
+}));
+
+
 // Import my Controller
 const controllers = require("./controllers")
 
