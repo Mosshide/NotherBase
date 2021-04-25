@@ -17,7 +17,7 @@ app.use(express.static('public'));
 // set up session
 app.use(session({
     store: MongoStore.create({
-        mongourl: "mongodb://localhost:27017/nother_base"
+        mongoUrl: "mongodb://localhost:27017/nother_base"
     }),
     secret: "nothr",
     resave: false,
@@ -35,7 +35,7 @@ app.get("/", function(req, res) {
     res.render("./index.ejs");
 });
 
-app.use("/", controllers.auth)
+app.use("/", controllers.auth);
 
 app.use("/chat", controllers.chat);
 

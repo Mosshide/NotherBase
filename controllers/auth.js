@@ -9,11 +9,7 @@ router.get("/new-user", function(req, res) {
     res.render("auth/new")
 });
 
-router.get("/:id", function(req, res) {
-    res.render("auth/index");
-});
-
-router.post("/", async function(req, res) {
+router.post("/new-user", async function(req, res) {
     try {
         const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(req.body.password, salt);
@@ -31,6 +27,36 @@ router.post("/", async function(req, res) {
     }
 });
 
+router.get("/login", function(req, res) {
+    res.render("auth/login")
+});
 
+router.post("/login", async function(req, res) {
+    try {
+        const foundAccount = await Auth.find({ email: req.body.email });
+
+        if (foundAccount) {
+            if (await bcrypt.compare(nonhash, hash)) {
+                req.session.currentUser = {
+                    _id: foundAccount._id
+                };
+            };
+        }
+        else {
+            res.redirect("auth/login");
+        }       
+    }
+    catch(err) {
+
+    }
+});
+
+router.delete {
+    await req.session.destroy()
+}
+
+router.get("/:id", function(req, res) {
+    res.render("auth/index");
+});
 
 module.exports = router;
