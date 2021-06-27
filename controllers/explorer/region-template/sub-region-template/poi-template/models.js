@@ -9,4 +9,7 @@ const exampleSchema = new mongoose.Schema({
 
 // This tells Mongoose to use the exampleSchema to access the examples collection
 // in our db and then exports the model so we can use it.
-module.exports = mongoose.model('examples', exampleSchema);
+module.exports = {
+	example: mongoose.model('examples', exampleSchema),
+	placeholder: mongoose.model('placeholders', exampleSchema)
+}
