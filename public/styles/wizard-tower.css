@@ -30,8 +30,6 @@ main {
     box-shadow: 5px 5px 5px 5px var(--shadowColor);
     padding: 20px;
     border-radius: 5px;
-    margin-top: 15px;
-    margin-bottom: 100px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -73,12 +71,14 @@ h2, h3 {
     width: 100%;
 }
 
-ul {
-    margin: 10px;
+.floor {
+    width: 100%;
+    height: 500px;
+    border: 1px solid var(--shadowColor);
+    background-color: var(--bgColor);
+    padding: 10px;
 }
 
-@media only screen and (max-width: 800px) {
-    main {
-        width: 100%;
-    }
+#item-editor {
+    padding: 5px;
 }
