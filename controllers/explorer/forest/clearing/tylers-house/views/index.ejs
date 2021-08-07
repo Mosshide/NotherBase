@@ -1,13 +1,23 @@
-<%- include("../../../parts/poiHead.ejs"); %>
+<%- include("../../../../../../global/parts/head.ejs"); %>
 
 <!-- Load Styles Here -->
 <link rel="stylesheet" href="/styles/tylers-house.css">
 
 <!-- Your HTML Here -->
 <main>
-    <h1>Tyler's House</h1>
+    <img class="gui" src="/img/GUI.png">
+    <img class="area" src="/img/house-afar.png">
+    <img class="area tooltip" src="/img/house.png">
+
+    <a href="/forest/eye-of-the-forest/square">
+        <img class="icon" id="nother" src="/img/icon_background.png">
+    </a>
 </main>
 
 <!-- Load Scripts Here -->
-
-<%- include("../../../parts/footer.ejs"); %>
+<script>
+    $("#nother").hover(function() {
+        $("#nother").toggleClass("nother-bg");
+    });
+</script>
+<%- include("../../../../../../global/parts/footer.ejs"); %>
