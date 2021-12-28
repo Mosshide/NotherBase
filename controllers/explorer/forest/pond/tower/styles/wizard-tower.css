@@ -1,0 +1,116 @@
+:root {
+    --bgColor: rgb(37, 37, 37);
+    --bgColorBright: rgb(66, 66, 66);
+    --shadowColor: rgb(26, 26, 26);
+    --textColor: rgb(185, 135, 69);
+    --textColorBright: rgb(221, 181, 130);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.invisible {
+    display: none;
+}
+
+body {
+    background-color: var(--bgColor);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+}
+
+main {
+    width: 500px;
+    min-height: 500px;
+    box-shadow: 5px 5px 5px 5px var(--shadowColor);
+    padding: 20px;
+    border-radius: 5px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+}
+
+hr {
+    border: none;
+    border-bottom: 1px solid var(--textColor);
+    margin: 20px;
+    width: 100%;
+}
+
+p {
+    color: var(--textColor);
+    width: 100%;
+}
+
+button, a {
+    background-color: var(--bgColor);
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid var(--textColor);
+    color: var(--textColor);
+    margin: 5px;
+    margin-top: 20px;
+    text-decoration: none;
+}
+
+button:hover, a:hover {
+    border: 1px solid var(--textColorBright);
+    color: var(--textColorBright);
+    cursor: pointer;
+}
+
+h2, h3 {
+    color: var(--textColor);
+    width: 100%;
+}
+
+.floor {
+    width: 100%;
+    min-height: 500px;
+    border: 1px solid var(--shadowColor);
+    background-color: var(--bgColor);
+    padding: 10px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+#item-editor {
+    padding: 5px;
+    border: 1px solid var(--textColor);
+    border-radius: 5px;
+    margin: 20px 0;
+}
+
+.tab {
+    background-color: var(--textColor);
+    border-radius: 5px 5px 0 0;
+    color: var(--bgColor);
+    margin-bottom: -5px;
+    width: 85%;
+    padding: 2px;
+}
+
+#item-editor p {
+    border: 1px solid var(--textColor);
+    border-radius: 5px;
+    padding: 5px;
+    margin-bottom: 0;
+    cursor: pointer;
+}
+
+#item-editor p:hover {
+    background-color: var(--bgColorBright);
+}
+
+#item-editor p.selected {
+    border: 1px solid var(--textColorBright);
+}

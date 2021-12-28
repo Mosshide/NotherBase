@@ -1,30 +1,21 @@
-const router = require("express").Router();
+const { explore, router } = require("notherbase-fs").from(__dirname);
 
-const houseDB = require("./models.js").house;
-const gardenScript = require("./server-scripts/garden.js");
+explore("");
 
-router.get("/", function(req, res) {
-    res.render(`${__dirname}/views/index`, 
-    {
-        siteTitle: "NotherBase",
-        user: null
-    });
+explore("backyard", { 
+    styles: [ "backyard" ] 
 });
 
-router.get("/livingroom", function(req, res) {
-    res.render(`${__dirname}/views/livingroom`, 
-    {
-        siteTitle: "NotherBase",
-        user: null
-    });
+explore("livingroom", { 
+    styles: [ "livingroom" ] 
 });
 
-router.get("/laylas-room", function(req, res) {
-    res.render(`${__dirname}/views/laylas-room`, 
-    {
-        siteTitle: "NotherBase",
-        user: null
-    });
+explore("laylas-room", { 
+    styles: [ "laylas-room", "toy-box" ] 
+});
+
+explore("upstairs", { 
+    styles: [ "upstairs" ] 
 });
 
 module.exports = router;

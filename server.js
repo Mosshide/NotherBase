@@ -5,6 +5,12 @@ const express = require("express");
 const app = express();
 app.set("view engine", "ejs");
 
+//setup for sockets
+const http = require('http');
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server);
+
 // allows us to delete
 const methodOverride = require('method-override');
 app.use(methodOverride('_method'));
@@ -15,7 +21,7 @@ const MongoStore = require('connect-mongo');
 const authCheck = require('./controllers/authCheck.js');
 
 // allows us to use post body data
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 
 // allows us to get static files like css
 app.use(express.static('public'));
@@ -25,7 +31,7 @@ const favicon = require('serve-favicon');
 app.use(favicon(__dirname + '/public/img/logo.png'));
 
 //start connection to db
-require("./global/models/start-mongoose");
+require("./models/start-mongoose");
 
 // Import my Controller
 const controllers = require("./controllers");
@@ -38,18 +44,25 @@ app.use(session({
     saveUninitialized: false
 }));
 
+io.on('connection', (socket) => {
+    socket.join(socket.handshake.query.room);
+
+    socket.on('disconnect', () => {});
+});
+
 app.use("/user", controllers.user);
 
 app.use("/portfolio", controllers.portfolio);
 
-app.use("/chat", controllers.chat);
+app.use("/chat", controllers.chat(io));
+
+app.use("/inventory", controllers.inventory);
 
 app.use("/item", controllers.item);
 
+app.use("/the-front", controllers.theFront);
+
 app.use("/", authCheck, controllers.explorer);
 
-// notherbase.com/:region/:subregion/:point-of-interest/:section-of-poi
-// notherbase.com/forest/eye-of-the-forest/square/clothing-stall
-
 // Go Off (On)
-app.listen(process.env.PORT);
+server.listen(process.env.PORT);

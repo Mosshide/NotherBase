@@ -1,0 +1,287 @@
+:root {
+    --cabinColor: rgb(109, 71, 41);
+    --cabinColorLight: rgb(161, 122, 92);
+    --cabinColorDark: rgb(90, 60, 36);
+    --cabinColorVeryDark: rgb(37, 26, 17);
+    --outsideColor: rgb(62, 62, 83);
+    --couchColor: rgb(128, 52, 2);
+    --couchSeamColor: rgb(17, 27, 37);
+    --shadow: black;
+    --tableColor: rgb(136, 103, 60);
+    --dominoShadow: rgba(0, 0, 0, 0.226);
+    --dominoSelection: rgb(212, 36, 154);
+    --dominoOption: rgb(31, 155, 31);
+    --dominoColor: rgb(224, 224, 224);
+    --dominoHighlightedColor: rgb(255, 253, 130);
+    --dominoHeldColor: rgb(130, 255, 249);
+}
+
+body {
+    background-color: var(--cabinColorVeryDark);
+}
+
+main {
+    background-color: var(--cabinColorDark);
+    width: 800px;
+}
+
+.column {
+    width: 30%;
+    padding: 5px;
+    height: 500px;
+    margin-bottom: 40px;
+}
+
+a {
+    background-color: var(--outsideColor);
+}
+
+#exit {
+    width: 25%;
+    height: 100px;
+}
+
+.couch {
+    width: 400px;
+    height: 200px;
+    position: relative;
+}
+
+@keyframes colorRange {
+    from {
+        background-color: rgb(172, 47, 47);
+    }
+    25% {
+        background-color: rgb(177, 175, 58);
+    }
+    50% {
+        background-color: rgb(49, 139, 56);
+    }
+    75% {
+        background-color: rgb(35, 104, 161);
+    }
+    to {
+        background-color: rgb(125, 26, 145)(0, 132, 255);
+    }
+}
+
+.couch-part{ 
+    position: absolute;
+    background-color: var(--couchColor);
+    border-radius: 5px;
+    border: 1px solid var(--couchSeamColor);
+    box-shadow: 2px 2px 2px var(--shadow);
+    animation-duration: 7s;
+    animation-name: colorRange;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+.arm-rest {
+    width: 15%;
+    height: 50%;
+    left: 0;
+    bottom: 0;
+}
+
+.arm-rest:nth-of-type(even) {
+    left: 85%;
+}
+
+.base {
+    border-radius: 0px 0px 5px 5px;
+    width: 35%;
+    height: 20%;
+    left: 15%;
+    bottom: 0;
+}
+
+.base:nth-of-type(even) {
+    left: 50%;
+}
+
+.pillow {
+    border-radius: 0;
+    width: 35%;
+    height: 15%;
+    left: 15%;
+    bottom: 20%;
+}
+
+.pillow:nth-of-type(even) {
+    left: 50%;
+}
+
+.back-rest {
+    border-radius: 5px 5px 0px 0px;
+    width: 45%;
+    height: 50%;
+    left: 5%;
+    bottom: 35%;
+}
+
+.back-rest:nth-of-type(even) {
+    left: 50%;
+}
+
+.table {
+    margin-top: 40px;
+    background-color: var(--tableColor);
+    background-image: url("/img/wood.jpg");
+    background-size: 80px 80px;
+    image-rendering: pixelated;
+    width: 600px;
+    height: 600px;
+    border-radius: 5px;
+    border: outset 5px var(--tableColor);
+    box-shadow: 2px 2px 2px var(--shadow);
+    position: relative;
+}
+
+.table * {
+    color: var(--dominoColor);
+}
+
+.opponent-hand {
+    position: absolute;
+    background-color: var(--dominoShadow);
+    width: 100%;
+    height: 50px;
+    left: 0;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    border: outset 2px rgba(255, 0, 0, 0.651);
+}
+
+.bone {
+    width: 50px;
+    height: 25px;
+    background-color: var(--dominoColor);
+    border: 1px solid var(--dominoShadow);
+    border-radius: 5px;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .25s ease;
+    user-select: none;
+}
+
+.your-hand .bone:hover {
+    cursor: pointer;
+    border: 2px solid var(--dominoSelection);
+}
+
+.bone.highlighted {
+    background-color: var(--dominoHighlightedColor);
+}
+
+.bone.held {
+    background-color: var(--dominoHeldColor);
+}
+
+.bone.in-yard {
+    position: absolute;
+    left: calc(50% - 25px);
+    top: calc(50% - 12.5px);
+}
+
+.bone.on-board {
+    position: absolute;
+}
+
+.option {
+    border: 1px solid var(--dominoOption);
+}
+
+.selected {
+    border: 1px solid var(--dominoSelection);
+}
+
+.board {
+    position: absolute;
+    background-color: var(--dominoShadow);
+    width: 70%;
+    height: calc(100% - 110px);
+    left: 5px;
+    top: 55px;
+    border: outset 2px rgba(54, 54, 54, 0.651);
+}
+
+.board .bone:hover {
+    cursor: pointer;
+}
+
+.board.big-bone-time {
+    border: outset 2px var(--dominoHighlightedColor);
+}
+
+.bone-yard {
+    position: absolute;
+    background-color: var(--dominoShadow);
+    width: calc(30% - 15px);
+    height: 25%;
+    right: 5px;
+    top: 37.5%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: outset 2px rgba(255, 255, 255, 0.651);
+}
+
+#score1 {
+    position: absolute;
+    background-color: var(--dominoShadow);
+    width: 20%;
+    height: 15%;
+    right: 15px;
+    top: 65px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: outset 2px rgba(255, 0, 0, 0.651);
+}
+
+#score2 {
+    position: absolute;
+    background-color: var(--dominoShadow);
+    width: 20%;
+    height: 15%;
+    right: 15px;
+    top: calc(50% + 65px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: outset 2px rgba(0, 0, 255, 0.527);
+}
+
+.your-hand {
+    position: absolute;
+    background-color: var(--dominoShadow);
+    width: 100%;
+    height: 50px;
+    left: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    border: outset 2px rgba(0, 0, 255, 0.527);
+}
+
+.turn-to-play {
+    background-color: rgba(238, 170, 69, 0.548);
+}
+
+#play {
+    margin: 5px;
+    width: 100%;
+    height: 50px;
+}
+
+.chat-box {
+    height: 400px;
+}
