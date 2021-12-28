@@ -10,12 +10,4 @@ router.get("/", function(req, res) {
     });
 });
 
-router.get("/livingroom", function(req, res) {
-    res.render(`${__dirname}/views/livingroom`, 
-    {
-        siteTitle: "NotherBase",
-        user: null
-    });
-});
-
 module.exports = router;

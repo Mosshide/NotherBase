@@ -1,0 +1,52 @@
+<%- include("../../../../../../global/parts/head.ejs"); %>
+
+<!-- Load Styles Here -->
+<link rel="stylesheet" href="/styles/main.css">
+
+<!-- Your HTML Here -->
+<main>
+    <% if (pov === "keep-swimming") { %>
+        <p>
+            Is something in the water?
+        </p>
+        <hr>
+        <a href="/forest/pond/side/swim?pov=fight-fish">
+            Keep Swimming
+        </a>
+        <a href="/forest/pond/side/swim?pov=out-of-pond">
+            Get Out
+        </a>
+    <% } else if (pov === "fight-fish") { %>
+        <p> Something suddenly bites your leg!</p>
+
+        <h3>Kill the fish!</h3>
+        <div id="XX">
+            <div id="XXX">
+    
+            </div>
+        </div>
+
+    <% } else if (pov === "out-of-pond") { %>
+        <p>
+            Right as you escape the water, you could swear you heard the snap of a jaw.
+            You quickly look back, but you see nothing to confirm your suspicions.
+        </p>
+        <hr>
+        <a href="/forest/pond/side">
+            Get Back on Shore
+        </a>
+    <% } else { %>
+        <p>
+            You go for a swim. The water feels like a solid, and it's hard to stay afloat. This isn't relaxing.
+        </p>
+        <hr>
+        <a href="/forest/pond/side/swim?pov=keep-swimming">
+            Keep Swimming
+        </a>
+        <a href="/forest/pond/side">
+            Get Back on Shore
+        </a>
+    <% } %>
+</main>
+
+<%- include("../../../../../../global/parts/footer.ejs"); %>

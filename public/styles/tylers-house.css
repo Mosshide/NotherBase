@@ -22,7 +22,6 @@ body {
 }
 
 main {
-    background-color: rgb(155, 0, 155);
     position: absolute;
     left: calc(50% - (var(--game-size-width) / 2));
     top: calc(50% - (var(--game-size-height) / 2));
@@ -33,6 +32,7 @@ main {
 img {
     image-rendering: pixelated;
     position: absolute;
+    user-select: none;
 }
 
 .gui {
@@ -40,6 +40,7 @@ img {
     left: 0px;
     width: 100%;
     height: 100%;
+    user-select: none;
 }
 
 .area {
@@ -48,23 +49,38 @@ img {
     height: calc(144px * var(--scale));
     top: 84px;
     left: 24px;
+    user-select: none;
 }
 
 .icon {
     position: absolute;
     width: calc(22px * var(--scale));
     height: calc(22px * var(--scale));
+    user-select: none;
 }
 
-.nother-bg {
-    background-color: rgb(155, 0, 155);
+.nother {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
 }
-#nother {
+
+.continue {
     position: absolute;
     bottom: 0px;
     right: 444px;
 }
 
+.invisible {
+    background-image: rgba(0, 0, 0, 0);
+}
+.pink-bg {
+    background-color: rgb(155, 0, 155);
+}
+
+.green-bg {
+    background-color: rgb(40, 210, 0);
+}
 
 /* * {
     box-sizing: border-box;

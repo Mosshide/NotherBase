@@ -5,19 +5,50 @@
 
 <!-- Your HTML Here -->
 <main>
-    <img class="gui" src="/img/GUI.png">
-    <img class="area" src="/img/house-afar.png">
-    <img class="area tooltip" src="/img/house.png">
+    <img class="gui" draggable="false" src="/img/GUI.png">
+    <img class="area" draggable="false" src="/img/house-afar.png">
+    <img class="area tooltip" draggable="false" src="/img/house.png">
 
-    <a href="/forest/eye-of-the-forest/square">
-        <img class="icon" id="nother" src="/img/icon_background.png">
+    <a id="notherHoverable" href="/forest/clearing/wyatts-house">
+        <img class="icon nother" id="notherBackground" draggable="false" src="/img/icon_background.png">
+        <img class="icon nother" id="notherButton" draggable="false" src="/img/icon_nother.png">
+        <img class="icon nother" draggable="false" src="/img/icon_border.png">
+    </a>
+    
+    <a id="continueHoverable" href="/forest/clearing/wyatts-house">
+        <img class="icon continue" id="continueBackground" draggable="false" src="/img/icon_background.png">
+        <img class="icon continue" id="continueButton" draggable="false" src="/img/icon_continue.png">
+        <img class="icon continue" draggable="false" src="/img/icon_border.png">
     </a>
 </main>
 
 <!-- Load Scripts Here -->
 <script>
-    $("#nother").hover(function() {
-        $("#nother").toggleClass("nother-bg");
+    $("#notherHoverable").hover(function() {
+        $("#notherBackground").toggleClass("pink-bg");
+    }, function() {
+        $("#notherButton").attr("src", "/img/icon_nother.png");
+        $("#notherBackground").toggleClass("pink-bg");
+    });
+    $("#notherHoverable").mouseup(function() {
+        $("#notherButton").attr("src", "/img/icon_nother.png");
+    });
+    $("#notherHoverable").mousedown(function() {
+        $("#notherButton").attr("src", "/img/icon_notherClick.png");
+    });
+
+    $("#continueHoverable").hover(function() {
+        $("#continueBackground").toggleClass("green-bg");
+    }, function() {
+        $("#continueButton").attr("src", "/img/icon_continue.png");
+        $("#continueBackground").toggleClass("green-bg");
+    });
+    $("#continueHoverable").mouseup(function() {
+        $("#continueButton").attr("src", "/img/icon_continue.png");
+    });
+    $("#continueHoverable").mousedown(function() {
+        $("#continueButton").attr("src", "/img/icon_continueClick.png");
     });
 </script>
+
 <%- include("../../../../../../global/parts/footer.ejs"); %>
