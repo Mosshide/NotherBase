@@ -2,7 +2,8 @@
     --textColor: rgb(0, 0, 0);
     --primaryColor: rgb(244, 244, 244);
     --secondaryColor: white;
-    --tertiaryColor: rgb(186, 139, 45);
+    --tertiaryColor: rgb(212, 177, 106);
+    --focusColor: rgb(183, 152, 90);
     --positiveColor: green;
     --negativeColor: red;
     --alertColor: yellow;
@@ -50,12 +51,12 @@ main {
     color: var(--textColor);
     background: var(--secondaryColor);
     background-size: cover;
-    width: calc(100% - 100px);
+    width: calc(100% - 20px);
     height: calc(100% - 50px);
     overflow: hidden;
-    margin: 50px;
+    margin: 10px;
     margin-bottom: 0;
-    border-radius: 25px 25px 0px 0px;
+    border-radius: 5px 5px 0px 0px;
 }
 
 img {
