@@ -1,5 +1,7 @@
 section#news {
     padding: 0;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 section#news .controls {
@@ -8,14 +10,20 @@ section#news .controls {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
+    background-color: var(--focusColor);
 }
 
 section#news .controls button {
-    width: 90%;
+    width: 75px;
     height: 100%;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
+}
+
+section#news .controls input {
+    width: 100%;
+    height: 100%;
 }
 
 .articles {
@@ -23,18 +31,25 @@ section#news .controls button {
     height: calc(100% - 40px);
 }
 
+.articles .loading {
+    width: 100%;
+    text-align: center;
+}
+
+article .header {
+    width: 100%;
+    width: 150px;
+    position: relative;
+    overflow: hidden;
+}
+
 article {
     border-bottom: 1px solid black;
     height: 500px;
     width: 100%;
     display: flex;
-}
-
-article .pics {
-    width: 40%;
-    height: 100%;
-    margin: 0;
-    padding: 10px;
+    flex-wrap: wrap;
+    overflow: hidden;
 }
 
 article .text {
@@ -43,8 +58,10 @@ article .text {
     margin: 0;
 }
 
-article img {
-    width: 300px;
-    height: 300px;
+.header img {
+    width: 100%;
+    height: 100%;
     float: left;
+    object-fit: cover;
+    position: absolute;
 }
