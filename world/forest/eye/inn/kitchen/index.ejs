@@ -1,83 +1,241 @@
-<link rel="stylesheet" href="/styles/billboard.css">
-<style>
-    <%- include("./fridge.css") %>
-</style>
-
-<h4>Pantry</h4>
-<div class="billboard" id="pantry"></div>
-
-<h4>Fridge</h4>
-<div class="fridge">
-    <h4>Freezer</h4>
-    <div class="billboard" id="freezer"></div>
-    <hr>
-    <h4>Meats</h4>
-    <div class="billboard" id="meats"></div>
-    <hr>
-    <h4>Veggies</h4>
-    <div class="billboard" id="veggies"></div>
-    <hr>
-    <h4>Drinks</h4>
-    <div class="billboard" id="drinks"></div>
-    <hr>
-    <h4>Snacks</h4>
-    <div class="billboard" id="snacks"></div>
-    <hr>
-    <h4>Other</h4>
-    <div class="billboard" id="other"></div>
+<div class="fridge floatables">
+    <div class="browser"></div>
+    <div class="search-box"></div>
+    <div class="meta buttons"></div>
 </div>
 
 <hr>
 
-<a href="/forest/eye/inn/bar">
+<a class="return" href="/forest/eye/inn/bar">
     Return to the Bar
 </a>
 
-<script src="/js/billboard.js"></script>
+<script src="/js/util/buttons.js"></script>
+<script src="/js/util/search-box.js"></script>
+<script src="/js/util/browser.js"></script>
+<script src="/js/entity.js"></script>
+<script src="/js/floatable.js"></script>
 <script>
-    const pantry = new Billboard("pantry", null, {
-        onSave: "save-pantry"
+    const browser = new Browser();
+    const search = new SearchBox();
+    const metaBrowser = new MetaBrowser("Your Kitchen", browser, search);
+    metaBrowser.addService("pantry", {
+        fields: new NBField({
+            name: "item",
+            label: "Pantry Item: ",
+            placeholder: "No Item",
+            multiple: true
+        }, [
+            new NBField({
+                name: "amount",
+                placeholder: 1
+            }, "number"),
+            new NBField({
+                name: "name",
+                placeholder: "Item"
+            }, "string"),
+            new NBField({
+                name: "expiration",
+                label: "Expires: ",
+                placeholder: Date.now()
+            }, "date")
+        ]),
+        label: "Pantry",
+        editable: true,
+        multiple: true,
+        toLoad: async () => {
+            return await base.load("kitchen-pantry");
+        },
+        toSave: async (item, which, deleting) => {
+            await base.do("save-kitchen", { item, which, deleting, part: "pantry" });
+        }
+    });
+    metaBrowser.addService("freezer", {
+        fields: new NBField({
+            name: "item",
+            label: "Freezer Item: ",
+            placeholder: "No Item",
+            multiple: true
+        }, [
+            new NBField({
+                name: "amount",
+                placeholder: 1
+            }, "number"),
+            new NBField({
+                name: "name",
+                placeholder: "Item"
+            }, "string"),
+            new NBField({
+                name: "expiration",
+                label: "Expires: ",
+                placeholder: Date.now()
+            }, "date")
+        ]),
+        label: "Freezer",
+        editable: true,
+        multiple: true,
+        toLoad: async () => {
+            return await base.load("kitchen-freezer");
+        },
+        toSave: async (item, which, deleting) => {
+            await base.do("save-kitchen", { item, which, deleting, part: "freezer" });
+        }
+    });
+    metaBrowser.addService("meats", {
+        fields: new NBField({
+            name: "item",
+            label: "Meat: ",
+            placeholder: "No Item",
+            multiple: true
+        }, [
+            new NBField({
+                name: "amount",
+                placeholder: 1
+            }, "number"),
+            new NBField({
+                name: "name",
+                placeholder: "Item"
+            }, "string"),
+            new NBField({
+                name: "expiration",
+                label: "Expires: ",
+                placeholder: Date.now()
+            }, "date")
+        ]),
+        label: "Meats",
+        editable: true,
+        multiple: true,
+        toLoad: async () => {
+            return await base.load("kitchen-meats");
+        },
+        toSave: async (item, which, deleting) => {
+            await base.do("save-kitchen", { item, which, deleting, part: "meats" });
+        }
+    });
+    metaBrowser.addService("veggies", {
+        fields: new NBField({
+            name: "item",
+            label: "Veggie: ",
+            placeholder: "No Item",
+            multiple: true
+        }, [
+            new NBField({
+                name: "amount",
+                placeholder: 1
+            }, "number"),
+            new NBField({
+                name: "name",
+                placeholder: "Item"
+            }, "string"),
+            new NBField({
+                name: "expiration",
+                label: "Expires: ",
+                placeholder: Date.now()
+            }, "date")
+        ]),
+        label: "Veggies",
+        editable: true,
+        multiple: true,
+        toLoad: async () => {
+            return await base.load("kitchen-veggies");
+        },
+        toSave: async (item, which, deleting) => {
+            await base.do("save-kitchen", { item, which, deleting, part: "veggies" });
+        }
+    });
+    metaBrowser.addService("drinks", {
+        fields: new NBField({
+            name: "item",
+            label: "Drink: ",
+            placeholder: "No Item",
+            multiple: true
+        }, [
+            new NBField({
+                name: "amount",
+                placeholder: 1
+            }, "number"),
+            new NBField({
+                name: "name",
+                placeholder: "Item"
+            }, "string"),
+            new NBField({
+                name: "expiration",
+                label: "Expires: ",
+                placeholder: Date.now()
+            }, "date")
+        ]),
+        label: "Drinks",
+        editable: true,
+        multiple: true,
+        toLoad: async () => {
+            return await base.load("kitchen-drinks");
+        },
+        toSave: async (item, which, deleting) => {
+            await base.do("save-kitchen", { item, which, deleting, part: "drinks" });
+        }
+    });
+    metaBrowser.addService("snacks", {
+        fields: new NBField({
+            name: "item",
+            label: "Snack: ",
+            placeholder: "No Item",
+            multiple: true
+        }, [
+            new NBField({
+                name: "amount",
+                placeholder: 1
+            }, "number"),
+            new NBField({
+                name: "name",
+                placeholder: "Item"
+            }, "string"),
+            new NBField({
+                name: "expiration",
+                label: "Expires: ",
+                placeholder: Date.now()
+            }, "date")
+        ]),
+        label: "Snacks",
+        editable: true,
+        multiple: true,
+        toLoad: async () => {
+            return await base.load("kitchen-snacks");
+        },
+        toSave: async (item, which, deleting) => {
+            await base.do("save-kitchen", { item, which, deleting, part: "snacks" });
+        }
+    });
+    metaBrowser.addService("other", {
+        fields: new NBField({
+            name: "item",
+            label: "Item: ",
+            placeholder: "No Item",
+            multiple: true
+        }, [
+            new NBField({
+                name: "amount",
+                placeholder: 1
+            }, "number"),
+            new NBField({
+                name: "name",
+                placeholder: "Item"
+            }, "string"),
+            new NBField({
+                name: "expiration",
+                label: "Expires: ",
+                placeholder: Date.now()
+            }, "date")
+        ]),
+        label: "Other",
+        editable: true,
+        multiple: true,
+        toLoad: async () => {
+            return await base.load("kitchen-other");
+        },
+        toSave: async (item, which, deleting) => {
+            await base.do("save-kitchen", { item, which, deleting, part: "other" });
+        }
     });
 
-    const freezer = new Billboard("freezer", null, {
-        onSave: "save-freezer"
-    });
-    const meats = new Billboard("meats", null, {
-        onSave: "save-meats"
-    });
-    const veggies = new Billboard("veggies", null, {
-        onSave: "save-veggies"
-    });
-    const drinks = new Billboard("drinks", null, {
-        onSave: "save-drinks"
-    });
-    const snacks = new Billboard("snacks", null, {
-        onSave: "save-snacks"
-    });
-    const other = new Billboard("other", null, {
-        onSave: "save-other"
-    });
-
-    base.load("pantry").then((res) => {
-        pantry.load(res);
-    });
-
-    base.load("fridge-freezer").then((res) => {
-        freezer.load(res);
-    });
-    base.load("fridge-meats").then((res) => {
-        meats.load(res);
-    });
-    base.load("fridge-veggies").then((res) => {
-        veggies.load(res);
-    });
-    base.load("fridge-drinks").then((res) => {
-        drinks.load(res);
-    });
-    base.load("fridge-snacks").then((res) => {
-        snacks.load(res);
-    });
-    base.load("fridge-other").then((res) => {
-        other.load(res);
-    });
+    const floatBoard = new FloatBoard();
 </script>

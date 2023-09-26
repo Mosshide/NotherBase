@@ -15,7 +15,7 @@
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
-    height: 400px;
+    height: 500px;
 }
 
 .month h4 {
@@ -28,7 +28,8 @@
 
 .month.small {
     width: 100%;
-    min-height: 100px;
+    height: auto;
+    min-height: 80px;
 }
 
 .floating .month.small {
