@@ -9,22 +9,33 @@ class Agenda {
         
         this.render();
 
+        this.loaded = null;
+
         base.do("load-schedule", { route: "/forest/eye/filter/office" }).then((res) => {
-            this.load(res.data);
+            if (this.loaded) {
+                this.load([...res.data, ...this.loaded]);
+            }
+            else this.loaded = res.data;
+        });
+
+        base.do("load-shared-schedule", { route: "/forest/eye/filter/office" }).then((res) => {
+            if (this.loaded) {
+                this.load([...res.data, ...this.loaded]);
+            }
+            else this.loaded = res.data;
         });
     }
 
     render = () => {
         this.$div = $(`.agenda#${this.id}`);
 
-        this.$week = $(`<section class="week"></section>`).appendTo(this.$div);
         for (let i = 0; i < 7; i++) {
-            this.days.push(new Day(this.$week, this.date, i));       
+            this.days.push(new Day(this.$div, this.date, i));       
         }
     }
 
     load = (tasks) => {
-        this.tasks = [...tasks.userTasks, ...tasks.sharedTasks];
+        this.tasks = tasks;
 
         for (let i = 0; i < 7; i++) {
             this.days[i].load(this.tasks);        

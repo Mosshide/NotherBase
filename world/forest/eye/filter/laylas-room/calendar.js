@@ -10,25 +10,30 @@ class Calendar {
         this.render();
         
         base.do("load-schedule", { route: "/forest/eye/filter/office" }).then((res) => {
-            this.load(res.data);
+            this.userTasks = res.data;
+
+            base.do("load-shared-schedule", { route: "/forest/eye/filter/office" }).then((resp) => {
+                this.sharedTasks = resp.data;
+                console.log(this.userTasks, this.sharedTasks);
+                this.load();
+            });
         });
     }
 
     render = () => {
         this.$div = $(`.calendar#${this.id}`);
 
-        this.$year = $(`<section class="year"></section>`).appendTo(this.$div);
-
         for (let i = 0; i < 12; i++) {
-            this.months.push(new Month(this.$year, this.date, i));       
+            this.months.push(new Month(this.$div, this.date, i));       
         }
     }
 
-    load = (tasks) => {
-        this.tasks = [...tasks.userTasks, ...tasks.sharedTasks];
+    load = (tasks = this.userTasks, shared = this.sharedTasks) => {
+        this.userTasks = this.userTasks;
+        this.sharedTasks = this.sharedTasks
 
         for (let i = 0; i < 12; i++) {
-            this.months[i].load(this.tasks);        
+            this.months[i].load([...this.userTasks, ...this.sharedTasks]);        
         }
     }
 }

@@ -16,7 +16,7 @@ class Projector {
 
     save = async (url = this.$urlInput.val()) => {
         if (this.onSave) {
-            this.$iframe.attr("src", url + "&origin=https://www.notherbase.com");
+            this.$iframe.attr("src", url);
             await base.do(this.onSave, {
                 id: this.id,
                 url: url
@@ -35,4 +35,3 @@ class Projector {
         }
     }
 }
-//https://www.youtube.com/embed/tqH2hOjZTfc?si=FPA5_z8NSFgS0cK9

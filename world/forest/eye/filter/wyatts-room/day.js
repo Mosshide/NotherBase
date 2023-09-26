@@ -12,7 +12,7 @@ class Day {
 
     render = () => {
         if (this.day === 0) this.$div = $(`<article class="day" id="${this.day}"></article>`).appendTo(this.$parent);
-        else this.$div = $(`<article class="day small" id="${this.day}"></article>`).appendTo(this.$parent);
+        else this.$div = $(`<article class="small day" id="${this.day}"></article>`).appendTo(this.$parent);
 
         const weekday = ["Sun", "Mon"," Tue", "Wed", "Thu", "Fri", "Sat"];
         //const weekday = ["Wednesday", "Wednesday"," Wednesday", "Wednesday", "Wednesday", "Wednesday", "Wednesday"];
@@ -26,7 +26,7 @@ class Day {
             $.get(`https://api.weather.gov/points/46.7253,-122.9534`, (data) => {
                 if (data.properties.forecast) $.get(data.properties.forecast, (data) => {
                     let current = data.properties.periods[0];
-                    $(".week .day#0 .weather").text(`${current.name}: ${current.temperature} °F, ${current.shortForecast}, ${current.windSpeed}`);
+                    $(".day#0 .weather").text(`${current.name}: ${current.temperature} °F, ${current.shortForecast}, ${current.windSpeed}`);
                 });
             });
 
@@ -83,7 +83,6 @@ class Day {
                     }
                     newDate.setFullYear(dayEnd.getFullYear());
                     newDate.setMonth(dayEnd.getMonth());
-                    console.log(newDate, dayStart, dayEnd, monthEnd);
                 }
                 else if (this.tasks[i].frequency === "yearly") while (newDate.getTime() < dayStart.getTime()) {
                     newDate.setFullYear(newDate.getFullYear() + 1);

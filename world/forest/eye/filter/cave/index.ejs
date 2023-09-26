@@ -9,11 +9,13 @@
 
 <hr>
 
-<div class="nono-spirit">
-    <img id="move-nono-spirit" src="/img/nono/nono_spirit.png" alt="Nono Spirit">
+<div class="floatables">
+    <div class="nono-spirit">
+        <img id="move-nono-spirit" src="/img/nono/nono_spirit.png" alt="Nono Spirit">
+    </div>
+    
+    <div class="nono-board"></div>
 </div>
-
-<div class="nono-board"></div>
 
 <hr>
 
@@ -39,11 +41,12 @@
     Return to the Fields
 </a>
 
+<script src="/js/entity.js"></script>
+<script src="/js/floatable.js"></script>
 <script>
     <%- include("./nono.js"); %>
 
     let lastPos = [0, 0];
-
     let moveNono = function moveNono() {
         let focus = $("#move-nono-spirit");
         let newPos = [Math.floor(Math.random() * 200), Math.floor(Math.random() * 100)];
@@ -55,12 +58,8 @@
 
         lastPos = newPos;
     };
-
     moveNono();
     setInterval(moveNono, 2000);
 
-    //base.do("reset-nono");
-    base.load("filter-cave-nono").then((res) => {
-        nonoGame.startNew(res.level, res.difficulty);
-    });
+    const floatBoard = new FloatBoard();
 </script>
