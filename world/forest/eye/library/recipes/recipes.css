@@ -1,11 +1,43 @@
 .browser .nested.measure {
     width: 75% !important;
-    margin-left: 0 !important;
+    margin: 0 !important;
+}
+
+.browser .edit.nested.measure {
+    width: 65% !important;
+    margin: 0 !important;
 }
 
 .browser .nested.amount {
-    width: 20% !important;
-    margin-right: 1px !important;
+    width: 25% !important;
+    margin: 0 !important;
+}
+
+.browser .nested.ingredient {
+    width: 100% !important;
+    margin: 0 !important;
+}
+
+.browser li.directions textarea {
+    width: 85% !important;
+    margin: 0;
+}
+
+.browser li {
+    position: relative;
+    margin: 0;
+    padding: var(--padding);
+    border: none;
+    padding-bottom: calc(var(--padding) * 2);
+}
+
+.browser .multiple li .remove {
+    position: absolute;
+    top: var(--margin);
+    right: var(--margin);
+    width: 10%;
+    margin: 0;
+    height: var(--inputHeight);
 }
 
 .browser p.measure {

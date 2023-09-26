@@ -237,7 +237,7 @@ class EditBox extends ViewBox {
                 }
                 else this.$div = $(`<div class="edit nested ${this.fields.settings.name}"></div>`);
             }
-            else this.$div = $(`<div class="edit  ${this.fields.settings.name}"></div>`);
+            else this.$div = $(`<div class="edit ${this.fields.settings.name}"></div>`);
     
             this.renderHeader();
     
@@ -340,21 +340,19 @@ class EditBox extends ViewBox {
 
     renderHeader = () => {
         let label = this.fields.settings.label;
-        if (!label) label = "";
 
         if (this.nested) {
-            if (this.multiple) {
+            if (this.fields.settings.multiple) {
+                if (!label) label = "";
                 this.$header = $(`<h6>${this.fields.settings.label}</h6>`).appendTo(this.$div);
-                
+                if (!this.fields.settings.lockLength) {
+                    this.$add = $(`<button class="add">Add</button>`).appendTo(this.$header);
+                    this.$add.click(() => { this.add(); });
+                }
             }
-            else this.$header = $(`<h6>${this.fields.settings.label}</h6>`).appendTo(this.$div);
+            else if (label) this.$header = $(`<h6>${this.fields.settings.label}</h6>`).appendTo(this.$div);
         } 
-        else this.$header = $(`<h4>${this.fields.settings.label}</h4>`).appendTo(this.$div);
-
-        if (!this.fields.settings.lockLength) {
-            this.$add = $(`<button class="add">Add</button>`).appendTo(this.$header);
-            this.$add.click(() => { this.add(); });
-        }
+        else if (label) this.$header = $(`<h4>${this.fields.settings.label}</h4>`).appendTo(this.$div);
     }
 
     save = () => {
@@ -450,12 +448,7 @@ class EditBox extends ViewBox {
             else {
                 this.renderHeader();
         
-                if (this.fields.settings.multiple && this.nested) {
-                    if (!this.fields.settings.lockLength) {
-                        this.$add = $(`<button>Add</button>`).appendTo(this.$div);
-                        this.$add.click(() => { this.add(); });
-                    }
-        
+                if (this.fields.settings.multiple && this.nested) {        
                     if (Array.isArray(item)) {
                         for (let i = 0; i < item.length; i++) {
                             this.add(item[i]);
