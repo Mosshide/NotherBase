@@ -25,7 +25,7 @@
     position: relative;
 }
 
-.browser div.edit {
+.browser .edit {
     width: 100%;
     background: var(--bgColor);
     display: flex;
@@ -40,9 +40,9 @@
     position: static;
     height: auto;
     padding: 0;
-    width: var(--fillFromMargin);
-    margin: var(--margin);
-    margin-bottom: 15px;
+    width: 100%;
+    margin: 0;
+    margin-top: var(--thickMargin);
 }
 
 .browser h6 {
