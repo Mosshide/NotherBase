@@ -190,9 +190,7 @@ class EditBox extends ViewBox {
         if (!this.fields.settings.hidden) {
             if (this.nested) {
                 if (this.fields.settings.multiple) {
-                    this.$div = $(`<div class="edit nested multiple  ${this.fields.settings.name}"></div>`);
-                    this.$add = $(`<button>Add</button>`).appendTo(this.$div);
-                    this.$add.click(this.add);
+                    this.$div = $(`<div class="edit nested multiple ${this.fields.settings.name}"></div>`);
                 }
                 else this.$div = $(`<div class="edit nested ${this.fields.settings.name}"></div>`);
             }
@@ -298,12 +296,21 @@ class EditBox extends ViewBox {
     }
 
     renderHeader = () => {
-        if (this.fields.settings.label) {
-            if (this.nested) {
-                if (this.multiple) this.$header = $(`<h6>${this.fields.settings.label}</h6>`).appendTo(this.$div);
-                else this.$header = $(`<h6>${this.fields.settings.label}</h6>`).appendTo(this.$div);
-            } 
-            else this.$header = $(`<h4>${this.fields.settings.label}</h4>`).appendTo(this.$div);
+        let label = this.fields.settings.label;
+        if (!label) label = "";
+
+        if (this.nested) {
+            if (this.multiple) {
+                this.$header = $(`<h6>${this.fields.settings.label}</h6>`).appendTo(this.$div);
+                
+            }
+            else this.$header = $(`<h6>${this.fields.settings.label}</h6>`).appendTo(this.$div);
+        } 
+        else this.$header = $(`<h4>${this.fields.settings.label}</h4>`).appendTo(this.$div);
+
+        if (!this.fields.settings.lockLength) {
+            this.$add = $(`<button class="add">Add</button>`).appendTo(this.$header);
+            this.$add.click(() => { this.add(); });
         }
     }
 

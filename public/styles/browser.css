@@ -46,7 +46,7 @@
     padding: 0 !important;
     width: var(--fillFromMargin) !important;
     margin: var(--margin) !important;
-    margin-bottom: 0 !important;
+    margin-bottom: 15px !important;
 }
 
 .browser h6 {
@@ -207,4 +207,10 @@
     width: 30px;
     height: 30px;
     margin: var(--margin);
+}
+
+.browser .edit .add {
+    position: absolute;
+    right: 5px;
+    top: 5px;
 }
