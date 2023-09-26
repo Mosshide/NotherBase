@@ -666,8 +666,6 @@ class MetaBrowser extends Buttons {
     new = () => {
         if (this.serving.editable) {
             this.select(this.serving.data.length, "edit", true, true);
-    
-            
         }
     }
 
@@ -748,11 +746,17 @@ class MetaBrowser extends Buttons {
 
     updateBrowser = (which = 0, state = this.serving.state) => {
         if (this.serving.multiple) {
-            if (which >= 0 && which < this.serving.data.length) {
-                if (state === "read") this.browser.read(this.serving.data[which], this, this.serving.fields, this.serving.editable);
-                else if (state === "edit") this.browser.edit(this.serving.lastEdit, this, this.serving.fields, this.serving.editable);
+            if (this.serving.data.length > 0) {
+                if (which >= 0 && which < this.serving.data.length) {
+                    if (state === "read") this.browser.read(this.serving.data[which], this, this.serving.fields, this.serving.editable);
+                    else if (state === "edit") this.browser.edit(this.serving.lastEdit, this, this.serving.fields, this.serving.editable);
+                }
+                else if (which == this.serving.data.length) {
+                    if (state === "edit") this.browser.edit(this.serving.lastEdit, this, this.serving.fields, this.serving.editable);
+                }
+                else this.browser.edit(null, this, this.serving.fields, this.serving.editable);
             }
-            else this.browser.edit(null, this, this.serving.fields, this.serving.editable);
+            else this.browser.read(null, this, this.serving.fields, this.serving.editable)
         }
         else this.browser.edit(null, this, this.serving.fields, this.serving.editable);
     }
