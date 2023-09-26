@@ -233,13 +233,11 @@ class EditBox extends ViewBox {
         if (!this.fields.settings.hidden) {
             if (this.nested) {
                 if (this.fields.settings.multiple) {
-                    this.$div = $(`<div class="edit nested multiple  ${this.fields.settings.name}"></div>`);
-                    this.$add = $(`<button>Add</button>`).appendTo(this.$div);
-                    this.$add.click(this.add);
+                    this.$div = $(`<div class="edit nested multiple ${this.fields.settings.name}"></div>`);
                 }
                 else this.$div = $(`<div class="edit nested ${this.fields.settings.name}"></div>`);
             }
-            else this.$div = $(`<div class="edit  ${this.fields.settings.name}"></div>`);
+            else this.$div = $(`<div class="edit ${this.fields.settings.name}"></div>`);
     
             this.renderHeader();
     
@@ -341,13 +339,20 @@ class EditBox extends ViewBox {
     }
 
     renderHeader = () => {
-        if (this.fields.settings.label) {
-            if (this.nested) {
-                if (this.multiple) this.$header = $(`<h6>${this.fields.settings.label}</h6>`).appendTo(this.$div);
-                else this.$header = $(`<h6>${this.fields.settings.label}</h6>`).appendTo(this.$div);
-            } 
-            else this.$header = $(`<h4>${this.fields.settings.label}</h4>`).appendTo(this.$div);
-        }
+        let label = this.fields.settings.label;
+
+        if (this.nested) {
+            if (this.fields.settings.multiple) {
+                if (!label) label = "";
+                this.$header = $(`<h6>${this.fields.settings.label}</h6>`).appendTo(this.$div);
+                if (!this.fields.settings.lockLength) {
+                    this.$add = $(`<button class="add">Add</button>`).appendTo(this.$header);
+                    this.$add.click(() => { this.add(); });
+                }
+            }
+            else if (label) this.$header = $(`<h6>${this.fields.settings.label}</h6>`).appendTo(this.$div);
+        } 
+        else if (label) this.$header = $(`<h4>${this.fields.settings.label}</h4>`).appendTo(this.$div);
     }
 
     save = () => {
@@ -443,12 +448,7 @@ class EditBox extends ViewBox {
             else {
                 this.renderHeader();
         
-                if (this.fields.settings.multiple && this.nested) {
-                    if (!this.fields.settings.lockLength) {
-                        this.$add = $(`<button>Add</button>`).appendTo(this.$div);
-                        this.$add.click(() => { this.add(); });
-                    }
-        
+                if (this.fields.settings.multiple && this.nested) {        
                     if (Array.isArray(item)) {
                         for (let i = 0; i < item.length; i++) {
                             this.add(item[i]);
@@ -666,8 +666,6 @@ class MetaBrowser extends Buttons {
     new = () => {
         if (this.serving.editable) {
             this.select(this.serving.data.length, "edit", true, true);
-    
-            
         }
     }
 
@@ -748,11 +746,17 @@ class MetaBrowser extends Buttons {
 
     updateBrowser = (which = 0, state = this.serving.state) => {
         if (this.serving.multiple) {
-            if (which >= 0 && which < this.serving.data.length) {
-                if (state === "read") this.browser.read(this.serving.data[which], this, this.serving.fields, this.serving.editable);
-                else if (state === "edit") this.browser.edit(this.serving.lastEdit, this, this.serving.fields, this.serving.editable);
+            if (this.serving.data.length > 0) {
+                if (which >= 0 && which < this.serving.data.length) {
+                    if (state === "read") this.browser.read(this.serving.data[which], this, this.serving.fields, this.serving.editable);
+                    else if (state === "edit") this.browser.edit(this.serving.lastEdit, this, this.serving.fields, this.serving.editable);
+                }
+                else if (which == this.serving.data.length) {
+                    if (state === "edit") this.browser.edit(this.serving.lastEdit, this, this.serving.fields, this.serving.editable);
+                }
+                else this.browser.edit(null, this, this.serving.fields, this.serving.editable);
             }
-            else this.browser.edit(null, this, this.serving.fields, this.serving.editable);
+            else this.browser.read(null, this, this.serving.fields, this.serving.editable)
         }
         else this.browser.edit(null, this, this.serving.fields, this.serving.editable);
     }

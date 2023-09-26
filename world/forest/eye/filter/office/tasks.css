@@ -1,0 +1,23 @@
+.browser .shared h6 {
+    width: 50%;
+}
+
+.browser .shared p {
+    width: 50%;
+}
+
+.browser .sharing .nested.name {
+    margin: 0 !important;
+}
+
+.browser .nested.shared {
+    margin: 0 !important;
+}
+
+.browser .nested.recurs {
+    width: 50%;
+}
+
+.browser .nested.recurring {
+    width: 50%;
+}
