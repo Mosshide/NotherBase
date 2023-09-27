@@ -106,41 +106,14 @@
     padding: calc(var(--thickPadding) / 2);
 }
 
-.browser .ui button {
-    height: 100%;
-    margin: 0;
-    border-radius: 2px 2px 0 0;
+.browser .buttons.tabs {
+    height: 50px;
+    width: 100%;
     padding: 5px;
-}
-
-.browser .ui button.delete {
     position: absolute;
-    right: 0;
-    bottom: 0;
-}
-
-.browser .ui button.create {
-    position: absolute;
-    right: 65%;
-    bottom: 0%;
-}
-
-.browser .ui button.edit {
-    position: absolute;
-    right: 50%;
-    bottom: 0;
-}
-
-.browser .ui button.save {
-    position: absolute;
-    right: 60%;
-    bottom: 0%;
-}
-
-.browser .ui button.cancel {
-    position: absolute;
-    right: 40%;
-    bottom: 0;
+    left: 0;
+    bottom: -40px;
+    margin: 0;
 }
 
 .browser input {
@@ -224,4 +197,9 @@
     border: none;
     border-left: var(--standardBorder);
     padding: calc(var(--thickPadding) / 2);
+}
+
+.browser p.long-string {
+    overflow: auto;
+    max-height: 30vh;
 }

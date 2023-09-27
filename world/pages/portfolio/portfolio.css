@@ -186,10 +186,6 @@ nav .buttons {
     margin: 20px;
 }
 
-.browser {
-    height: clamp(200px, 40vh, 500px);
-}
-
 @media only screen and (max-width: 900px) {
     .portrait {
         width: 100%;
