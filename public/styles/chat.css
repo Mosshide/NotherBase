@@ -1,14 +1,14 @@
 .chat-box {
     position: relative;
     width: 100%;
-    height: 40vh;
+    height: 400px;
     display: flex;
     flex-wrap: wrap;
 }
 
 .chat-log {
     width: 100%;
-    height: calc(100% - 8vh);
+    height: calc(100% - 2 * var(--inputHeight));
     background-color: rgba(0, 0, 0, 0.534);
     overflow: auto;
     padding: 5px;
@@ -16,7 +16,6 @@
 }
 
 .chat-send {
-    height: 4vh;
     width: 5em;
     outline: none;
     background-color: var(--bgColor);
@@ -35,7 +34,6 @@
 }
 
 .chat-entry {
-    height: 4vh;
     width: calc(100% - 5em);
     outline: none;
     background-color: var(--bgColor);
@@ -52,7 +50,7 @@
 .chat-box>ul {
     position: absolute;
     left: 0;
-    top: 4vh;
+    top: var(--inputHeight);
     height: 0;
     width: 100%;
     border: var(--standardBorder);
@@ -64,7 +62,7 @@
 }
 
 .chat-box>ul.shown {
-    height: calc(100% - 4vh);
+    height: calc(100% - 2 * var(--inputHeight));
 }
 
 .chat-box>ul h4 {
