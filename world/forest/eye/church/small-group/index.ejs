@@ -1,0 +1,90 @@
+<p>
+    You enter the room reserved for small groups.
+</p>
+
+<div class="floatables">
+    <div class="browser"></div>
+    <div class="search-box"></div>
+    <div class="meta buttons"></div>
+</div>
+
+<hr>
+
+<a class="return" href="/forest/eye/church/sanctuary">
+    Return to the Sanctuary
+</a>
+
+<script src="/js/util/buttons.js"></script>
+<script src="/js/util/search-box.js"></script>
+<script src="/js/util/browser.js"></script>
+<script src="/js/entity.js"></script>
+<script src="/js/floatable.js"></script>
+<script>
+    const browser = new Browser();
+    const search = new SearchBox();
+    const metaBrowser = new MetaBrowser("Small Groups", browser, search);
+    metaBrowser.addService("small-group", {
+        fields: new NBField({
+            name: "small-group",
+            multiple: true,
+            label: "Small Group: ",
+            placeholder: "No Small Group"
+        }, [
+            new NBField({
+                name: "name",
+                label: "Group Name: ",
+                placeholder: "Small Group"
+            }, "string"),
+            new NBField({
+                name: "location",
+                label: "Location: ",
+                placeholder: "No Location"
+            }, "string"),
+            new NBField({
+                name: "nextMeeting",
+                label: "Next Meeting Time: ",
+                placeholder: "Right after church"
+            }, "string"),
+            new NBField({
+                name: "people",
+                multiple: true,
+                label: "People: ",
+                placeholder: "No People"
+            }, [
+                new NBField({
+                    name: "name",
+                    label: "Name: ",
+                    placeholder: "No Name"
+                }, "string"),
+                new NBField({
+                    name: "notes",
+                    label: "Notes: ",
+                    placeholder: "No Notes"
+                }, "long-string"),
+            ]),
+            new NBField({
+                name: "notes",
+                label: "Notes: ",
+                placeholder: "No Notes"
+            }, "long-string"),
+            new NBField({
+                name: "requests",
+                label: "Prayer Requests: ",
+                placeholder: "No Requests",
+                multiple: true
+            }, "string")
+        ]),
+        label: "Small Group",
+        editable: true,
+        multiple: true,
+        toLoad: async () => {
+            let res = await base.load("small-group");
+            return res;
+        },
+        toSave: async (item, which, deleting) => {
+            await base.do("save-small-group", { item, which, deleting });
+        }
+    });
+
+    const floatBoard = new FloatBoard();
+</script>

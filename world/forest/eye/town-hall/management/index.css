@@ -29,3 +29,7 @@
     margin-top: 5vh;
     margin-bottom: 5vh;
 }
+
+h6.auth {
+    z-index: 4 !important;
+}

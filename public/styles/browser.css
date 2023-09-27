@@ -42,7 +42,12 @@
     padding: 0;
     width: 100%;
     margin: 0;
-    margin-top: var(--thickMargin);
+    padding: var(--thickPadding);
+    padding-bottom: calc(var(--thickPadding) * 3 / 2);
+}
+
+:nth-child(even of .browser .edit) {
+    background: var(--darkBgColor);
 }
 
 .browser h6 {
@@ -96,8 +101,9 @@
     top: 0;
     background: var(--bgColor);
     border-bottom: var(--standardBorder);
-    margin-bottom: -1px;
     z-index: 5;
+    margin: 0;
+    padding: calc(var(--thickPadding) / 2);
 }
 
 .browser .ui button {
@@ -146,8 +152,9 @@
     border: 1px dashed var(--textColor);
     max-height: 40vh;
     border-radius: 3px;
-    margin-top: 20px;
+    margin: var(--thickMargin);
     position: relative;
+    padding: 0;
 }
 
 .browser .multiple li>input {
@@ -167,9 +174,16 @@
     padding: 0;
     flex-wrap: wrap;
     border: none;
-    border-top: var(--standardBorder);
-    margin: var(--margin);
-    margin-top: 0;
+    border-bottom: var(--standardBorder);
+    margin: 0;
+}
+
+.browser li:last-child {
+    border: none;
+}
+
+.browser li .nested {
+    padding: 1px;
 }
 
 .browser #alert {
@@ -209,4 +223,5 @@
     margin: 0;
     border: none;
     border-left: var(--standardBorder);
+    padding: calc(var(--thickPadding) / 2);
 }
