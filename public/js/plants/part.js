@@ -5,8 +5,8 @@ class PlantPart extends Entity {
         this.behaviors = behaviors;
         this.part = this.name;
         this.recursionFactor = recursionFactor + 1;
-        /*{
-            name: "stem",
+        /*
+        part: {
             imgs: [ "/img/textures/substance.png" ],
             spawns: [{
                 position: { minX: 0, minY: 0, maxX: 100, maxY: 100 },
@@ -15,7 +15,7 @@ class PlantPart extends Entity {
             growth: { minTime: 1000, spawnTime: 1100, maxTime: 2000 },
             size: { minX: 5, minY: 5, maxX: 10, maxY: 10 },
             children: {
-                stem: {
+                part: {
                     cooldown: 100, 
                     potentialDelay: 100
                 }
@@ -23,7 +23,8 @@ class PlantPart extends Entity {
             max: 1,
             spawnRate: { cooldown: 100, potentialDelay: 100 },
             recursionMax: 1
-        }*/
+        }
+        */
 
         this.size = [0, 0];
         this.maxSize = [

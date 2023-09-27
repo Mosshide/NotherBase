@@ -581,7 +581,7 @@ iframe {
     flex-wrap: wrap;
     margin: var(--margin);
     border: var(--standardBorder);
-    height: 400px;
+    height: 300px;
 }
 
 .dialogue>h4 {

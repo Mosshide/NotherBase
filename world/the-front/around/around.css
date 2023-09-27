@@ -88,3 +88,7 @@
     height: auto;
     border-radius: 30%;
 }
+
+.topLeaf, .rightLeaf, .bottomLeaf, .leftLeaf {
+    border-radius: 50% 50% 0 0;
+}
