@@ -22,6 +22,99 @@
         <h1>NotherBase Documentation</h1>
         <h2>notherbase-fs Version: 3.2.14</h2>
 
+        <details>
+            <summary><h3>General Web Development Setup</h3></summary>
+
+            <h4>Windows and Linux Web Development Setup</h4>
+            <a href="https://learn.microsoft.com/en-us/windows/dev-environment/javascript/nodejs-on-wsl">Install Node.js on Windows Subsystem for Linux (WSL2)</a>
+            <p>
+                The link above is a Microsoft tutorial on installing WSL2 and Node.js. WSL2 is a 
+                virtualized Ubuntu environment that will run Node.js in the terminal, which gives us
+                a local development version of the NotherBase server. Follow the tutorial.
+            </p>
+
+            <p>
+                VS Code is a great code editor. One of the extensions that highlights EJS 
+                syntax is helpful.
+            </p>
+
+            <p>
+                Windows Users: I reccommend using Windows Terminal. If you use 
+                VS Code, make sure to get the WSL extension.
+            </p>
+
+            <p>
+                Linux Users: Go to the same link as the Windows folks and just ignore all the instructions
+                that are specifically for Windows users.
+            </p>
+
+            <p>
+                Nodemon is reccommended to automatically restart your development server when your
+                code changes.
+            </p>
+<pre class="code">
+npm i -g nodemon
+</pre>
+
+            <h4>Create your own Base</h4>
+            <p>
+                By installing notherbase-fs to an npm package, one can setup 
+                an Express.js server with automatic routes and a MongoDB connection.
+
+                Enter the line below in the directory you'd like your code to be.
+                Follow its instructions to the best of your ability, just hit enter
+                if you're not sure what to fill in for an option. The second half of 
+                this command ensures the npm package type is "module."
+            </p>
+<pre class="code">
+npm init; npm pkg set type="module";
+</pre>
+
+            <p>
+                Install the latest version of notherbase-fs package and get access to its features. 
+            </p>
+<pre class="code">
+npm i notherbase-fs
+</pre>
+
+            <p>
+                Create a yourBase.js file and use the code below to import notherbase-fs, 
+                grab the local directory and initialize the server.
+            </p>
+<pre class="code">
+import NotherBaseFS from "notherbase-fs";
+import { fileURLToPath } from 'node:url';
+const __dirname = fileURLToPath(new URL('./world', import.meta.url));
+const yourBase = new NotherBaseFS(__dirname);
+</pre>
+            <p>
+                Create a file named .env and provide the environment variables below.
+                The PORT variable is needed for testing. Hosting platforms like Heroku
+                may provide their own. The MONGODB_URI and SECRET variables are 
+                needed to connect to a MongoDB database, which is needed for the 
+                server to start. The NOREPLY and EMAILPW variables allow the server to
+                send emails out with their Gmail account and an app-specific password.
+            </p>
+<pre class="code">
+PORT=4567
+MONGODB_URI="mongodb+srv://user:password@examplebase.compd.mongodb.net/examplebase?retryWrites=true&w=majority"
+SECRET="somesecret"
+NOREPLY="e@mail.com"
+EMAILPW="dendfsmdy!dtut"
+</pre>
+
+            <h4>Running the Development Server</h4>
+            <p>
+                Start the server with node or nodemon(recommended).
+            </p>
+<pre class="code">
+node yourBase.js
+</pre>
+<pre class="code">
+nodemon yourBase.js
+</pre>
+        </details>
+
         <details open>
             <summary><h3>notherbase-fs</h3></summary>
 
@@ -33,54 +126,6 @@
                     Install in another package to create a simple server and database
                     quickly.
                 </p>
-            </details>
-
-            <details>
-                <summary><h5>How to get started</h5></summary>
-                <p>
-                    By installing notherbase-fs to an npm package, one can easily setup 
-                    an Express.js server with automatic routes and a MongoDB connection.
-                </p>
-
-                <h6>Install notherbase-fs</h6>
-                <p>
-                    notherbase-fs uses ES Modules. Enusre the npm package type is "module."
-                </p>
-<pre class="code">
-npm i notherbase-fs
-</pre>
-
-                <p>
-                    Use the above code in the directory of your npm package in order
-                    to install the latest version of notherbase-fs to your package.
-                </p>
-
-                <h6>Create a Base</h6>
-                <p>
-                    The code below imports notherbase-fs, grabs the local directory
-                    and initializes the server. Insert it in the package's main file.
-                </p>
-<pre class="code">
-import NotherBaseFS from "notherbase-fs";
-import { fileURLToPath } from 'node:url';
-const __dirname = fileURLToPath(new URL('./world', import.meta.url));
-const notherBaseFS = new NotherBaseFS(__dirname);
-</pre>
-                <p>
-                    Create a file named .env and provide the environment variables below.
-                    The PORT variable is needed for testing. Hosting platforms like Heroku
-                    may provide their own. The MONGODB_URI and SECRET variables are 
-                    needed to connect to a MongoDB database, which is needed for the 
-                    server to start. The NOREPLY and EMAILPW variables allow the server to
-                    send emails out.
-                </p>
-<pre class="code">
-PORT=4567
-MONGODB_URI="mongodb+srv://user:password@examplebase.compd.mongodb.net/examplebase?retryWrites=true&w=majority"
-SECRET="somesecret"
-NOREPLY="e@mail.com"
-EMAILPW="dendfsmdy!dtut"
-</pre>
             </details>
 
             <details>
@@ -744,6 +789,71 @@ static db = mongoose.model('spirits', new mongoose.Schema({
 
         <details open>
             <summary><h3>notherbase</h3></summary>
+
+            <details>
+                <summary><h5>Development Collaboration</h5></summary>
+                
+                <p>
+                    Nother uses GitHub to store our code in the cloud and
+                    Git for version control. Fork the NotherBase repository linked
+                    below.
+                </p>
+                <a href="https://github.com/Mosshide/NotherBase">NotherBase GitHub Repository</a>
+                <p>
+                    Clone your fork to your computer locally.
+                </p>
+<pre class="code">
+git clone https://github.com/You/YourFork.git
+</pre>
+
+                <p>
+                    Enter the new directory and install all package dependencies.
+                </p>
+<pre class="code">
+cd YourFork
+npm i
+</pre>
+
+                <p>
+                    Create a file named .env and insert the environment variables below.
+                    Ask Wyatt for password details.
+                </p>
+<pre class="code">
+PORT=4567
+MONGODB_URI="mongodb+srv://genDev:password@notherbase.compd.mongodb.net/notherbase-test?retryWrites=true&w=majority"
+SECRET="ahahhahaah"
+NOREPLY="wyatt@notherbase.com"
+EMAILPW=""
+</pre>
+
+                <p>
+                    Make your changes then stage them, commit them and sync them to GitHub.
+                    This is all easily done in the left side panel of VS Code. Use the commands below
+                    if you need to do it in the terminal.
+                </p>
+
+<pre class="code">
+gaa
+gcsm "text describing your changes"
+</pre>
+<pre class="code">
+git push
+</pre>
+                <p>
+                    Git may get upset and require the details below - I don't know.
+                </p>
+<pre class="code">
+git config --global user.email you@example.com
+git config --global user.name “Your Name”
+</pre>
+
+                <p>
+                    When you have changes that you would like to suggest go live,
+                    create a new pull request for your fork on GitHub, from your
+                    live branch to NotherBase's "beta" branch. We'll try to respond 
+                    to it quickly, providing details if your code is rejected.
+                </p>
+            </details>
 
             <details>
                 <summary><h5>Spirit of NotherBase</h5></summary>
