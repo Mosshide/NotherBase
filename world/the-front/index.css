@@ -109,8 +109,28 @@
     cursor: pointer;
 }
 
+.toys {
+    overflow: hidden;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    background: url("/img/textures/abstract street art.png");
+    background-size: 100% 100%;
+    display: flex;
+    flex-wrap: wrap;
+    clip-path: polygon(5% 30%, 25% 25%, 30% 5%, 70% 5%, 75% 25%, 95% 30%, 95% 70%, 75% 75%, 70% 95%, 30% 95%, 25% 75%, 5% 70%);
+}
+
 .toy {
     overflow: hidden;
-    max-width: 200px;
-    max-height: 200px;
+    width: 50%;
+    height: 50%;
+    border-radius: 5px;
+}
+
+.toy img {
+    width: 200%;
+    height: 200%;
+    clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 35% 0, 35% 15%, 50% 15%, 50% 35%, 35% 35%, 35% 50%, 15% 50%, 15% 35%, 0 35%);
+    user-select: none;
 }
