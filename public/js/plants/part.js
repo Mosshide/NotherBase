@@ -37,7 +37,8 @@ class PlantPart extends Entity {
 
         //spawn self
         let spawn = Math.floor(Math.random() * this.behaviors[this.part].spawns.length);
-        this.rotateTo(this.behaviors[this.part].spawns[spawn].rotation.minAngle + Math.random() * (this.behaviors[this.part].spawns[spawn].rotation.maxAngle - this.behaviors[this.part].spawns[spawn].rotation.minAngle));
+        this.angle = this.behaviors[this.part].spawns[spawn].rotation.minAngle + Math.random() * (this.behaviors[this.part].spawns[spawn].rotation.maxAngle - this.behaviors[this.part].spawns[spawn].rotation.minAngle);
+        this.rotateTo(this.angle);
         this.moveTo(this.behaviors[this.part].spawns[spawn].position.minX + Math.random() * (this.behaviors[this.part].spawns[spawn].position.maxX - this.behaviors[this.part].spawns[spawn].position.minX),
                     this.behaviors[this.part].spawns[spawn].position.minY + Math.random() * (this.behaviors[this.part].spawns[spawn].position.maxY - this.behaviors[this.part].spawns[spawn].position.minY));
         this.setImage(this.behaviors[this.part].imgs[0]);
