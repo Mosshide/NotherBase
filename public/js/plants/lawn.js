@@ -41,8 +41,14 @@ class Lawn extends Ground {
     }
 
     onUpdate = (interval) => {
-        this.spawn(new PlantPart("grass", this.$ground, this.grass), 
-                    this.grass.stem.spawnRate.cooldown + Math.random() * this.grass.stem.spawnRate.potentialDelay,
-                    this.maxGrass);
+        let part = new PlantPart("grass", this.$ground, this.grass);
+        part.side = 1;
+        part.css("transition", `all .20s ease-out`)
+        part.$div.on("click", () => {
+            part.side = -1 * part.side;
+            part.rotateTo(part.angle + part.side * (Math.random() * 10));
+        });
+
+        this.spawn(part, this.grass.stem.spawnRate.cooldown + Math.random() * this.grass.stem.spawnRate.potentialDelay, this.maxGrass);
     }
 }
