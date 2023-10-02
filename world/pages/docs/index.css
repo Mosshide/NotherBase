@@ -46,3 +46,11 @@ details .output {
     border: var(--standardBorder);
     padding: var(--padding);
 }
+
+a {
+    display: block;
+}
+
+summary, h4 {
+    padding: var(--thickPadding);
+}
