@@ -1,5 +1,6 @@
 class Entity {
     constructor(name, kind, $parent) {
+        this.$div = null;
         this.$parent = $parent;
         this.children = [];
         this.named = {};
