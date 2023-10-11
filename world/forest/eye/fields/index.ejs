@@ -10,6 +10,8 @@
     
 <div class="dialogue" id="zerry"></div>
 
+<div class="game" id="basketball"></div>
+
 <hr>
 
 <a class="go" href="/forest/eye/fields/soil">
@@ -31,6 +33,7 @@
 </a>
 
 <script src="/js/dialogue.js"></script>
+<script src="/js/games/relatives.js"></script>
 <script>
     //npc dialogues
     let berryTree = function () {
@@ -109,4 +112,39 @@
         }
     };
     let zerryDialogue = new Dialogue("zerry", 2050, zerryTree, "/img/npcs/zerry.png");
+
+    class BasketballGame extends RelativesGame {
+        constructor() {
+            super("basketball");
+
+            this.render();
+            this.beat();
+        }
+
+        addInputs = () => {
+            
+            this.$header = $(`<h4>Basketball</h4>`).appendTo(this.$inputsBox);
+
+            this.$angleLabel = $(`<h6>Angle:</h6>`).appendTo(this.$inputsBox);
+            this.$inputs.angle = $(`<input type="number" id="angle">`).appendTo(this.$inputsBox);
+
+            this.$powerLabel = $(`<h6>Power:</h6>`).appendTo(this.$inputsBox);
+            this.$inputs.power = $(`<input type="number" id="power">`).appendTo(this.$inputsBox);
+        }
+
+        addOutputs = () => {
+            this.$outputs.result = $(`<p id="result">Result: </p>`).appendTo(this.$outputsBox);
+        }
+
+        resolve = (inputs, extResponse) => {
+            if (inputs.angle > 50 && inputs.angle < 80 && inputs.power > 5 && inputs.power < 9) this.$outputs.result.text("Result: Okay");
+            else this.$outputs.result.text("Result: Not");
+        }
+
+        update = () => {
+
+        }
+    }
+
+    const basketball = new BasketballGame();
 </script>
