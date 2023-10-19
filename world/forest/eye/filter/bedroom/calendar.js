@@ -14,7 +14,6 @@ class Calendar {
 
             base.do("load-shared-schedule", { route: "/forest/eye/filter/office" }).then((resp) => {
                 this.sharedTasks = resp.data;
-                console.log(this.userTasks, this.sharedTasks);
                 this.load();
             });
         });
