@@ -33,7 +33,7 @@ class Day {
             //load billboard
             this.$billboard = $(`<div class="billboard" id="today"></div>`).appendTo(this.$div);
             this.$billboard.append(`<h4>To Do</h4>`);
-            base.load("todo-today").then((res) => { this.billboard = new Billboard("today", res.items, { onSave: "save-todo" }); });
+            base.load("todo-today").then((res) => { this.billboard = new Billboard("today", res, { onSave: "save-todo" }); });
         }
 
         //render schedule
