@@ -7,7 +7,7 @@ export default async (req, user) => {
         //check that a valid item was sent
         if (Array.isArray(req.body.items)) {
             //save the document in the database
-            await spirit.commit(req.body.items);
+            await spirit.commit({ items: req.body.items });
         }
     }
 }
