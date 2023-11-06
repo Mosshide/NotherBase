@@ -217,7 +217,6 @@ article {
 h1, h2, h3, h4, h5, h6 {
     width: 100%;
     text-align: center;
-    text-shadow: 1px 1px 1px var(--shadowColor);
 }
 
 h1 {
@@ -411,7 +410,6 @@ input[type=checkbox] {
 
 .sign * {
     color: var(--darkWoodColor);
-    text-shadow: 1px 1px 2px var(--shadowColor);
     background: none;
 }
 
@@ -425,7 +423,6 @@ input[type=checkbox] {
 
 .info {
     color: var(--selectedTextColor);
-    text-shadow: 2px 2px var(--shadowColor);
     text-align: center;
 }
 
@@ -746,7 +743,7 @@ iframe {
     background: rgba(0, 0, 0, 0.021);
     backdrop-filter: blur(2px);
     overflow: hidden;
-    box-shadow: inset -1px -1px 5px rgba(0, 0, 0, 0.289), inset 1px 1px 5px rgba(255, 255, 255, 0.453);
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.289), inset 1px 1px 2px rgba(255, 255, 255, 0.453);
     border-radius: 3px;
 }
 
