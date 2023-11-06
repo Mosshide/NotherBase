@@ -2,6 +2,8 @@
     --footerTextColor : rgb(255, 255, 255);
     --bgColor: white;
     --darkBgColor: rgb(255, 255, 255);
+    --bgCanvas: rgb(233, 229, 224);
+    --bgCanvasGradient: linear-gradient(170deg, rgb(233, 229, 224) 0%, rgb(41, 48, 51) 100%);
     --darkBgColorGradient: linear-gradient(170deg, rgb(192, 204, 223) 0%, rgb(255, 255, 255) 100%);
     --veryDarkBgColorTransparent: rgba(15, 15, 15, 0.404);
     --veryDarkBgColor: rgb(121, 108, 103);
@@ -30,25 +32,32 @@ footer {
     width: 100%;
     max-width: 900px;
     padding: var(--padding);
+    background: rgba(255, 255, 255, 0.259);
     z-index: 1;
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: space-between;
 }
 
-footer input, footer p {
+footer p, footer a, footer a:hover {
     color: var(--footerTextColor);
     font-size: small;
     width: auto;
-    margin: 0;
-    margin-right: 5px;
-    height: 15px;
-    background-color: rgba(240, 248, 255, 0);
+    height: auto;
+    background: none;
     padding: 0;
+    border-radius: 0;
+}
+
+footer button, footer button:hover {
+    border-radius: 2px;
+    border: none;
 }
 
 footer a, footer a:hover {
-    color: var(--footerTextColor);
-    border: none;
-    font-size: small;
     height: auto;
+    border: none;
+    border-bottom: 1px solid var(--footerTextColor);
 }
 
 .form {
@@ -89,10 +98,11 @@ footer a, footer a:hover {
     margin: 0;
     background-color: white;
     list-style: none;
+    border: none;
 }
 
 .tickets li {
-    border: var(--standardBorder);
+    border: none;
     padding: 10px;
 }
 
@@ -116,18 +126,13 @@ footer a, footer a:hover {
     width: 100%;
     margin: 0;
     margin-bottom: 20px;
+    padding: 10px;
 }
 
 .folded {
     height: 50px !important;
     overflow: hidden;
     transition: height .3s ease;
-}
-
-#alert {
-    width: 100%;
-    text-align: center;
-    margin: 10px;
 }
 
 .search-box {
