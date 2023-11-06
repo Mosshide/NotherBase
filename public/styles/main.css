@@ -746,7 +746,7 @@ iframe {
     background: rgba(0, 0, 0, 0.021);
     backdrop-filter: blur(2px);
     overflow: hidden;
-    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.336);
+    box-shadow: inset -1px -1px 5px rgba(0, 0, 0, 0.289), inset 1px 1px 5px rgba(255, 255, 255, 0.453);
     border-radius: 3px;
 }
 
