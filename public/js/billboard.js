@@ -72,6 +72,7 @@ class Billboard {
 
     deleteItem = async (which = this.currentItem) => {
         if (which >= 0) this.items.splice(which, 1);
+        this.currentItem = -1;
 
         this.save();
     }
@@ -95,11 +96,11 @@ class Billboard {
                     if (!this.creatingNew) {
                         this.submit(this.items[this.currentItem].type);
                     }
-                    else this.submit();
+                    else this.submit("txt");
                 } 
             });
             this.$submit = $(`<button id="submit">Submit Text</button>`).appendTo(this.$edit);
-            this.$submit.click(() => this.submit());
+            this.$submit.click(() => { this.submit("txt"); });
             this.$submitImg = $(`<button id="submit-img">Submit Image URL</button>`).appendTo(this.$edit);
             this.$submitImg.click(() => { this.submit("img"); });
             this.$delete = $(`<button id="delete">Delete</button>`).appendTo(this.$edit);
