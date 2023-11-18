@@ -560,8 +560,116 @@ class Browser {
         this.buttons = new BrowserButtons(id, this);
         this.buttons.hide();
 
-        this.render();
         Browser.attemptStyle();
+        this.render();
+    }
+
+    static styled = false;
+
+    static attemptStyle() {
+        if (!Browser.styled) {
+            $("head").append(`<link href='/styles/browser.css' rel='stylesheet' />`);
+            Browser.styled = true;
+        }
+    }
+
+    render = () => {
+        this.$div = $(`.browser${this.id ? `#${this.id}` : ""}`);
+
+        //read box
+        this.readBox.render().appendTo(this.$div);
+
+        //edit box
+        let $edit = this.editBox.render();
+        this.editBox.hide();
+        $edit.appendTo(this.$div);
+
+        this.$div.append(this.buttons.$div);
+    }
+
+    save = async () => {
+        this.item = this.editBox.save();
+        
+        if (this.settings.onSave) this.settings.onSave(this.item);
+
+        this.read();
+    }
+
+    read = (item = this.item, parent = this.parent, fields = this.fields, editable = this.editable) => {
+        this.item = item;
+        this.parent = parent;
+        this.fields = fields;
+        this.editable = editable;
+
+        this.editBox.hide();
+
+        this.buttons.hide("save");
+        this.buttons.hide("cancel");
+
+        if (this.editable) this.buttons.show("edit");
+        else this.buttons.hide("edit");
+
+        this.readBox.show();
+
+        this.readBox.load(this.item, this.fields);
+    }
+
+    edit = (item = this.item, parent = this.parent, fields = this.fields, editable = this.editable) => {
+        this.editable = editable;
+
+        if (this.editable) {
+            this.item = item;
+            this.parent = parent;
+            this.fields = fields;
+    
+            this.readBox.hide();
+
+            this.buttons.hide("edit");
+            this.buttons.show("save");
+            this.buttons.show("cancel");
+            this.editBox.show();
+    
+            this.editBox.load(item, this.fields);
+
+            if (this.settings.onEdit) this.settings.onEdit();
+        }
+    }
+
+    cancel = () => {
+        this.editBox.hide();
+
+        this.buttons.hide("save");
+        this.buttons.hide("cancel");
+
+        if (this.editable) this.buttons.show("edit");
+        else this.buttons.hide("edit");
+
+        this.readBox.show();
+
+        if (this.settings.onCancel) this.settings.onCancel();
+    }
+}
+
+class TreeBrowser {
+    constructor(id, fields = new NBField(), settings = {}) {
+        this.id = id;
+        this.fields = fields;
+        this.editable = false;
+        this.settings = {
+            onSave: null,
+            onEdit: null,
+            onCancel: null,
+            disableSave: false,
+            ...settings
+        };
+
+        this.readBox = new ReadBox(this.fields);
+        this.editBox = new EditBox(this.fields, false);
+        this.buttons = new BrowserButtons(id, this);
+        this.buttons.hide();
+
+        Browser.attemptStyle();
+        this.render();
     }
 
     /**

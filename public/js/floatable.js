@@ -113,6 +113,18 @@ class FloatBoard extends Ground{
         this.items = {};
 
         this.load();
+
+        
+        FloatBoard.attemptStyle();
+    }
+
+    static styled = false;
+
+    static attemptStyle() {
+        if (!FloatBoard.styled) {
+            $("head").append(`<link href='/styles/floatables.css' rel='stylesheet' />`);
+            FloatBoard.styled = true;
+        }
     }
 
     updateMouse = (event) => {
