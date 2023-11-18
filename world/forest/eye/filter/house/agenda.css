@@ -1,0 +1,16 @@
+.weather {
+    padding: 10px;
+    max-height: 10vh;
+}
+
+.search-box {
+    border: none;
+}
+
+.search-box .selector {
+    border: none;
+}
+
+.search-box .selector li {
+    border: none;
+}

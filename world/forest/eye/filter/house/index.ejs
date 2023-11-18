@@ -1,31 +1,99 @@
 <style>
+    <%- include("./index.css"); %>
+    <%- include("./agenda.css"); %>
     <%- include("./tasks.css"); %>
 </style>
+<link rel="stylesheet" href="/styles/browser.css">
+<link rel="stylesheet" href="/styles/billboard.css">
 
-<div class="floatables">
-    <div class="browser"></div>
-    <div class="search-box"></div>
-    <div class="meta buttons"></div>
-</div>
+<section class="porch">
+    <input type="text" class="mailbox">
+</section>
+
+<!-- <section class="agenda" id="upstairs"></section> -->
+
+<div class="meta buttons"></div>
+<div class="browser"></div>
+<div class="search-box"></div>
 
 <hr>
 
-<a class="return" href="/forest/eye/filter/living-room">
-    Exit the Office
+<a class="go" href="/forest/eye/filter/tree-house">
+    Climb up the nearby Tree House
+</a>
+
+<hr>
+
+<a class="to" href="/forest/eye/filter/cave">
+    Go to Cave
+</a>
+
+<a class="to" href="/forest/eye/filter/tower">
+    Go to the Tower
+</a>
+
+<a class="to" href="/forest/eye/town-hall">
+    Go to the Town Hall
+</a>
+
+<hr>
+
+<a class="return" href="/forest/eye/library">
+    Return to the Library
+</a>
+
+<a class="return" href="/forest/eye/church">
+    Return to the Church
 </a>
 
 <script src="/js/util/weather.js"></script>
 <script src="/js/util/buttons.js"></script>
 <script src="/js/util/search-box.js"></script>
 <script src="/js/util/browser.js"></script>
+<script src="/js/billboard.js"></script>
 <script src="/js/entity.js"></script>
-<script src="/js/floatable.js"></script>
+<script src="/js/plants/part.js"></script>
 <script>
     const weather = new WeatherSystem();
 
+    const $mailbox = $(".mailbox");
+    let mailboxCD = 1000;
+    let lastMailboxUpdate = 0;
+
+    base.load("house-mailbox").then((res) => {
+        if (typeof res == "string") $mailbox.val(res);
+        //console.log(res);
+    });
+
+    $mailbox.on("input", (e) => { 
+        lastMailboxUpdate = Date.now();
+
+        setTimeout(() => {
+            let now = Date.now();
+            if (now - lastMailboxUpdate > mailboxCD) {
+                base.do("set-mailbox", { item: e.currentTarget.value });
+            }
+        }, mailboxCD);
+    });
+
+    const date = new Date();
+    <%- include("./agenda.js"); %>
+    const agenda = new Agenda("upstairs");
     const browser = new Browser();
-    const search = new SearchBox();
-    const metaBrowser = new MetaBrowser("Your Schedule", browser, search);
+    browser.hide();
+    const metaBrowser = new MetaBrowser("Your Schedule", browser, agenda);
+    const weekday = ["Sun", "Mon"," Tue", "Wed", "Thu", "Fri", "Sat"];
+    //const weekday = ["Wednesday", "Wednesday"," Wednesday", "Wednesday", "Wednesday", "Wednesday", "Wednesday"];
+    let dayName = weekday[date.getDay()];
+    $(`<div class="date">${dayName}: ${date.toLocaleDateString()}</div>`).appendTo(metaBrowser.$div);
+    //get weather forecast
+    let $weather = $(`<div class="weather">Loading the weather outside.</div>`).appendTo(metaBrowser.$div);
+    $.get(`https://api.weather.gov/points/46.7253,-122.9534`, (data) => {
+        if (data.properties.forecast) $.get(data.properties.forecast, (data) => {
+            let current = data.properties.periods[0];
+            $weather.text(`${current.name}: ${current.temperature} °F, ${current.shortForecast}, ${current.windSpeed}`);
+        });
+    });
     metaBrowser.addService("schedule", {
         fields: new NBField({
         name: "task",
@@ -176,5 +244,4 @@
         }
     });
 
-    const floatBoard = new FloatBoard();
 </script>

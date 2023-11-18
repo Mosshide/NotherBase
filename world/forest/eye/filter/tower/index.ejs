@@ -1,6 +1,23 @@
 <style>
     <%- include("./wizard-tower.css"); %>
+    <%- include("./yard.css"); %>
 </style>
+
+<div class="yard">
+    <div class="sky">
+        <h4>The Yard</h4>
+        
+        <div class="ray"></div>
+        <div class="ray"></div>
+        <div class="ray"></div>
+        <div class="ray"></div>
+        <div class="ray"></div>
+        <div class="sun"></div>
+    </div>
+
+    <div class="ground">
+    </div>
+</div>
 
 <p>
     The tower stands before you, wooden door locked.
@@ -61,6 +78,10 @@
 <script src="/js/entity.js"></script>
 <script src="/js/floatable.js"></script>
 <script>
+    //yard
+    <%- include("./yard.js"); %>
+    let yard = new Yard();
+
     $("#knock").on("click", function knock() {
         $("#extra").text("You knocked on the tower's door. Surely you've been heard.");
         $("#knock").toggleClass("invisible");

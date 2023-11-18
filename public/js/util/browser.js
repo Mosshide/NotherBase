@@ -1,6 +1,10 @@
 class BrowserButtons extends Buttons {
     constructor(id, browser) {
         super(id, [
+            new Button("new", {
+                onClick: () => { browser.new(); },
+                label: "New"
+            }),
             new Button("edit", {
                 onClick: () => { browser.edit(); },
                 label: "Edit"
@@ -12,6 +16,10 @@ class BrowserButtons extends Buttons {
             new Button("cancel", {
                 onClick: () => { browser.cancel(); },
                 label: "Cancel"
+            }),
+            new Button("delete", {
+                onClick: () => { browser.attemptDelete(); },
+                label: "Delete"
             })
         ], {
             isTabs: true
@@ -518,7 +526,22 @@ class EditBox extends ViewBox {
     }
 }
 
+/**
+ * A browser that shows or edits spirit data.
+ * @class
+ */
 class Browser {
+    /**
+     * Represents spirit data with fields, settings, and buttons.
+     * @constructor
+     * @param {string} id - The ID of the browser.
+     * @param {NBField} [fields=new NBField()] - The fields of the spirit data.
+     * @param {Object} [settings={}] - The settings of the browser.
+     * @param {Function} [settings.onSave=null] - The function to call when the spirit data is saved.
+     * @param {Function} [settings.onEdit=null] - The function to call when the spirit data is edited.
+     * @param {Function} [settings.onCancel=null] - The function to call when the edit is cancelled.
+     * @param {boolean} [settings.disableSave=false] - Whether to disable the save button.
+     */
     constructor(id, fields = new NBField(), settings = {}) {
         this.id = id;
         this.fields = fields;
@@ -527,6 +550,7 @@ class Browser {
             onSave: null,
             onEdit: null,
             onCancel: null,
+            onDelete: null,
             disableSave: false,
             ...settings
         };
@@ -540,8 +564,16 @@ class Browser {
         Browser.attemptStyle();
     }
 
+    /**
+     * Indicates whether the browser has been styled or not.
+     * @type {boolean}
+     */
     static styled = false;
 
+    /**
+     * Attempts to add a stylesheet to the head of the document if it hasn't been added already.
+     * @returns {void}
+     */
     static attemptStyle() {
         if (!Browser.styled) {
             $("head").append(`<link href='/styles/browser.css' rel='stylesheet' />`);
@@ -549,6 +581,11 @@ class Browser {
         }
     }
 
+    /**
+     * Renders the ReadBoxes or EditBoxes on the Browser.
+     * @function
+     * @returns {void}
+     */
     render = () => {
         this.$div = $(`.browser${this.id ? `#${this.id}` : ""}`);
 
@@ -563,7 +600,13 @@ class Browser {
         this.$div.append(this.buttons.$div);
     }
 
+    /**
+     * Saves the edited item and triggers onSave event.
+     * @async
+     */
     save = async () => {
+        this.onSave();
+        
         this.item = this.editBox.save();
         
         if (this.settings.onSave) this.settings.onSave(this.item);
@@ -571,7 +614,54 @@ class Browser {
         this.read();
     }
 
+    attemptDelete = () => {
+        this.buttons.delete.$div.empty();
+        this.buttons.delete.disable();
+
+        this.serving.lastAttempt = Date.now();
+
+        this.$cancel = $(`<button id="cancel-delete">Cancel</button>`).appendTo(this.buttons.delete.$div);
+        this.$cancel.on("click", (e) => {
+            this.cancelDelete();
+            e.stopPropagation();
+        });
+
+        this.$confirm = $(`<button id="confirm-delete">Confirm Delete</button>`).appendTo(this.buttons.delete.$div);
+        this.$confirm.on("click", (e) => {
+            if (Date.now() - this.serving.lastAttempt > 1000) {
+                this.delete();
+                e.stopPropagation();
+            }
+        });
+    }
+
+    cancelDelete = () => {
+        this.buttons.delete.$div.empty();
+        this.buttons.delete.$div.text("Delete");
+        this.buttons.delete.enable();
+    }
+
+    delete = async () => {
+        if (this.settings.onDelete) this.settings.onDelete();
+
+        this.clear();
+    }
+
+    clear = () => {
+        this.item = {};
+        this.readBox.load({}, this.fields);
+    }
+
+    /**
+     * Reads the item and displays it in read mode.
+     * @param {Object} [item=this.item] - The item to be read.
+     * @param {Object} [parent=this.parent] - The parent object of the Browser.
+     * @param {Array} [fields=this.fields] - The fields to be displayed.
+     * @param {boolean} [editable=this.editable] - Whether the item is editable or not.
+     */
     read = (item = this.item, parent = this.parent, fields = this.fields, editable = this.editable) => {
+        this.onRead();
+        
         this.item = item;
         this.parent = parent;
         this.fields = fields;
@@ -590,7 +680,16 @@ class Browser {
         this.readBox.load(this.item, this.fields);
     }
 
+    /**
+     * Edits the item with the given parameters.
+     * @param {Object} [item=this.item] - The item to be edited.
+     * @param {Object} [parent=this.parent] - The parent object of the Browser.
+     * @param {Array} [fields=this.fields] - The fields of the item to be edited.
+     * @param {boolean} [editable=this.editable] - Whether the item is editable or not.
+     */
     edit = (item = this.item, parent = this.parent, fields = this.fields, editable = this.editable) => {
+        this.onEdit();
+        
         this.editable = editable;
 
         if (this.editable) {
@@ -601,6 +700,7 @@ class Browser {
             this.readBox.hide();
 
             this.buttons.hide("edit");
+            this.buttons.hide("new");
             this.buttons.show("save");
             this.buttons.show("cancel");
             this.editBox.show();
@@ -611,7 +711,21 @@ class Browser {
         }
     }
 
+    /**
+     * Calls the edit function with an empty object.
+     */
+    new = () => {
+        this.edit({}, this.parent, this.fields, this.editable);
+    }
+
+    /**
+     * Function to cancel the edit operation and revert back to read mode.
+     * @function cancel
+     * @returns {void}
+     */
     cancel = () => {
+        this.onCancel();
+
         this.editBox.hide();
 
         this.buttons.hide("save");
@@ -624,11 +738,59 @@ class Browser {
 
         if (this.settings.onCancel) this.settings.onCancel();
     }
+
+    /**
+     * Hides the div by adding the "invisible" class to it.
+     * @function
+     */
+    hide = () => {
+        this.$div.addClass("invisible");
+    }
+
+    /**
+     * Shows the div element by removing the "invisible" class.
+     * @function
+     */
+    show = () => {
+        this.$div.removeClass("invisible");
+    }
+
+    /**
+     * Function called when saving data.
+     * @function
+     */
+    onSave = () => {}
+
+    /**
+     * Function called when reading data.
+     * @function
+     */
+    onRead = () => {}
+
+    /**
+     * Function called when editing data.
+     * @function
+     */
+    onEdit = () => {}
+
+    /**
+     * Function called when cancelling edits.
+     * @function
+     */
+    onCancel = () => {}
 }
 
 //
 
 class MetaBrowser extends Buttons {
+    /**
+     * Represents a browser utility for browsing and managing services.
+     * @constructor
+     * @param {string} [label="Browse"] - The label for the browser.
+     * @param {Object} [browser=null] - The browser object.
+     * @param {Object} [searchBox=null] - The search box object.
+     * @param {string} [id=null] - The ID for the browser.
+     */
     constructor(label = "Browse", browser = null, searchBox = null, id = null) {
         super(id, {}, {
             $origin: $(`.meta.buttons${id ? `#${id}` : ""}`),
@@ -640,20 +802,9 @@ class MetaBrowser extends Buttons {
         this.browser.settings.onSave = this.save;
         this.browser.settings.onEdit = this.edit;
         this.browser.settings.onCancel = this.cancel;
+        this.browser.settings.onDelete = this.delete;
         this.searchBox = searchBox;
         this.selectedService = "";
-
-        this.addButton(new Button("new", {
-            onClick: this.new,
-            label: "New"
-        }));
-        this.buttons.new.hide();
-
-        this.addButton(new Button("delete", {
-            onClick: this.attemptDelete,
-            label: "Delete"
-        }));
-        this.buttons.delete.hide();
 
         this.$alert = $(`<p class="alert invisible"></p>`).appendTo(this.$div);
     }
@@ -688,33 +839,6 @@ class MetaBrowser extends Buttons {
 
             this.select(0, "read", true, true);
         }
-    }
-
-    attemptDelete = () => {
-        this.buttons.delete.$div.empty();
-        this.buttons.delete.disable();
-
-        this.serving.lastAttempt = Date.now();
-
-        this.$cancel = $(`<button id="cancel-delete">Cancel</button>`).appendTo(this.buttons.delete.$div);
-        this.$cancel.on("click", (e) => {
-            this.cancelDelete();
-            e.stopPropagation();
-        });
-
-        this.$confirm = $(`<button id="confirm-delete">Confirm Delete</button>`).appendTo(this.buttons.delete.$div);
-        this.$confirm.on("click", (e) => {
-            if (Date.now() - this.serving.lastAttempt > 1000) {
-                this.delete();
-                e.stopPropagation();
-            }
-        });
-    }
-
-    cancelDelete = () => {
-        this.buttons.delete.$div.empty();
-        this.buttons.delete.$div.text("Delete");
-        this.buttons.delete.enable();
     }
 
     save = async (item) => {
@@ -835,18 +959,6 @@ class MetaBrowser extends Buttons {
 
         this.selectedService = service;
         this.serving = this.services[this.selectedService];
-
-        if (this.serving.editable) {
-            if (this.serving.multiple) {
-                this.buttons.new.show();
-            }
-
-            this.buttons.delete.show();
-        }
-        else {
-            this.buttons.new.hide();
-            this.buttons.delete.hide();
-        }
 
         this.buttons[service].hide();
 
