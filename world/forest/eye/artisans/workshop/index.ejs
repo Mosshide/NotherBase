@@ -1,8 +1,9 @@
 <div class="floatables">
     <div class="browser"></div>
-    <div class="search-box"></div>
-    <div class="meta buttons"></div>
 </div>
+
+<div class="search-box"></div>
+<div class="meta buttons"></div>
 
 <hr>
 
@@ -16,9 +17,9 @@
 <script src="/js/entity.js"></script>
 <script src="/js/floatable.js"></script>
 <script>
-    const browser = new Browser();
+    const treeBrowser = new TreeBrowser();
     const search = new SearchBox();
-    const metaBrowser = new MetaBrowser("Your Projects", browser, search);
+    const metaBrowser = new MetaBrowser("Your Projects", treeBrowser, search);
     metaBrowser.addService("projects", {
         fields: new NBField({
             name: "projects",
