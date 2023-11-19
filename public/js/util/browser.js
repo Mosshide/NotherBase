@@ -648,6 +648,14 @@ class Browser {
 
         if (this.settings.onCancel) this.settings.onCancel();
     }
+
+    hide = () => {
+        this.$div.addClass("invisible");
+    }
+
+    show = () => {
+        this.$div.removeClass("invisible");
+    }
 }
 
 class TreeBrowser {

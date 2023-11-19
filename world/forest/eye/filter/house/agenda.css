@@ -1,16 +1,38 @@
+.meta.buttons {
+    display: flex;
+    flex-wrap: wrap;
+}
+
 .weather {
-    padding: 10px;
-    max-height: 10vh;
+    width: 50%;
+    padding: var(--thickPadding);
+}
+
+.date {
+    width: 50%;
+    padding: var(--thickPadding);
 }
 
 .search-box {
     border: none;
+    background: none;
+    margin-bottom: var(--margin);
+    margin-top: var(--tabMargin);
+}
+
+.search-box .buttons {
+    border: none;
+    background: none;
+    top: calc(-1 * var(--tabMargin));
 }
 
 .search-box .selector {
     border: none;
+    padding: var(--padding);
+    background: none;
 }
 
 .search-box .selector li {
     border: none;
+    padding: var(--padding);
 }

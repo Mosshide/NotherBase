@@ -80,8 +80,10 @@ class SearchBox {
         }
     }
 
-    renderSearchResults = () => {
+    renderSearchResults = function() {
         this.$searchList.empty();
+
+        console.log("dfshfgh");
 
         for (let i = 0; i < this.items.length; i++) {
             if (this.items[i]) {
