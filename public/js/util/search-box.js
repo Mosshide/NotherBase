@@ -1,17 +1,60 @@
+Filters = class Filters {
+    constructor(onFilterChange = null) {
+        this.filter = "";
+        this.onFilterChange = onFilterChange;
+
+        this.render();
+    }
+
+    render = () => {
+        this.$div = $(`<div class="filters invisible"></div>`);
+        this.$search = $(`<input type="text" placeholder="search">`).appendTo(this.$div);
+        this.$search.on("input", (e) => { return this.setFilter(e.currentTarget.value); });
+        
+        return this.$div;
+    }
+
+    setFilter = (filter) => {
+        this.filter = filter;
+        this.$search.val(filter);
+        if (this.onFilterChange) this.onFilterChange();
+    }
+
+    getFilter = () => {
+        return this.filter.toLowerCase();
+    }
+
+    show = () => {
+        this.$div.removeClass("invisible");
+    }
+
+    hide = () => {
+        this.$div.addClass("invisible");
+    }
+
+    toggle = () => {
+        this.$div.toggleClass("invisible");
+    }
+}
+
+SearchButtons = class SearchButtons extends Buttons {
+    constructor(id, searchBox) {
+        super(id, [], {
+            isTabs: true
+        });
+    }
+}
+
 class SearchBox {
-    constructor(id, settings) {
-        this.settings = {
-            parent: null,
-            ...settings
-        };
+    constructor(id = null, parent) {
+        this.id = id;
+        this.parent = parent;
 
         SearchBox.attemptStyle();
 
-        this.$div = $(`.search-box${id ? `#${id}` : ""}`);
+        this.$div = $(`<div class="search-box" id="${id ? `#${id}` : ""}"></div>`);
         this.$searchList = $(`<ul class="selector"></ul>`).appendTo(this.$div);
-        this.filters = new SearchBox.Filters(this.renderSearchResults);
-        this.$div.append(this.filters.$div);
-        this.buttons = new SearchBox.SearchButtons(id, this);
+        this.buttons = new SearchButtons(id, this);
         
         this.selected = -1;
         this.items = [];
@@ -28,62 +71,17 @@ class SearchBox {
         }
     }
 
-    static Filters = class Filters {
-        constructor(onFilterChange = null) {
-            this.filter = "";
-            this.onFilterChange = onFilterChange;
-
-            this.render();
-        }
-    
-        render = () => {
-            this.$div = $(`<div class="filters invisible"></div>`);
-            this.$search = $(`<input type="text" placeholder="search">`).appendTo(this.$div);
-            this.$search.on("input", (e) => { return this.setFilter(e.currentTarget.value); });
-            
-            return this.$div;
-        }
-    
-        setFilter = (filter) => {
-            this.filter = filter;
-            this.$search.val(filter);
-            if (this.onFilterChange) this.onFilterChange();
-        }
-    
-        getFilter = () => {
-            return this.filter.toLowerCase();
-        }
-
-        show = () => {
-            this.$div.removeClass("invisible");
-        }
-
-        hide = () => {
-            this.$div.addClass("invisible");
-        }
-
-        toggle = () => {
-            this.$div.toggleClass("invisible");
-        }
+    addFilters = (filters = new Filters(this.renderSearchResults)) => {
+        this.filters = filters;
+        this.$div.append(this.filters.$div);
+        this.buttons.addButton(new Button("toggleFilters", {
+            onClick: this.filters.toggle,
+            label: "Filters"
+        }));
     }
 
-    static SearchButtons = class SearchButtons extends Buttons {
-        constructor(id, searchBox) {
-            super(id, [
-                new Button("toggleFilters", {
-                    onClick: searchBox.filters.toggle,
-                    label: "Filters"
-                })
-            ], {
-                isTabs: true
-            });
-        }
-    }
-
-    renderSearchResults = function() {
+    renderSearchResults = () => {
         this.$searchList.empty();
-
-        console.log("dfshfgh");
 
         for (let i = 0; i < this.items.length; i++) {
             if (this.items[i]) {
@@ -94,7 +92,7 @@ class SearchBox {
                         let $result = $(`<li id="${i}">${label}</li>`).appendTo(this.$searchList);
                         $result.on("click", (e) => { 
                             this.select(e.currentTarget);
-                            if (this.settings.parent) this.settings.parent.select(i, "read", true);
+                            if (this.parent) this.parent.select(i, "read", true);
                         });
                     }
                 }
@@ -103,7 +101,7 @@ class SearchBox {
                         let $result = $(`<li id="${i}">Name Error</li>`).appendTo(this.$searchList);
                         $result.on("click", (e) => { 
                             this.select(e.currentTarget);
-                            if (this.settings.parent) this.settings.parent.select(i, "read", true);
+                            if (this.parent) this.parent.select(i, "read", true);
                         });
                     }
                 }
@@ -115,8 +113,7 @@ class SearchBox {
         }
     }
 
-    load = (data, parent = null, which = null, filter = null) => {
-        this.settings.parent = parent;
+    load = (data, which = null, filter = null) => {
         this.items = data;
         this.renderSearchResults();
         if (which) this.select(null, which);

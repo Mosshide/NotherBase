@@ -1,14 +1,14 @@
 .search-box {
     position: relative;
-    height: 300px;
+    height: 50vh;
     width: var(--fillFromMargin);
     margin: var(--margin);
-    border: var(--standardBorder);
-    background: rgb(25, 25, 25);
+    border: none;
+    background: none;
+    margin-top: var(--tabMargin);
     align-content: flex-start;
     gap: 0;
     padding: 1px;
-    margin-bottom: var(--tabMargin);
 }
 
 .floating .search-box {
@@ -28,9 +28,10 @@
     overflow: auto;
     width: 100%;
     margin: 0;
-    padding: 0;
     align-content: flex-start;
-    border: 1px dotted var(--textColor);
+    border: none;
+    padding: var(--padding);
+    background: none;
 }
 
 .search-box .filters {
@@ -43,4 +44,15 @@
     overflow: auto;
     z-index: 6;
     margin: var(--margin);
+}
+
+.search-box .selector li {
+    border: none;
+    padding: var(--padding);
+}
+
+.search-box .buttons {
+    border: none;
+    background: none;
+    top: calc(-1 * var(--tabMargin));
 }

@@ -1,7 +1,6 @@
 <style>
     <%- include("./index.css"); %>
     <%- include("./agenda.css"); %>
-    <%- include("./tasks.css"); %>
 </style>
 <link rel="stylesheet" href="/styles/browser.css">
 <link rel="stylesheet" href="/styles/billboard.css">
@@ -10,11 +9,10 @@
     <input type="text" class="mailbox">
 </section>
 
-<!-- <section class="agenda" id="upstairs"></section> -->
+<div class="date"></div>
+<div class="weather">Loading the weather outside...</div>
 
-<div class="meta buttons"></div>
-<div class="browser"></div>
-<div class="search-box"></div>
+<div class="meta"></div>
 
 <hr>
 
@@ -73,6 +71,21 @@
                 base.do("set-mailbox", { item: e.currentTarget.value });
             }
         }, mailboxCD);
+    });
+
+    //date
+    const weekday = ["Sun", "Mon"," Tue", "Wed", "Thu", "Fri", "Sat"];
+    //const weekday = ["Wednesday", "Wednesday"," Wednesday", "Wednesday", "Wednesday", "Wednesday", "Wednesday"];
+    const date = new Date();
+    let dayName = weekday[date.getDay()];
+    $(`.date`).text(`${dayName}: ${date.toLocaleDateString()}`);
+
+    //get weather forecast
+    $.get(`https://api.weather.gov/points/46.7253,-122.9534`, (data) => {
+        if (data.properties.forecast) $.get(data.properties.forecast, (data) => {
+            let current = data.properties.periods[0];
+            $(`.weather`).text(`${current.name}: ${current.temperature} °F, ${current.shortForecast}, ${current.windSpeed}`);
+        });
     });
 
     <%- include("./agenda.js"); %>

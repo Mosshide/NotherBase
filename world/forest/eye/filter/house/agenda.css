@@ -1,38 +1,33 @@
-.meta.buttons {
-    display: flex;
-    flex-wrap: wrap;
-}
-
 .weather {
     width: 50%;
     padding: var(--thickPadding);
 }
 
-.date {
+main>.date {
     width: 50%;
     padding: var(--thickPadding);
 }
 
-.search-box {
-    border: none;
-    background: none;
-    margin-bottom: var(--margin);
-    margin-top: var(--tabMargin);
+.browser .shared h6 {
+    width: 50% !important;
 }
 
-.search-box .buttons {
-    border: none;
-    background: none;
-    top: calc(-1 * var(--tabMargin));
+.browser .shared p {
+    width: 50% !important;
 }
 
-.search-box .selector {
-    border: none;
-    padding: var(--padding);
-    background: none;
+.browser .sharing .nested.name {
+    margin: 0 !important;
 }
 
-.search-box .selector li {
-    border: none;
-    padding: var(--padding);
+.browser .nested.shared {
+    margin: 0 !important;
+}
+
+.browser .nested.frequency {
+    width: 50% !important;
+}
+
+.browser .nested.recurring {
+    width: 50% !important;
 }
