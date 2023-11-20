@@ -17,9 +17,10 @@
 <script src="/js/entity.js"></script>
 <script src="/js/floatable.js"></script>
 <script>
-    const treeBrowser = new TreeBrowser();
-    const search = new SearchBox();
-    const metaBrowser = new MetaBrowser("Your Projects", treeBrowser, search);
+    const metaBrowser = new MetaBrowser({
+        label: "Your Recipes",
+        usBrowser: TreeBrowser
+    });
     metaBrowser.addService("projects", {
         fields: new NBField({
             name: "projects",

@@ -25,9 +25,7 @@
 
 <div class="tower">
     <div class="floatables">
-        <div class="browser"></div>
-        <div class="search-box"></div>
-        <div class="meta buttons"></div>
+        <div class="meta"></div>
     </div>
 
     <div id="cover"></div>
@@ -95,10 +93,9 @@
             $(e.target.parentElement).find(".content").toggleClass("invisible");
         });
 
-        const browser = new Browser();
-        const search = new SearchBox();
-
-        const metaTower = new MetaBrowser("Tower", browser, search);
+        const metaTower = new MetaBrowser({
+            label: "Tower"
+        });
         metaTower.addService("items", {
             fields: new NBField({
                 name: "item",

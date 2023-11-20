@@ -984,8 +984,14 @@ class MetaBrowser {
             },
             label: `New`
         }));
+        this.buttons.hide();
         this.$div.append(this.buttons.$div);
         this.$alert = $(`<p class="alert invisible"></p>`).appendTo(this.$div);
+        this.$hideAlert = $(`<button class="hide">X</button>`).appendTo(this.$alert);
+        this.$hideAlert.on("click", () => {
+            this.$alert.addClass("invisible");
+        });
+
 
         if (this.settings.useBrowser) this.addBrowser();
         if (this.settings.useSearchBox) this.addSearchBox();
@@ -993,6 +999,10 @@ class MetaBrowser {
 
     setAlert = (msg) => {
         this.$alert.text(msg);
+        this.$hideAlert = $(`<button class="hide">X</button>`).appendTo(this.$alert);
+        this.$hideAlert.on("click", () => {
+            this.$alert.addClass("invisible");
+        });
         this.$alert.removeClass("invisible");
     }
 
@@ -1150,6 +1160,9 @@ class MetaBrowser {
         this.serving = this.services[this.selectedService];
 
         this.buttons.hide(this.selectedService);
+
+        if (this.serving.editable) this.buttons.show("new");
+        else this.buttons.hide("new");
 
         this.updateSearch();
         if (!passToBrowser) this.browser.hide();

@@ -170,10 +170,10 @@
     padding: 1px;
 }
 
-.browser #alert {
+.meta .alert {
     position: absolute;
-    bottom: 5px;
-    height: 10vh;
+    top: 50px;
+    height: 100px;
     width: var(--fillFromMargin);
     left: var(--margin);
     background-color: var(--bgColor);
@@ -181,9 +181,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 50;
 }
 
-.browser #alert #hide {
+.meta .alert .hide {
     position: absolute;
     top: 5px;
     height: 30px;

@@ -321,9 +321,6 @@ const reject = (e) => {
     });
 }
 
-const groupsBrowser = new Browser();
-const groupsSearch = new SearchBox();
-
 let removeButton = new Button("remove", {
     onClick: startRemove,
     label: "Remove"
@@ -379,7 +376,9 @@ let cancelRejectButton = new Button("cancel-reject", {
     hidden: true
 })
 
-const metaGroups = new MetaBrowser("Your Groups", groupsBrowser, groupsSearch);
+const metaGroups = new MetaBrowser({
+    label: "Your Groups"
+});
 metaGroups.addService("groups", {
     fields: new NBField({
         name: "group",
