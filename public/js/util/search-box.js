@@ -1,4 +1,4 @@
-Filters = class Filters {
+const Filters = class Filters {
     constructor(onFilterChange = null) {
         this.filter = "";
         this.onFilterChange = onFilterChange;
@@ -37,14 +37,6 @@ Filters = class Filters {
     }
 }
 
-SearchButtons = class SearchButtons extends Buttons {
-    constructor(id, searchBox) {
-        super(id, [], {
-            isTabs: true
-        });
-    }
-}
-
 class SearchBox {
     constructor(id = null, parent) {
         this.id = id;
@@ -54,12 +46,14 @@ class SearchBox {
 
         this.$div = $(`<div class="search-box" id="${id ? `#${id}` : ""}"></div>`);
         this.$searchList = $(`<ul class="selector"></ul>`).appendTo(this.$div);
-        this.buttons = new SearchButtons(id, this);
+        // this.buttons = new Buttons(id, [], {
+        //     isTabs: true
+        // });
         
         this.selected = -1;
         this.items = [];
 
-        this.$div.append(this.buttons.$div);
+        //this.$div.append(this.buttons.$div);
     }
 
     static styled = false;
@@ -74,10 +68,6 @@ class SearchBox {
     addFilters = (filters = new Filters(this.renderSearchResults)) => {
         this.filters = filters;
         this.$div.append(this.filters.$div);
-        this.buttons.addButton(new Button("toggleFilters", {
-            onClick: this.filters.toggle,
-            label: "Filters"
-        }));
     }
 
     renderSearchResults = () => {

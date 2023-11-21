@@ -9,8 +9,16 @@
     <input type="text" class="mailbox">
 </section>
 
-<div class="date"></div>
-<div class="weather">Loading the weather outside...</div>
+<div class="date">
+    <p class="day"></p>
+    <p class="full-date"></p>
+</div>
+<div class="weather">
+    <p class="name"></p>
+    <p class="temp">Loading the weather outside...</p>
+    <p class="forecast"></p>
+    <p class="wind-speed"></p>
+</div>
 
 <div class="meta"></div>
 
@@ -74,17 +82,21 @@
     });
 
     //date
-    const weekday = ["Sun", "Mon"," Tue", "Wed", "Thu", "Fri", "Sat"];
-    //const weekday = ["Wednesday", "Wednesday"," Wednesday", "Wednesday", "Wednesday", "Wednesday", "Wednesday"];
+    //const weekday = ["Sun", "Mon"," Tue", "Wed", "Thu", "Fri", "Sat"];
+    const weekday = ["Wednesday", "Wednesday"," Wednesday", "Wednesday", "Wednesday", "Wednesday", "Wednesday"];
     const date = new Date();
     let dayName = weekday[date.getDay()];
-    $(`.date`).text(`${dayName}: ${date.toLocaleDateString()}`);
+    $(`.date .day`).text(dayName);
+    $(`.date .full-date`).text(date.toLocaleDateString());
 
     //get weather forecast
     $.get(`https://api.weather.gov/points/46.7253,-122.9534`, (data) => {
         if (data.properties.forecast) $.get(data.properties.forecast, (data) => {
             let current = data.properties.periods[0];
-            $(`.weather`).text(`${current.name}: ${current.temperature} °F, ${current.shortForecast}, ${current.windSpeed}`);
+            $(`.weather .name`).text(current.name);
+            $(`.weather .temp`).text(`${current.temperature} °F`);
+            $(`.weather .forecast`).text(current.shortForecast);
+            $(`.weather .wind-speed`).text(current.windSpeed);
         });
     });
 

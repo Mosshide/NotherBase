@@ -3,6 +3,8 @@
     display: flex;
     flex-wrap: wrap;
     position: relative;
+    height: auto;
+    min-height: 50vh;
 }
 
 .browser {
@@ -13,7 +15,7 @@
     flex-wrap: wrap;
     height: initial;
     left: var(--margin);
-    top: 30px;
+    top: 10px;
     z-index: 10;
     height: 90%;
 }

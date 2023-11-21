@@ -31,3 +31,16 @@ main>.date {
 .browser .nested.recurring {
     width: 50% !important;
 }
+
+.meta .buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.search-box {
+    overflow: auto;
+}
+
+.selector {
+    height: auto !important;
+}

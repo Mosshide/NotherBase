@@ -5,7 +5,6 @@
     margin: var(--margin);
     border: none;
     background: none;
-    margin-top: var(--tabMargin);
     align-content: flex-start;
     gap: 0;
     padding: 1px;

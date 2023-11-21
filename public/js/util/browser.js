@@ -1018,7 +1018,11 @@ class MetaBrowser {
 
     addSearchBox = () => {
         this.searchBox = new this.settings.useSearchBox(null, this);
-        this.searchBox.addFilters()
+        this.searchBox.addFilters(new Filters(this.searchBox.renderSearchResults));
+        this.buttons.addButton(new Button("toggleFilters", {
+            onClick: this.searchBox.filters.toggle,
+            label: "Filters"
+        }));
         this.$div.append(this.searchBox.$div);
     }
 
