@@ -25,11 +25,11 @@ main>.date {
 }
 
 .browser .nested.frequency {
-    width: 50% !important;
+    width: 60% !important;
 }
 
 .browser .nested.recurring {
-    width: 50% !important;
+    width: 40% !important;
 }
 
 .meta .buttons {

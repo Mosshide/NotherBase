@@ -1,7 +1,47 @@
+class AgendaFilters extends Filters {
+    constructor(onFilterChange = null) {
+        super(onFilterChange, {
+            search: "",
+            showOld: false,
+            showMore: false
+        });
+
+        this.extendedRender();
+    }
+
+    extendedRender = () => {
+        // create the  showOld header and append it to the base div
+        this.$showOldHeader = $(`<h4>Show Old</h4>`).appendTo(this.$div);
+        // create the show old tasks checkbox and append it to the base div
+        this.$showOld = $(`<input type="checkbox" id="show-old">`).appendTo(this.$div);
+        // enable the checkbox to update the filter
+        this.$showOld.on("change", (e) => { return this.updateFilter("showOld", e.currentTarget.checked); });
+
+
+        // create the showMore header and append it to the base div
+        this.$showMoreHeader = $(`<h4>Show More</h4>`).appendTo(this.$div);
+        // create the show more tasks checkbox and append it to the base div
+        this.$showMore = $(`<input type="checkbox" id="show-more">`).appendTo(this.$div);
+        // enable the checkbox to update the filter
+        this.$showMore.on("change", (e) => { return this.updateFilter("showMore", e.currentTarget.checked); });
+    }
+
+    setFilter = (filter) => {
+        // update the filter
+        this.updateFilter(null, filter);
+        // update the search input value
+        this.$search.val(this.filter.search);
+        // update the showOld checkbox value
+        this.$showOld.prop("checked", this.filter.showOld);
+        // update the showMore checkbox value
+        this.$showMore.prop("checked", this.filter.showMore);
+    }
+}
+
 class Agenda extends SearchBox {
     constructor(id = null, parent) {
-        super(id, parent);
-        //this.addFilters(new Filters(this.renderSearchResults));
+        super(id, parent, null);
+        this.addFilters(new AgendaFilters(this.renderSearchResults));
 
         this.$oldList = $(`<ul class="selector"></ul>`).appendTo(this.$div);
         this.$todayList = $(`<ul class="selector"></ul>`).appendTo(this.$div);
@@ -57,9 +97,13 @@ class Agenda extends SearchBox {
         
         this.$todayHeader = $("<h4>Schedule - Today</h4>").appendTo(this.$searchList);
 
+        let filter = this.filters.getFilter();
+
         for (let i = 0; i < this.items.length; i++) {
             if (this.items[i]) {
                 let label = this.items[i].name || this.items[i].username || this.items[i].title || this.items[i].header || this.items[i].whenSearched || Object.values(this.items[i])[0];
+                if (!label) label = "Name Error";
+
                 let $list = this.$todoList;
                 let header = "To Do";
                 
@@ -107,12 +151,17 @@ class Agenda extends SearchBox {
                 };
 
 
-                if (label?.toLowerCase && label.toLowerCase().includes(this.filters.getFilter())) {
-                    let $result = this.appendToList($list, label, i, header);
+                let filtered = false;
+                if (!label.toLowerCase().includes(filter.search)) {
+                    filtered = true;
                 }
-                else if (("Name Error").includes(this.filters.getFilter())) {
-                    let $result = this.appendToList($list, "Name Error", i, header);
+                if (!filter.showOld) {
+                    if ($list === this.$oldList) filtered = true;
                 }
+                if (!filter.showMore) {
+                    if ($list === this.$moreList) filtered = true;
+                }
+                if (!filtered) this.appendToList($list, label, i, header);
             }
             else $(`<p>No Items</p>`).appendTo(this.$searchList);
         };
