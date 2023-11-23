@@ -1,0 +1,104 @@
+<style>
+    <%- include("./index.css"); %>
+    <%- include("./agenda.css"); %>
+</style>
+<link rel="stylesheet" href="/styles/browser.css">
+<link rel="stylesheet" href="/styles/billboard.css">
+
+<section class="porch">
+    <input type="text" class="mailbox">
+</section>
+
+<div class="date">
+    <p class="day"></p>
+    <p class="full-date"></p>
+</div>
+<div class="weather">
+    <p class="name"></p>
+    <p class="temp">Loading the weather outside...</p>
+    <p class="forecast"></p>
+    <p class="wind-speed"></p>
+</div>
+
+<div class="meta"></div>
+
+<hr>
+
+<a class="go" href="/forest/eye/filter/tree-house">
+    Climb up the nearby Tree House
+</a>
+
+<hr>
+
+<a class="to" href="/forest/eye/filter/cave">
+    Go to Cave
+</a>
+
+<a class="to" href="/forest/eye/filter/tower">
+    Go to the Tower
+</a>
+
+<a class="to" href="/forest/eye/town-hall">
+    Go to the Town Hall
+</a>
+
+<hr>
+
+<a class="return" href="/forest/eye/library">
+    Return to the Library
+</a>
+
+<a class="return" href="/forest/eye/church">
+    Return to the Church
+</a>
+
+<script src="/js/util/weather.js"></script>
+<script src="/js/util/buttons.js"></script>
+<script src="/js/util/search-box.js"></script>
+<script src="/js/util/browser.js"></script>
+<script src="/js/billboard.js"></script>
+<script src="/js/entity.js"></script>
+<script>
+    const weather = new WeatherSystem();
+
+    const $mailbox = $(".mailbox");
+    let mailboxCD = 1000;
+    let lastMailboxUpdate = 0;
+
+    base.load("house-mailbox").then((res) => {
+        if (typeof res == "string") $mailbox.val(res);
+        //console.log(res);
+    });
+
+    $mailbox.on("input", (e) => { 
+        lastMailboxUpdate = Date.now();
+
+        setTimeout(() => {
+            let now = Date.now();
+            if (now - lastMailboxUpdate > mailboxCD) {
+                base.do("set-mailbox", { item: e.currentTarget.value });
+            }
+        }, mailboxCD);
+    });
+
+    //date
+    //const weekday = ["Sun", "Mon"," Tue", "Wed", "Thu", "Fri", "Sat"];
+    const weekday = ["Wednesday", "Wednesday"," Wednesday", "Wednesday", "Wednesday", "Wednesday", "Wednesday"];
+    const date = new Date();
+    let dayName = weekday[date.getDay()];
+    $(`.date .day`).text(dayName);
+    $(`.date .full-date`).text(date.toLocaleDateString());
+
+    //get weather forecast
+    $.get(`https://api.weather.gov/points/46.7253,-122.9534`, (data) => {
+        if (data.properties.forecast) $.get(data.properties.forecast, (data) => {
+            let current = data.properties.periods[0];
+            $(`.weather .name`).text(current.name);
+            $(`.weather .temp`).text(`${current.temperature} °F`);
+            $(`.weather .forecast`).text(current.shortForecast);
+            $(`.weather .wind-speed`).text(current.windSpeed);
+        });
+    });
+
+    <%- include("./agenda.js"); %>
+</script>

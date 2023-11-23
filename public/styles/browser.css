@@ -1,12 +1,15 @@
+.meta {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+}
+
 .browser {
     width: var(--fillFromMargin);
-    position: relative;
     border: var(--standardBorder);
     display: flex;
     flex-wrap: wrap;
-    height: initial;
-    margin: var(--margin);
-    margin-bottom: var(--tabMargin);
 }
 
 .floating .browser {
@@ -36,34 +39,37 @@
     overflow: auto;
 }
 
-.browser .nested {
-    position: static;
-    height: auto;
-    padding: 0;
+.browser .read.nested, .browser .edit.nested {
     width: 100%;
-    margin: 0;
-    padding: var(--thickPadding);
-    padding-bottom: calc(var(--thickPadding) * 3 / 2);
+    margin: var(--margin);
+    padding: 0;
 }
 
 :nth-child(even of .browser .edit) {
     background: var(--darkBgColor);
 }
 
-.browser h6 {
-    background: none;
-    width: 100%;
-    padding: var(--padding);
-    text-align: left;
-}
-
 .browser h4 {
-    position: sticky;
-    top: 0;
     background: var(--bgColor);
-    z-index: 6;
     width: 100%;
     margin: 0;
+    height: 40px;
+    padding: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.browser ul.content {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    justify-content: flex-start;
+    overflow: auto;
+    border: none;
 }
 
 .browser img.image {
@@ -93,19 +99,6 @@
     margin-bottom: 0;
 }
 
-.browser .multiple>h6 {
-    width: 100%;
-    text-align: center;
-    position: sticky;
-    left: 0;
-    top: 0;
-    background: var(--bgColor);
-    border-bottom: var(--standardBorder);
-    z-index: 5;
-    margin: 0;
-    padding: calc(var(--thickPadding) / 2);
-}
-
 .browser .buttons.tabs {
     height: 50px;
     width: 100%;
@@ -122,12 +115,17 @@
 }
 
 .browser .multiple {
-    border: 1px dashed var(--textColor);
-    max-height: 40vh;
-    border-radius: 3px;
+    border: none;
+    border-radius: 5px;
     margin: var(--thickMargin);
     position: relative;
     padding: 0;
+    padding-top: calc(2 * var(--mediumPadding));
+    overflow: visible;
+}
+
+.browser .with-buttons {
+    margin-bottom: 50px !important;
 }
 
 .browser .multiple li>input {
@@ -138,7 +136,9 @@
 .browser li>button.remove {
     width: 10%;
     margin: var(--margin);
-    border-radius: none;
+    border-radius: 0;
+    border: 1px solid var(--textColor);
+    height: var(--inputHeight) !important;
 }
 
 .browser li {
@@ -159,10 +159,10 @@
     padding: 1px;
 }
 
-.browser #alert {
+.meta .alert {
     position: absolute;
-    bottom: 5px;
-    height: 10vh;
+    top: 50px;
+    height: 100px;
     width: var(--fillFromMargin);
     left: var(--margin);
     background-color: var(--bgColor);
@@ -170,9 +170,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 50;
 }
 
-.browser #alert #hide {
+.meta .alert .hide {
     position: absolute;
     top: 5px;
     height: 30px;
@@ -194,12 +195,15 @@
     right: 0;
     top: 0;
     margin: 0;
-    border: none;
-    border-left: var(--standardBorder);
-    padding: calc(var(--thickPadding) / 2);
+    border: var(--standardBorder);
+    height: 40px;
+    border-radius: 0;
 }
 
 .browser p.long-string {
     overflow: auto;
-    max-height: 30vh;
+}
+
+.browser .tabs #delete * {
+    margin: 0;
 }
