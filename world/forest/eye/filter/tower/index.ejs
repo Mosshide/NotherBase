@@ -1,6 +1,23 @@
 <style>
     <%- include("./wizard-tower.css"); %>
+    <%- include("./yard.css"); %>
 </style>
+
+<div class="yard">
+    <div class="sky">
+        <h4>The Yard</h4>
+        
+        <div class="ray"></div>
+        <div class="ray"></div>
+        <div class="ray"></div>
+        <div class="ray"></div>
+        <div class="ray"></div>
+        <div class="sun"></div>
+    </div>
+
+    <div class="ground">
+    </div>
+</div>
 
 <p>
     The tower stands before you, wooden door locked.
@@ -8,9 +25,7 @@
 
 <div class="tower">
     <div class="floatables">
-        <div class="browser"></div>
-        <div class="search-box"></div>
-        <div class="meta buttons"></div>
+        <div class="meta"></div>
     </div>
 
     <div id="cover"></div>
@@ -33,7 +48,7 @@
 
 <hr>
 
-<a class="to" href="/forest/eye/filter/yard">
+<a class="to" href="/forest/eye/filter/house">
     Go to the House
 </a>
 
@@ -59,8 +74,13 @@
 <script src="/js/util/search-box.js"></script>
 <script src="/js/util/browser.js"></script>
 <script src="/js/entity.js"></script>
+<script src="/js/plants/part.js"></script>
 <script src="/js/floatable.js"></script>
 <script>
+    //yard
+    <%- include("./yard.js"); %>
+    let yard = new Yard();
+
     $("#knock").on("click", function knock() {
         $("#extra").text("You knocked on the tower's door. Surely you've been heard.");
         $("#knock").toggleClass("invisible");
@@ -73,10 +93,9 @@
             $(e.target.parentElement).find(".content").toggleClass("invisible");
         });
 
-        const browser = new Browser();
-        const search = new SearchBox();
-
-        const metaTower = new MetaBrowser("Tower", browser, search);
+        const metaTower = new MetaBrowser({
+            label: "Tower"
+        });
         metaTower.addService("items", {
             fields: new NBField({
                 name: "item",

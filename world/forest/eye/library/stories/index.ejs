@@ -4,9 +4,7 @@
 <link rel="stylesheet" href="/styles/browser.css">
 
 <div class="floatables">
-    <div class="browser" id="stories"></div>
-    <div class="search-box" id="stories"></div>
-    <div class="meta buttons" id="stories"></div>
+    <div class="meta" id="stories"></div>
 </div>
 
 <hr>
@@ -21,9 +19,9 @@
 <script src="/js/entity.js"></script>
 <script src="/js/floatable.js"></script>
 <script>
-    const browser = new Browser();
-    const search = new SearchBox();
-    const metaBrowser = new MetaBrowser("Your Stories", browser, search);
+    const metaBrowser = new MetaBrowser({
+        label: "Your Stories"
+    });
     metaBrowser.addService("stories", {
         fields: new NBField({
             name: "story",

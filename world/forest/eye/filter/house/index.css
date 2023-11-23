@@ -20,37 +20,15 @@
     --toySize: 100px;
 }
 
-section h4 {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 50px;
+main {
+    align-items: flex-start;
 }
 
-article h4, h5 {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 50px;
-    margin: 0;
-    width: 100%;
-}
-
-.folder {
-    background: rgba(0, 0, 0, 0.041);
-    height: 50px;
-    width: 50px;
+.date .day {
+    font-weight: bold;
 }
 
 .porch {
-    background: var(--woodColor);
-}
-
-.upstairs {
-    background: var(--houseColor);
-}
-
-.mailbox {
-    height: 100px;
-    width: 90%;
+    width: 100%;
+    margin: 0;
 }

@@ -4,6 +4,7 @@ class Button {
             onClick: null,
             label: null,
             hidden: false,
+            parent: null,
             ...settings
         };
 
@@ -15,7 +16,13 @@ class Button {
     }
 
     render = () => {
-        this.$div = $(`<button class="${this.settings.hidden ? "invisible" : ""}" id=${this.id}>${this.settings.label ? this.settings.label : "="}</button>`);
+        if (this.$div) this.$div.empty();
+        else this.$div = $(`<button>=</button>`);
+
+        if (this.settings.hidden) this.$div.addClass("invisible");
+        if (this.id) this.$div.attr("id", this.id);
+        if (this.settings.label) this.$div.text(this.settings.label);
+
         this.enable();
     }
 
@@ -34,36 +41,37 @@ class Button {
         this.$div.off();
     }
 
-    enable = () => {
+    enable = (onClick = null) => {
         this.enabled = true;
-        if (this.settings.onClick) this.$div.on("click", (e) => {
-            this.settings.onClick(e);
-        });
+        if (onClick) this.settings.onClick = onClick;
+        if (this.settings.onClick) {
+            this.$div.on("click", (e) => {
+                this.settings.onClick(e);
+            });
+        }
     }
 }
 
 class Buttons {
-    constructor(id, buttons, settings) {
+    constructor(id, BaseButtons = [], settings = {}) {
         this.settings = {
             $origin: null,
             isTabs: false,
             label: null,
             ...settings
         };
+        this.id = id;
 
         Buttons.attemptStyle();
 
         this.buttons = {};
-        for (let i = 0; i < buttons.length; i++) {
-            this.buttons[buttons[i].id] = buttons[i];
-        }
-
-        if (!this.settings.$origin) this.$div = $(`<div class="buttons ${this.settings.isTabs ? "tabs" : ""}" id="${id ? id : ""}"></div>`);
-        else this.$div = this.settings.$origin;
-
-        this.$div.click(this.click);
+        this.BaseButtons = BaseButtons;
 
         this.render();
+
+        for (let i = 0; i < this.BaseButtons.length; i++) {
+            this.addButton(new (this.BaseButtons[i])());
+        }
     }
 
     static styled = false;
@@ -76,12 +84,20 @@ class Buttons {
     }
 
     render = () => {
-        this.$div.empty();
+        if (this.$div) this.$div.empty();
+        else {
+            if (!this.settings.$origin) this.$div = $(`<div class="buttons"></div>`);
+            else this.$div = this.settings.$origin;
+
+            if (this.id) this.$div.attr("id", this.id);
+            if (this.settings.isTabs) this.$div.addClass("tabs");
+    
+            this.$div.on("click", () => { this.click(); });
+        }
         
         if (this.settings.label) this.$header = $(`<h4>${this.settings.label}</h4>`).appendTo(this.$div);
 
         let keys = Object.keys(this.buttons);
-
         for (let i = 0; i < keys.length; i++) {
             this.$div.append(this.buttons[keys[i]].$div);
         }
@@ -89,6 +105,7 @@ class Buttons {
 
     addButton = (button) => {
         this.buttons[button.id] = button;
+        this.buttons[button.id].settings.parent = this;
 
         this.$div.append(button.$div);
     }
@@ -113,5 +130,30 @@ class Buttons {
                 this.buttons[keys[i]].show();
             }
         }
+    }
+
+    enable = (which, onClick = null) => {
+        if (which) this.buttons[which].enable(onClick);
+        else {
+            let keys = Object.keys(this.buttons);
+
+            for (let i = 0; i < keys.length; i++) {
+                this.buttons[keys[i]].enable(onClick);
+            }
+        }
+    }
+
+    disable = (which) => {
+        if (which) this.buttons[which].disable();
+        else {
+            let keys = Object.keys(this.buttons);
+
+            for (let i = 0; i < keys.length; i++) {
+                this.buttons[keys[i]].disable();
+            }
+        }
+    }
+
+    click = () => {
     }
 }

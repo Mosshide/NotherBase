@@ -3,8 +3,6 @@
 </p>
 
 <div class="floatables">
-    <div class="browser"></div>
-    <div class="search-box"></div>
     <div class="meta buttons"></div>
 </div>
 
@@ -20,9 +18,9 @@
 <script src="/js/entity.js"></script>
 <script src="/js/floatable.js"></script>
 <script>
-    const browser = new Browser();
-    const search = new SearchBox();
-    const metaBrowser = new MetaBrowser("Small Groups", browser, search);
+    const metaBrowser = new MetaBrowser({
+        label: "Small Groups"
+    });
     metaBrowser.addService("small-group", {
         fields: new NBField({
             name: "small-group",

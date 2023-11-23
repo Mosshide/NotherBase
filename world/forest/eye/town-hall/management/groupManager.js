@@ -1,385 +1,393 @@
-const startPromote = (e) => {
-    let $promote = $(e.currentTarget);
-    $promote.addClass("invisible");
+class RemoveButton extends Button {
+    constructor() {
+        super("remove", {
+            label: "Remove"
+        });
 
-    let $ul = $promote.parent();
+        this.enable(this.startRemove);
+    }
 
-    let $demote = $ul.find(`#demote`);
-    $demote.addClass("invisible");
-    let $cancel = $ul.find(`#cancel-promote`);
-    $cancel.removeClass("invisible");
-
-    let $li = $(`<li id="new-promote"></li>`).appendTo($ul);
-    let $input = $(`<input type="text"></input>`).appendTo($li);
-    let $submit = $(`<button>Promote</button>`).appendTo($li);
-    $submit.on("click", (element) => {
-        promote(element, $input);
-    });
-
-    $cancel.on("click", (element) => {
-        cancelPromote(element);
-    });
-}
-
-const cancelPromote = (e) => {
-    let $cancel = $(e.currentTarget);
-    $cancel.addClass("invisible");
-    
-    let $ul = $cancel.parent();
-
-    let $demote = $ul.find(`#demote`);
-    $demote.removeClass("invisible");
-    let $promote = $ul.find(`#promote`);
-    $promote.removeClass("invisible");
-    
-    $ul.find("#new-promote").remove();
-}
-
-const promote = (e, $input) => {
-    let $ul = $(e.currentTarget).parent().parent().parent();
-    let userID = $ul.find(".read.id").text();
-
-    base.do("save-auth", { 
-        title: $input.val(), 
-        userID, 
-        groupID: metaGroups.serving.data[metaGroups.serving.selected].id 
-    }).then((res) => { 
-        metaGroups.reload(); 
-        switch (res.data) {
-            case "auth-error":
-                metaGroups.setAlert("You are unauthorized to promote members!")
-                break;
-            case "login-error":
-                metaGroups.setAlert("You are not logged in!")
-                break;
-            case "promoted":
-                metaGroups.setAlert("Promoted!")
-                break;
-            case "redundant":
-                metaGroups.setAlert("Promotion already given!")
-                break;
+    startRemove = (e) => {
+        let $lis = metaGroups.browser.$div.find(".read.members>ul>li");
+        this.hide();
+        this.settings.parent.show("cancel-remove");
+        $(`.read.members>ul>li .read.auth`).addClass("invisible");
+        
+        for (let i = 0; i < $lis.length; i++) {
+            let $li = $($lis[i]);
+            $li.addClass("click-me");
+            $li.on("click", (element) => {
+                this.remove(element);
+            });
         }
-    });
-}
+    }    
 
-const startDemote = (e) => {
-    let $demote = $(e.currentTarget);
-    $demote.addClass("invisible");
-
-    let $ul = $demote.parent();
-
-    let $promote = $ul.find(`#promote`);
-    $promote.addClass("invisible");
-    let $cancel = $ul.find(`#cancel-demote`);
-    $cancel.removeClass("invisible");
-
-    let $lis = $ul.find("li");
-    $lis.addClass("click-me");
-    $lis.on("click", (element) => {
-        demote(element);
-    });
-
-    $cancel.on("click", (element) => {
-        cancelDemote(element);
-    });
-}
-
-const cancelDemote = (e) => {
-    let $cancel = $(e.currentTarget);
-    $cancel.addClass("invisible");
+    remove = (e) => {
+        let $li = $(e.currentTarget);
+        let userID = $li.find(".read.id").text();
     
-    let $ul = $cancel.parent();
-
-    let $demote = $ul.find(`#demote`);
-    $demote.removeClass("invisible");
-    let $promote = $ul.find(`#promote`);
-    $promote.removeClass("invisible");
-    
-    let $lis = $ul.find("li");
-    $lis.removeClass("click-me");
-    $lis.off();
-}
-
-const demote = (e) => {
-    let $li = $(e.currentTarget);
-    let $ul = $li.parent().parent();
-    let userID = $ul.find(".read.id").text();
-
-    base.do("save-auth", { 
-        title: $li.find("p").text(), 
-        userID, 
-        demote: true, 
-        groupID: metaGroups.serving.data[metaGroups.serving.selected].id 
-    }).then((res) => { 
-        metaGroups.reload(); 
-        switch (res.data) {
-            case "auth-error":
-                metaGroups.setAlert("You are unauthorized to demote members!")
-                break;
-            case "login-error":
-                metaGroups.setAlert("You are not logged in!")
-                break;
-            case "self-error":
-                metaGroups.setAlert("You cannot demote yourself unless there are other Leaders!")
-                break;
-            case "leader-count-error":
-                metaGroups.setAlert("You cannot demote another Leader unless there are other Leaders!")
-                break;
-            case "demoted":
-                metaGroups.setAlert("Demoted!")
-                break;
-        }
-    });
-}
-
-const startRemove = (e) => {
-    let $lis = metaGroups.browser.$div.find(".read.members>li");
-    $(`#remove`).addClass("invisible");
-    $(`#cancel-remove`).removeClass("invisible");
-    $(`.read.members>li .read.auth`).addClass("invisible");
-    
-    for (let i = 0; i < $lis.length; i++) {
-        let $li = $($lis[i]);
-        $li.addClass("click-me");
-        $li.on("click", (element) => {
-            remove(element);
+        base.do("remove-member", {
+            userID,
+            groupID: metaGroups.serving.data[metaGroups.serving.selected].id
+        }).then((res) => { 
+            metaGroups.reload(); 
+            switch (res.data) {
+                case "auth-error":
+                    metaGroups.setAlert("You are unauthorized to remove members!")
+                    break;
+                case "login-error":
+                    metaGroups.setAlert("You are not logged in!")
+                    break;
+                case "self-error":
+                    metaGroups.setAlert("You cannot remove yourself if you are a Leader!")
+                    break;
+                case "removed":
+                    metaGroups.setAlert("Removed!")
+                    break;
+            }
         });
     }
 }
 
-const cancelRemove = (e) => {
-    let $lis = metaGroups.browser.$div.find(".read.members>li");
-    $(`#cancel-remove`).addClass("invisible");
-    $(`#remove`).removeClass("invisible");
-    $(`.read.members>li .read.auth`).removeClass("invisible");
-    
-    for (let i = 0; i < $lis.length; i++) {
-        let $li = $($lis[i]);
-        $li.removeClass("click-me");
-        $li.off();
+class CancelRemoveButton extends Button {
+    constructor () {
+        super("cancel-remove", {
+            label: "Cancel Remove",
+            hidden: true
+        });
+
+        this.enable(this.cancelRemove);
+    }
+
+    cancelRemove = (e) => {
+        let $lis = metaGroups.browser.$div.find(".read.members>ul>li");
+        this.hide();
+        this.settings.parent.show("remove");
+        $(`.read.members>ul>li .read.auth`).removeClass("invisible");
+        
+        for (let i = 0; i < $lis.length; i++) {
+            let $li = $($lis[i]);
+            $li.removeClass("click-me");
+            $li.off();
+        }
     }
 }
 
-const remove = (e) => {
-    let $li = $(e.currentTarget);
-    let $ul = $li.parent();
-    let userID = $li.find(".read.id").text();
+class DemoteButton extends Button {
+    constructor() {
+        super("demote", {
+            label: "Demote"
+        });
 
-    base.do("remove-member", {
-        userID,
-        groupID: metaGroups.serving.data[metaGroups.serving.selected].id
-    }).then((res) => { 
-        metaGroups.reload(); 
-        switch (res.data) {
-            case "auth-error":
-                metaGroups.setAlert("You are unauthorized to remove members!")
-                break;
-            case "login-error":
-                metaGroups.setAlert("You are not logged in!")
-                break;
-            case "self-error":
-                metaGroups.setAlert("You cannot remove yourself if you are a Leader!")
-                break;
-            case "removed":
-                metaGroups.setAlert("Removed!")
-                break;
-        }
-    });
-}
+        this.enable(this.startDemote);
+    }
 
-const startAccept = (e) => {
-    let $accept = $(e.currentTarget);
-    $accept.addClass("invisible");
-
-    let $ul = $accept.parent();
-
-    let $reject = $ul.find(`#reject`);
-    $reject.addClass("invisible");
-    let $cancel = $ul.find(`#cancel-accept`);
-    $cancel.removeClass("invisible");
-
-    let $lis = $ul.find("li");
-    $lis.addClass("click-me");
-    $lis.on("click", (element) => {
-        accept(element);
-    });
-
-    $cancel.on("click", (element) => {
-        cancelAccept(element);
-    });
-}
-
-const cancelAccept = (e) => {
-    let $cancel = $(e.currentTarget);
-    $cancel.addClass("invisible");
+    startDemote = (e) => {
+        this.hide();
     
-    let $ul = $cancel.parent();
-
-    let $reject = $ul.find(`#reject`);
-    $reject.removeClass("invisible");
-    let $accept = $ul.find(`#accept`);
-    $accept.removeClass("invisible");
+        let $ul = this.$div.parent().parent().find("ul.content");
     
-    let $lis = $ul.find("li");
-    $lis.removeClass("click-me");
-    $lis.off();
-}
+        this.settings.parent.hide("promote");
 
-const accept = (e) => {
-    let $li = $(e.currentTarget);
-    let $ul = $li.parent().parent();
-    let userID = $li.find(".read.id").text();
-
-    base.do("save-joins", {
-        userID,
-        groupID: metaGroups.serving.data[metaGroups.serving.selected].id 
-    }).then((res) => { 
-        metaGroups.reload(); 
-        switch (res.data) {
-            case "auth-error":
-                metaGroups.setAlert("You are unauthorized to accept join requests!")
-                break;
-            case "login-error":
-                metaGroups.setAlert("You are not logged in!")
-                break;
-            case "accepted":
-                metaGroups.setAlert("Accepted!")
-                break;
-            case "redundant":
-                metaGroups.setAlert("User already joined!")
-                break;
-            case "not-found-error":
-                metaGroups.setAlert("Join request not found!")
-                break;
-        }
-    });
-}
-
-const startReject = (e) => {
-    let $reject = $(e.currentTarget);
-    $reject.addClass("invisible");
-
-    let $ul = $reject.parent();
-
-    let $accept = $ul.find(`#accept`);
-    $accept.addClass("invisible");
-    let $cancel = $ul.find(`#cancel-reject`);
-    $cancel.removeClass("invisible");
-
-    let $lis = $ul.find("li");
-    $lis.addClass("click-me");
-    $lis.on("click", (element) => {
-        reject(element);
-    });
-
-    $cancel.on("click", (element) => {
-        cancelReject(element);
-    });
-}
-
-const cancelReject = (e) => {
-    let $cancel = $(e.currentTarget);
-    $cancel.addClass("invisible");
+        this.settings.parent.show("cancel-demote");
     
-    let $ul = $cancel.parent();
-
-    let $accept = $ul.find(`#accept`);
-    $accept.removeClass("invisible");
-    let $reject = $ul.find(`#reject`);
-    $reject.removeClass("invisible");
+        let $lis = $ul.find("li");
+        $lis.addClass("click-me");
+        $lis.on("click", (element) => {
+            this.demote(element);
+        });
+    }
     
-    let $lis = $ul.find("li");
-    $lis.removeClass("click-me");
-    $lis.off();
+    demote = (e) => {
+        let $li = $(e.currentTarget);
+        let $ul = this.$div.parent().parent().parent();
+        let userID = $ul.find(".read.id").text();
+    
+        base.do("save-auth", { 
+            title: $li.find("p").text(), 
+            userID, 
+            demote: true, 
+            groupID: metaGroups.serving.data[metaGroups.serving.selected].id 
+        }).then((res) => { 
+            metaGroups.reload(); 
+            switch (res.data) {
+                case "auth-error":
+                    metaGroups.setAlert("You are unauthorized to demote members!")
+                    break;
+                case "login-error":
+                    metaGroups.setAlert("You are not logged in!")
+                    break;
+                case "self-error":
+                    metaGroups.setAlert("You cannot demote yourself unless there are other Leaders!")
+                    break;
+                case "leader-count-error":
+                    metaGroups.setAlert("You cannot demote another Leader unless there are other Leaders!")
+                    break;
+                case "demoted":
+                    metaGroups.setAlert("Demoted!")
+                    break;
+            }
+        });
+    }
+    
 }
 
-const reject = (e) => {
-    let $li = $(e.currentTarget);
-    let $ul = $li.parent().parent();
-    let userID = $li.find(".read.id").text();
+class CancelDemoteButton extends Button {
+    constructor () {
+        super("cancel-demote", {
+            label: "Cancel Demote",
+            hidden: true
+        });
 
-    base.do("save-joins", {
-        userID,
-        groupID: metaGroups.serving.data[metaGroups.serving.selected].id,
-        reject: true
-    }).then((res) => { 
-        metaGroups.reload(); 
-        switch (res.data) {
-            case "auth-error":
-                metaGroups.setAlert("You are unauthorized to reject join requests!")
-                break;
-            case "login-error":
-                metaGroups.setAlert("You are not logged in!")
-                break;
-            case "rejected":
-                metaGroups.setAlert("Rejected!")
-                break;
-            case "not-found-error":
-                metaGroups.setAlert("Join request not found!")
-                break;
-        }
-    });
+        this.enable(this.cancelDemote);
+    }
+
+    cancelDemote = (e) => {
+        this.hide();
+        
+        let $ul = this.$div.parent().find("ul.content");
+    
+        this.settings.parent.show("demote");
+        this.settings.parent.show("promote");
+        
+        let $lis = $ul.find("li");
+        $lis.removeClass("click-me");
+        $lis.off();
+    }
 }
 
-const groupsBrowser = new Browser();
-const groupsSearch = new SearchBox();
+class PromoteButton extends Button {
+    constructor() {
+        super("promote", {
+            label: "Promote"
+        });
 
-let removeButton = new Button("remove", {
-    onClick: startRemove,
-    label: "Remove"
+        this.enable(this.startPromote);
+    }
+
+    startPromote = (e) => {
+        this.hide();
+    
+        let $ul = this.$div.parent().parent().find("ul.content");
+    
+        this.settings.parent.hide("demote");
+        this.settings.parent.show("cancel-promote");
+    
+        let $li = $(`<li id="new-promote"></li>`).appendTo($ul);
+        let $input = $(`<input type="text"></input>`).appendTo($li);
+        let $submit = $(`<button>Promote</button>`).appendTo($li);
+        $submit.on("click", (element) => {
+            this.promote(element, $input);
+        });
+    }
+    
+    promote = (e, $input) => {
+        let $ul = this.$div.parent().parent().parent();
+        let userID = $ul.find(".read.id").text();
+    
+        base.do("save-auth", { 
+            title: $input.val(), 
+            userID, 
+            groupID: metaGroups.serving.data[metaGroups.serving.selected].id 
+        }).then((res) => { 
+            metaGroups.reload(); 
+            switch (res.data) {
+                case "auth-error":
+                    metaGroups.setAlert("You are unauthorized to promote members!")
+                    break;
+                case "login-error":
+                    metaGroups.setAlert("You are not logged in!")
+                    break;
+                case "promoted":
+                    metaGroups.setAlert("Promoted!")
+                    break;
+                case "redundant":
+                    metaGroups.setAlert("Promotion already given!")
+                    break;
+            }
+        });
+    }
+}
+
+class CancelPromoteButton extends Button {
+    constructor () {
+        super("cancel-promote", {
+            label: "Cancel Promote",
+            hidden: true
+        });
+
+        this.enable(this.cancelPromote);
+    }
+
+    cancelPromote = (e) => {
+        this.hide();
+        
+        let $ul = this.$div.parent().parent().find("ul.content");
+    
+        this.settings.parent.show("demote");
+        this.settings.parent.show("promote");
+        
+        $ul.find("#new-promote").remove();
+    }
+}
+
+class AcceptButton extends Button {
+    constructor() {
+        super("accept", {
+            label: "Accept"
+        });
+
+        this.enable(this.startAccept);
+    }
+
+    startAccept = (e) => {
+        this.hide();
+    
+        let $ul = this.$div.parent().parent().find("ul.content");
+    
+        this.settings.parent.hide("reject");
+        this.settings.parent.show("cancel-accept");
+    
+        let $lis = $ul.find("li");
+        $lis.addClass("click-me");
+        $lis.on("click", (element) => {
+            this.accept(element);
+        });
+    }
+    
+    accept = (e) => {
+        let $li = $(e.currentTarget);
+        let userID = $li.find(".read.id").text();
+    
+        base.do("save-joins", {
+            userID,
+            groupID: metaGroups.serving.data[metaGroups.serving.selected].id 
+        }).then((res) => { 
+            metaGroups.reload(); 
+            switch (res.data) {
+                case "auth-error":
+                    metaGroups.setAlert("You are unauthorized to accept join requests!")
+                    break;
+                case "login-error":
+                    metaGroups.setAlert("You are not logged in!")
+                    break;
+                case "accepted":
+                    metaGroups.setAlert("Accepted!")
+                    break;
+                case "redundant":
+                    metaGroups.setAlert("User already joined!")
+                    break;
+                case "not-found-error":
+                    metaGroups.setAlert("Join request not found!")
+                    break;
+            }
+        });
+    }
+}
+
+class CancelAcceptButton extends Button {
+    constructor () {
+        super("cancel-accept", {
+            label: "Cancel Accept",
+            hidden: true
+        });
+
+        this.enable(this.cancelAccept);
+    }
+
+    cancelAccept = (e) => {
+        this.hide();
+        
+        let $ul = this.$div.parent().parent().find("ul.content");
+    
+        this.settings.parent.show("reject");
+        this.settings.parent.show("accept");
+        
+        let $lis = $ul.find("li");
+        $lis.removeClass("click-me");
+        $lis.off();
+    }
+}
+
+class RejectButton extends Button {
+    constructor() {
+        super("reject", {
+            label: "Reject"
+        });
+
+        this.enable(this.startReject);
+    }
+
+    startReject = (e) => {
+        this.hide();
+    
+        let $ul = this.$div.parent().parent().find("ul.content");
+    
+        this.settings.parent.hide("accept");
+        this.settings.parent.show("cancel-reject");
+    
+        let $lis = $ul.find("li");
+        $lis.addClass("click-me");
+        $lis.on("click", (element) => {
+            this.reject(element);
+        });
+    }
+    
+    reject = (e) => {
+        let $li = $(e.currentTarget);
+        let userID = $li.find(".read.id").text();
+    
+        base.do("save-joins", {
+            userID,
+            groupID: metaGroups.serving.data[metaGroups.serving.selected].id,
+            reject: true
+        }).then((res) => { 
+            metaGroups.reload(); 
+            switch (res.data) {
+                case "auth-error":
+                    metaGroups.setAlert("You are unauthorized to reject join requests!")
+                    break;
+                case "login-error":
+                    metaGroups.setAlert("You are not logged in!")
+                    break;
+                case "rejected":
+                    metaGroups.setAlert("Rejected!")
+                    break;
+                case "not-found-error":
+                    metaGroups.setAlert("Join request not found!")
+                    break;
+            }
+        });
+    }
+}
+
+class CancelRejectButton extends Button {
+    constructor () {
+        super("cancel-reject", {
+            label: "Cancel Reject",
+            hidden: true
+        });
+
+        this.enable(this.cancelReject);
+    }
+
+    cancelReject = (e) => {
+        this.hide();
+        
+        let $ul = this.$div.parent().parent().find("ul.content");
+    
+        this.settings.parent.show("accept");
+        this.settings.parent.show("reject");
+        
+        let $lis = $ul.find("li");
+        $lis.removeClass("click-me");
+        $lis.off();
+    }
+}
+
+const metaGroups = new MetaBrowser({
+    label: "Your Groups"
 });
-
-let cancelRemoveButton = new Button("cancel-remove", {
-    onClick: cancelRemove,
-    label: "Cancel Remove",
-    hidden: true
-});
-
-let demoteButton = new Button("demote", {
-    onClick: startDemote,
-    label: "Demote"
-});
-
-let cancelDemoteButton = new Button("cancel-demote", {
-    onClick: null,
-    label: "Cancel Demote",
-    hidden: true
-});
-
-let promoteButton = new Button("promote", {
-    onClick: startPromote,
-    label: "Promote"
-});
-
-let cancelPromoteButton = new Button("cancel-promote", {
-    onClick: null,
-    label: "Cancel Promote",
-    hidden: true
-});
-
-let acceptButton = new Button("accept", {
-    onClick: startAccept,
-    label: "Accept"
-});
-
-let cancelAcceptButton = new Button("cancel-accept", {
-    onClick: null,
-    label: "Cancel Accept",
-    hidden: true
-});
-
-let rejectButton = new Button("reject", {
-    onClick: startReject,
-    label: "Reject"
-});
-
-let cancelRejectButton = new Button("cancel-reject", {
-    onClick: null,
-    label: "Cancel Reject",
-    hidden: true
-})
-
-const metaGroups = new MetaBrowser("Your Groups", groupsBrowser, groupsSearch);
 metaGroups.addService("groups", {
     fields: new NBField({
         name: "group",
@@ -407,7 +415,7 @@ metaGroups.addService("groups", {
             multiple: true,
             label: "Members: ",
             placeholder: "No Members",
-            buttons: [ removeButton, cancelRemoveButton]
+            buttons: [ RemoveButton, CancelRemoveButton ]
         }, [
             new NBField({
                 name: "name",
@@ -420,7 +428,7 @@ metaGroups.addService("groups", {
                 label: "Auth: ",
                 placeholder: "No Auth",
                 multiple: true,
-                buttons: [ demoteButton, cancelDemoteButton, promoteButton, cancelPromoteButton ]
+                buttons: [ DemoteButton, CancelDemoteButton, PromoteButton, CancelPromoteButton ]
             }, "string"),
             new NBField({
                 name: "id",
@@ -433,7 +441,7 @@ metaGroups.addService("groups", {
             multiple: true,
             label: "Join Requests: ",
             placeholder: "No Join Requests",
-            buttons: [ acceptButton, cancelAcceptButton, rejectButton, cancelRejectButton ]
+            buttons: [ AcceptButton, CancelAcceptButton, RejectButton, CancelRejectButton ]
         }, [
             new NBField({
                 name: "name",
