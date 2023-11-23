@@ -38,7 +38,6 @@ const Filters = class Filters {
             // if the filter is null, set it to default
             if (!this.filter[which]) this.filter[which] = this.defaults[which];
         }
-        console.log(this.filter);
 
         // if it has been set, call the onFilterChange function
         if (this.onFilterChange) this.onFilterChange();
@@ -145,6 +144,14 @@ class SearchBox {
         this.$searchList.children().removeClass("selected");
         if (target) $(target).addClass("selected");
         else if (which != null) $(this.$searchList.children()[which]).addClass("selected");
+    }
+
+    hide = () => {
+        this.$div.addClass("invisible");
+    }
+
+    show = () => {
+        this.$div.removeClass("invisible");
     }
 }
 

@@ -8,11 +8,12 @@ main>.date {
     padding: var(--thickPadding);
 }
 
-.browser .shared h6 {
+.browser .shared h4 {
     width: 50% !important;
+    font-size: var(--h5Size);
 }
 
-.browser .shared p {
+.browser .shared ul {
     width: 50% !important;
 }
 
@@ -25,11 +26,20 @@ main>.date {
 }
 
 .browser .nested.frequency {
-    width: 60% !important;
+    width: 52% !important;
+}
+
+.browser .nested.frequency select {
+    width: 100%;
+    height: 40px;
 }
 
 .browser .nested.recurring {
     width: 40% !important;
+}
+
+.browser .nested.recurring ul {
+    justify-content: center;
 }
 
 .meta .buttons {

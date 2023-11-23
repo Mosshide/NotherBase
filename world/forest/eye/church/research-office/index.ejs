@@ -24,13 +24,11 @@
             this.reader = new BibleResearch.Reader();
             this.$div.append(this.reader.render());
 
-            this.$div.append(`<div class="browser"></div>`);
-            this.$div.append(`<div class="search-box"></div>`);
             this.$div.append(`<div class="meta buttons" id="bible-research"></div>`);
 
-            this.browser = new Browser();
-            this.search = new SearchBox();
-            this.metaResearch = new MetaBrowser("Bible Research", this.browser, this.search);
+            this.metaResearch = new MetaBrowser({
+                label: "Bible Research"
+            });
             this.metaResearch.addService("bible-research-persons", {
                 fields: new NBField({
                     name: "persons",

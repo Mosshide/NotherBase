@@ -3,21 +3,13 @@
     display: flex;
     flex-wrap: wrap;
     position: relative;
-    height: auto;
-    min-height: 50vh;
 }
 
 .browser {
     width: var(--fillFromMargin);
-    position: absolute;
     border: var(--standardBorder);
     display: flex;
     flex-wrap: wrap;
-    height: initial;
-    left: var(--margin);
-    top: 10px;
-    z-index: 10;
-    height: 90%;
 }
 
 .floating .browser {
@@ -45,14 +37,11 @@
     justify-content: flex-start;
     margin: 0;
     overflow: auto;
-    height: 100%;
 }
 
 .browser .read.nested, .browser .edit.nested {
-    height: auto;
-    min-height: 40px;
     width: 100%;
-    margin: 0;
+    margin: var(--margin);
     padding: 0;
 }
 
@@ -65,15 +54,14 @@
     width: 100%;
     margin: 0;
     height: 40px;
-    padding: 0;
+    padding: 2px;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
 }
 
 .browser ul.content {
     width: 100%;
-    height: 100%;
     margin: 0;
     padding: 0;
     display: flex;
@@ -82,10 +70,6 @@
     justify-content: flex-start;
     overflow: auto;
     border: none;
-}
-
-.browser ul.content.headed {
-    height: calc(100% - 40px);
 }
 
 .browser img.image {
@@ -105,7 +89,6 @@
     align-content: flex-start;
     justify-content: flex-start;
     margin: 0;
-    height: 100%;
 }
 
 .browser .read p, .browser .edit p {
@@ -133,12 +116,16 @@
 
 .browser .multiple {
     border: none;
-    max-height: 35vh;
     border-radius: 5px;
     margin: var(--thickMargin);
     position: relative;
     padding: 0;
     padding-top: calc(2 * var(--mediumPadding));
+    overflow: visible;
+}
+
+.browser .with-buttons {
+    margin-bottom: 50px !important;
 }
 
 .browser .multiple li>input {
@@ -215,5 +202,8 @@
 
 .browser p.long-string {
     overflow: auto;
-    max-height: 30vh;
+}
+
+.browser .tabs #delete * {
+    margin: 0;
 }

@@ -1,26 +1,46 @@
 class BrowserButtons extends Buttons {
     constructor(id, browser) {
         super(id, [
-            new Button("edit", {
-                onClick: () => { browser.edit(); },
-                label: "Edit"
-            }),
-            new Button("save", {
-                onClick: () => { browser.save(); },
-                label: "Save"
-            }),
-            new Button("cancel", {
-                onClick: () => { browser.cancel(); },
-                label: "Cancel"
-            }),
-            new Button("delete", {
-                onClick: () => { browser.attemptDelete(); },
-                label: "Delete"
-            }),
-            new Button("close", {
-                onClick: () => { browser.hide(); },
-                label: "Close"
-            })
+            class NewButton extends Button {
+                constructor() {
+                    super("edit", {
+                        onClick: () => { browser.edit(); },
+                        label: "Edit"
+                    });
+                }
+            },
+            class SaveButton extends Button {
+                constructor() {
+                    super("save", {
+                        onClick: () => { browser.save(); },
+                        label: "Save"
+                    });
+                }
+            },
+            class CancelButton extends Button {
+                constructor() {
+                    super("cancel", {
+                        onClick: () => { browser.cancel(); },
+                        label: "Cancel"
+                    });
+                }
+            },
+            class DeleteButton extends Button {
+                constructor() {
+                    super("delete", {
+                        onClick: () => { browser.attemptDelete(); },
+                        label: "Delete"
+                    });
+                }
+            },
+            class CloseButton extends Button {
+                constructor() {
+                    super("close", {
+                        onClick: () => { browser.close(); },
+                        label: "Close"
+                    });
+                }
+            }
         ], {
             isTabs: true
         });
@@ -88,6 +108,13 @@ class ViewBox {
 class ReadBox extends ViewBox {
     constructor(fields, nested) {
         super(fields, nested);
+
+        if (this.fields.settings.buttons) this.buttons = new Buttons(null, this.fields.settings.buttons, {
+            isTabs: true,
+            parent: this
+        });
+
+        this.render();
     }
 
     render = () => {
@@ -99,9 +126,13 @@ class ReadBox extends ViewBox {
             this.$div.addClass("nested");
             if (this.fields.settings.multiple) this.$div.addClass("multiple");
         }
+        if (this.fields.settings.buttons) this.$div.addClass("with-buttons");
 
         this.renderHeader();
-        this.renderButtons();
+        if (this.buttons) {
+            this.buttons.$div.appendTo(this.$div);
+            this.buttons.enable();
+        }
 
         this.$content = $(`<ul class="${this.fields.settings.label ? "headed" : ""} content"></ul>`).appendTo(this.$div);
         
@@ -116,15 +147,6 @@ class ReadBox extends ViewBox {
         
         if (this.fields.settings.label) {
             this.$header = $(`<h4 class="${mods}${this.fields.settings.name}">${this.fields.settings.label}</h4>`).appendTo(this.$div);
-        }
-    }
-
-    renderButtons = () => {
-        if (Array.isArray(this.fields.settings.buttons)) {
-            for (let i = 0; i < this.fields.settings.buttons.length; i++) {
-                this.fields.settings.buttons[i].render();
-                this.$div.append(this.fields.settings.buttons[i].$div.clone(true));
-            }
         }
     }
 
@@ -173,7 +195,7 @@ class ReadBox extends ViewBox {
         if (this.item != item || this.fields != fields) {
             this.fields = fields;
             this.item = item;
-    
+            
             this.render();
 
             if (item) {
@@ -235,6 +257,8 @@ class EditBox extends ViewBox {
         super(fields, nested);
         this.loadOverride = loadOverride;
         this.extraData = extraData;
+
+        this.render();
     }
 
     render = () => {
@@ -549,13 +573,15 @@ class Browser {
             onEdit: null,
             onCancel: null,
             onDelete: null,
+            onClose: null,
             disableSave: false,
             ...settings
         };
         this.newItem = false;
+        this.state = "hidden";
 
-        this.readBox = new ReadBox(this.fields);
-        this.editBox = new EditBox(this.fields, false);
+        this.box = null;
+        
         this.buttons = new BrowserButtons(id, this);
         this.buttons.hide();
 
@@ -575,20 +601,14 @@ class Browser {
     render = () => {
         this.$div = $(`<div class="browser invisible" id="${this.id ? `#${this.id}` : ""}"></div>`);
 
-        //read box
-        this.readBox.render().appendTo(this.$div);
-
-        //edit box
-        let $edit = this.editBox.render();
-        this.editBox.hide();
-        $edit.appendTo(this.$div);
-
         this.$div.append(this.buttons.$div);
     }
 
     delete = async () => {
         if (this.settings.onDelete) this.settings.onDelete();
         this.hide();
+        if (this.box?.$div) this.box.$div.remove();
+        this.cancelDelete();
     }
 
     attemptDelete = () => {
@@ -597,7 +617,6 @@ class Browser {
 
         this.lastAttempt = Date.now();
 
-        console.log(this.buttons.buttons.delete);
         this.$cancel = $(`<button id="cancel-delete">Cancel</button>`).appendTo(this.buttons.buttons.delete.$div);
         this.$cancel.on("click", (e) => {
             this.cancelDelete();
@@ -620,36 +639,41 @@ class Browser {
     }
 
     save = async () => {
-        this.item = this.editBox.save();
+        if (this.state === "edit") {
+            this.item = this.box.save();
+            if (this.newItem) this.newItem = false;
+            
+            if (this.settings.onSave) this.settings.onSave(this.item);
 
-        if (this.newItem) {
-            this.newItem = false;
+            this.read();
         }
-        
-        if (this.settings.onSave) this.settings.onSave(this.item);
-
-        this.read();
     }
 
     read = (item = this.item, parent = this.parent, fields = this.fields, editable = this.editable) => {
+        this.state = "read";
         this.newItem = false;
         this.item = item;
         this.parent = parent;
         this.fields = fields;
         this.editable = editable;
 
-        this.editBox.hide();
+        this.cancelDelete();
+
+        if (this.box?.$div) this.box.$div.remove();
+        this.box = new ReadBox(this.fields);
+        this.$div.append(this.box.$div);
 
         this.buttons.show("close");
         this.buttons.hide("save");
         this.buttons.hide("cancel");
+        this.buttons.show("delete");
 
         if (this.editable) this.buttons.show("edit");
         else this.buttons.hide("edit");
 
-        this.readBox.show();
+        this.box.show();
 
-        this.readBox.load(this.item, this.fields);
+        this.box.load(this.item, this.fields);
 
         this.show();
     }
@@ -663,20 +687,22 @@ class Browser {
         this.editable = editable;
 
         if (this.editable) {
+            this.state = "edit";
             this.item = item;
             this.parent = parent;
             this.fields = fields;
     
-            this.readBox.hide();
+            if (this.box?.$div) this.box.$div.remove();
+            this.box = new EditBox(this.fields);
+            this.$div.append(this.box.$div);
 
             this.buttons.hide("edit");
             this.buttons.show("close");
             this.buttons.show("save");
             this.buttons.show("cancel");
-            this.buttons.show("delete");
-            this.editBox.show();
+            this.buttons.hide("delete");
     
-            this.editBox.load(item, this.fields);
+            this.box.load(item, this.fields);
 
             if (this.settings.onEdit) this.settings.onEdit();
         }
@@ -685,25 +711,19 @@ class Browser {
     }
 
     cancel = () => {
-        this.editBox.hide();
-
-        this.buttons.hide("save");
-        this.buttons.hide("cancel");
-
-        if (this.editable) this.buttons.show("edit");
-        else this.buttons.hide("edit");
-
-        this.readBox.show();
-        if (this.newItem) {
-            this.hide();
-            this.newItem = false;
-        }
+        this.read();
 
         if (this.settings.onCancel) this.settings.onCancel();
     }
 
+    close = () => {
+        this.hide();
+        if (this.settings.onClose) this.settings.onClose();
+    }
+
     hide = () => {
         this.$div.addClass("invisible");
+        this.state = "hidden";
     }
 
     show = () => {
@@ -1009,7 +1029,11 @@ class MetaBrowser {
             onSave: this.save,
             onEdit: this.edit,
             onCancel: this.cancel,
-            onDelete: this.delete
+            onDelete: this.delete,
+            onClose: () => {
+                this.serving.state = "search";
+                this.showSearch();
+            }
         });
         this.$div.append(this.browser.$div);
     }
@@ -1026,7 +1050,7 @@ class MetaBrowser {
     addService = (service, settings) => {
         this.services[service] = {
             selected: 0,
-            state: "read",
+            state: "search",
             lastFilter: "",
             lastEdit: {},
             label: null,
@@ -1050,7 +1074,7 @@ class MetaBrowser {
 
             this.buttons.addButton(new Button(service, {
                 onClick: () => {
-                    this.selectService(service, false, true);
+                    this.selectService(service, true, true);
                 },
                 label: `Switch to ${serving.label ? serving.label : service}`
             }));
@@ -1082,8 +1106,8 @@ class MetaBrowser {
 
     new = () => {
         if (this.serving.editable) {
-            console.log(this.serving.data.length);
             this.select(this.serving.data.length, "new", true, true);
+            this.hideSearch();
         }
     }
 
@@ -1097,15 +1121,19 @@ class MetaBrowser {
             if (this.serving.toSave) await this.serving.toSave(item, this.serving.selected);
 
             this.serving.state = "read";
+
+            this.hideSearch();
         }
     }
 
     edit = async () => {
         this.serving.state = "edit";
+        this.hideSearch();
     }
 
     cancel = async () => {
         this.select(this.serving.selected, "read");
+        this.hideSearch();
     }
 
     delete = async (which = this.serving.selected) => {
@@ -1120,6 +1148,8 @@ class MetaBrowser {
             }
 
             this.updateSearch();
+            this.serving.state = "search";
+            this.showSearch();
         }
     }
 
@@ -1141,7 +1171,10 @@ class MetaBrowser {
         }
         else if (state === "new") {
             this.browser.new(this, this.serving.fields);
+            this.serving.state = "edit";
         }
+
+        if (state != "search") this.hideSearch();
     }
 
     updateSearch = () => {
@@ -1153,7 +1186,7 @@ class MetaBrowser {
     }
 
     selectService = (service, passToBrowser = true, passToSearch = true) => {
-        if (this.serving.state === "edit") this.serving.lastEdit = this.browser.editBox.save();
+        if (this.serving.state === "edit") this.serving.lastEdit = this.browser.box.save();
 
         this.buttons.show(this.selectedService);
 
@@ -1165,8 +1198,25 @@ class MetaBrowser {
         if (this.serving.editable) this.buttons.show("new");
         else this.buttons.hide("new");
 
+        this.browser.hide();
         this.updateSearch();
-        if (!passToBrowser) this.browser.hide();
+        this.showSearch();
         this.select(this.serving.selected, this.serving.state, passToBrowser, passToSearch);
+    }
+
+    hide = () => {
+        this.$div.addClass("invisible");
+    }
+
+    show = () => {
+        this.$div.removeClass("invisible");
+    }
+
+    showSearch = () => {
+        if (this.searchBox) this.searchBox.show();
+    }
+
+    hideSearch = () => {
+        if (this.searchBox) this.searchBox.hide();
     }
 }

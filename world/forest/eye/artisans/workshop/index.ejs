@@ -1,9 +1,6 @@
 <div class="floatables">
-    <div class="browser"></div>
+    <div class="meta"></div>
 </div>
-
-<div class="search-box"></div>
-<div class="meta buttons"></div>
 
 <hr>
 
@@ -18,8 +15,7 @@
 <script src="/js/floatable.js"></script>
 <script>
     const metaBrowser = new MetaBrowser({
-        label: "Your Recipes",
-        usBrowser: TreeBrowser
+        label: "Your Projects"
     });
     metaBrowser.addService("projects", {
         fields: new NBField({
