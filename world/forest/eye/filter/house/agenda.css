@@ -10,10 +10,9 @@ main>.date {
 
 .browser .shared h4 {
     width: 50% !important;
-    font-size: var(--h5Size);
 }
 
-.browser .shared ul {
+.browser .edit .shared ul {
     width: 50% !important;
 }
 
@@ -54,3 +53,30 @@ main>.date {
 .selector {
     height: auto !important;
 }
+
+.read.name h4, .read.date h4, .read.time h4, .read.shared h4 {
+    display: none;
+}
+
+.read.date, .read.time {
+    width: 46% !important;
+}
+
+.nested h4 {
+    border: none;
+    font-size: var(--pSize);
+    background: none;
+}
+
+.read.sharing li {
+    justify-content: space-between;
+}
+
+.read.sharing .read.name {
+    width: 80% !important;
+}
+
+.read.sharing .read.shared {
+    width: 17% !important;
+}
+

@@ -1,3 +1,5 @@
+// an extension of the Filters class called AgendaFilters
+// this class has a few extra filters that are specific to the agenda
 class AgendaFilters extends Filters {
     constructor(onFilterChange = null) {
         super(onFilterChange, {
@@ -11,33 +13,37 @@ class AgendaFilters extends Filters {
 
     extendedRender = () => {
         // create the  showOld header and append it to the base div
-        this.$showOldHeader = $(`<h4>Show Old</h4>`).appendTo(this.$div);
+        this.$showOldHeader = $(`<h5>Show Old</h5>`).appendTo(this.$div);
         // create the show old tasks checkbox and append it to the base div
         this.$showOld = $(`<input type="checkbox" id="show-old">`).appendTo(this.$div);
         // enable the checkbox to update the filter
-        this.$showOld.on("change", (e) => { return this.updateFilter("showOld", e.currentTarget.checked); });
+        this.$showOld.on("change", (e) => { return this.updateFilter(e.currentTarget.checked, "showOld"); });
 
 
         // create the showMore header and append it to the base div
-        this.$showMoreHeader = $(`<h4>Show More</h4>`).appendTo(this.$div);
+        this.$showMoreHeader = $(`<h5>Show More</h5>`).appendTo(this.$div);
         // create the show more tasks checkbox and append it to the base div
         this.$showMore = $(`<input type="checkbox" id="show-more">`).appendTo(this.$div);
         // enable the checkbox to update the filter
-        this.$showMore.on("change", (e) => { return this.updateFilter("showMore", e.currentTarget.checked); });
+        this.$showMore.on("change", (e) => { return this.updateFilter(e.currentTarget.checked, "showMore"); });
     }
 
     setFilter = (filter) => {
-        // update the filter
-        this.updateFilter(null, filter);
-        // update the search input value
-        this.$search.val(this.filter.search);
-        // update the showOld checkbox value
-        this.$showOld.prop("checked", this.filter.showOld);
-        // update the showMore checkbox value
-        this.$showMore.prop("checked", this.filter.showMore);
+        if (filter) {
+            // update the filter
+            this.updateFilter(filter, null);
+            // update the search input value
+            this.$search.val(this.filter.search);
+            // update the showOld checkbox value
+            this.$showOld.prop("checked", this.filter.showOld);
+            // update the showMore checkbox value
+            this.$showMore.prop("checked", this.filter.showMore);
+        }
     }
 }
 
+// an extension of the SearchBox class called Agenda
+// this class has a few extra lists that are specific to the agenda
 class Agenda extends SearchBox {
     constructor(id = null, parent) {
         super(id, parent, null);
@@ -69,29 +75,17 @@ class Agenda extends SearchBox {
         dayEnd.setMilliseconds(999);
 
         let weekEnd = new Date(nowDate.getTime());
-        weekEnd.setDate(weekEnd.getDay() + 7);
+        weekEnd.setDate(weekEnd.getDate() + 7);
         weekEnd.setHours(23);
         weekEnd.setMinutes(59);
         weekEnd.setSeconds(59);
         weekEnd.setMilliseconds(999);
 
         let monthEnd = new Date(nowDate.getTime());
-        monthEnd.setDate(15);
         monthEnd.setMonth(monthEnd.getMonth() + 1);
-        monthEnd.setDate(0);
-        monthEnd.setHours(23);
-        monthEnd.setMinutes(59);
-        monthEnd.setSeconds(59);
-        monthEnd.setMilliseconds(999);
 
         let yearEnd = new Date(nowDate.getTime());
         yearEnd.setFullYear(yearEnd.getFullYear() + 1);
-        yearEnd.setMonth(0);
-        yearEnd.setDate(0);
-        yearEnd.setHours(23);
-        yearEnd.setMinutes(59);
-        yearEnd.setSeconds(59);
-        yearEnd.setMilliseconds(999);
 
         this.clearLists();
         
@@ -109,57 +103,65 @@ class Agenda extends SearchBox {
                 
                 if (this.items[i].date) {
                     let testDate = new Date(this.items[i].date);
+                    let testTime = new Date(this.items[i].time);
 
-                    if (this.items[i].frequency === "weekly") while (testDate.getTime() < dayStart.getTime()) {
-                        testDate.setDate(testDate.getDate() + 7);
-                    }
-                    else if (this.items[i].frequency === "monthly") {
-                        while (testDate.getTime() < dayStart.getTime()) {
-                            testDate.setFullYear(dayEnd.getFullYear());
-                            testDate.setMonth(testDate.getMonth() + 1);
+                    if (testDate.getTime() < dayStart.getTime()) {
+                        if (this.items[i].frequency === "weekly") while (testDate.getTime() < dayStart.getTime()) {
+                            testDate.setDate(testDate.getDate() + 7);
                         }
-                        
-                    }
-                    else if (this.items[i].frequency === "yearly") while (testDate.getTime() < dayStart.getTime()) {
-                        testDate.setFullYear(testDate.getFullYear() + 1);
+                        else if (this.items[i].frequency === "monthly") {
+                            testDate.toWithinAMonth();
+                            
+                        }
+                        else if (this.items[i].frequency === "yearly") {
+                            testDate.toWithinAYear();
+                        }
                     }
 
                     if (testDate.getTime() < dayStart.getTime()) {
                         $list = this.$oldList;
                         header = "Old Tasks";
+                        label = `${testDate.toLocaleDateString()} - ${label}`;
                     }
                     else if (testDate.getTime() < dayEnd.getTime()) {
                         $list = this.$todayList;
                         header = "Today";
+                        label = `${testTime.getHours()}:${testTime.getMinutes()} - ${label}`;
                     }
                     else if (testDate.getTime() < weekEnd.getTime()) {
                         $list = this.$weekList;
                         header = "This Week";
+                        label = `${testDate.getDayOfTheWeek(true)} - ${label}`;
                     }
                     else if (testDate.getTime() < monthEnd.getTime()) {
                         $list = this.$monthList;
                         header = "This Month";
+                        label = `${testDate.getMonth() + 1}/${testDate.getDate()} - ${label}`;
                     }
                     else if (testDate.getTime() < yearEnd.getTime()) {
                         $list = this.$yearList;
                         header = "This Year";
+                        label = `${testDate.getMonth() + 1}/${testDate.getDate()} - ${label}`;
                     }
                     else {
                         $list = this.$moreList;
                         header = "More";
+                        label = `${testDate.toLocaleDateString()} - ${label}`;
                     }
                 };
 
 
                 let filtered = false;
-                if (!label.toLowerCase().includes(filter.search)) {
-                    filtered = true;
-                }
-                if (!filter.showOld) {
-                    if ($list === this.$oldList) filtered = true;
-                }
-                if (!filter.showMore) {
-                    if ($list === this.$moreList) filtered = true;
+                if (filter) {
+                    if (!label.toLowerCase().includes(filter.search)) {
+                        filtered = true;
+                    }
+                    if (!filter.showOld) {
+                        if ($list === this.$oldList) filtered = true;
+                    }
+                    if (!filter.showMore) {
+                        if ($list === this.$moreList) filtered = true;
+                    }
                 }
                 if (!filtered) this.appendToList($list, label, i, header);
             }
@@ -170,6 +172,7 @@ class Agenda extends SearchBox {
         }
     }
 
+    // clears all lists
     clearLists = () => {
         this.$searchList.empty();
         this.$searchList.addClass("invisible");
@@ -189,6 +192,10 @@ class Agenda extends SearchBox {
         this.$moreList.addClass("invisible");
     }
 
+    // appends a Jquery element to a list
+    // the element is a list item with the given label
+    // the element has an id of i
+    // optionally, the element can have a header
     appendToList = ($list, label, i, header) => {
         if ($list.children().length < 1) {
             $list.append(`<h4>${header}</h4>`);
