@@ -80,3 +80,6 @@ main>.date {
     width: 17% !important;
 }
 
+.search-box h4 {
+    border: none;
+}
