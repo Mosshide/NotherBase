@@ -42,7 +42,7 @@ class BrowserButtons extends Buttons {
                 }
             }
         ], {
-            isTabs: true
+            isTabs: false
         });
     }
 }
@@ -174,7 +174,7 @@ class ReadBox extends ViewBox {
             else $rendered = $(`<p class="${field.settings.name}"></p>`).appendTo($parent);
         }
         else if (field.children === "boolean") {
-            $rendered = $(`<p class="${field.settings.name}">${item}</p>`).appendTo($parent);
+            $rendered = $(`<p class="${field.settings.name}">${item ? "Yes" : "No"}</p>`).appendTo($parent);
         }
         else if (field.children === "long-string") {
             if (item) $rendered = $(`<p class="long-string ${field.settings.name}">${item.replace(/(?:\r\n|\r|\n)/g, '<br />')}</p>`).appendTo($parent);
@@ -1179,9 +1179,8 @@ class MetaBrowser {
 
     updateSearch = () => {
         if (this.searchBox) {
-            if (this.serving.multiple) this.searchBox.load(this.serving.data, this.serving.selected);
-            else this.searchBox.load([ this.serving.data ]);
-            this.serving.lastFilter = "";
+            if (this.serving.multiple) this.searchBox.load(this.serving.data, this.serving.selected, this.serving.lastFilter);
+            else this.searchBox.load([ this.serving.data ], null, this.serving.lastFilter);
         }
     }
 

@@ -23,6 +23,29 @@ export default async (req, user) => {
             }
         }
 
+        // sort the data first by if there is a date, then by date, then by time, then by name
+        spirit.memory.data.sort((a, b) => {
+            if (a.date && !b.date) return -1;
+            if (!a.date && b.date) return 1;
+            if (a.date && b.date) {
+                if (a.date < b.date) return -1;
+                if (a.date > b.date) return 1;
+            }
+            if (a.time && !b.time) return -1;
+            if (!a.time && b.time) return 1;
+            if (a.time && b.time) {
+                if (a.time < b.time) return -1;
+                if (a.time > b.time) return 1;
+            }
+            if (a.name && !b.name) return -1;
+            if (!a.name && b.name) return 1;
+            if (a.name && b.name) {
+                if (a.name < b.name) return 1;
+                if (a.name > b.name) return -1;
+            }
+            return 0;
+        });
+
         //save the document in the database
         await spirit.commit();
     }
