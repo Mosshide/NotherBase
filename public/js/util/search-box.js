@@ -20,7 +20,7 @@ class Filters {
         // create the search input and append it to the base div
         this.$search = $(`<input type="text" placeholder="search">`).appendTo(this.$div);
         // enable the search input to update the filter
-        this.$search.on("input", (e) => { return this.updateFilter(e.currentTarget.value, "search"); });
+        this.$search.on("input", (e) => { return this.updateFilter(e.currentTarget.value.toLowerCase(), "search"); });
         
         return this.$div;
     }
