@@ -1,11 +1,23 @@
-.weather {
-    width: 50%;
-    padding: var(--thickPadding);
+main .hud {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-content: center;
+    min-height: 90px;
+    width: 100%;
 }
 
-main>.date {
+main .hud .weather {
     width: 50%;
-    padding: var(--thickPadding);
+    padding: var(--padding);
+}
+
+main .hud .date {
+    width: 50%;
+    padding: var(--padding);
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
 }
 
 .browser .shared h4 {
