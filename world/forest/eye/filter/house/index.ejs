@@ -9,15 +9,16 @@
     <input type="text" class="mailbox">
 </section>
 
-<div class="date">
-    <p class="day"></p>
-    <p class="full-date"></p>
-</div>
-<div class="weather">
-    <p class="name"></p>
-    <p class="temp">Loading the weather outside...</p>
-    <p class="forecast"></p>
-    <p class="wind-speed"></p>
+<div class="hud">
+    <div class="date">
+        <p class="day"></p>
+        <p class="full-date"></p>
+    </div>
+    <div class="weather">
+        <p class="name"></p>
+        <p class="temp">Loading the weather outside...</p>
+        <p class="forecast"></p>
+    </div>
 </div>
 
 <div class="meta"></div>
@@ -94,10 +95,9 @@
     $.get(`https://api.weather.gov/points/46.7253,-122.9534`, (data) => {
         if (data.properties.forecast) $.get(data.properties.forecast, (data) => {
             let current = data.properties.periods[0];
-            $(`.weather .name`).text(current.name);
+            $(`.weather .name`).text(`Forecast ${current.name}:`);
             $(`.weather .temp`).text(`${current.temperature} °F`);
-            $(`.weather .forecast`).text(current.shortForecast);
-            $(`.weather .wind-speed`).text(current.windSpeed);
+            $(`.weather .forecast`).text(`${current.shortForecast}; ${current.windSpeed}`);
         });
     });
 

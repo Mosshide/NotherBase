@@ -1,6 +1,6 @@
 :root {
     /* colors */
-    --clickable: linear-gradient(90deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.02) 100%);
+    --clickable: linear-gradient(90deg, rgba(255,255,255,0.015) 0%, rgba(255,255,255,0.03) 50%, rgba(255,255,255,0.015) 100%);
     --tint: rgba(0, 0, 0, 0.123);
     --bgColor: rgb(37, 37, 37);
     --bgColorGradient: linear-gradient(170deg, rgba(37,37,37,1) 0%, rgba(15,15,15,1) 100%);
@@ -312,6 +312,9 @@ input {
 }
 
 input[type=checkbox] {
+    width: 20%;
+    height: 30px;
+    margin: var(--margin);
     background-color: var(--tint);
 }
 
@@ -328,7 +331,7 @@ input[type=submit] {
 }
 
 button {
-    background-color: var(--bgColor);
+    background: var(--clickable);
     padding: var(--padding);
     border-radius: var(--borderRadius);
     border: var(--standardBorder);
@@ -343,6 +346,7 @@ input[type=submit]:hover, button:hover {
     border: var(--brightBorder);
     color: var(--textColorBright);
     cursor: pointer;
+    background: var(--hoverColor);
 }
 
 /* links */
@@ -394,12 +398,6 @@ a.subtle:hover {
     border-radius: 0;
 }
 /*  */
-
-input[type=checkbox] {
-    width: 30px;
-    height: 30px;
-    margin: var(--margin);
-}
 
 .sign {
     width: var(--fillFromMargin);
