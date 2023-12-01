@@ -397,7 +397,6 @@ metaGroups.addService("groups", {
     }, [
         new NBField({
             name: "name",
-            label: "Name: ",
             placeholder: "No Name"
         }, "string"),
         new NBField({
