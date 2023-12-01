@@ -34,15 +34,22 @@
 }
 
 .search-box .filters {
-    width: var(--fillFromMargin);
-    height: var(--fillFromMargin);
-    position: absolute;
-    left: 0;
-    top: 0;
+    width: 100%;
+    height: auto;
     background: var(--bgColor);
-    overflow: auto;
-    z-index: 6;
-    margin: var(--margin);
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    border-bottom: 1px dashed var(--textColor);
+}
+
+.search-box .filters h5 {
+    width: 45%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    height: 40px;
 }
 
 .search-box .selector li {

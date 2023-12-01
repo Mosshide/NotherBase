@@ -6,7 +6,7 @@
 }
 
 .browser {
-    width: var(--fillFromMargin);
+    width: 100%;
     border: var(--standardBorder);
     display: flex;
     flex-wrap: wrap;
@@ -45,10 +45,6 @@
     padding: 0;
 }
 
-:nth-child(even of .browser .edit) {
-    background: var(--darkBgColor);
-}
-
 .browser h4 {
     background: var(--bgColor);
     width: 100%;
@@ -77,7 +73,7 @@
     height: auto;
     max-height: 30vh;
     object-fit: contain;
-    background: rgba(0, 0, 0, 0.12);
+    background: var(--tint);
 }
 
 .browser .read {
@@ -94,7 +90,7 @@
 .browser .read p, .browser .edit p {
     background: none;
     width: 100%;
-    background: rgba(0, 0, 0, 0.12);
+    background: var(--tint);
     border-radius: 4px;
     margin-bottom: 0;
 }

@@ -1,8 +1,11 @@
-const Filters = class Filters {
-    constructor(onFilterChange = null, defaults = { search: "" }) {
-        this.defaults = defaults;
-        this.filter = { ...this.defaults };
+// a class called Filters that can be used to filter a search box
+class Filters {
+    constructor(onFilterChange, defaults = { search: "" }) {
         this.onFilterChange = onFilterChange;
+        this.parent = parent;
+        this.defaults = defaults;
+        this.filter = this.defaults;
+        this.$div = null;
 
         this.render();
     }
@@ -10,8 +13,10 @@ const Filters = class Filters {
     render = () => {
         // create the base div
         this.$div = $(`<div class="filters invisible"></div>`);
+        // create the Filters header and append it to the base div
+        //this.$filtersHeader = $(`<h4>Filters</h4>`).appendTo(this.$div);
         // create the search header and append it to the base div
-        this.$searchHeader = $(`<h4>Search</h4>`).appendTo(this.$div);
+        this.$searchHeader = $(`<h5>Search</h5>`).appendTo(this.$div);
         // create the search input and append it to the base div
         this.$search = $(`<input type="text" placeholder="search">`).appendTo(this.$div);
         // enable the search input to update the filter
@@ -20,37 +25,29 @@ const Filters = class Filters {
         return this.$div;
     }
 
-    setFilter = (filter) => {
+    getFilter = (which) => {
+        if (which) return this.filter[which];
+        return this.filter;
+    }
+
+    setFilter = (filter, which = "search") => {
         // update the filter
-        this.updateFilter(null, filter);
+        this.updateFilter(filter, which);
         // update the search input value
         this.$search.val(this.filter.search);
     }
 
-    updateFilter = (which, filter) => {
-        if (!which) {
-            this.filter = filter;
-            if (!this.filter) this.filter = { ...this.defaults };
-        }
-        else {
-            // set the filter to the input value
-            this.filter[which] = filter;
-            // if the filter is null, set it to default
-            if (!this.filter[which]) this.filter[which] = this.defaults[which];
-        }
+    // updates a specific filter or all filters if which is not null
+    updateFilter = (filter, which = null) => {
+        if (which) this.filter[which] = filter;
+        else this.filter = filter;
 
         // if it has been set, call the onFilterChange function
         if (this.onFilterChange) this.onFilterChange();
     }
 
-    getFilter = (which = null) => {
-        if (which) {
-            // normalize the filter and return it
-            return this.filter[which].toLowerCase();
-        }
-        else {
-            return this.filter;
-        }
+    setDefaults = (defaults = this.defaults) => {
+        this.filter = { ...this.defaults };
     }
 
     show = () => {
@@ -142,8 +139,8 @@ class SearchBox {
 
     select = (target = null, which = null) => {
         this.$searchList.children().removeClass("selected");
-        if (target) $(target).addClass("selected");
-        else if (which != null) $(this.$searchList.children()[which]).addClass("selected");
+        // if (target) $(target).addClass("selected");
+        // else if (which != null) $(this.$searchList.children()[which]).addClass("selected");
     }
 
     hide = () => {
@@ -154,4 +151,3 @@ class SearchBox {
         this.$div.removeClass("invisible");
     }
 }
-
