@@ -40,13 +40,6 @@ class AgendaFilters extends Filters {
             this.$showMore.prop("checked", this.filter.showMore);
         }
     }
-
-    updateShowOldFilter = (filter) => {
-        this.filter.showOld = filter;
-
-        // if it has been set, call the onFilterChange function
-        if (this.onFilterChange) this.onFilterChange();
-    }
 }
 
 // an extension of the SearchBox class called Agenda
@@ -138,17 +131,17 @@ class Agenda extends SearchBox {
                     else if (testDate.getTime() < weekEnd.getTime()) {
                         $list = this.$weekList;
                         header = "This Week";
-                        label = `${testDate.toLocaleDateString()} - ${label}`;
+                        label = `${testDate.getDayOfTheWeek(true)} - ${label}`;
                     }
                     else if (testDate.getTime() < monthEnd.getTime()) {
                         $list = this.$monthList;
                         header = "This Month";
-                        label = `${testDate.toLocaleDateString()} - ${label}`;
+                        label = `${testDate.getMonth() + 1}/${testDate.getDate()} - ${label}`;
                     }
                     else if (testDate.getTime() < yearEnd.getTime()) {
                         $list = this.$yearList;
                         header = "This Year";
-                        label = `${testDate.toLocaleDateString()} - ${label}`;
+                        label = `${testDate.getMonth() + 1}/${testDate.getDate()} - ${label}`;
                     }
                     else {
                         $list = this.$moreList;

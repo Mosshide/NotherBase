@@ -42,6 +42,7 @@
     flex-wrap: wrap;
     justify-content: space-between;
     border-bottom: 1px dashed var(--textColor);
+    padding: var(--padding);
 }
 
 .search-box .filters h5 {

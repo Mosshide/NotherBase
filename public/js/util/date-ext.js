@@ -42,3 +42,8 @@ Date.prototype.toWithinAYear = function () {
     this.setDate(Math.min(d, this.getDaysInMonth()));
     return this;
 }
+
+Date.prototype.getDayOfTheWeek = function (mini = false) {
+    if (mini) return ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][this.getDay()];
+    return ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][this.getDay()];
+};
