@@ -1,46 +1,26 @@
 class BrowserButtons extends Buttons {
     constructor(id, browser) {
         super(id, [
-            class NewButton extends Button {
-                constructor() {
-                    super("edit", {
-                        onClick: () => { browser.edit(); },
-                        label: "Edit"
-                    });
-                }
-            },
-            class SaveButton extends Button {
-                constructor() {
-                    super("save", {
-                        onClick: () => { browser.save(); },
-                        label: "Save"
-                    });
-                }
-            },
-            class CancelButton extends Button {
-                constructor() {
-                    super("cancel", {
-                        onClick: () => { browser.cancel(); },
-                        label: "Cancel"
-                    });
-                }
-            },
-            class DeleteButton extends Button {
-                constructor() {
-                    super("delete", {
-                        onClick: () => { browser.attemptDelete(); },
-                        label: "Delete"
-                    });
-                }
-            },
-            class CloseButton extends Button {
-                constructor() {
-                    super("close", {
-                        onClick: () => { browser.close(); },
-                        label: "Close"
-                    });
-                }
-            }
+            new Button("edit", {
+                onClick: () => { browser.edit(); },
+                label: "Edit"
+            }),
+            new Button("save", {
+                onClick: () => { browser.save(); },
+                label: "Save"
+            }),
+            new Button("cancel", {
+                onClick: () => { browser.cancel(); },
+                label: "Cancel"
+            }),
+            new Button("delete", {
+                onClick: () => { browser.attemptDelete(); },
+                label: "Delete"
+            }),
+            new Button("close", {
+                onClick: () => { browser.close(); },
+                label: "Close"
+            })
         ], {
             isTabs: false
         });
@@ -582,10 +562,10 @@ class Browser {
 
         this.box = null;
         
+        Browser.attemptStyle();
         this.buttons = new BrowserButtons(id, this);
         this.buttons.hide();
 
-        Browser.attemptStyle();
         this.render();
     }
 
@@ -989,19 +969,20 @@ class MetaBrowser {
             ...settings
         }
 
+        Browser.attemptStyle();
+
         this.browser = null;
         this.searchBox = null;
         this.services = {};
         this.selectedService = "";
         this.$div = $(".meta" + (this.settings.id ? `#${this.settings.id}` : ""));
         if (this.settings.label) this.$header = $(`<h4>${this.settings.label}</h4>`).appendTo(this.$div);
-        this.buttons = new Buttons(this.settings.id, [], {});
-        this.buttons.addButton(new Button("new", {
-            onClick: () => {
-                this.new();
-            },
-            label: `New`
-        }));
+        this.buttons = new Buttons(this.settings.id, [ 
+            new Button("new", {
+                onClick: () => { this.new(); },
+                label: "New"
+            })
+        ], {});
         this.buttons.hide();
         this.$div.append(this.buttons.$div);
         this.$alert = $(`<p class="alert invisible"></p>`).appendTo(this.$div);
@@ -1009,7 +990,6 @@ class MetaBrowser {
         this.$hideAlert.on("click", () => {
             this.$alert.addClass("invisible");
         });
-
 
         if (this.settings.useBrowser) this.addBrowser();
         if (this.settings.useSearchBox) this.addSearchBox();
