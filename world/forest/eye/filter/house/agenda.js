@@ -126,7 +126,8 @@ class Agenda extends SearchBox {
                     else if (testDate.getTime() < dayEnd.getTime()) {
                         $list = this.$todayList;
                         header = "Today";
-                        label = `${testTime.getHours()}:${testTime.getMinutes()} - ${label}`;
+                        // prepends the label with the time, adding an extra 0 if necessary
+                        label = `${testTime.getHours()}:${testTime.getMinutes() < 10 ? "0" : ""}${testTime.getMinutes()} - ${label}`;
                     }
                     else if (testDate.getTime() < weekEnd.getTime()) {
                         $list = this.$weekList;
