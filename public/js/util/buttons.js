@@ -53,7 +53,7 @@ class Button {
 }
 
 class Buttons {
-    constructor(id, BaseButtons = [], settings = {}) {
+    constructor(id, baseButtons = [], settings = {}) {
         this.settings = {
             $origin: null,
             isTabs: false,
@@ -65,12 +65,13 @@ class Buttons {
         Buttons.attemptStyle();
 
         this.buttons = {};
-        this.BaseButtons = BaseButtons;
+        this.baseButtons = baseButtons;
 
         this.render();
 
-        for (let i = 0; i < this.BaseButtons.length; i++) {
-            this.addButton(new (this.BaseButtons[i])());
+        for (let i = 0; i < this.baseButtons.length; i++) {
+            this.baseButtons[i].hide();
+            this.addButton(this.baseButtons[i]);
         }
     }
 
