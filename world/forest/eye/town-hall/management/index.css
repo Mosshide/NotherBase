@@ -1,35 +1,7 @@
-.browser h6.auth {
-    padding: 1px;
+.read.members .read.name .content {
+    width: 65%;
 }
 
-.browser .read.name {
-    background: none;
-}
-
-.browser .read.members {
-    background: var(--darkBgColor);
-    margin-top: 5vh;
-    margin-bottom: 5vh;
-}
-
-.browser .edit.members {
-    background: var(--darkBgColor);
-    margin-top: 5vh;
-    margin-bottom: 5vh;
-}
-
-.browser .read.joinRequests {
-    background: var(--darkBgColor);
-    margin-top: 5vh;
-    margin-bottom: 5vh;
-}
-
-.browser .edit.joinRequests {
-    background: var(--darkBgColor);
-    margin-top: 5vh;
-    margin-bottom: 5vh;
-}
-
-h6.auth {
-    z-index: 4 !important;
+.read.members .read.name h4 {
+    width: 25%;
 }
