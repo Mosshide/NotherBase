@@ -55,3 +55,7 @@
 .ingredients li {
     display: flex;
 }
+
+.read.img h4 {
+    display: none;
+}
