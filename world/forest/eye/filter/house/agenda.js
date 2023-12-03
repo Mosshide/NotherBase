@@ -127,7 +127,7 @@ class Agenda extends SearchBox {
                         $list = this.$todayList;
                         header = "Today";
                         // prepends the label with the time, adding an extra 0 if necessary
-                        label = `${testTime.getHours()}:${testTime.getMinutes() < 10 ? "0" : ""}${testTime.getMinutes()} - ${label}`;
+                        label = `${this.items[i].timeHours}:${this.items[i].timeMinutes} - ${label}`;
                     }
                     else if (testDate.getTime() < weekEnd.getTime()) {
                         $list = this.$weekList;
@@ -233,10 +233,26 @@ metaBrowser.addService("schedule", {
         placeholder: Date.now()
     }, "date"),
     new NBField({
-        name: "time",
+        name: "timeHours",
         label: "Time: ",
-        placeholder: Date.now()
-    }, "time"),
+        placeholder: "",
+        options: [
+            "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", 
+            "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"
+        ]
+    }, "options"),
+    new NBField({
+        name: "timeMinutes",
+        placeholder: "",
+        options: [
+            "00", "01", "02", "03", "04", "05", "06", "07", "08", "09",
+            "10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
+            "20", "21", "22", "23", "24", "25", "26", "27", "28", "29",
+            "30", "31", "32", "33", "34", "35", "36", "37", "38", "39",
+            "40", "41", "42", "43", "44", "45", "46", "47", "48", "49",
+            "50", "51", "52", "53", "54", "55", "56", "57", "58", "59"
+        ]
+    }, "options"),
     new NBField({
         name: "recurring",
         label: "Repeat Task: ",
