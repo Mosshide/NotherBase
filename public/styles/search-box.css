@@ -8,6 +8,7 @@
     align-content: flex-start;
     gap: 0;
     padding: 1px;
+    overflow: auto;
 }
 
 .floating .search-box {
@@ -23,7 +24,7 @@
 }
 
 .search-box .selector {
-    height: 100%;
+    height: auto;
     overflow: auto;
     width: 100%;
     margin: 0;

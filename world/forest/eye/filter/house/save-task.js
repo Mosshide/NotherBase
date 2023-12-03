@@ -31,18 +31,25 @@ export default async (req, user) => {
                 if (a.date < b.date) return -1;
                 if (a.date > b.date) return 1;
             }
+
+            // convert timeHours and timeMinutes to time
+            if (a.timeHours && a.timeMinutes) a.time = a.timeHours + a.timeMinutes;
             if (a.time && !b.time) return -1;
             if (!a.time && b.time) return 1;
             if (a.time && b.time) {
                 if (a.time < b.time) return -1;
                 if (a.time > b.time) return 1;
             }
+
+
             if (a.name && !b.name) return -1;
             if (!a.name && b.name) return 1;
             if (a.name && b.name) {
                 if (a.name < b.name) return 1;
                 if (a.name > b.name) return -1;
             }
+
+
             return 0;
         });
 

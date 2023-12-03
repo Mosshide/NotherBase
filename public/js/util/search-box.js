@@ -92,7 +92,7 @@ class SearchBox {
     addFilters = (filters) => {
         if (filters) {
             this.filters = filters;
-            this.$div.append(this.filters.$div);
+            this.$div.prepend(this.filters.$div);
         }
     }
 
