@@ -1,24 +1,19 @@
 class BrowserButtons extends Buttons {
     constructor(id, browser) {
         super(id, [
-            new Button("edit", {
-                onClick: () => { browser.edit(); },
+            new Button("edit", browser.edit, {
                 label: "Edit"
             }),
-            new Button("save", {
-                onClick: () => { browser.save(); },
+            new Button("save", browser.save, {
                 label: "Save"
             }),
-            new Button("cancel", {
-                onClick: () => { browser.cancel(); },
+            new Button("cancel", browser.cancel, {
                 label: "Cancel"
             }),
-            new Button("delete", {
-                onClick: () => { browser.attemptDelete(); },
+            new Button("delete", browser.attemptDelete, {
                 label: "Delete"
             }),
-            new Button("close", {
-                onClick: () => { browser.close(); },
+            new Button("close", browser.close, {
                 label: "Close"
             })
         ], {
@@ -978,8 +973,7 @@ class MetaBrowser {
         this.$div = $(".meta" + (this.settings.id ? `#${this.settings.id}` : ""));
         if (this.settings.label) this.$header = $(`<h4>${this.settings.label}</h4>`).appendTo(this.$div);
         this.buttons = new Buttons(this.settings.id, [ 
-            new Button("new", {
-                onClick: () => { this.new(); },
+            new Button("new", this.new, {
                 label: "New"
             })
         ], {});
@@ -1020,8 +1014,7 @@ class MetaBrowser {
 
     addSearchBox = () => {
         this.searchBox = new this.settings.useSearchBox(null, this);
-        this.buttons.addButton(new Button("toggleFilters", {
-            onClick: this.searchBox.filters.toggle,
+        this.buttons.addButton(new Button("toggleFilters", this.searchBox.filters.toggle, {
             label: "Filters"
         }));
         this.$div.append(this.searchBox.$div);
@@ -1052,10 +1045,7 @@ class MetaBrowser {
             
             if (serving.multiple && !Array.isArray(serving.data)) serving.data = [];
 
-            this.buttons.addButton(new Button(service, {
-                onClick: () => {
-                    this.selectService(service, true, true);
-                },
+            this.buttons.addButton(new Button(service, () => { this.selectService(service, true, true); }, {
                 label: `Switch to ${serving.label ? serving.label : service}`
             }));
     
