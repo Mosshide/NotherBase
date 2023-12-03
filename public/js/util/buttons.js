@@ -1,18 +1,16 @@
 class Button {
-    constructor(id, settings) {
+    constructor(id, onClick = null, settings = {}) {
         this.settings = {
-            onClick: null,
             label: null,
             hidden: false,
             parent: null,
             ...settings
         };
+        this.onClick = onClick;
 
         this.id = id;
 
         this.$div = null;
-
-        this.render();
     }
 
     render = () => {
@@ -24,6 +22,8 @@ class Button {
         if (this.settings.label) this.$div.text(this.settings.label);
 
         this.enable();
+
+        return this.$div;
     }
 
     hide = () => {
@@ -41,12 +41,12 @@ class Button {
         this.$div.off();
     }
 
-    enable = (onClick = null) => {
+    enable = (onClick = this.onClick) => {
         this.enabled = true;
-        if (onClick) this.settings.onClick = onClick;
-        if (this.settings.onClick) {
+        if (onClick) this.onClick = onClick;
+        if (this.onClick) {
             this.$div.on("click", (e) => {
-                this.settings.onClick(e);
+                this.onClick(e, this);
             });
         }
     }
@@ -70,7 +70,6 @@ class Buttons {
         this.render();
 
         for (let i = 0; i < this.baseButtons.length; i++) {
-            this.baseButtons[i].hide();
             this.addButton(this.baseButtons[i]);
         }
     }
@@ -108,7 +107,7 @@ class Buttons {
         this.buttons[button.id] = button;
         this.buttons[button.id].settings.parent = this;
 
-        this.$div.append(button.$div);
+        this.$div.append(button.render());
     }
 
     hide = (which = null) => {
