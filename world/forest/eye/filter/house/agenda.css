@@ -53,6 +53,19 @@ main .hud .date {
     justify-content: center;
 }
 
+.nested.timeHours {
+    width: 20% !important;
+}
+
+.nested.timeMinutes {
+    width: 20% !important;
+}
+
+.browser .edit.timeHours {
+    flex-wrap: nowrap;
+    width: 40% !important;
+}
+
 .meta .buttons {
     display: flex;
     justify-content: space-between;
@@ -66,11 +79,11 @@ main .hud .date {
     height: auto !important;
 }
 
-.read.name h4, .read.date h4, .read.time h4, .read.shared h4 {
+.read.timeHours h4, .read.date h4, .read.time h4, .read.shared h4 {
     display: none;
 }
 
-.read.date, .read.time {
+.read.date {
     width: 46% !important;
 }
 

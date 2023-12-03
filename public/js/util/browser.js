@@ -1,19 +1,19 @@
 class BrowserButtons extends Buttons {
     constructor(id, browser) {
         super(id, [
-            new Button("edit", browser.edit, {
+            new Button("edit", () => { browser.edit(); }, {
                 label: "Edit"
             }),
-            new Button("save", browser.save, {
+            new Button("save", () => { browser.save(); }, {
                 label: "Save"
             }),
-            new Button("cancel", browser.cancel, {
+            new Button("cancel", () => { browser.cancel(); }, {
                 label: "Cancel"
             }),
-            new Button("delete", browser.attemptDelete, {
+            new Button("delete", () => { browser.attemptDelete(); }, {
                 label: "Delete"
             }),
-            new Button("close", browser.close, {
+            new Button("close", () => { browser.close(); }, {
                 label: "Close"
             })
         ], {

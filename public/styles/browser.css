@@ -206,3 +206,8 @@
 .browser .tabs #delete * {
     margin: 0;
 }
+
+.browser select {
+    width: 100%;
+    height: 40px;
+}
