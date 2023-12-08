@@ -1,69 +1,24 @@
-class ListItem {
-    /* settings: {
-        $template: override,
-        onAdd: function,
-        onEdit: function,
-        onRemove: function,
-        editOk: bool,
-        removeOk: bool
-    } */
-    constructor(settings) {
-        this.settings = settings;
-        this.$div = null;
-        if (!settings.$template) this.$template = $(`<li>New Item</li>`);
-        else this.$template = settings.$template;
-        
-    }
-
-    render = ($to) => {
-        this.$div = this.$template.clone();
-        if (removeOk) {
-            this.$remove = $(`<button id="remove">X</button>`).appendTo(this.$div);
-            this.$remove.click(this.remove);
-        }
-        $to.append(this.$div);
-    }
-
-    remove = () => {
-
-
-        this.settings.onRemove();
+class ListItem extends Element {
+    constructor(id, onClick = null, settings = {}) {
+        super("li", {
+            id: id,
+            onClick: onClick,
+            placeholder: "Item",
+            ...settings
+        });
     }
 }
 
-class List {
-    /* settings: {
-        onAdd: function,
-        onEdit: function,
-        onRemove: function,
-        addOk: bool,
-        removeOk: bool
-    } */
-    constructor(id = "", settings) {
-        this.settings = settings;
-        this.$div = $(`ul#${id}`);
-        this.items = [];
+class List extends Element {
+    constructor(settings = {}) {
+        super("ul", {
+            ...settings
+        });
     }
 
-    add = (item) => {
-        this.items.push(item);
-        item.render(this.$div);
-    }
-
-    remove = () => {
-        
-    }
-
-    render = ($to) => {
-        this.$div = this.$template.clone();
-        if (removeOk) {
-            this.$remove = $(`<button id="remove">X</button>`).appendTo(this.$div);
-            this.$remove.click(this.remove);
-        }
-        $to.append(this.$div);
-    }
-
-    getValues() {
-
+    addItem = (item) => {
+        this.addChild(new ListItem(this.children.length, this.settings.onClick, {
+            placeholder: item
+        }));
     }
 }

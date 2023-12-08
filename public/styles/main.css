@@ -7,6 +7,7 @@
     --bgCanvas: rgb(233, 229, 224);
     --bgCanvasGradient: linear-gradient(170deg, rgb(233, 229, 224) 0%, rgb(51, 47, 41) 100%);
     --bgColorTransparent: rgba(37, 37, 37, 0.76);
+    --mediumBgColorGradient: linear-gradient(170deg, rgba(37, 37, 37,1) 0%, rgba(27,27,27,1) 100%);
     --darkBgColor: rgb(27, 27, 27);
     --darkBgColorGradient: linear-gradient(170deg, rgba(27,27,27,1) 0%, rgba(5,5,5,1) 100%);
     --veryDarkBgColorTransparent: rgba(15, 15, 15, 0.404);
@@ -262,6 +263,7 @@ p {
     width: 100%;
     padding: var(--padding);
     font-size: var(--pSize);
+    min-height: calc(var(--pSize) + 2 * var(--padding));
 }
 
 ul {
@@ -492,30 +494,32 @@ a.subtle:hover {
     margin: var(--margin);
 }
 
-ul.selector li {
+ul.selector>li {
     width: var(--fillFromMargin);
     overflow: hidden;
     font-size: clamp(var(--littleP), var(--pSize), var(--littleP) * 2);
     border: none;
     border-bottom: var(--standardBorder);
-    min-height: 5px;
+    min-height: 40px;
     background: var(--clickable);
     border-radius: 5px;
     margin: var(--margin);
+    display: flex;
+    align-items: center;
 }
 
-ul.selector li:hover {
+ul.selector>li:hover {
     cursor: pointer;
     background: var(--hoverColor);
     color: var(--hoverTextColor);
 }
 
-ul.selector li.selected {
+ul.selector>li.selected {
     background: var(--selectionColor);
     color: var(--selectedTextColor);
 }
 
-ul.selector p {
+ul.selector>p {
     color: rgb(78, 78, 78);
 }
 

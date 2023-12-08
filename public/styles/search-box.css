@@ -1,6 +1,6 @@
 .search-box {
     position: relative;
-    height: 50vh;
+    max-height: 0;
     width: var(--fillFromMargin);
     margin: var(--margin);
     border: none;
@@ -9,6 +9,14 @@
     gap: 0;
     padding: 1px;
     overflow: auto;
+    opacity: 0;
+    transition: all 0.3s ease-out;
+}
+
+.search-box.open {
+    opacity: 1;
+    max-height: 50vh;
+    transition: all 0.3s ease-out;
 }
 
 .floating .search-box {
@@ -36,7 +44,7 @@
 
 .search-box .filters {
     width: 100%;
-    height: auto;
+    max-height: 0;
     background: var(--bgColor);
     margin: 0;
     display: flex;
@@ -44,6 +52,13 @@
     justify-content: space-between;
     border-bottom: 1px dashed var(--textColor);
     padding: var(--padding);
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.search-box .filters.open {
+    max-height: 40vh;
+    transition: max-height 0.3s ease-out;
 }
 
 .search-box .filters h5 {
@@ -54,9 +69,17 @@
     height: 40px;
 }
 
-.search-box .selector li {
+.search-box .selector>li {
     border: none;
     padding: var(--padding);
+    height: auto;
+    flex-wrap: wrap;
+    transition: all 0.3s ease-out;
+}
+
+.search-box .selector>li.disabled {
+    cursor: initial;
+    background: var(--bgColor);
 }
 
 .search-box .buttons {

@@ -5,13 +5,22 @@
     position: relative;
     min-height: 200px;
     transition: all 0.5s ease-in-out;
+    align-content: flex-start;
 }
 
 .browser {
     width: 100%;
-    border: var(--standardBorder);
+    height: auto;
     display: flex;
     flex-wrap: wrap;
+    opacity: 0;
+    transition: all 0.3s ease-in-out;
+    background: var(--mediumBgColorGradient);
+}
+
+.browser.open {
+    opacity: 1;
+    transition: all 0.3s ease-out;
 }
 
 .floating .browser {
@@ -32,7 +41,7 @@
 
 .browser .edit {
     width: 100%;
-    background: var(--bgColor);
+    background: var(--mediumBgColorGradient);
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
@@ -45,10 +54,11 @@
     width: 100%;
     margin: var(--margin);
     padding: 0;
+    background: none;
 }
 
 .browser h4 {
-    background: var(--bgColor);
+    background: none;
     width: 100%;
     margin: 0;
     height: 40px;
@@ -82,7 +92,7 @@
 .browser .read {
     width: 100%;
     overflow: auto;
-    background: var(--bgColor);
+    background: var(--mediumBgColorGradient);
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;

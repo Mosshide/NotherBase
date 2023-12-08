@@ -11,6 +11,8 @@
     Return to the Library
 </a>
 
+<script src="/js/util/element.js"></script>
+<script src="/js/util/list.js"></script>
 <script src="/js/util/buttons.js"></script>
 <script src="/js/util/search-box.js"></script>
 <script src="/js/util/browser.js"></script>
@@ -24,7 +26,7 @@
             this.reader = new BibleResearch.Reader();
             this.$div.append(this.reader.render());
 
-            this.$div.append(`<div class="meta buttons" id="bible-research"></div>`);
+            this.$div.append(`<div class="meta" id="bible-research"></div>`);
 
             this.metaResearch = new MetaBrowser({
                 label: "Bible Research"
