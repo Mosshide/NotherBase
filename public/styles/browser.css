@@ -13,7 +13,7 @@
     height: auto;
     display: flex;
     flex-wrap: wrap;
-    opacity: 0;
+    opacity: 1;
     transition: all 0.3s ease-in-out;
     background: var(--mediumBgColorGradient);
 }

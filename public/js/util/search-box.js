@@ -92,10 +92,7 @@ class SearchBox extends Element {
         if (this.settings.filters === "default") this.filters = this.addChild(new Filters(this.renderSearchResults));
         else if (this.settings.filters) this.filters = this.addChild(this.settings.filters(this.renderSearchResults));
         else this.filters = null;
-        this.list = this.addChild(new List({
-            onClick: (i) => {
-                if (this.settings.onLiClick) this.settings.onLiClick(i);
-            },
+        this.list = this.addChild(new Element("ul", {
             defaultClasses: "selector"        
         }));
     }
@@ -129,14 +126,22 @@ class SearchBox extends Element {
                 if (!label) label = "Name Error";
 
                 let filtered = false;
-                if (!label.toLowerCase().includes(filter)) {
-                    filtered = true;
-                }
-                if (!filtered) this.list.addItem(label);
+
+                if (!label.toLowerCase().includes(filter)) filtered = true;
+
+                if (!filtered) this.list.addChild(new Text("li", { 
+                    placeholder: label,
+                    id: i,
+                    onClick: (e, element) => {
+                        if (this.settings.onLiClick) this.settings.onLiClick(e, element);
+                    } 
+                }));
             }
         };
         if (this.items.length < 1) {
-            this.list.addChild(new Element("p", { placeholder: "No Items" }));
+            this.list.addChild(new Element("p", { 
+                placeholder: "No Items"
+            }));
         }
     }
 

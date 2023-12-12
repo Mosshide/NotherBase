@@ -1,4 +1,4 @@
-class Button extends Element {
+class Button extends Text {
     constructor(id, onClick = null, settings = {}) {
         super("button", {
             id: id,
@@ -22,6 +22,7 @@ class Buttons extends Element {
     }
 
     addButton = (button) => {
+        console.log(button);
         this.buttons[button.settings.id] = button;
         this.addChild(button);
     }

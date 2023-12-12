@@ -523,6 +523,13 @@ ul.selector>p {
     color: rgb(78, 78, 78);
 }
 
+ul.selector>li.disabled {
+    background: var(--bgColor);
+    color: var(--textColor);
+    border: var(--standardBorder);
+    cursor: default;
+}
+
 .click-me {
     background: var(--selectionColor);
     color: var(--selectedTextColor);

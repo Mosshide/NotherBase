@@ -4,12 +4,14 @@ class Element {
     constructor(elementType = "div", settings = {}) {
         this.settings = {
             defaultClasses: "",
+            attributes: {},
             id: null,
             src: null,
             placeholder: "",
             hidden: false,
             onClick: null,
-            onInput: null,
+            onInput: null,            
+            onClose: null,
             header: null,
             styles: null,
             ...settings
@@ -18,7 +20,7 @@ class Element {
         this.parent = null;
         this.children = [];
         this.$div = null;
-        this.value = null;
+        this.value = this.settings.placeholder;
 
         if (this.settings.styles) Element.attemptStyle(this.settings.styles);
     }
@@ -33,21 +35,15 @@ class Element {
     }
 
     // renders the element
-    render = () => {
-        // remove the element if it already exists
-        if (this.$div) this.$div.remove();
+    render() {
         // create the element
-        this.$div = $(`<${this.type}></${this.type}>`);
+        if (!this.$div) {
+            this.$div = $(`<${this.type}></${this.type}>`);
+            this.initModifiers();
+        }
 
-        // insert the placeholder
-        this.resetValue();
-
-        // add the default classes
-        this.$div.addClass(this.settings.defaultClasses);
-        // add the id
-        if (this.id) this.$div.attr("id", this.id);
-        // add the src
-        if (this.settings.src) this.$div.attr("src", this.settings.src);
+        this.$div.empty();
+        if (this.settings.header) this.$div.append(`<h4>${this.settings.header}</h4>`);
 
         // render the children
         this.children.forEach((child) => {
@@ -62,11 +58,25 @@ class Element {
         return this.$div;
     }
 
+    initModifiers = () => {
+        // add the attributes
+        if (this.settings.attributes) {
+            for (let key in this.settings.attributes) {
+                this.$div.attr(key, this.settings.attributes[key]);
+            }
+        }
+        // add the default classes
+        if (this.settings.defaultClasses) this.$div.addClass(this.settings.defaultClasses);
+        // add the id
+        if (this.id) this.$div.attr("id", this.id);
+        // add the src
+        if (this.settings.src) this.$div.attr("src", this.settings.src);
+    }
+
     // adds a child to the element
-    addChild = (child, rerender = true) => {
+    addChild = (child) => {
         this.children.push(child);
         child.setParent(this);
-        if (rerender || !child.$div) child.render();
         child.$div.appendTo(this.$div);
         return child;
     }
@@ -74,6 +84,7 @@ class Element {
     // sets the parent of the element
     setParent = (parent) => {
         this.parent = parent;
+        if (!this.$div) this.render();
     }
 
     // removes a child from the element and returns it
@@ -81,6 +92,7 @@ class Element {
         let index = this.children.indexOf(child);
         if (index != -1) {
             this.children.splice(index, 1);
+            child.$div.remove();
             child.setParent(null);
             return child;
         }
@@ -90,21 +102,17 @@ class Element {
 
     // sets the value of the element
     setValue = (value = null) => {
-        this.$div.text(value);
         this.value = value;
+        this.render();
     }
 
-    getValue = (which = null) => {
-        if (which) return this.value[which];
+    getValue = () => {
         return this.value;
     }
 
     // resets the value of the element
     resetValue = () => {
-        this.$div.empty();
-        if (this.settings.placeholder) this.$div.text(this.settings.placeholder);
-        if (this.settings.header) this.$div.prepend(`<h4>${this.settings.header}</h4>`);
-        this.value = null;
+        this.value = this.settings.placeholder;
     }
 
     // hides the element
@@ -128,21 +136,203 @@ class Element {
     disable = () => {
         this.enabled = false;
         this.$div.off();
+        this.$div.addClass("disabled");
     }
 
     // enables the element
-    enable = (onClick = this.onClick) => {
+    enable = (onClick = this.settings.onClick) => {
         this.enabled = true;
         if (onClick) this.settings.onClick = onClick;
         if (this.settings.onClick) {
             this.$div.on("click", (e) => {
                 this.settings.onClick(e, this);
+                e.stopPropagation();
             });
         }
 
         if (this.settings.onInput) this.$div.on("input", (e) => { 
             return this.settings.onInput(e.currentTarget.value.toLowerCase()); 
         });
+
+        this.$div.removeClass("disabled");
+    }
+
+    close = () => {
+        this.hide();
+
+        this.$div.remove();
+
+        if (this.settings.onClose) this.settings.onClose();
+    }
+}
+
+// a class called Text that can be used to display text
+class Text extends Element {
+    constructor(elementType = "p", settings = {}) {
+        super(elementType, {
+            ...settings
+        });
+    }
+
+    // renders the element
+    render = () => {
+        this.$div = super.render();
+
+        if (this.value) this.$div.append(this.value);
+        else this.$div.append(this.settings.placeholder);
+
+        return this.$div;
+    }
+}
+
+// a class called Input that can be used to get user input
+class Input extends Element {
+    constructor(inputType = "text", settings = {}) {
+        super("label", {
+            inputType: inputType,
+            step: null,
+            ...settings
+        });
+    }
+
+    // renders the element
+    render = () => {
+        this.$div = super.render();
+
+        this.$input = $(`<input type="${this.settings.inputType}" value="${this.value}" placeholder="${this.settings.placeholder}">`).appendTo(this.$div);
+
+        return this.$div;
+    }
+
+    setValue = (value) => {
+        if (value != null) {
+            if (this.$div) this.$input.val(value);
+            this.value = value;
+        }
+    }
+
+    getValue = () => {
+        this.value = this.$input.val();
+        return this.value;
+    }
+}
+
+// a class called TextArea that can be used to get user input
+class TextArea extends Element {
+    constructor(settings = {}) {
+        super("label", {
+            ...settings
+        });
+    }
+
+    // renders the element
+    render = () => {
+        this.$div = super.render();
+
+        this.$input = $(`<textarea value="${this.value}" placeholder="${this.settings.placeholder}"></textarea>`).appendTo(this.$div);
+
+        return this.$div;
+    }
+
+    setValue = (value) => {
+        if (value != null) {
+            if (this.$div) this.$input.val(value);
+            this.value = value;
+        }
+    }
+
+    getValue = () => {
+        this.value = this.$input.val();
+        return this.value;
+    }
+}
+
+// a class called Select that can be used to get user input
+class Select extends Element {
+    constructor(settings = {}) {
+        super("select", {
+            options: [],
+            ...settings
+        });
+    }
+
+    // renders the element
+    render = () => {
+        // create the element
+        if (!this.$div) {
+            this.$div = $(`<select></select>`);
+            this.initModifiers();
+        }
+
+        for (let i = 0; i < fields.settings.options.length; i++) {
+            // $(`<option class="${fields.settings.name}" value="${fields.settings.options[i]}">${fields.settings.options[i]}</option>`).appendTo($editItem);
+            this.addChild(new Element("option", {
+                defaultClasses: fields.settings.name,
+                placeholder: this.settings.options[i]
+            }));
+        }
+
+        if (this.settings.hidden) this.hide();
+        else this.show();
+
+        this.enable();
+
+        return this.$div;
+    }
+
+    setValue = (which) => {
+        if (which) {
+            if (this.$div) this.$div.find(`option:contains("${which}")`).prop('selected', true);
+            this.value = which;
+        }
+        else {
+            if (this.$div) this.$div.find(`option:contains("${this.settings.placeholder}")`).prop('selected', true);
+            this.value = this.settings.placeholder;
+        }
+    }
+
+    getValue = () => {
+        this.value = this.$div.find(`option:selected`).text();
+        return this.value;
+    }
+}
+
+// a class called CheckBox that can be used to get user input
+class CheckBox extends Element {
+    constructor(settings = {}) {
+        super("input", {
+            ...settings
+        });
+    }
+
+    // renders the element
+    render = () => {
+        // create the element
+        if (!this.$div) {
+            this.$div = $(`<input type="checkbox"></input>`);
+            this.initModifiers();
+        }
+
+        if (this.value) this.$div.prop("checked", this.value);
+        else if (this.settings.placeholder) this.$div.prop("checked", this.settings.placeholder);
+        else this.$div.prop("checked", false);
+
+        if (this.settings.hidden) this.hide();
+        else this.show();
+
+        this.enable();
+
+        return this.$div;
+    }
+
+    setValue = (value) => {
+        if (this.$div) this.$div.prop("checked", value);
+        this.value = value;
+    }
+
+    getValue = () => {
+        this.value = this.$div.prop("checked");
+        return this.value;
     }
 }
 
