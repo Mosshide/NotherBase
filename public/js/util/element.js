@@ -100,6 +100,18 @@ class Element {
         return null;
     }
 
+    // removes all children from the element and returns them
+    removeChildren = () => {
+        let children = this.children;
+        this.children = [];
+        this.render();
+        return children;
+    }
+
+    remove = () => {
+        if (this.parent) this.parent.removeChild(this);
+    }
+
     // sets the value of the element
     setValue = (value = null) => {
         this.value = value;
@@ -185,6 +197,32 @@ class Text extends Element {
     }
 }
 
+// a class called Alert that can be used to display alerts
+class Alert extends Text {
+    constructor(settings = {}) {
+        super("p", {
+            defaultClasses: "alert",
+            hidden: true,
+            ...settings
+        });
+
+        this.addChild(new Element("button", {
+            defaultClasses: "hide",
+            onClick: () => { this.hide(); },
+            placeholder: "X"
+        }));
+    }
+
+    // renders the element
+    render = () => {
+        this.$div = super.render();
+
+        this.$div.addClass(this.settings.type);
+
+        return this.$div;
+    }
+}
+
 // a class called Input that can be used to get user input
 class Input extends Element {
     constructor(inputType = "text", settings = {}) {
@@ -229,7 +267,7 @@ class TextArea extends Element {
     render = () => {
         this.$div = super.render();
 
-        this.$input = $(`<textarea value="${this.value}" placeholder="${this.settings.placeholder}"></textarea>`).appendTo(this.$div);
+        this.$input = $(`<textarea placeholder="${this.settings.placeholder}">${this.value}</textarea>`).appendTo(this.$div);
 
         return this.$div;
     }
@@ -339,28 +377,33 @@ class CheckBox extends Element {
 
 // a class called Container that can be used to contain other Elements
 class Container extends Element {
-    constructor(elementType = "div", settings = {}) {
-        super(elementType, {
+    constructor(settings = {}) {
+        super("container", {
             defaultClasses: "container",
             ...settings
         });
     }
 
-    // renders the element
-    render = (query = null) => {
-        if (query) this.$div = $(query);
+    // attaches the element
+    attach(query = null) {
+        if (query) {
+            this.$div = $(query);
+            this.initModifiers();
+        }
         
         if (this.$div) this.$div.empty();
 
-        // add the default classes
-        this.$div.addClass(this.defaultClasses);
-        // add the id
-        if (this.id) this.$div.attr("id", this.id);
+        if (this.settings.header) this.$div.append(`<h4>${this.settings.header}</h4>`);
 
         // render the children
         this.children.forEach((child) => {
             child.render().appendTo(this.$div);
         });
+
+        if (this.settings.hidden) this.hide();
+        else this.show();
+
+        if (this.settings.onClick) this.enable();
 
         return this.$div;
     }

@@ -28,6 +28,7 @@ class Filters extends Element {
         super("div", {
             defaultClasses: "filters",
             header: "Filters",
+            hidden: true,
             ...settings
         });
         this.defaults = defaults;
@@ -72,7 +73,9 @@ class SearchButtons extends Buttons {
             ...settings
         });
 
-        this.addButton(new Button("new", searchBox.new, { placeholder: "New" }));
+        this.addButton(new Button("new", (e, element) => {
+            searchBox.settings.onNew();
+        }, { placeholder: "New" }));
         this.addButton(new Button("toggleFilters", () => { if (searchBox.filters) searchBox.filters.toggle(); }, { placeholder: "Filters" }));
     }
 }
@@ -97,6 +100,14 @@ class SearchBox extends Element {
         }));
     }
 
+    static extractLabel = (item) => {
+        let label = item.name || item.username || item.title || item.header || item.whenSearched || Object.values(item)[0];
+        if (!label) label = "No Name";
+
+        if (typeof label !== "string") label = label.toString();
+        return label;
+    }
+
     setFilters = (filters) => {
         if (this.filters) this.filters.setValue(filters);
     }
@@ -110,26 +121,27 @@ class SearchBox extends Element {
         this.items = items;
         if (!Array.isArray(this.items)) this.items = [this.items];
 
-        if (onNew) this.buttons.show("new");
-        else this.buttons.hide("new");
+        if (onNew) {
+            this.buttons.show("new");
+            this.settings.onNew = onNew;
+        }
+        else {
+            this.buttons.hide("new");
+            this.settings.onNew = null;
+        }
         this.renderSearchResults();
     }
 
     renderSearchResults = () => {
-        this.list.$div.empty();
+        this.list.removeChildren();
 
         let filter = this.filters.getValue("search");
 
         for (let i = 0; i < this.items.length; i++) {
             if (this.items[i]) {
-                let label = this.items[i].name || this.items[i].username || this.items[i].title || this.items[i].header || this.items[i].whenSearched || Object.values(this.items[i])[0];
-                if (!label) label = "Name Error";
+                let label = SearchBox.extractLabel(this.items[i]);
 
-                let filtered = false;
-
-                if (!label.toLowerCase().includes(filter)) filtered = true;
-
-                if (!filtered) this.list.addChild(new Text("li", { 
+                if (label.toLowerCase().includes(filter)) this.list.addChild(new Text("li", { 
                     placeholder: label,
                     id: i,
                     onClick: (e, element) => {
@@ -145,10 +157,9 @@ class SearchBox extends Element {
         }
     }
 
-    new = () => {
-        if (this.onNew) this.onNew();
-    }
-
-    getEdits = () => {
+    addItem = (item = {}) => {
+        this.items.push(item);
+        this.renderSearchResults();
+        return this.list.children[this.list.children.length - 1];
     }
 }

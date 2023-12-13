@@ -28,8 +28,10 @@
             this.$div.append(`<div class="meta" id="bible-research"></div>`);
 
             this.metaResearch = new MetaBrowser({
-                label: "Bible Research"
+                label: "Bible Research",
+                id: "bible-research"
             });
+            this.metaResearch.attach();
             this.metaResearch.addService("bible-research-persons", {
                 fields: new NBField({
                     name: "persons",
