@@ -124,16 +124,6 @@
     margin: 0;
 }
 
-.browser .multiple {
-    border: none;
-    border-radius: 5px;
-    margin: var(--thickMargin);
-    position: relative;
-    padding: 0;
-    padding-top: calc(2 * var(--mediumPadding));
-    overflow: visible;
-}
-
 .browser .with-buttons {
     margin-bottom: 50px !important;
 }

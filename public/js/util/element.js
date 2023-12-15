@@ -92,8 +92,6 @@ class Element {
         let index = this.children.indexOf(child);
         if (index != -1) {
             this.children.splice(index, 1);
-            child.$div.remove();
-            child.setParent(null);
             return child;
         }
 
@@ -106,10 +104,6 @@ class Element {
         this.children = [];
         this.render();
         return children;
-    }
-
-    remove = () => {
-        if (this.parent) this.parent.removeChild(this);
     }
 
     // sets the value of the element
@@ -171,6 +165,8 @@ class Element {
 
     close = () => {
         this.hide();
+
+        if (this.parent) this.parent.removeChild(this);
 
         this.$div.remove();
 
@@ -385,7 +381,7 @@ class Container extends Element {
     }
 
     // attaches the element
-    attach(query = null) {
+    render(query = null) {
         if (query) {
             this.$div = $(query);
             this.initModifiers();

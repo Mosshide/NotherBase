@@ -1,16 +1,3 @@
-class BrowserButtons extends Buttons {
-    constructor(browser) {
-        super();
-        this.browser = browser;
-
-        this.addButton(new Button("edit", (e, self) => { this.browser.edit(); }, { placeholder: "Edit" }));
-        this.addButton(new Button("save", (e, self) => { this.browser.save(); }, { placeholder: "Save" }));
-        this.addButton(new Button("cancel", (e, self) => { this.browser.cancel(); }, { placeholder: "Cancel" }));
-        this.addButton(new Button("delete", (e, self) => { this.browser.attemptDelete(); }, { placeholder: "Delete" }));
-        this.addButton(new Button("close", (e, self) => { this.browser.close(); }, { placeholder: "Close" }));
-    }
-}
-
 class NBField {
     constructor(settings, children) {
         this.settings = {
@@ -166,7 +153,7 @@ class EditBox extends Element {
                 placeholder: "Add"
             }));
         }
-        if (this.fields.settings.buttons) {
+        if (this.fields.settings.buttons.length > 0) {
             if (!this.buttons) this.buttons = this.addChild(new Buttons());
             this.fields.settings.buttons.forEach((button) => {
                 this.buttons.addButton(button);
@@ -176,10 +163,14 @@ class EditBox extends Element {
 
     setValue = (item = null, fields = this.fields) => {
         this.fields = fields;
+        this.settings.defaultClasses = `edit${this.nested ? " nested" : ""}${fields.settings.multiple ? " multiple" : ""}`;
+        this.initModifiers();
         this.item = item;
         
         if (!Array.isArray(this.fields.children)) {
-            if (fields.settings.multiple) for (let i = 0; i < item ? item.length : 0; i++) {
+            console.log(item, fields);
+            if (fields.settings.multiple && Array.isArray(item)) for (let i = 0; i < item.length; i++) {
+                console.log(item[i]);
                 this.createChild(item[i]);
             }
             else {
@@ -272,10 +263,13 @@ class EditBox extends Element {
             });
         }
 
+        console.log(child);
+        
         if (child) {
             child.setValue(finalItem);
+            console.log(this.fields.children, child, finalItem, this.nested, this);
             if (this.nested && this.fields.settings.multiple) child.addChild(new Button("remove", (e, self) => {
-                this.removeChild(self.parent);
+                self.parent.close();
             }, {
                 placeholder: "X"
             }));
@@ -376,15 +370,18 @@ class Browser extends Element {
 
         this.box = null;
         
-        this.buttons = this.addChild(new BrowserButtons(this));
+        this.buttons = this.addChild(new Buttons(this));
+        this.buttons.addButton(new Button("edit", (e, self) => { this.edit(); }, { placeholder: "Edit" }));
+        this.buttons.addButton(new Button("save", (e, self) => { this.save(); }, { placeholder: "Save" }));
+        this.buttons.addButton(new Button("cancel", (e, self) => { this.cancel(); }, { placeholder: "Cancel" }));
+        this.buttons.addButton(new Button("delete", (e, self) => { this.attemptDelete(); }, { placeholder: "Delete" }));
+        this.buttons.addButton(new Button("close", (e, self) => { this.close(); }, { placeholder: "Close" }));
         this.buttons.hideButton();
     }
 
     delete = async () => {
         if (this.settings.onDelete) this.settings.onDelete();
-        this.hide();
-        if (this.box?.$div) this.box.$div.remove();
-        this.cancelDelete();
+        this.close();
     }
 
     attemptDelete = () => {
@@ -417,7 +414,6 @@ class Browser extends Element {
     save = async () => {
         if (this.state === "edit" || this.state === "new") {
             this.item = this.box.getValue();
-            console.log(this.item);
             
             if (this.settings.onSave) this.settings.onSave(this.item);
 
@@ -431,7 +427,7 @@ class Browser extends Element {
 
         this.cancelDelete();
 
-        if (this.box) this.removeChild(this.box);
+        if (this.box) this.box.close();
         this.box = this.addChild(new ReadBox(this.serving.fields));
         this.box.setValue(this.serving.data[this.serving.selected], this.serving.fields);
 
@@ -448,7 +444,7 @@ class Browser extends Element {
         this.state = "new";
         this.serving = serving;
 
-        if (this.box?.$div) this.removeChild(this.box);
+        if (this.box) this.box.close();
         this.box = this.addChild(new EditBox(this.serving.fields));
         this.box.setValue(itemOverride ? itemOverride : null, this.serving.fields);
 
@@ -463,9 +459,9 @@ class Browser extends Element {
         this.state = "edit";
         this.serving = serving;
         
-        if (this.box?.$div) this.removeChild(this.box);
+        if (this.box?.$div) this.box.close();
         this.box = this.addChild(new EditBox(this.serving.fields));
-        this.box.setValue(itemOverride ? itemOverride : this.serving.settings.placeholder, this.serving.fields);
+        this.box.setValue(itemOverride ? itemOverride : this.serving.data[this.serving.selected], this.serving.fields);
 
         this.buttons.hideButton("edit");
         this.buttons.hideButton("close");
@@ -513,11 +509,12 @@ class MetaBrowser extends Container {
         this.buttons.hideButton();
         
         this.alert = this.addChild(new Alert());
+
         if (this.settings.useSearchBox) this.addSearchBox();
     }
 
-    attach() {
-        this.$div = super.attach(`.meta${this.settings.id ? `#${this.settings.id}` : ""}`);
+    render() {
+        this.$div = super.render(`.meta${this.settings.id ? `#${this.settings.id}` : ""}`);
 
         return this.$div;
     }
@@ -534,7 +531,19 @@ class MetaBrowser extends Container {
                 onEdit: this.edit,
                 onCancel: this.cancel,
                 onDelete: this.delete,
-                onClose: this.closeBrowser
+                onClose: () => {
+                    if (this.serving.state == "new" || this.serving.state == "delete") {
+                        this.serving.data.splice(this.serving.selected, 1);
+                        this.disabledElement.close();
+                    }
+                    else {
+                        this.disabledElement.enable();
+                        this.disabledElement.setValue(this.settings.useSearchBox.extractLabel(this.serving.data[this.serving.selected]));
+                    }
+                    this.serving.state = "search";
+                    this.disabledElement = null;
+                    this.browser = null;
+                }
             });
         }
     }
@@ -554,21 +563,9 @@ class MetaBrowser extends Container {
     }
 
     delete = () => {
-        this.serving.state = "search";
+        this.serving.state = "delete";
         this.serving.data.splice(this.serving.selected, 1);
         if (this.serving.toSave) this.serving.toSave(this.serving.data, this.serving.selected, true);
-    }
-
-    closeBrowser = () => {
-        if (this.serving.state == "new") this.disabledElement.remove();
-        else {
-            this.disabledElement.enable();
-            this.disabledElement.setValue(this.settings.useSearchBox.extractLabel(this.serving.data[this.serving.selected]));
-        }
-        console.log(this.disabledElement);
-        this.serving.state = "search";
-        this.disabledElement = null;
-        this.browser = null;
     }
 
     addSearchBox = () => {
@@ -641,7 +638,6 @@ class MetaBrowser extends Container {
         if (this.serving) {
             if (this.serving.state == "edit" || this.serving.state == "new") {
                 this.serving.lastEdit = this.browser.box.getValue();
-                console.log(this.serving.lastEdit);
             }
             this.serving.lastFilter = this.searchBox.getFilters();
         }
@@ -665,7 +661,7 @@ class MetaBrowser extends Container {
             element.addChild(this.browser);
         }
         else if (this.serving.state == "new") {
-            let element = this.searchBox.addItem(this.serving.lastEdit);
+            let element = this.searchBox.list.children[this.serving.selected];
             element.disable();
             this.disabledElement = element;
             this.makeBrowser();

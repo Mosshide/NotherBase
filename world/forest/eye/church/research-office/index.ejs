@@ -31,7 +31,7 @@
                 label: "Bible Research",
                 id: "bible-research"
             });
-            this.metaResearch.attach();
+            this.metaResearch.render();
             this.metaResearch.addService("bible-research-persons", {
                 fields: new NBField({
                     name: "persons",
@@ -41,7 +41,6 @@
                 }, [
                     new NBField({
                         name: "name",
-                        label: "Person: ",
                         placeholder: "No Persons"
                     }, "string"),
                     new NBField({

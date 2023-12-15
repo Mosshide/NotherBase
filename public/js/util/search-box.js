@@ -83,7 +83,7 @@ class SearchButtons extends Buttons {
 class SearchBox extends Element {
     constructor(settings = {}) {
         super("div", {
-            defaultClasses: "search-box open",
+            defaultClasses: "search-box",
             onNew: null,
             onLiClick: null,
             styles: "search-box",
@@ -119,6 +119,7 @@ class SearchBox extends Element {
 
     setItems = (items, onNew = this.settings.onNew) => {
         this.items = items;
+        
         if (!Array.isArray(this.items)) this.items = [this.items];
 
         if (onNew) {
