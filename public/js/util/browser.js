@@ -135,7 +135,7 @@ class ReadBox extends Element {
 }
 
 class EditBox extends Element {
-    constructor(fields, nested = false, settings = {}) {
+    constructor(fields, nested = false, isItem = false, settings = {}) {
         super("div", {
             defaultClasses: `edit ${nested ? "nested" : ""}`,
             header: fields.settings.label,
@@ -144,8 +144,10 @@ class EditBox extends Element {
         this.fields = fields;
         this.child = {};
         this.nested = nested;
+        this.isItem = isItem;
 
-        if (this.nested && this.fields.settings.multiple) {
+        if (this.isItem) this.settings.header = null;
+        else if (this.nested && this.fields.settings.multiple) {
             if (!this.buttons) this.buttons = this.addChild(new Buttons());
             this.buttons.addButton(new Button("add", (e, self) => {
                 this.createChild(null);
@@ -166,31 +168,34 @@ class EditBox extends Element {
         this.settings.defaultClasses = `edit${this.nested ? " nested" : ""}${fields.settings.multiple ? " multiple" : ""}`;
         this.initModifiers();
         this.item = item;
-        
-        if (!Array.isArray(this.fields.children)) {
-            console.log(item, fields);
-            if (fields.settings.multiple && Array.isArray(item)) for (let i = 0; i < item.length; i++) {
-                console.log(item[i]);
-                this.createChild(item[i]);
-            }
-            else {
-                this.createChild(item);
-            }
-        }
-        else {
-            fields.children.forEach((field) => {
+
+        if (this.isItem) {
+            this.fields.children.forEach((field) => {
                 let child = this.addChild(new EditBox(field, true));
                 this.child[field.settings.name] = child;
-                if (item) child.setValue(item[field.settings.name]);
+                if (this.item?.[field.settings.name]) child.setValue(this.item[field.settings.name]);
                 else child.setValue(null);
             });
         }
+        else if (fields.settings.multiple && Array.isArray(item)) for (let i = 0; i < item.length; i++) {
+            this.createChild(item[i]);
+        }
+        else {
+            this.createChild(item);
+        }
+
+        this.render();
     }
 
     createChild = (finalItem) => {
         let child = null;
+        let ignoreSet = false;
+
         if (this.fields.settings.readOnly) {
             child = new ReadBox(this.fields, true);
+        }
+        else if (Array.isArray(this.fields.children)) {
+            child = new EditBox(this.fields, true, true);
         }
         else if (this.fields.children === "number") {
             child = new Input("number", {
@@ -262,12 +267,9 @@ class EditBox extends Element {
                 placeholder: this.fields.settings.placeholder
             });
         }
-
-        console.log(child);
         
         if (child) {
             child.setValue(finalItem);
-            console.log(this.fields.children, child, finalItem, this.nested, this);
             if (this.nested && this.fields.settings.multiple) child.addChild(new Button("remove", (e, self) => {
                 self.parent.close();
             }, {
@@ -284,6 +286,7 @@ class EditBox extends Element {
         let toGo = {};
 
         if (Array.isArray(this.fields.children)) {
+            console.log(this.child);
             for (let i = 0; i < this.fields.children.length; i++) {
                 if (!this.fields.children[i].settings.hidden && !this.fields.children[i].settings.readOnly) {
                     toGo[this.fields.children[i].settings.name] = this.child[this.fields.children[i].settings.name].getValue();

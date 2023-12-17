@@ -20,7 +20,7 @@ class Element {
         this.parent = null;
         this.children = [];
         this.$div = null;
-        this.value = this.settings.placeholder;
+        this.value = null;
 
         if (this.settings.styles) Element.attemptStyle(this.settings.styles);
     }
@@ -59,18 +59,20 @@ class Element {
     }
 
     initModifiers = () => {
-        // add the attributes
-        if (this.settings.attributes) {
-            for (let key in this.settings.attributes) {
-                this.$div.attr(key, this.settings.attributes[key]);
+        if (this.$div) {
+            // add the attributes
+            if (this.settings.attributes) {
+                for (let key in this.settings.attributes) {
+                    this.$div.attr(key, this.settings.attributes[key]);
+                }
             }
+            // add the default classes
+            if (this.settings.defaultClasses) this.$div.addClass(this.settings.defaultClasses);
+            // add the id
+            if (this.id) this.$div.attr("id", this.id);
+            // add the src
+            if (this.settings.src) this.$div.attr("src", this.settings.src);
         }
-        // add the default classes
-        if (this.settings.defaultClasses) this.$div.addClass(this.settings.defaultClasses);
-        // add the id
-        if (this.id) this.$div.attr("id", this.id);
-        // add the src
-        if (this.settings.src) this.$div.attr("src", this.settings.src);
     }
 
     // adds a child to the element
@@ -233,7 +235,7 @@ class Input extends Element {
     render = () => {
         this.$div = super.render();
 
-        this.$input = $(`<input type="${this.settings.inputType}" value="${this.value}" placeholder="${this.settings.placeholder}">`).appendTo(this.$div);
+        this.$input = $(`<input type="${this.settings.inputType}" value="${this.value ? this.value : ""}" placeholder="${this.settings.placeholder}">`).appendTo(this.$div);
 
         return this.$div;
     }
@@ -263,7 +265,7 @@ class TextArea extends Element {
     render = () => {
         this.$div = super.render();
 
-        this.$input = $(`<textarea placeholder="${this.settings.placeholder}">${this.value}</textarea>`).appendTo(this.$div);
+        this.$input = $(`<textarea placeholder="${this.settings.placeholder}">${this.value ? this.value : ""}</textarea>`).appendTo(this.$div);
 
         return this.$div;
     }
