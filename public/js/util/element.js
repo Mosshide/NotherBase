@@ -61,15 +61,18 @@ class Element {
     initModifiers = () => {
         if (this.$div) {
             // add the attributes
+            [...this.$div[0].attributes].forEach(attr => this.$div[0].removeAttribute(attr.name));
             if (this.settings.attributes) {
                 for (let key in this.settings.attributes) {
                     this.$div.attr(key, this.settings.attributes[key]);
                 }
             }
             // add the default classes
+            this.$div.removeClass();
             if (this.settings.defaultClasses) this.$div.addClass(this.settings.defaultClasses);
             // add the id
             if (this.id) this.$div.attr("id", this.id);
+            else this.$div.removeAttr("id");
             // add the src
             if (this.settings.src) this.$div.attr("src", this.settings.src);
         }
@@ -167,12 +170,9 @@ class Element {
 
     close = () => {
         this.hide();
-
-        if (this.parent) this.parent.removeChild(this);
-
-        this.$div.remove();
-
         if (this.settings.onClose) this.settings.onClose();
+        this.$div.remove();
+        if (this.parent) this.parent.removeChild(this);
     }
 }
 

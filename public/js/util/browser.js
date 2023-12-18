@@ -1,5 +1,5 @@
 class NBField {
-    constructor(settings, children) {
+    constructor(settings, children = null) {
         this.settings = {
             name: "default",
             label: "",
@@ -8,7 +8,8 @@ class NBField {
             lockLength: false,
             readOnly: false,
             hidden: false,
-            buttons: [],
+            buttons: null,
+            type: "object",
             ...settings
         }
 
@@ -16,323 +17,236 @@ class NBField {
     }
 }
 
-class ReadBox extends Element {
-    constructor(fields, nested = false, settings = {}) {
+class ViewBox extends Element {
+    constructor(nested = false, settings = {}) {
         super("div", {
             defaultClasses: `read ${nested ? "nested" : ""}`,
-            header: fields.settings.label,
             ...settings
         });
-        this.fields = fields;
-
-        if (this.fields.settings.buttons) {
-            this.buttons = this.addChild(new Buttons());
-            this.fields.settings.buttons.forEach((button) => {
-                this.buttons.addButton(button);
-            });
-        }
+        this.fields = {};
+        this.nested = nested;
+        this.item = null;
+        this.editing = false;
+        this.buttons = null;
+        this.child = [];
     }
 
-    setValue = (item = null, fields = this.fields) => {
-        this.fields = fields;
+    setValue = (item = null, fields = this.fields, editing = this.editing) => {
         this.item = item;
+        this.fields = fields;
+        this.editing = editing;
+        this.settings.defaultClasses = `${this.editing ? "edit" : "read"}${this.nested ? " nested" : ""}${this.fields.settings.multiple ? " multiple" : ""}`;
+        this.settings.header = this.fields.settings.label;
+        this.removeChildren();
+        this.initModifiers();
         
-        if (!Array.isArray(this.fields.children)) {
-            if (this.fields.settings.multiple) for (let i = 0; i < item.length; i++) {
-                this.createChild(item[i]);
-            }
-            else this.createChild(item);
-        }
-        else {
-            this.fields.children.forEach((field) => {
-                let child = this.addChild(new ReadBox(field, true));
-                if (item) child.setValue(item[field.settings.name]);
-                else child.setValue(null);
+        if (this.fields.settings.buttons || this.fields.settings.multiple) {
+            this.buttons = this.addChild(new Buttons());
+            if (this.fields.settings.buttons) this.fields.settings.buttons.forEach((button) => {
+                this.buttons.addButton(button);
             });
+            if (this.fields.settings.multiple && this.editing) this.buttons.addButton(new Button("add", (e, self) => { this.createChild(); }, { placeholder: "Add" }));
         }
+
+        if (!Array.isArray(item)) item = [item];
+        if (item.length == 0) item.push(null);
+        for (let i = 0; i < item.length; i++) {
+            this.createChild(item[i]);
+        } 
     }
 
     createChild = (item) => {
         let child = null;
-        if (this.fields.children === "image") {
-            if (item) child = new Element("img", {
-                defaultClasses: `image ${this.fields.settings.name}`,
-                src: item
-            });
-            else child = new Element("img", {
-                defaultClasses: `image ${this.fields.settings.name}`,
-                src: this.fields.settings.placeholder
-            });
-        }
-        else if (this.fields.children === "date-time") {
-            if (item) child = new Text("p", {
-                defaultClasses: `date-time ${this.fields.settings.name}`,
-                placeholder: (new Date(item)).toLocaleString()
-            });
-            else child = new Text("p", {
-                defaultClasses: `date-time ${this.fields.settings.name}`
-            });
-        }
-        else if (this.fields.children === "date") {
-            if (item) child = new Text("p", {
-                defaultClasses: `date ${this.fields.settings.name}`,
-                placeholder: (new Date(item)).toLocaleDateString()
-            });
-            else child = new Text("p", {
-                defaultClasses: `date ${this.fields.settings.name}`
-            });
-        }
-        else if (this.fields.children === "time") {
-            if (item) child = new Text("p", {
-                defaultClasses: `time ${this.fields.settings.name}`,
-                placeholder: (new Date(item)).toLocaleTimeString()
-            });
-            else child = new Text("p", {
-                defaultClasses: `time ${this.fields.settings.name}`
-            });
-        }
-        else if (this.fields.children === "number") {
-            if (item) child = new Text("p", {
-                defaultClasses: `number ${this.fields.settings.name}`,
-                placeholder: item
-            });
-            else child = new Text("p", {
-                defaultClasses: `number ${this.fields.settings.name}`
-            });
-        }
-        else if (this.fields.children === "boolean") {
-            child = new Text("p", {
-                defaultClasses: `boolean ${this.fields.settings.name}`,
-                placeholder: item ? "Yes" : "No"
-            });
-        }
-        else if (this.fields.children === "long-string") {
-            if (item) {
-                if (typeof item !== "string") item = item.toString();
-                child = new Text("p", {
-                    defaultClasses: `long-string ${this.fields.settings.name}`,
-                    placeholder: item.replace(/(?:\r\n|\r|\n)/g, '<br />')
-                });
-            }
-            else child = new Text("p", {
-                defaultClasses: `long-string ${this.fields.settings.name}`
-            });
-        }
-        else {
-            if (item) {
-                if (typeof item !== "string") item = item.toString();
-                child = new Text("p", {
-                    defaultClasses: `string ${this.fields.settings.name}`,
-                    placeholder: item.replace(/(?:\r\n|\r|\n)/g, '<br />')
-                });
-            }
-            else child = new Text("p", {
-                defaultClasses: `string ${this.fields.settings.name}`
-            });
-        }
-        return this.addChild(child);
-    }
-}
 
-class EditBox extends Element {
-    constructor(fields, nested = false, isItem = false, settings = {}) {
-        super("div", {
-            defaultClasses: `edit ${nested ? "nested" : ""}`,
-            header: fields.settings.label,
-            ...settings
-        });
-        this.fields = fields;
-        this.child = {};
-        this.nested = nested;
-        this.isItem = isItem;
+        if (this.fields.settings.type == "object") {
+            child = new Element();
+            child.child = {};
+            child.getValue = () => {
+                let toGo = {};
 
-        if (this.isItem) this.settings.header = null;
-        else if (this.nested && this.fields.settings.multiple) {
-            if (!this.buttons) this.buttons = this.addChild(new Buttons());
-            this.buttons.addButton(new Button("add", (e, self) => {
-                this.createChild(null);
-            }, {
-                placeholder: "Add"
-            }));
-        }
-        if (this.fields.settings.buttons.length > 0) {
-            if (!this.buttons) this.buttons = this.addChild(new Buttons());
-            this.fields.settings.buttons.forEach((button) => {
-                this.buttons.addButton(button);
-            });
-        }
-    }
-
-    setValue = (item = null, fields = this.fields) => {
-        this.fields = fields;
-        this.settings.defaultClasses = `edit${this.nested ? " nested" : ""}${fields.settings.multiple ? " multiple" : ""}`;
-        this.initModifiers();
-        this.item = item;
-
-        if (this.isItem) {
-            this.fields.children.forEach((field) => {
-                let child = this.addChild(new EditBox(field, true));
-                this.child[field.settings.name] = child;
-                if (this.item?.[field.settings.name]) child.setValue(this.item[field.settings.name]);
-                else child.setValue(null);
-            });
-        }
-        else if (fields.settings.multiple && Array.isArray(item)) for (let i = 0; i < item.length; i++) {
-            this.createChild(item[i]);
-        }
-        else {
-            this.createChild(item);
-        }
-
-        this.render();
-    }
-
-    createChild = (finalItem) => {
-        let child = null;
-        let ignoreSet = false;
-
-        if (this.fields.settings.readOnly) {
-            child = new ReadBox(this.fields, true);
-        }
-        else if (Array.isArray(this.fields.children)) {
-            child = new EditBox(this.fields, true, true);
-        }
-        else if (this.fields.children === "number") {
-            child = new Input("number", {
-                defaultClasses: `number ${this.fields.settings.name}`,
-                step: "any",
-                placeholder: this.fields.settings.placeholder
-            });
-        }
-        else if (this.fields.children === "options") {
-            child = new Select({
-                defaultClasses: `pet-select ${this.fields.settings.name}`,
-                options: this.fields.settings.options,
-                placeholder: this.fields.settings.placeholder
-            });
-        }
-        else if (this.fields.children === "boolean") {
-            child = new Input("checkbox", {
-                defaultClasses: `boolean ${this.fields.settings.name}`,
-                placeholder: this.fields.settings.placeholder
-            });
-        }
-        else if (this.fields.children === "date-time") {
-            if (finalItem) finalItem = new Date(finalItem);
-
-            child = new Input("datetime-local", {
-                defaultClasses: `${this.fields.settings.name}`,
-                placeholder: this.fields.settings.placeholder
-            });
-        }
-        else if (this.fields.children === "date") {
-            if (finalItem) {
-                let d = new Date(finalItem);
-                let day = ("0" + d.getDate()).slice(-2);
-                let month = ("0" + (d.getMonth() + 1)).slice(-2);
-                finalItem = `${d.getFullYear()}-${month}-${day}`;
-            }
-
-            child = new Input("date", {
-                defaultClasses: `${this.fields.settings.name}`,
-                placeholder: this.fields.settings.placeholder
-            });
-        }
-        else if (this.fields.children === "time") {
-            if (finalItem) {
-                let date = new Date(finalItem);
-                let hours = ("0" + date.getHours()).slice(-2);
-                let minutes = ("0" + date.getMinutes()).slice(-2);
-                let seconds = ("0" + date.getSeconds()).slice(-2);
-                finalItem = `${hours}:${minutes}:${seconds}`;
-            }
-
-            child = new Input("time", {
-                defaultClasses: `${this.fields.settings.name}`,
-                placeholder: this.fields.settings.placeholder
-            });
-        }
-        else if (this.fields.children === "long-string") {
-            child = new TextArea({
-                defaultClasses: `long-string ${this.fields.settings.name}`,
-                placeholder: this.fields.settings.placeholder,
-                attributes: {
-                    rows: "4"
+                for (let i = 0; i < this.fields.children.length; i++) {
+                    if (!this.fields.children[i].settings.hidden) {
+                        toGo[this.fields.children[i].settings.name] = child.child[this.fields.children[i].settings.name].getValue();
+                    }
                 }
-            });
-        }
-        else {
-            child = new Input("text", {
-                defaultClasses: `${this.fields.settings.name}`,
-                placeholder: this.fields.settings.placeholder
-            });
-        }
-        
-        if (child) {
-            child.setValue(finalItem);
-            if (this.nested && this.fields.settings.multiple) child.addChild(new Button("remove", (e, self) => {
-                self.parent.close();
-            }, {
-                placeholder: "X"
-            }));
-                
-            this.child = this.addChild(child);
-        }
 
-        return child;
-    }
+                return toGo;
+            }
 
-    getValue = () => {
-        let toGo = {};
-
-        if (Array.isArray(this.fields.children)) {
-            console.log(this.child);
             for (let i = 0; i < this.fields.children.length; i++) {
-                if (!this.fields.children[i].settings.hidden && !this.fields.children[i].settings.readOnly) {
-                    toGo[this.fields.children[i].settings.name] = this.child[this.fields.children[i].settings.name].getValue();
-                }
+                let grandChild = child.addChild(new ViewBox(true));
+                child.child[this.fields.children[i].settings.name] = grandChild;
+                grandChild.setValue(item ? item[this.fields.children[i].settings.name] : null, this.fields.children[i], this.editing);
             }
         }
         else {
-            toGo = [];
-            if (this.fields.settings.multiple) for (let i = 1; i < this.children.length; i++) {
-                toGo.push(this.children[i].getValue());
-
-                if (this.fields.children == "date-time") {
-                    toGo[toGo.length - 1] = new Date(toGo).getTime();
+            if (this.editing && !this.fields.settings.readOnly) {
+                if (this.fields.settings.type === "number") {
+                    child = new Input("number", {
+                        defaultClasses: `number ${this.fields.settings.name}`,
+                        step: "any",
+                        placeholder: this.fields.settings.placeholder
+                    });
                 }
-                else if (this.fields.children == "date") {
-                    let date = toGo[toGo.length - 1].split("-");
-                    toGo[toGo.length - 1] = new Date(date[0], date[1] - 1, date[2]).getTime();
+                else if (this.fields.settings.type === "options") {
+                    child = new Select({
+                        defaultClasses: `pet-select ${this.fields.settings.name}`,
+                        options: this.fields.settings.options,
+                        placeholder: this.fields.settings.placeholder
+                    });
                 }
-                else if (this.fields.children == "time") {
-                    let time = toGo[toGo.length - 1].split(" ")[0].split(":");
-                    let date = new Date();
-                    date.setHours(time[0]);
-                    date.setMinutes(time[1]);
-                    date.setSeconds(time[2]);
-                    toGo[toGo.length - 1] = date.getTime();
+                else if (this.fields.settings.type === "boolean") {
+                    child = new Input("checkbox", {
+                        defaultClasses: `boolean ${this.fields.settings.name}`,
+                        placeholder: this.fields.settings.placeholder
+                    });
+                }
+                else if (this.fields.settings.type === "date-time") {
+                    if (item) item = new Date(item);
+        
+                    child = new Input("datetime-local", {
+                        defaultClasses: `${this.fields.settings.name}`,
+                        placeholder: this.fields.settings.placeholder
+                    });
+                }
+                else if (this.fields.settings.type === "date") {
+                    if (item) {
+                        let d = new Date(item);
+                        let day = ("0" + d.getDate()).slice(-2);
+                        let month = ("0" + (d.getMonth() + 1)).slice(-2);
+                        item = `${d.getFullYear()}-${month}-${day}`;
+                    }
+        
+                    child = new Input("date", {
+                        defaultClasses: `${this.fields.settings.name}`,
+                        placeholder: this.fields.settings.placeholder
+                    });
+                }
+                else if (this.fields.settings.type === "time") {
+                    if (item) {
+                        let date = new Date(item);
+                        let hours = ("0" + date.getHours()).slice(-2);
+                        let minutes = ("0" + date.getMinutes()).slice(-2);
+                        let seconds = ("0" + date.getSeconds()).slice(-2);
+                        item = `${hours}:${minutes}:${seconds}`;
+                    }
+        
+                    child = new Input("time", {
+                        defaultClasses: `${this.fields.settings.name}`,
+                        placeholder: this.fields.settings.placeholder
+                    });
+                }
+                else if (this.fields.settings.type === "long-string") {
+                    child = new TextArea({
+                        defaultClasses: `long-string ${this.fields.settings.name}`,
+                        placeholder: this.fields.settings.placeholder,
+                        attributes: {
+                            rows: "4"
+                        }
+                    });
+                }
+                else {
+                    child = new Input("text", {
+                        defaultClasses: `${this.fields.settings.name}`,
+                        placeholder: this.fields.settings.placeholder
+                    });
                 }
             }
             else {
-                toGo = this.child.getValue();
-
-                if (this.fields.children == "date-time") {
-                    toGo = new Date(toGo).getTime();
+                if (this.fields.settings.type === "image") {
+                    if (item) child = new Element("img", {
+                        defaultClasses: `image ${this.fields.settings.name}`,
+                        src: item
+                    });
+                    else child = new Element("img", {
+                        defaultClasses: `image ${this.fields.settings.name}`,
+                        src: this.fields.settings.placeholder
+                    });
                 }
-                else if (this.fields.children == "date") {
-                    let date = toGo.split("-");
-                    toGo = new Date(date[0], date[1] - 1, date[2]).getTime();
+                else if (this.fields.settings.type === "date-time") {
+                    child = new Text("p", {
+                        defaultClasses: `date-time ${this.fields.settings.name}`,
+                        placeholder: (new Date(item)).toLocaleString()
+                    });
                 }
-                else if (this.fields.children == "time") {
-                    let time = toGo.split(" ")[0].split(":");
-                    let date = new Date();
-                    date.setHours(time[0]);
-                    date.setMinutes(time[1]);
-                    date.setSeconds(time[2]);
-                    toGo = date.getTime();
+                else if (this.fields.settings.type === "date") {
+                    child = new Text("p", {
+                        defaultClasses: `date ${this.fields.settings.name}`,
+                        placeholder: (new Date(this.fields.settings.placeholder)).toLocaleDateString()
+                    });
+                }
+                else if (this.fields.settings.type === "time") {
+                    child = new Text("p", {
+                        defaultClasses: `time ${this.fields.settings.name}`,
+                        placeholder: (new Date(this.fields.settings.placeholder)).toLocaleTimeString()
+                    });
+                }
+                else if (this.fields.settings.type === "number") {
+                    child = new Text("p", {
+                        defaultClasses: `number ${this.fields.settings.name}`,
+                        placeholder: this.fields.settings.placeholder
+                    });
+                }
+                else if (this.fields.settings.type === "boolean") {
+                    child = new Text("p", {
+                        defaultClasses: `boolean ${this.fields.settings.name}`,
+                        placeholder: this.fields.settings.placeholder
+                    });
+                }
+                else if (this.fields.settings.type === "long-string") {
+                    child = new Text("p", {
+                        defaultClasses: `long-string ${this.fields.settings.name}`,
+                        placeholder: this.fields.settings.placeholder.replace(/(?:\r\n|\r|\n)/g, '<br />')
+                    });
+                }
+                else {
+                    child = new Text("p", {
+                        defaultClasses: `string ${this.fields.settings.name}`,
+                        placeholder: this.fields.settings.placeholder.replace(/(?:\r\n|\r|\n)/g, '<br />')
+                    });
                 }
             }
+
+            child.setValue(item, this.fields.children, this.editing);
+        }
+        
+        if (child) {
+            child.settings.onClose = () => {
+                this.child.splice(this.child.indexOf(child), 1);
+                if (this.child.length == 0) this.setValue();
+            }
+            if (this.editing && this.fields.settings.multiple && !this.fields.settings.readOnly && this.nested) {
+                child.addChild(new Button("remove", (e, self) => { child.close(); }, { placeholder: "X" }));
+            }
+        }
+
+        return this.child.push(this.addChild(child));
+    }
+
+    getValue = () => {
+        let toGo = [];
+
+        for (let i = 0; i < this.child.length; i++) {
+            toGo.push(this.child[i].getValue());
+
+            if (this.fields.children == "date-time") {
+                toGo[toGo.length - 1] = new Date(toGo).getTime();
+            }
+            else if (this.fields.children == "date") {
+                let date = toGo[toGo.length - 1].split("-");
+                toGo[toGo.length - 1] = new Date(date[0], date[1] - 1, date[2]).getTime();
+            }
+            else if (this.fields.children == "time") {
+                let time = toGo[toGo.length - 1].split(" ")[0].split(":");
+                let date = new Date();
+                date.setHours(time[0]);
+                date.setMinutes(time[1]);
+                date.setSeconds(time[2]);
+                toGo[toGo.length - 1] = date.getTime();
+            }
+        }
+        if (!this.fields.settings.multiple || !this.nested) {
+            toGo = toGo[0];
         }
 
         return toGo;
@@ -431,8 +345,8 @@ class Browser extends Element {
         this.cancelDelete();
 
         if (this.box) this.box.close();
-        this.box = this.addChild(new ReadBox(this.serving.fields));
-        this.box.setValue(this.serving.data[this.serving.selected], this.serving.fields);
+        this.box = this.addChild(new ViewBox());
+        this.box.setValue(this.serving.data[this.serving.selected], this.serving.fields, false);
 
         this.buttons.showButton("close");
         this.buttons.hideButton("save");
@@ -448,8 +362,8 @@ class Browser extends Element {
         this.serving = serving;
 
         if (this.box) this.box.close();
-        this.box = this.addChild(new EditBox(this.serving.fields));
-        this.box.setValue(itemOverride ? itemOverride : null, this.serving.fields);
+        this.box = this.addChild(new ViewBox());
+        this.box.setValue(itemOverride ? itemOverride : null, this.serving.fields, true);
 
         this.buttons.hideButton("edit");
         this.buttons.showButton("close");
@@ -463,8 +377,8 @@ class Browser extends Element {
         this.serving = serving;
         
         if (this.box?.$div) this.box.close();
-        this.box = this.addChild(new EditBox(this.serving.fields));
-        this.box.setValue(itemOverride ? itemOverride : this.serving.data[this.serving.selected], this.serving.fields);
+        this.box = this.addChild(new ViewBox(), false, true);
+        this.box.setValue(itemOverride ? itemOverride : this.serving.data[this.serving.selected], this.serving.fields, true);
 
         this.buttons.hideButton("edit");
         this.buttons.hideButton("close");
@@ -517,6 +431,7 @@ class MetaBrowser extends Container {
     }
 
     render() {
+        this.settings.defaultClasses = "meta";
         this.$div = super.render(`.meta${this.settings.id ? `#${this.settings.id}` : ""}`);
 
         return this.$div;
