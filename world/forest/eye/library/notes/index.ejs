@@ -12,6 +12,7 @@
     Return to the Lobby
 </a>
 
+<script src="/js/util/element.js"></script>
 <script src="/js/util/buttons.js"></script>
 <script src="/js/util/search-box.js"></script>
 <script src="/js/util/browser.js"></script>
@@ -25,19 +26,20 @@
         fields: new NBField({
             name: "note",
             label: "Note: ",
-            placeholder: "No Note",
-            multiple: true
+            placeholder: "No Note"
         }, [
             new NBField({
                 name: "title",
                 label: "Title: ",
                 placeholder: "No Title",
-            }, "string"),
+                type: "string"
+            }),
             new NBField({
                 name: "content",
                 label: "Content: ",
                 placeholder: "No Content",
-            }, "long-string")
+                type: "long-string"
+            })
         ]),
         label: "Notes",
         editable: true,
@@ -49,6 +51,7 @@
             await base.do("save-note", { item, which, deleting });
         }
     });
+    metaBrowser.render();
 
     const floatBoard = new FloatBoard();
 </script>

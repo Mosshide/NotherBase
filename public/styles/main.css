@@ -536,6 +536,10 @@ ul.selector>li.disabled {
     cursor: pointer;
 }
 
+.click-me:hover {
+    background: var(--hoverColor);
+}
+
 .painting {
     border: 3px solid var(--darkWoodColor);
     background: var(--hoverColor);

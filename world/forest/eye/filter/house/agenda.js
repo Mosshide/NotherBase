@@ -8,24 +8,15 @@ class AgendaFilters extends Filters {
             showMore: false
         });
 
-        this.extendedRender();
-    }
+        this.showOld = this.addChild(new CheckBox({
+            header: "Show Old",
+            onClick: (e, self) => { this.updateFilter(self.getValue(), "showOld"); }
+        }));
 
-    extendedRender = () => {
-        // create the  showOld header and append it to the base div
-        this.$showOldHeader = $(`<h5>Show Old</h5>`).appendTo(this.$div);
-        // create the show old tasks checkbox and append it to the base div
-        this.$showOld = $(`<input type="checkbox" id="show-old">`).appendTo(this.$div);
-        // enable the checkbox to update the filter
-        this.$showOld.on("change", (e) => { return this.updateFilter(e.currentTarget.checked, "showOld"); });
-
-
-        // create the showMore header and append it to the base div
-        this.$showMoreHeader = $(`<h5>Show More</h5>`).appendTo(this.$div);
-        // create the show more tasks checkbox and append it to the base div
-        this.$showMore = $(`<input type="checkbox" id="show-more">`).appendTo(this.$div);
-        // enable the checkbox to update the filter
-        this.$showMore.on("change", (e) => { return this.updateFilter(e.currentTarget.checked, "showMore"); });
+        this.showMore = this.addChild(new CheckBox({
+            header: "Show More",
+            onClick: (e, self) => { this.updateFilter(self.getValue(), "showMore"); }
+        }));
     }
 
     setFilter = (filter) => {
@@ -45,169 +36,226 @@ class AgendaFilters extends Filters {
 // an extension of the SearchBox class called Agenda
 // this class has a few extra lists that are specific to the agenda
 class Agenda extends SearchBox {
-    constructor(id = null, parent) {
-        super(id, parent, null);
-        this.addFilters(new AgendaFilters(this.renderSearchResults));
+    constructor(settings = {}) {
+        super({
+            defaultClasses: "search-box agenda",
+            filters: null,
+            ...settings
+        });
 
-        this.$oldList = $(`<ul class="selector"></ul>`).appendTo(this.$div);
-        this.$todayList = $(`<ul class="selector"></ul>`).appendTo(this.$div);
-        this.$todoList = $(`<ul class="selector"></ul>`).appendTo(this.$div);
-        this.$weekList = $(`<ul class="selector"></ul>`).appendTo(this.$div);
-        this.$monthList = $(`<ul class="selector"></ul>`).appendTo(this.$div);
-        this.$yearList = $(`<ul class="selector"></ul>`).appendTo(this.$div);
-        this.$moreList = $(`<ul class="selector"></ul>`).appendTo(this.$div);
+        this.nowDate = new Date();
+
+        this.dayStart = new Date(this.nowDate.getTime());
+        this.dayStart.setHours(0);
+        this.dayStart.setMinutes(0);
+        this.dayStart.setSeconds(0);
+        this.dayStart.setMilliseconds(0);
+
+        this.dayEnd = new Date(this.nowDate.getTime());
+        this.dayEnd.setHours(23);
+        this.dayEnd.setMinutes(59);
+        this.dayEnd.setSeconds(59);
+        this.dayEnd.setMilliseconds(999);
+
+        this.weekEnd = new Date(this.nowDate.getTime());
+        this.weekEnd.setDate(this.weekEnd.getDate() + 7);
+        this.weekEnd.setHours(23);
+        this.weekEnd.setMinutes(59);
+        this.weekEnd.setSeconds(59);
+        this.weekEnd.setMilliseconds(999);
+
+        this.monthEnd = new Date(this.nowDate.getTime());
+        this.monthEnd.setMonth(this.monthEnd.getMonth() + 1);
+
+        this.yearEnd = new Date(this.nowDate.getTime());
+        this.yearEnd.setFullYear(this.yearEnd.getFullYear() + 1);
+
+        this.addFilters(AgendaFilters, this.renderSearchResults);
+
+        this.oldList = this.addChild(new Element("ul", {
+            defaultClasses: "selector",
+            header: "Old Tasks",
+            hidden: true
+        }));
+        this.todayList = this.addChild(new Element("ul", {
+            defaultClasses: "selector",
+            header: "Schedule - Today",
+            hidden: true
+        }));
+        this.todoList = this.addChild(new Element("ul", {
+            defaultClasses: "selector",
+            header: "To Do",
+            hidden: true
+        }));
+        this.weekList = this.addChild(new Element("ul", {
+            defaultClasses: "selector",
+            header: "This Week",
+            hidden: true
+        }));
+        this.monthList = this.addChild(new Element("ul", {
+            defaultClasses: "selector",
+            header: "This Month",
+            hidden: true
+        }));
+        this.yearList = this.addChild(new Element("ul", {
+            defaultClasses: "selector",
+            header: "This Year",
+            hidden: true
+        }));
+        this.moreList = this.addChild(new Element("ul", {
+            defaultClasses: "selector",
+            header: "More",
+            hidden: true
+        }));
     }
 
     // Override renderSearchResults method
     renderSearchResults = () => {
-        let nowDate = new Date();
-
-        let dayStart = new Date(nowDate.getTime());
-        dayStart.setHours(0);
-        dayStart.setMinutes(0);
-        dayStart.setSeconds(0);
-        dayStart.setMilliseconds(0);
-
-        let dayEnd = new Date(nowDate.getTime());
-        dayEnd.setHours(23);
-        dayEnd.setMinutes(59);
-        dayEnd.setSeconds(59);
-        dayEnd.setMilliseconds(999);
-
-        let weekEnd = new Date(nowDate.getTime());
-        weekEnd.setDate(weekEnd.getDate() + 7);
-        weekEnd.setHours(23);
-        weekEnd.setMinutes(59);
-        weekEnd.setSeconds(59);
-        weekEnd.setMilliseconds(999);
-
-        let monthEnd = new Date(nowDate.getTime());
-        monthEnd.setMonth(monthEnd.getMonth() + 1);
-
-        let yearEnd = new Date(nowDate.getTime());
-        yearEnd.setFullYear(yearEnd.getFullYear() + 1);
-
         this.clearLists();
-        
-        this.$todayHeader = $("<h4>Schedule - Today</h4>").appendTo(this.$searchList);
 
-        let filter = this.filters.getFilter();
+        this.filter = this.filters.getValue(null);
 
         for (let i = 0; i < this.items.length; i++) {
-            if (this.items[i]) {
-                let label = this.items[i].name || this.items[i].username || this.items[i].title || this.items[i].header || this.items[i].whenSearched || Object.values(this.items[i])[0];
-                if (!label) label = "Name Error";
-
-                let $list = this.$todoList;
-                let header = "To Do";
-                
-                if (this.items[i].date) {
-                    let testDate = new Date(this.items[i].date);
-                    let testTime = new Date(this.items[i].time);
-
-                    if (testDate.getTime() < dayStart.getTime()) {
-                        if (this.items[i].frequency === "weekly") while (testDate.getTime() < dayStart.getTime()) {
-                            testDate.setDate(testDate.getDate() + 7);
-                        }
-                        else if (this.items[i].frequency === "monthly") {
-                            testDate.toWithinAMonth();
-                            
-                        }
-                        else if (this.items[i].frequency === "yearly") {
-                            testDate.toWithinAYear();
-                        }
-                    }
-
-                    if (testDate.getTime() < dayStart.getTime()) {
-                        $list = this.$oldList;
-                        header = "Old Tasks";
-                        label = `${testDate.toLocaleDateString()} - ${label}`;
-                    }
-                    else if (testDate.getTime() < dayEnd.getTime()) {
-                        $list = this.$todayList;
-                        header = "Today";
-                        // prepends the label with the time, adding an extra 0 if necessary
-                        label = `${this.items[i].timeHours}:${this.items[i].timeMinutes} - ${label}`;
-                    }
-                    else if (testDate.getTime() < weekEnd.getTime()) {
-                        $list = this.$weekList;
-                        header = "This Week";
-                        label = `${testDate.getDayOfTheWeek(true)} - ${label}`;
-                    }
-                    else if (testDate.getTime() < monthEnd.getTime()) {
-                        $list = this.$monthList;
-                        header = "This Month";
-                        label = `${testDate.getMonth() + 1}/${testDate.getDate()} - ${label}`;
-                    }
-                    else if (testDate.getTime() < yearEnd.getTime()) {
-                        $list = this.$yearList;
-                        header = "This Year";
-                        label = `${testDate.getMonth() + 1}/${testDate.getDate()} - ${label}`;
-                    }
-                    else {
-                        $list = this.$moreList;
-                        header = "More";
-                        label = `${testDate.toLocaleDateString()} - ${label}`;
-                    }
-                };
-
-
-                let filtered = false;
-                if (filter) {
-                    if (!label.toLowerCase().includes(filter.search)) {
-                        filtered = true;
-                    }
-                    if (!filter.showOld) {
-                        if ($list === this.$oldList) filtered = true;
-                    }
-                    if (!filter.showMore) {
-                        if ($list === this.$moreList) filtered = true;
-                    }
-                }
-                if (!filtered) this.appendToList($list, label, i, header);
+            if (this.items[i]) {        
+                this.renderItem(this.items[i], i);
             }
-            else $(`<p>No Items</p>`).appendTo(this.$searchList);
+            else $(`<p>No Items</p>`).appendTo(this.list.$div);
         };
         if (this.items.length < 1) {
-            this.$searchList.append(`<p>No Items</p>`);
+            this.list.$div.append(`<p>No Items</p>`);
+        }
+    }
+
+    extractLabel = (item) => {
+        let label = item.name || item.username || item.title || item.header || item.whenSearched || Object.values(item)[0];
+        if (!label) label = "No Name";
+
+        if (typeof label !== "string") label = label.toString();
+
+        if (item.date) {
+            let testDate = new Date(item.date);
+
+            if (testDate.getTime() < this.dayStart.getTime()) {
+                if (item.frequency === "weekly") while (testDate.getTime() < this.dayStart.getTime()) {
+                    testDate.setDate(testDate.getDate() + 7);
+                }
+                else if (item.frequency === "monthly") {
+                    testDate.toWithinAMonth();
+                }
+                else if (item.frequency === "yearly") {
+                    testDate.toWithinAYear();
+                }
+            }
+
+            if (testDate.getTime() < this.dayStart.getTime()) {
+                label = `${testDate.toLocaleDateString()} - ${label}`;
+            }
+            else if (testDate.getTime() < this.dayEnd.getTime()) {
+                label = `${item.timeHours}:${item.timeMinutes} - ${label}`;
+            }
+            else if (testDate.getTime() < this.weekEnd.getTime()) {
+                label = `${testDate.getDayOfTheWeek(true)} - ${label}`;
+            }
+            else if (testDate.getTime() < this.monthEnd.getTime()) {
+                label = `${testDate.getMonth() + 1}/${testDate.getDate()} - ${label}`;
+            }
+            else if (testDate.getTime() < this.yearEnd.getTime()) {
+                label = `${testDate.getMonth() + 1}/${testDate.getDate()} - ${label}`;
+            }
+            else {
+                label = `${testDate.toLocaleDateString()} - ${label}`;
+            }
+        };
+
+        return label;
+    }
+
+    getList = (item) => {
+        let list = this.todoList;
+
+        if (item.date) {
+            let testDate = new Date(item.date);
+
+            if (testDate.getTime() < this.dayStart.getTime()) {
+                if (item.frequency === "weekly") while (testDate.getTime() < this.dayStart.getTime()) {
+                    testDate.setDate(testDate.getDate() + 7);
+                }
+                else if (item.frequency === "monthly") {
+                    testDate.toWithinAMonth();
+                }
+                else if (item.frequency === "yearly") {
+                    testDate.toWithinAYear();
+                }
+            }
+
+            if (testDate.getTime() < this.dayStart.getTime()) {
+                list = this.oldList;
+            }
+            else if (testDate.getTime() < this.dayEnd.getTime()) {
+                list = this.todayList;
+            }
+            else if (testDate.getTime() < this.weekEnd.getTime()) {
+                list = this.weekList;
+            }
+            else if (testDate.getTime() < this.monthEnd.getTime()) {
+                list = this.monthList;
+            }
+            else if (testDate.getTime() < this.yearEnd.getTime()) {
+                list = this.yearList;
+            }
+            else {
+                list = this.moreList;
+            }
+        };
+
+        return list;
+    }
+
+    renderItem = (item, i) => {
+        let label = this.extractLabel(item);
+        let list = this.getList(item);
+        
+        let filtered = false;
+        if (this.filter) {
+            if (!label.toLowerCase().includes(this.filter.search)) {
+                filtered = true;
+            }
+            if (!this.filter.showOld) {
+                if (list === this.oldList) filtered = true;
+            }
+            if (!this.filter.showMore) {
+                if (list === this.moreList) filtered = true;
+            }
+        }
+        if (!filtered) {
+            list.show();
+            return list.addChild(new Text("li", { 
+                placeholder: label,
+                id: i,
+                onClick: (e, element) => {
+                    if (this.settings.onLiClick) this.settings.onLiClick(e, element);
+                } 
+            }));
         }
     }
 
     // clears all lists
     clearLists = () => {
-        this.$searchList.empty();
-        this.$searchList.addClass("invisible");
-        this.$oldList.empty();
-        this.$oldList.addClass("invisible");
-        this.$todayList.empty();
-        this.$todayList.addClass("invisible");
-        this.$todoList.empty();
-        this.$todoList.addClass("invisible");
-        this.$weekList.empty();
-        this.$weekList.addClass("invisible");
-        this.$monthList.empty();
-        this.$monthList.addClass("invisible");
-        this.$yearList.empty();
-        this.$yearList.addClass("invisible");
-        this.$moreList.empty();
-        this.$moreList.addClass("invisible");
-    }
-
-    // appends a Jquery element to a list
-    // the element is a list item with the given label
-    // the element has an id of i
-    // optionally, the element can have a header
-    appendToList = ($list, label, i, header) => {
-        if ($list.children().length < 1) {
-            $list.append(`<h4>${header}</h4>`);
-            $list.removeClass("invisible");
-        }
-        let $result = $(`<li id="${i}">${label}</li>`).appendTo($list);
-        $result.on("click", (e) => { 
-            this.select(e.currentTarget);
-            if (this.parent) this.parent.select(i, "read", true);
-        });
-        return $result;
+        this.list.$div.empty();
+        this.oldList.removeChildren();
+        this.oldList.hide();
+        this.todayList.removeChildren();
+        this.todayList.hide();
+        this.todoList.removeChildren();
+        this.todoList.hide();
+        this.weekList.removeChildren();
+        this.weekList.hide();
+        this.monthList.removeChildren();
+        this.monthList.hide();
+        this.yearList.removeChildren();
+        this.yearList.hide();
+        this.moreList.removeChildren();
+        this.moreList.hide();
     }
 }
 
@@ -215,23 +263,25 @@ const metaBrowser = new MetaBrowser({
     label: null,
     useSearchBox: Agenda
 });
+metaBrowser.render();
 metaBrowser.addService("schedule", {
     fields: new NBField({
     name: "task",
     label: "Task: ",
-    placeholder: "No task",
-    multiple: true
+    placeholder: "No task"
 }, [
     new NBField({
         name: "name",
         label: "Name: ",
-        placeholder: "Name"
-    }, "string"),
+        placeholder: "Name",
+        type: "string"
+    }),
     new NBField({
         name: "date",
         label: "Date: ",
-        placeholder: Date.now()
-    }, "date"),
+        placeholder: Date.now(),
+        type: "date"
+    }),
     new NBField({
         name: "timeHours",
         label: "Time: ",
@@ -239,8 +289,9 @@ metaBrowser.addService("schedule", {
         options: [
             "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", 
             "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"
-        ]
-    }, "options"),
+        ],
+        type: "options"
+    }),
     new NBField({
         name: "timeMinutes",
         placeholder: "",
@@ -251,13 +302,15 @@ metaBrowser.addService("schedule", {
             "30", "31", "32", "33", "34", "35", "36", "37", "38", "39",
             "40", "41", "42", "43", "44", "45", "46", "47", "48", "49",
             "50", "51", "52", "53", "54", "55", "56", "57", "58", "59"
-        ]
-    }, "options"),
+        ],
+        type: "options"
+    }),
     new NBField({
         name: "recurring",
         label: "Repeat Task: ",
-        placeholder: false
-    }, "boolean"),
+        placeholder: false,
+        type: "boolean"
+    }),
     new NBField({
         name: "frequency",
         label: "Frequency: ",
@@ -267,13 +320,15 @@ metaBrowser.addService("schedule", {
             "weekly",
             "monthly",
             "yearly"
-        ]
-    }, "options"),
+        ],
+        type: "options"
+    }),
     new NBField({
         name: "description",
         label: "Description: ",
-        placeholder: "Description"
-    }, "long-string"),
+        placeholder: "Description",
+        type: "long-string"
+    }),
     new NBField({
         name: "sharing",
         label: "Sharing: ",
@@ -283,22 +338,25 @@ metaBrowser.addService("schedule", {
     }, [
         new NBField({
             name: "id",
-            hidden: true
-        }, "string"),
+            hidden: true,
+            readOnly: true,
+            type: "string"
+        }),
         new NBField({
             name: "name",
             placeholder: "No Group",
-            readOnly: true
-        }, "string"),
+            readOnly: true,
+            type: "string"
+        }),
         new NBField({
             name: "shared",
             label: "Shared: ",
-            placeholder: false
-        }, "boolean")
+            placeholder: false,
+            type: "boolean"
+        })
     ])
 ]),
 label: "Your Tasks",
-editable: true,
 multiple: true,
 toLoad: async () => {
     return (await base.do("load-schedule")).data;

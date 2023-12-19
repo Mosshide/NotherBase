@@ -21,6 +21,7 @@ class Element {
         this.children = [];
         this.$div = null;
         this.value = null;
+        this.enabled = true;
 
         if (this.settings.styles) Element.attemptStyle(this.settings.styles);
     }
@@ -53,7 +54,7 @@ class Element {
         if (this.settings.hidden) this.hide();
         else this.show();
 
-        if (this.settings.onClick) this.enable();
+        if (this.enabled) this.enable();
 
         return this.$div;
     }
@@ -61,7 +62,6 @@ class Element {
     initModifiers = () => {
         if (this.$div) {
             // add the attributes
-            [...this.$div[0].attributes].forEach(attr => this.$div[0].removeAttribute(attr.name));
             if (this.settings.attributes) {
                 for (let key in this.settings.attributes) {
                     this.$div.attr(key, this.settings.attributes[key]);
@@ -153,6 +153,8 @@ class Element {
     // enables the element
     enable = (onClick = this.settings.onClick) => {
         this.enabled = true;
+        this.$div.off();
+
         if (onClick) this.settings.onClick = onClick;
         if (this.settings.onClick) {
             this.$div.on("click", (e) => {
@@ -161,18 +163,14 @@ class Element {
             });
         }
 
-        if (this.settings.onInput) this.$div.on("input", (e) => { 
-            return this.settings.onInput(e.currentTarget.value.toLowerCase()); 
-        });
-
         this.$div.removeClass("disabled");
     }
 
     close = () => {
         this.hide();
-        if (this.settings.onClose) this.settings.onClose();
         this.$div.remove();
         if (this.parent) this.parent.removeChild(this);
+        if (this.settings.onClose) this.settings.onClose();
     }
 }
 
@@ -193,6 +191,15 @@ class Text extends Element {
 
         return this.$div;
     }
+
+    setValue = (value) => {
+        if (value) {
+            value = value.toString();
+            value = value.replace(/(?:\r\n|\r|\n)/g, '<br />');
+            this.value = value;
+        }
+        this.render();
+    }
 }
 
 // a class called Alert that can be used to display alerts
@@ -204,20 +211,10 @@ class Alert extends Text {
             ...settings
         });
 
-        this.addChild(new Element("button", {
+        this.addChild(new Button("hide", () => { this.hide(); }, {
             defaultClasses: "hide",
-            onClick: () => { this.hide(); },
             placeholder: "X"
         }));
-    }
-
-    // renders the element
-    render = () => {
-        this.$div = super.render();
-
-        this.$div.addClass(this.settings.type);
-
-        return this.$div;
     }
 }
 
@@ -237,6 +234,8 @@ class Input extends Element {
 
         this.$input = $(`<input type="${this.settings.inputType}" value="${this.value ? this.value : ""}" placeholder="${this.settings.placeholder}">`).appendTo(this.$div);
 
+        if (this.enabled) this.enable();
+
         return this.$div;
     }
 
@@ -251,12 +250,33 @@ class Input extends Element {
         this.value = this.$input.val();
         return this.value;
     }
+
+    enable = (onInput = this.settings.onInput) => {
+        this.enabled = true;
+        this.$div.off();
+
+        if (onInput) this.settings.onInput = onInput;
+
+        if (this.settings.onClick) {
+            this.$div.on("click", (e) => {
+                this.settings.onClick(e, this);
+                e.stopPropagation();
+            });
+        }
+
+        if (this.settings.onInput && this.$input) this.$input.on("input", (e) => { 
+            return this.settings.onInput(e.currentTarget.value.toLowerCase()); 
+        });
+
+        this.$div.removeClass("disabled");
+    }
 }
 
 // a class called TextArea that can be used to get user input
 class TextArea extends Element {
     constructor(settings = {}) {
         super("label", {
+            attributes: { rows: "4" },
             ...settings
         });
     }
@@ -267,6 +287,7 @@ class TextArea extends Element {
 
         this.$input = $(`<textarea placeholder="${this.settings.placeholder}">${this.value ? this.value : ""}</textarea>`).appendTo(this.$div);
 
+        if (this.enabled) this.enable();
         return this.$div;
     }
 
@@ -280,6 +301,26 @@ class TextArea extends Element {
     getValue = () => {
         this.value = this.$input.val();
         return this.value;
+    }
+
+    enable = (onInput = this.settings.onInput) => {
+        this.enabled = true;
+        this.$div.off();
+
+        if (onInput) this.settings.onInput = onInput;
+        
+        if (this.settings.onClick) {
+            this.$div.on("click", (e) => {
+                this.settings.onClick(e, this);
+                e.stopPropagation();
+            });
+        }
+
+        if (this.settings.onInput && this.$input) this.$input.on("input", (e) => { 
+            return this.settings.onInput(e.currentTarget.value.toLowerCase()); 
+        });
+
+        this.$div.removeClass("disabled");
     }
 }
 
@@ -300,19 +341,21 @@ class Select extends Element {
             this.initModifiers();
         }
 
-        for (let i = 0; i < fields.settings.options.length; i++) {
-            // $(`<option class="${fields.settings.name}" value="${fields.settings.options[i]}">${fields.settings.options[i]}</option>`).appendTo($editItem);
-            this.addChild(new Element("option", {
-                defaultClasses: fields.settings.name,
-                placeholder: this.settings.options[i]
-            }));
+        this.$div.empty();
+
+        for (let i = 0; i < this.settings.options.length; i++) {
+            $(`<option value="${this.settings.options[i]}">${this.settings.options[i]}</option>`).appendTo(this.$div);
+            // this.addChild(new Text("option", {
+            //     placeholder: this.settings.options[i]
+            // }));
         }
+
+        if (this.value) this.$div.find(`option:contains("${this.value}")`).prop('selected', true);
 
         if (this.settings.hidden) this.hide();
         else this.show();
 
-        this.enable();
-
+        if (this.enabled) this.enable();
         return this.$div;
     }
 
@@ -331,27 +374,46 @@ class Select extends Element {
         this.value = this.$div.find(`option:selected`).text();
         return this.value;
     }
+
+    enable = (onInput = this.settings.onInput) => {
+        this.enabled = true;
+        this.$div.off();
+
+        if (onInput) this.settings.onInput = onInput;
+        
+        if (this.settings.onClick) {
+            this.$div.on("click", (e) => {
+                this.settings.onClick(e, this);
+                e.stopPropagation();
+            });
+        }
+
+        if (this.settings.onInput && this.$input) this.$input.on("input", (e) => { 
+            return this.settings.onInput(e.currentTarget.value.toLowerCase()); 
+        });
+
+        this.$div.removeClass("disabled");
+    }
 }
 
 // a class called CheckBox that can be used to get user input
 class CheckBox extends Element {
     constructor(settings = {}) {
-        super("input", {
+        super("label", {
             ...settings
         });
     }
 
     // renders the element
     render = () => {
-        // create the element
-        if (!this.$div) {
-            this.$div = $(`<input type="checkbox"></input>`);
-            this.initModifiers();
-        }
+        this.$div = super.render();
 
-        if (this.value) this.$div.prop("checked", this.value);
-        else if (this.settings.placeholder) this.$div.prop("checked", this.settings.placeholder);
-        else this.$div.prop("checked", false);
+        // create the element
+        this.$input = $(`<input type="checkbox">`).appendTo(this.$div);
+
+        if (this.value !== null) this.$input.prop("checked", this.value);
+        else if (this.settings.placeholder !== null) this.$input.prop("checked", this.settings.placeholder);
+        else this.$input.prop("checked", false);
 
         if (this.settings.hidden) this.hide();
         else this.show();
@@ -362,12 +424,14 @@ class CheckBox extends Element {
     }
 
     setValue = (value) => {
-        if (this.$div) this.$div.prop("checked", value);
-        this.value = value;
+        if (value !== null) {
+            if (this.$input) this.$input.prop("checked", value);
+            this.value = value;
+        } 
     }
 
     getValue = () => {
-        this.value = this.$div.prop("checked");
+        this.value = this.$input.prop("checked");
         return this.value;
     }
 }

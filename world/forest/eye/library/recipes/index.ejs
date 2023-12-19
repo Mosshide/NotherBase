@@ -20,14 +20,13 @@
 <script src="/js/floatable.js"></script>
 <script>
     const metaBrowser = new MetaBrowser({
-        label: "Your Recipes"
+        header: "Your Recipes"
     });
     metaBrowser.addService("recipes", {
         fields: new NBField({
             name: "recipe",
             label: "Recipe: ",
-            placeholder: "No Recipe",
-            multiple: true
+            placeholder: "No Recipe"
         }, [
             new NBField({
                 name: "name",

@@ -28,32 +28,34 @@
             this.$div.append(`<div class="meta" id="bible-research"></div>`);
 
             this.metaResearch = new MetaBrowser({
-                label: "Bible Research",
+                header: "Bible Research",
                 id: "bible-research"
             });
             this.metaResearch.render();
             this.metaResearch.addService("bible-research-persons", {
                 fields: new NBField({
                     name: "persons",
-                    multiple: true,
                     label: "Person: ",
                     placeholder: "No Persons"
                 }, [
                     new NBField({
                         name: "name",
-                        placeholder: "No Persons"
-                    }, "string"),
+                        placeholder: "No Persons",
+                        type: "string"
+                    }),
                     new NBField({
                         name: "aliases",
                         multiple: true,
                         label: "Aliases: ",
-                        placeholder: "No Aliases"
-                    }, "string"),
+                        placeholder: "No Aliases",
+                        type: "string"
+                    }),
                     new NBField({
                         name: "description",
                         label: "Description: ",
-                        placeholder: "No Description"
-                    }, "long-string"),
+                        placeholder: "No Description",
+                        type: "long-string"
+                    }),
                 ]),
                 label: "Persons",
                 editable: true,
@@ -69,26 +71,28 @@
             this.metaResearch.addService("bible-research-themes", {
                 fields: new NBField({
                     name: "themes",
-                    multiple: true,
                     label: "Themes: ",
                     placeholder: "No Themes"
                 }, [
                     new NBField({
                         name: "name",
                         label: "Theme: ",
-                        placeholder: "No Theme"
-                    }, "string"),
+                        placeholder: "No Theme",
+                        type: "string"
+                    }),
                     new NBField({
                         name: "aliases",
                         multiple: true,
                         label: "Aliases: ",
-                        placeholder: "No Aliases"
-                    }, "string"),
+                        placeholder: "No Aliases",
+                        type: "string"
+                    }),
                     new NBField({
                         name: "description",
                         label: "Description: ",
-                        placeholder: "No Description"
-                    }, "long-string"),
+                        placeholder: "No Description",
+                        type: "long-string"
+                    }),
                 ]),
                 label: "Themes",
                 editable: true,

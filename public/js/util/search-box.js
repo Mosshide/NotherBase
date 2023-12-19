@@ -1,27 +1,3 @@
-class SearchInput extends Element {
-    constructor(onInput = null, settings = {}) {
-        super("input", {
-            defaultClasses: "search",
-            onInput: onInput,
-            placeholder: "Search",
-            ...settings
-        });
-    }
-}
-
-class SearchFilter extends Element {
-    constructor(onInput = null, settings = {}) {
-        super("div", {
-            defaultClasses: "search-filter",
-            header: "Search",
-            ...settings
-        });
-        this.onInput = onInput;
-
-        this.addChild(new SearchInput(this.onInput));
-    }
-}
-
 // a class called Filters that can be used to filter a search box
 class Filters extends Element {
     constructor(onFilterChange = null, defaults = { search: "" }, settings = {}) {
@@ -35,7 +11,10 @@ class Filters extends Element {
         this.filter = this.defaults;
         this.onFilterChange = onFilterChange;
 
-        this.search = this.addChild(new SearchFilter((filter) => this.updateFilter(filter, "search")));
+        this.search = this.addChild(new Input("text", {
+            header: "Search",
+            onInput: (filter) => { this.updateFilter(filter, "search"); }
+        }));
     }
 
     setValue = (filter, which = "search") => {
@@ -50,7 +29,8 @@ class Filters extends Element {
     }
 
     getValue = (which = "search") => {
-        return this.filter[which];
+        if (which) return this.filter[which];
+        return this.filter;
     }
 
     // updates a specific filter or all filters if which is not null
@@ -67,19 +47,6 @@ class Filters extends Element {
     }
 }
 
-class SearchButtons extends Buttons {
-    constructor(searchBox, settings = {}) {
-        super({
-            ...settings
-        });
-
-        this.addButton(new Button("new", (e, element) => {
-            searchBox.settings.onNew();
-        }, { placeholder: "New" }));
-        this.addButton(new Button("toggleFilters", () => { if (searchBox.filters) searchBox.filters.toggle(); }, { placeholder: "Filters" }));
-    }
-}
-
 class SearchBox extends Element {
     constructor(settings = {}) {
         super("div", {
@@ -91,21 +58,32 @@ class SearchBox extends Element {
             ...settings
         }); 
         
-        this.buttons = this.addChild(new SearchButtons(this));
+        this.buttons = this.addChild(new Buttons());
+        this.buttons.addButton(new Button("new", (e, element) => {
+            this.settings.onNew();
+        }, { placeholder: "New" }));
+        this.buttons.addButton(new Button("toggleFilters", () => { 
+            if (this.filters) this.filters.toggle(); 
+        }, { placeholder: "Filters" }));
+
         if (this.settings.filters === "default") this.filters = this.addChild(new Filters(this.renderSearchResults));
-        else if (this.settings.filters) this.filters = this.addChild(this.settings.filters(this.renderSearchResults));
         else this.filters = null;
+
         this.list = this.addChild(new Element("ul", {
             defaultClasses: "selector"        
         }));
     }
 
-    static extractLabel = (item) => {
+    extractLabel = (item) => {
         let label = item.name || item.username || item.title || item.header || item.whenSearched || Object.values(item)[0];
         if (!label) label = "No Name";
 
         if (typeof label !== "string") label = label.toString();
         return label;
+    }
+
+    addFilters = (filters, onFilterChange) => {
+        this.filters = this.addChild(new filters(onFilterChange));
     }
 
     setFilters = (filters) => {
@@ -136,19 +114,9 @@ class SearchBox extends Element {
     renderSearchResults = () => {
         this.list.removeChildren();
 
-        let filter = this.filters.getValue("search");
-
         for (let i = 0; i < this.items.length; i++) {
             if (this.items[i]) {
-                let label = SearchBox.extractLabel(this.items[i]);
-
-                if (label.toLowerCase().includes(filter)) this.list.addChild(new Text("li", { 
-                    placeholder: label,
-                    id: i,
-                    onClick: (e, element) => {
-                        if (this.settings.onLiClick) this.settings.onLiClick(e, element);
-                    } 
-                }));
+                this.renderItem(label, i);
             }
         };
         if (this.items.length < 1) {
@@ -160,7 +128,21 @@ class SearchBox extends Element {
 
     addItem = (item = {}) => {
         this.items.push(item);
-        this.renderSearchResults();
-        return this.list.children[this.list.children.length - 1];
+
+        return this.renderItem(item, this.items.length - 1);
+    }
+
+    renderItem = (item, i) => {
+        let filter = this.filters.getValue("search");
+        let label = SearchBox.extractLabel(item);
+        if (label.toLowerCase().includes(filter)) {
+            return this.list.addChild(new Text("li", { 
+                placeholder: label,
+                id: i,
+                onClick: (e, element) => {
+                    if (this.settings.onLiClick) this.settings.onLiClick(e, element);
+                } 
+            }));
+        }
     }
 }
