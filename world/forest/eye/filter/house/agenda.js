@@ -260,7 +260,7 @@ class Agenda extends SearchBox {
 }
 
 const metaBrowser = new MetaBrowser({
-    label: null,
+    header: "Agenda",
     useSearchBox: Agenda
 });
 metaBrowser.render();

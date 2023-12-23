@@ -146,3 +146,7 @@ footer a, footer a:hover {
 .selector li {
     background: none !important;
 }
+
+.browser, .read, .edit {
+    background: white !important;
+}

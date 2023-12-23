@@ -44,6 +44,7 @@
 </main>
 
 <script src="/js/base.js"></script>
+<script src="/js/util/element.js"></script>
 <script src="/js/util/buttons.js"></script>
 <script src="/js/util/search-box.js"></script>
 <script src="/js/util/browser.js"></script>
@@ -51,9 +52,7 @@
     const base = new Base();
 
     <% if (user && user.authLevels.includes("ITAD")) { %>
-        const browser = new Browser();
-        const search = new SearchBox();
-        const metaBrowser = new MetaBrowser("it admin", browser, search);
+        const metaBrowser = new MetaBrowser({ header: "it admin" });
 
         const load = () => {
             let filter = $("#filter").val();
@@ -62,44 +61,50 @@
                 fields: new NBField({
                 name: "ticket",
                 label: "Ticket: ",
-                placeholder: "No Ticket",
-                multiple: true
+                placeholder: "No Ticket"
             }, [
                     new NBField({
                         name: "title",
                         label: "Title: ",
-                        placeholder: "Ticket Title"
-                    }, "string"),
+                        placeholder: "Ticket Title",
+                        type: "string"
+                    }),
                     new NBField({
                         name: "id",
                         label: "id: ",
-                        placeholder: 0
-                    }, "number"),
+                        placeholder: 0,
+                        type: "number"
+                    }),
                     new NBField({
                         name: "date",
                         label: "Created On: ",
-                        placeholder: Date.now()
-                    }, "date"),
+                        placeholder: Date.now(),
+                        type: "date"
+                    }),
                     new NBField({
                         name: "quoted",
                         label: "Hours Quoted: ",
-                        placeholder: 0
-                    }, "number"),
+                        placeholder: 0,
+                        type: "number"
+                    }),
                     new NBField({
                         name: "resolved",
                         label: "Resolved On: ",
-                        placeholder: Date.now()
-                    }, "date"),
+                        placeholder: Date.now(),
+                        type: "date"
+                    }),
                     new NBField({
                         name: "used",
                         label: "Hours Used: ",
-                        placeholder: 0
-                    }, "number"),
+                        placeholder: 0,
+                        type: "number"
+                    }),
                     new NBField({
                         name: "description",
                         label: "Description: ",
-                        placeholder: "Description"
-                    }, "long-string")
+                        placeholder: "Description",
+                        type: "long-string"
+                    }),
                 ]),
                 label: filter,
                 editable: true,
@@ -116,6 +121,7 @@
                 }
             });
         }
+        metaBrowser.render();
     <% } %>
 
     class Tracker {
