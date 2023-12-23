@@ -5,13 +5,22 @@
     position: relative;
     min-height: 200px;
     transition: all 0.5s ease-in-out;
+    align-content: flex-start;
 }
 
 .browser {
     width: 100%;
-    border: var(--standardBorder);
+    height: auto;
     display: flex;
     flex-wrap: wrap;
+    opacity: 1;
+    transition: all 0.3s ease-in-out;
+    background: var(--mediumBgColorGradient);
+}
+
+.browser.open {
+    opacity: 1;
+    transition: all 0.3s ease-out;
 }
 
 .floating .browser {
@@ -32,7 +41,7 @@
 
 .browser .edit {
     width: 100%;
-    background: var(--bgColor);
+    background: var(--mediumBgColorGradient);
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
@@ -42,13 +51,14 @@
 }
 
 .browser .read.nested, .browser .edit.nested {
-    width: 100%;
+    width: var(--fillFromMargin);
     margin: var(--margin);
     padding: 0;
+    background: none;
 }
 
 .browser h4 {
-    background: var(--bgColor);
+    background: none;
     width: 100%;
     margin: 0;
     height: 40px;
@@ -82,7 +92,7 @@
 .browser .read {
     width: 100%;
     overflow: auto;
-    background: var(--bgColor);
+    background: var(--mediumBgColorGradient);
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
@@ -114,26 +124,11 @@
     margin: 0;
 }
 
-.browser .multiple {
-    border: none;
-    border-radius: 5px;
-    margin: var(--thickMargin);
-    position: relative;
-    padding: 0;
-    padding-top: calc(2 * var(--mediumPadding));
-    overflow: visible;
-}
-
 .browser .with-buttons {
     margin-bottom: 50px !important;
 }
 
-.browser .multiple li>input {
-    width: 85%;
-    margin: 0;
-}
-
-.browser li>button.remove {
+.browser .multiple button.remove {
     width: 10%;
     margin: var(--margin);
     border-radius: 0;
@@ -141,7 +136,7 @@
     height: var(--inputHeight) !important;
 }
 
-.browser li {
+.browser .multiple .object {
     width: 100%;
     display: flex;
     padding: 0;
@@ -150,11 +145,7 @@
     margin: 0;
 }
 
-.browser li:last-child {
-    border: none;
-}
-
-.browser li .nested {
+.browser .multiple .nested {
     padding: 1px;
 }
 

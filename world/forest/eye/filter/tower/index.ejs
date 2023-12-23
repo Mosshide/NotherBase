@@ -70,6 +70,7 @@
     Return to the Inn
 </a>
 
+<script src="/js/util/element.js"></script>
 <script src="/js/util/buttons.js"></script>
 <script src="/js/util/search-box.js"></script>
 <script src="/js/util/browser.js"></script>
@@ -100,29 +101,32 @@
             fields: new NBField({
                 name: "item",
                 label: "Item: ",
-                placeholder: "No item",
-                multiple: true
+                placeholder: "No item"
             }, [
                 new NBField({
                     name: "name",
                     label: "Name: ",
-                    placeholder: "Name"
-                }, "string"),
+                    placeholder: "Name",
+                type: "string"
+            }),
                 new NBField({
                     name: "short",
                     label: "Short Description: ",
-                    placeholder: "No Description"
-                }, "string"),
+                    placeholder: "No Description",
+                    type: "string"
+                }),
                 new NBField({
                     name: "long",
                     label: "Long Description: ",
-                    placeholder: "No Description"
-                }, "long-string"),
+                    placeholder: "No Description",
+                    type: "string"
+                }),
                 new NBField({
                     name: "id",
                     placeholder: null,
-                    hidden: true
-                }, "string")
+                    hidden: true,
+                    type: "string"
+                })
             ]),
             label: "Items",
             editable: true,
@@ -145,24 +149,28 @@
                 new NBField({
                     name: "username",
                     label: "Username: ",
-                    placeholder: "No Username"
-                }, "string"),
+                    placeholder: "No Username",
+                    type: "string"
+                }),
                 new NBField({
                     name: "authLevels",
                     label: "Auth Levels: ",
                     placeholder: "No Auth",
-                    multiple: true
-                }, "string"),
+                    multiple: true,
+                    type: "string"
+                }),
                 new NBField({
                     name: "email",
                     label: "Email: ",
-                    placeholder: "No Email"
-                }, "string"),
+                    placeholder: "No Email",
+                    type: "string"
+                }),
                 new NBField({
                     name: "id",
                     placeholder: null,
-                    hidden: true
-                }, "string")
+                    hidden: true,
+                    type: "string"
+                }),
             ]),
             label: "Users",
             editable: true,
@@ -175,5 +183,6 @@
                 await base.do("save-user", { item, which, deleting });
             }
         });
+        metaTower.render();
     <% } %>
 </script>

@@ -9,6 +9,8 @@
     gap: 0;
     padding: 1px;
     overflow: auto;
+    opacity: 1;
+    transition: all 0.3s ease-out;
 }
 
 .floating .search-box {
@@ -32,11 +34,13 @@
     border: none;
     padding: var(--padding);
     background: none;
+    display: flex;
+    flex-direction: column-reverse;
 }
 
 .search-box .filters {
     width: 100%;
-    height: auto;
+    max-height: 50vh;
     background: var(--bgColor);
     margin: 0;
     display: flex;
@@ -44,6 +48,13 @@
     justify-content: space-between;
     border-bottom: 1px dashed var(--textColor);
     padding: var(--padding);
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.search-box .filters.open {
+    max-height: 40vh;
+    transition: max-height 0.3s ease-out;
 }
 
 .search-box .filters h5 {
@@ -54,9 +65,17 @@
     height: 40px;
 }
 
-.search-box .selector li {
+.search-box .selector>li {
     border: none;
     padding: var(--padding);
+    height: auto;
+    flex-wrap: wrap;
+    transition: all 0.3s ease-out;
+}
+
+.search-box .selector>li.disabled {
+    cursor: initial;
+    background: var(--bgColor);
 }
 
 .search-box .buttons {
