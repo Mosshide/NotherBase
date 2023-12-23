@@ -46,7 +46,7 @@ let cancelRemove = function (e, self) {
     $items.removeClass("click-me");
     $items.off();
 
-    self.parent.show("remove");
+    self.parent.showButton("remove");
 }
 
 let cancelRemoveButton = new Button("cancel-remove", cancelRemove, {

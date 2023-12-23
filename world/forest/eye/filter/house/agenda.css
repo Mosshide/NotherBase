@@ -105,6 +105,7 @@ main .hud .date {
     width: 17% !important;
 }
 
-.search-box h4 {
+.search-box .selector>h4 {
     border: none;
+    order: 999999999;
 }

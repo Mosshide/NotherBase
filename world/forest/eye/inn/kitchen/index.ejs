@@ -8,6 +8,7 @@
     Return to the Bar
 </a>
 
+<script src="/js/util/element.js"></script>
 <script src="/js/util/buttons.js"></script>
 <script src="/js/util/search-box.js"></script>
 <script src="/js/util/browser.js"></script>
@@ -15,28 +16,30 @@
 <script src="/js/floatable.js"></script>
 <script>
     const metaBrowser = new MetaBrowser({
-        label: "Your Kitchen"
+        header: "Your Kitchen"
     });
     metaBrowser.addService("pantry", {
         fields: new NBField({
             name: "item",
             label: "Pantry Item: ",
-            placeholder: "No Item",
-            multiple: true
+            placeholder: "No Item"
         }, [
             new NBField({
                 name: "amount",
-                placeholder: 1
-            }, "number"),
+                placeholder: 1,
+                type: "number"
+            }),
             new NBField({
                 name: "name",
-                placeholder: "Item"
-            }, "string"),
+                placeholder: "Item",
+                type: "string"
+            }),
             new NBField({
                 name: "expiration",
                 label: "Expires: ",
-                placeholder: Date.now()
-            }, "date")
+                placeholder: Date.now(),
+                type: "date"
+            })
         ]),
         label: "Pantry",
         editable: true,
@@ -52,22 +55,24 @@
         fields: new NBField({
             name: "item",
             label: "Freezer Item: ",
-            placeholder: "No Item",
-            multiple: true
+            placeholder: "No Item"
         }, [
             new NBField({
                 name: "amount",
-                placeholder: 1
-            }, "number"),
+                placeholder: 1,
+                type: "number"
+            }),
             new NBField({
                 name: "name",
-                placeholder: "Item"
-            }, "string"),
+                placeholder: "Item",
+                type: "string"
+            }),
             new NBField({
                 name: "expiration",
                 label: "Expires: ",
-                placeholder: Date.now()
-            }, "date")
+                placeholder: Date.now(),
+                type: "date"
+            })
         ]),
         label: "Freezer",
         editable: true,
@@ -83,22 +88,24 @@
         fields: new NBField({
             name: "item",
             label: "Meat: ",
-            placeholder: "No Item",
-            multiple: true
+            placeholder: "No Item"
         }, [
             new NBField({
                 name: "amount",
-                placeholder: 1
-            }, "number"),
+                placeholder: 1,
+                type: "number"
+            }),
             new NBField({
                 name: "name",
-                placeholder: "Item"
-            }, "string"),
+                placeholder: "Item",
+                type: "string"
+            }),
             new NBField({
                 name: "expiration",
                 label: "Expires: ",
-                placeholder: Date.now()
-            }, "date")
+                placeholder: Date.now(),
+                type: "date"
+            })
         ]),
         label: "Meats",
         editable: true,
@@ -114,22 +121,24 @@
         fields: new NBField({
             name: "item",
             label: "Veggie: ",
-            placeholder: "No Item",
-            multiple: true
+            placeholder: "No Item"
         }, [
             new NBField({
                 name: "amount",
-                placeholder: 1
-            }, "number"),
+                placeholder: 1,
+                type: "number"
+            }),
             new NBField({
                 name: "name",
-                placeholder: "Item"
-            }, "string"),
+                placeholder: "Item",
+                type: "string"
+            }),
             new NBField({
                 name: "expiration",
                 label: "Expires: ",
-                placeholder: Date.now()
-            }, "date")
+                placeholder: Date.now(),
+                type: "date"
+            })
         ]),
         label: "Veggies",
         editable: true,
@@ -145,22 +154,24 @@
         fields: new NBField({
             name: "item",
             label: "Drink: ",
-            placeholder: "No Item",
-            multiple: true
+            placeholder: "No Item"
         }, [
             new NBField({
                 name: "amount",
-                placeholder: 1
-            }, "number"),
+                placeholder: 1,
+                type: "number"
+            }),
             new NBField({
                 name: "name",
-                placeholder: "Item"
-            }, "string"),
+                placeholder: "Item",
+                type: "string"
+            }),
             new NBField({
                 name: "expiration",
                 label: "Expires: ",
-                placeholder: Date.now()
-            }, "date")
+                placeholder: Date.now(),
+                type: "date"
+            })
         ]),
         label: "Drinks",
         editable: true,
@@ -176,22 +187,24 @@
         fields: new NBField({
             name: "item",
             label: "Snack: ",
-            placeholder: "No Item",
-            multiple: true
+            placeholder: "No Item"
         }, [
             new NBField({
                 name: "amount",
-                placeholder: 1
-            }, "number"),
+                placeholder: 1,
+                type: "number"
+            }),
             new NBField({
                 name: "name",
-                placeholder: "Item"
-            }, "string"),
+                placeholder: "Item",
+                type: "string"
+            }),
             new NBField({
                 name: "expiration",
                 label: "Expires: ",
-                placeholder: Date.now()
-            }, "date")
+                placeholder: Date.now(),
+                type: "date"
+            })
         ]),
         label: "Snacks",
         editable: true,
@@ -207,22 +220,24 @@
         fields: new NBField({
             name: "item",
             label: "Item: ",
-            placeholder: "No Item",
-            multiple: true
+            placeholder: "No Item"
         }, [
             new NBField({
                 name: "amount",
-                placeholder: 1
-            }, "number"),
+                placeholder: 1,
+                type: "number"
+            }),
             new NBField({
                 name: "name",
-                placeholder: "Item"
-            }, "string"),
+                placeholder: "Item",
+                type: "string"
+            }),
             new NBField({
                 name: "expiration",
                 label: "Expires: ",
-                placeholder: Date.now()
-            }, "date")
+                placeholder: Date.now(),
+                type: "date"
+            })
         ]),
         label: "Other",
         editable: true,
@@ -234,6 +249,7 @@
             await base.do("save-kitchen", { item, which, deleting, part: "other" });
         }
     });
+    metaBrowser.render();
 
     const floatBoard = new FloatBoard();
 </script>

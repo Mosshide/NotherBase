@@ -58,6 +58,7 @@ class SearchBox extends Element {
             ...settings
         }); 
         
+        this.browser = null;
         this.buttons = this.addChild(new Buttons());
         this.buttons.addButton(new Button("new", (e, element) => {
             this.settings.onNew();
@@ -75,7 +76,8 @@ class SearchBox extends Element {
     }
 
     extractLabel = (item) => {
-        let label = item.name || item.username || item.title || item.header || item.whenSearched || Object.values(item)[0];
+        let label = null;
+        if (item) label = item.name || item.username || item.title || item.header || item.whenSearched || Object.values(item)[0];
         if (!label) label = "No Name";
 
         if (typeof label !== "string") label = label.toString();
@@ -112,11 +114,15 @@ class SearchBox extends Element {
     }
 
     renderSearchResults = () => {
+        if (this.browser) {
+            this.browser.close();
+            this.browser = null;
+        }
         this.list.removeChildren();
 
         for (let i = 0; i < this.items.length; i++) {
             if (this.items[i]) {
-                this.renderItem(label, i);
+                this.renderItem(this.items[i], i);
             }
         };
         if (this.items.length < 1) {
@@ -126,16 +132,16 @@ class SearchBox extends Element {
         }
     }
 
-    addItem = (item = {}) => {
+    addItem = (item = {}, newItem = false) => {
         this.items.push(item);
 
-        return this.renderItem(item, this.items.length - 1);
+        return this.renderItem(item, this.items.length - 1, newItem);
     }
 
-    renderItem = (item, i) => {
+    renderItem = (item, i, newItem = false) => {
         let filter = this.filters.getValue("search");
-        let label = SearchBox.extractLabel(item);
-        if (label.toLowerCase().includes(filter)) {
+        let label = this.extractLabel(item);
+        if (label.toLowerCase().includes(filter) || newItem) {
             return this.list.addChild(new Text("li", { 
                 placeholder: label,
                 id: i,

@@ -228,7 +228,7 @@ class ViewBox extends Element {
                 this.child.splice(this.child.indexOf(child), 1);
                 if (this.child.length == 0) this.setValue();
             }
-            if (this.editing && this.fields.settings.multiple && !this.fields.settings.readOnly && this.nested) {
+            if (this.editing && this.fields.settings.multiple && !this.fields.settings.readOnly && this.nested && !this.fields.settings.lockLength) {
                 child.addChild(new Button("remove", (e, self) => { child.close(); }, { placeholder: "X" }));
             }
         }
@@ -364,9 +364,11 @@ class Browser extends Element {
         this.buttons.showButton("close");
         this.buttons.hideButton("save");
         this.buttons.hideButton("cancel");
-        this.buttons.showButton("delete");
-
-        if (this.serving.editable) this.buttons.showButton("edit");
+        
+        if (this.serving.editable) {
+            this.buttons.showButton("edit");
+            this.buttons.showButton("delete");
+        }
         else this.buttons.hideButton("edit");
     }
 
@@ -466,7 +468,7 @@ class MetaBrowser extends Container {
                         this.serving.data.splice(this.serving.selected, 1);
                         this.disabledElement.close();
                     }
-                    else {
+                    else if (this.disabledElement) {
                         this.disabledElement.enable();
                         this.disabledElement.setValue(this.searchBox.extractLabel(this.serving.data[this.serving.selected]));
                     }
@@ -509,6 +511,7 @@ class MetaBrowser extends Container {
                 element.disable();
                 this.disabledElement = element;
                 this.makeBrowser();
+                this.searchBox.browser = this.browser;
                 this.browser.read(this.serving);
                 element.addChild(this.browser);
             }
@@ -522,7 +525,7 @@ class MetaBrowser extends Container {
             state: "search",
             lastFilter: "",
             lastEdit: {},
-            label: null,
+            label: "Service",
             data: [],
             fields: new NBField(),
             editable: true,
@@ -536,7 +539,11 @@ class MetaBrowser extends Container {
         }));
 
         let keys = Object.keys(this.services);
-        if (keys.length < 2) this.load(service);
+        if (keys.length < 2) {
+            this.load(service);
+            this.buttons.hideButton(this.selectedService);
+            this.searchBox.setItems([], null);
+        }
         else this.load(service, false);
     }
 
@@ -545,6 +552,7 @@ class MetaBrowser extends Container {
 
         if (serving.toLoad) serving.toLoad().then((res) => {
             serving.data = res;
+            if (!Array.isArray(serving.data)) serving.data = [serving.data];
             if (select) this.selectService(service);
         });
     }
@@ -568,10 +576,11 @@ class MetaBrowser extends Container {
             }
             this.serving.selected = this.serving.data.length;
             this.serving.state = "new";
-            let newElement = this.searchBox.addItem(this.serving.lastEdit);
+            let newElement = this.searchBox.addItem(this.serving.lastEdit, true);
             newElement.disable();
             this.disabledElement = newElement;
             this.makeBrowser();
+            this.searchBox.browser = this.browser;
             this.browser.new(this.serving);
             newElement.addChild(this.browser);
         } : null);
@@ -582,6 +591,7 @@ class MetaBrowser extends Container {
             element.disable();
             this.disabledElement = element;
             this.makeBrowser();
+            this.searchBox.browser = this.browser;
             this.browser.edit(this.serving, this.serving.lastEdit);
             element.addChild(this.browser);
         }
@@ -590,6 +600,7 @@ class MetaBrowser extends Container {
             element.disable();
             this.disabledElement = element;
             this.makeBrowser();
+            this.searchBox.browser = this.browser;
             this.browser.new(this.serving, this.serving.lastEdit);
             element.addChild(this.browser);
         }
@@ -598,6 +609,7 @@ class MetaBrowser extends Container {
             element.disable();
             this.disabledElement = element;
             this.makeBrowser();
+            this.searchBox.browser = this.browser;
             this.browser.read(this.serving);
             element.addChild(this.browser);
         }      

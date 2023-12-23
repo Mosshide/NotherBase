@@ -3,7 +3,7 @@
 </p>
 
 <div class="floatables">
-    <div class="meta buttons"></div>
+    <div class="meta"></div>
 </div>
 
 <hr>
@@ -12,6 +12,7 @@
     Return to the Sanctuary
 </a>
 
+<script src="/js/util/element.js"></script>
 <script src="/js/util/buttons.js"></script>
 <script src="/js/util/search-box.js"></script>
 <script src="/js/util/browser.js"></script>
@@ -19,30 +20,32 @@
 <script src="/js/floatable.js"></script>
 <script>
     const metaBrowser = new MetaBrowser({
-        label: "Small Groups"
+        header: "Small Groups"
     });
     metaBrowser.addService("small-group", {
         fields: new NBField({
             name: "small-group",
-            multiple: true,
             label: "Small Group: ",
             placeholder: "No Small Group"
         }, [
             new NBField({
                 name: "name",
                 label: "Group Name: ",
-                placeholder: "Small Group"
-            }, "string"),
+                placeholder: "Small Group",
+                type: "string"
+            }),
             new NBField({
                 name: "location",
                 label: "Location: ",
-                placeholder: "No Location"
-            }, "string"),
+                placeholder: "No Location",
+                type: "string"
+            }),
             new NBField({
                 name: "nextMeeting",
                 label: "Next Meeting Time: ",
-                placeholder: "Right after church"
-            }, "string"),
+                placeholder: "Right after church",
+                type: "string"
+            }),
             new NBField({
                 name: "people",
                 multiple: true,
@@ -52,27 +55,30 @@
                 new NBField({
                     name: "name",
                     label: "Name: ",
-                    placeholder: "No Name"
-                }, "string"),
+                    placeholder: "No Name",
+                    type: "string"
+                }),
                 new NBField({
                     name: "notes",
                     label: "Notes: ",
-                    placeholder: "No Notes"
-                }, "long-string"),
+                    placeholder: "No Notes",
+                    type: "long-string"
+                }),
             ]),
             new NBField({
                 name: "notes",
                 label: "Notes: ",
-                placeholder: "No Notes"
-            }, "long-string"),
+                placeholder: "No Notes",
+                type: "long-string"
+            }),
             new NBField({
                 name: "requests",
                 label: "Prayer Requests: ",
                 placeholder: "No Requests",
-                multiple: true
-            }, "string")
+                multiple: true,
+                type: "string"
+            }),
         ]),
-        label: "Small Group",
         editable: true,
         multiple: true,
         toLoad: async () => {
@@ -83,6 +89,7 @@
             await base.do("save-small-group", { item, which, deleting });
         }
     });
+    metaBrowser.render();
 
     const floatBoard = new FloatBoard();
 </script>
