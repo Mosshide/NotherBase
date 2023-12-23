@@ -1,27 +1,22 @@
-let startRemove = function (e) {
-    let $lis = metaGroups.browser.$div.find(".read.members>ul>li");
-    this.hide();
-    this.settings.parent.show("cancel-remove");
-    $(`.read.members>ul>li .read.auth`).addClass("invisible");
-    
-    for (let i = 0; i < $lis.length; i++) {
-        let $li = $($lis[i]);
-        $li.addClass("click-me");
-        $li.on("click", (element) => {
-            remove(element);
-        });
-    }
+let startRemove = function (e, self) {
+    self.hide();
+    self.parent.showButton("cancel-remove");
+
+    let $items = metaGroups.browser.$div.find(".object.members");
+    $items.find(".read.auth").addClass("invisible");
+    $items.addClass("click-me");
+    $items.on("click", (element) => {
+        remove(element, self.parent);
+    });
 }
 
-let remove = function (e) {
-    let $li = $(e.currentTarget);
-    let userID = $li.find(".read.id").text();
-
+let remove = function (e, buttons) {
+    let userID = $(e.currentTarget).find("p.id").text();
     base.do("remove-member", {
         userID,
         groupID: metaGroups.serving.data[metaGroups.serving.selected].id
     }).then((res) => { 
-        metaGroups.reload(); 
+        metaGroups.load();
         switch (res.data) {
             case "auth-error":
                 metaGroups.setAlert("You are unauthorized to remove members!")
@@ -40,54 +35,48 @@ let remove = function (e) {
 }
 
 let removeButton = new Button("remove", startRemove, {
-    label: "Remove" 
+    placeholder: "Remove" 
 });
 
-let cancelRemove = function (e) {
-    let $lis = metaGroups.browser.$div.find(".read.members>ul>li");
-    this.hide();
-    this.settings.parent.show("remove");
-    $(`.read.members>ul>li .read.auth`).removeClass("invisible");
-    
-    for (let i = 0; i < $lis.length; i++) {
-        let $li = $($lis[i]);
-        $li.removeClass("click-me");
-        $li.off();
-    }
+let cancelRemove = function (e, self) {
+    self.hide();
+
+    let $items = metaGroups.browser.$div.find(".object.members");
+    $items.find(".read.auth").removeClass("invisible");
+    $items.removeClass("click-me");
+    $items.off();
+
+    self.parent.showButton("remove");
 }
 
 let cancelRemoveButton = new Button("cancel-remove", cancelRemove, {
-    label: "Cancel Remove", 
+    placeholder: "Cancel Remove", 
     hidden: true 
 });
 
+
 let startDemote = (e, self) => {
     self.hide();
+    self.parent.hideButton("promote");
+    self.parent.showButton("cancel-demote");
 
-    let $ul = self.$div.parent().parent().find("ul.content");
-
-    self.settings.parent.hide("promote");
-
-    self.settings.parent.show("cancel-demote");
-
-    let $lis = $ul.find("li");
-    $lis.addClass("click-me");
-    $lis.on("click", (element) => {
-        demote(element);
+    let $read = self.parent.parent.$div;
+    let $items = $read.find(".string.auth");
+    $items.addClass("click-me");
+    let userID = self.parent.parent.parent.$div.find("p.id").text();
+    $items.on("click", (element) => {
+        demote(element, userID, self.parent);
     });
 }
 
-let demote = (e) => {
-    let $li = $(e.currentTarget);
-    let userID = $li.parent().parent().parent().find("p.id").text();
-
+let demote = (e, userID, buttons) => {
     base.do("save-auth", { 
-        title: $li.find("p").text(), 
+        title: e.currentTarget.innerText, 
         userID, 
         demote: true, 
         groupID: metaGroups.serving.data[metaGroups.serving.selected].id 
     }).then((res) => { 
-        metaGroups.reload(); 
+        metaGroups.load();
         switch (res.data) {
             case "auth-error":
                 metaGroups.setAlert("You are unauthorized to demote members!")
@@ -109,52 +98,48 @@ let demote = (e) => {
 }
     
 let demoteButton = new Button("demote", startDemote, {
-    label: "Demote" 
+    placeholder: "Demote" 
 });
 
 let cancelDemote = (e, self) => {
     self.hide();
+    self.parent.showButton("demote");
+    self.parent.showButton("promote");
     
-    let $ul = self.$div.parent().find("ul.content");
-
-    self.settings.parent.show("demote");
-    self.settings.parent.show("promote");
-    
-    let $lis = $ul.find("li");
-    $lis.removeClass("click-me");
-    $lis.off();
+    let $read = self.parent.parent.$div;
+    let $items = $read.find(".string.auth");
+    $items.removeClass("click-me");
+    $items.off();
 }
 
 let cancelDemoteButton = new Button("cancel-demote", cancelDemote, {
-    label: "Cancel Demote", 
+    placeholder: "Cancel Demote", 
     hidden: true 
 });
 
 
 let startPromote = (e, self) => {
     self.hide();
+    self.parent.hideButton("demote");
+    self.parent.showButton("cancel-promote");
 
-    let $ul = self.$div.parent().parent().find("ul.content");
-
-    self.settings.parent.hide("demote");
-    self.settings.parent.show("cancel-promote");
-
-    let $li = $(`<li id="new-promote"></li>`).appendTo($ul);
-    let $input = $(`<input type="text"></input>`).appendTo($li);
-    let $submit = $(`<button>Promote</button>`).appendTo($li);
-    let userID = $ul.parent().parent().find("p.id").text();
+    let $read = self.parent.parent.$div;
+    let $item = $(`<div id="new-promote"></div>`).appendTo($read);
+    let $input = $(`<input type="text"></input>`).appendTo($item);
+    let $submit = $(`<button>Promote</button>`).appendTo($item);
+    let userID = self.parent.parent.parent.$div.find("p.id").text();
     $submit.on("click", (element) => {
-        promote(element, $input, userID);
+        promote(self.parent, $input, userID);
     });
 }
 
-let promote = (e, $input, userID) => {
+let promote = (buttons, $input, userID) => {
     base.do("save-auth", { 
         title: $input.val(), 
         userID, 
         groupID: metaGroups.serving.data[metaGroups.serving.selected].id 
     }).then((res) => { 
-        metaGroups.reload(); 
+        metaGroups.load();
         switch (res.data) {
             case "auth-error":
                 metaGroups.setAlert("You are unauthorized to promote members!")
@@ -173,49 +158,45 @@ let promote = (e, $input, userID) => {
 }
 
 let promoteButton = new Button("promote", startPromote, {
-    label: "Promote"
+    placeholder: "Promote"
 });
 
 let cancelPromote = (e, self) => {
     self.hide();
+    self.parent.showButton("demote");
+    self.parent.showButton("promote");
     
-    let $ul = self.$div.parent().parent().find("ul.content");
-
-    self.settings.parent.show("demote");
-    self.settings.parent.show("promote");
+    let $read = self.parent.parent.$div;
     
-    $ul.find("#new-promote").remove();
+    $read.find("#new-promote").remove();
 }
 
 let cancelPromoteButton = new Button("cancel-promote", cancelPromote, {
-    label: "Cancel Promote",
+    placeholder: "Cancel Promote",
     hidden: true
 });
 
+
 let startAccept = (e, self) => {
     self.hide();
+    self.parent.hideButton("reject");
+    self.parent.showButton("cancel-accept");
 
-    let $ul = self.$div.parent().parent().find("ul.content");
-
-    self.settings.parent.hide("reject");
-    self.settings.parent.show("cancel-accept");
-
-    let $lis = $ul.find("li");
-    $lis.addClass("click-me");
-    $lis.on("click", (element) => {
+    let $items = metaGroups.browser.$div.find(".object.joinRequests");
+    $items.addClass("click-me");
+    $items.on("click", (element) => {
         accept(element);
     });
 }
 
 let accept = (e) => {
-    let $li = $(e.currentTarget);
-    let userID = $li.find(".read.id").text();
+    let userID = $(e.currentTarget).find("p.id").text();
 
     base.do("save-joins", {
         userID,
         groupID: metaGroups.serving.data[metaGroups.serving.selected].id 
     }).then((res) => { 
-        metaGroups.reload(); 
+        metaGroups.load(); 
         switch (res.data) {
             case "auth-error":
                 metaGroups.setAlert("You are unauthorized to accept join requests!")
@@ -237,52 +218,46 @@ let accept = (e) => {
 }
 
 let acceptButton = new Button("accept", startAccept, {
-    label: "Accept"
+    placeholder: "Accept"
 });
 
 let cancelAccept = (e, self) => {
     self.hide();
+    self.parent.showButton("reject");
+    self.parent.showButton("accept");
     
-    let $ul = self.$div.parent().parent().find("ul.content");
-
-    self.settings.parent.show("reject");
-    self.settings.parent.show("accept");
-    
-    let $lis = $ul.find("li");
-    $lis.removeClass("click-me");
-    $lis.off();
+    let $items = metaGroups.browser.$div.find(".object.joinRequests");
+    $items.removeClass("click-me");
+    $items.off();
 }
 
 let cancelAcceptButton = new Button("cancel-accept", cancelAccept, {
-    label: "Cancel Accept",
+    placeholder: "Cancel Accept",
     hidden: true
 });
 
+
 let startReject = (e, self) => {
     self.hide();
+    self.parent.hideButton("accept");
+    self.parent.showButton("cancel-reject");
 
-    let $ul = self.$div.parent().parent().find("ul.content");
-
-    self.settings.parent.hide("accept");
-    self.settings.parent.show("cancel-reject");
-
-    let $lis = $ul.find("li");
-    $lis.addClass("click-me");
-    $lis.on("click", (element) => {
+    let $items = metaGroups.browser.$div.find(".object.joinRequests");
+    $items.addClass("click-me");
+    $items.on("click", (element) => {
         reject(element);
     });
 }
 
 let reject = (e) => {
-    let $li = $(e.currentTarget);
-    let userID = $li.find("p.id").text();
+    let userID = $(e.currentTarget).find("p.id").text();
 
     base.do("save-joins", {
         userID,
         groupID: metaGroups.serving.data[metaGroups.serving.selected].id,
         reject: true
     }).then((res) => { 
-        metaGroups.reload(); 
+        metaGroups.load(); 
         switch (res.data) {
             case "auth-error":
                 metaGroups.setAlert("You are unauthorized to reject join requests!")
@@ -301,52 +276,51 @@ let reject = (e) => {
 }
 
 let rejectButton = new Button("reject", startReject, {
-    label: "Reject"
+    placeholder: "Reject"
 });
 
 let cancelReject = (e, self) => {
     self.hide();
+    self.parent.showButton("accept");
+    self.parent.showButton("reject");
     
-    let $ul = self.$div.parent().parent().find("ul.content");
-
-    self.settings.parent.show("accept");
-    self.settings.parent.show("reject");
-    
-    let $lis = $ul.find("li");
-    $lis.removeClass("click-me");
-    $lis.off();
+    let $items = metaGroups.browser.$div.find(".object.joinRequests");
+    $items.removeClass("click-me");
+    $items.off();
 }
 
 let cancelRejectButton = new Button("cancel-reject", cancelReject, {
-    label: "Cancel Reject",
+    placeholder: "Cancel Reject",
     hidden: true
 });
 
 
 const metaGroups = new MetaBrowser({
-    label: "Your Groups"
+    header: "Your Groups"
 });
 metaGroups.addService("groups", {
     fields: new NBField({
         name: "group",
-        multiple: true,
         label: "Group: ",
         placeholder: "No Groups"
     }, [
         new NBField({
             name: "name",
-            placeholder: "No Name"
-        }, "string"),
+            placeholder: "No Name",
+            type: "string"
+        }),
         new NBField({
             name: "id",
             placeholder: null,
-            hidden: true
-        }, "string"),
+            hidden: true,
+            type: "string"
+        }),
         new NBField({
             name: "description",
             label: "Description: ",
-            placeholder: "No Description"
-        }, "long-string"),
+            placeholder: "No Description",
+            type: "long-string"
+        }),
         new NBField({
             name: "members",
             multiple: true,
@@ -358,8 +332,9 @@ metaGroups.addService("groups", {
                 name: "name",
                 label: "Name: ",
                 placeholder: "No Name",
-                readOnly: true
-            }, "string"),
+                readOnly: true,
+                type: "string"
+            }),
             new NBField({
                 name: "auth",
                 label: "Auth: ",
@@ -370,13 +345,15 @@ metaGroups.addService("groups", {
                     cancelDemoteButton,
                     promoteButton,
                     cancelPromoteButton
-                ]
-            }, "string"),
+                ],
+                type: "string"
+            }),
             new NBField({
                 name: "id",
                 hidden: true,
-                placeholder: null
-            }, "string")
+                placeholder: null,
+                type: "string"
+            })
         ]),
         new NBField({
             name: "joinRequests",
@@ -394,19 +371,22 @@ metaGroups.addService("groups", {
                 name: "name",
                 label: "Name: ",
                 placeholder: "No Name",
-                readOnly: true
-            }, "string"),
+                readOnly: true,
+                type: "string"
+            }),
             new NBField({
                 name: "note",
                 label: "Note: ",
                 placeholder: "No Note",
-                readOnly: true
-            }, "long-string"),
+                readOnly: true,
+                type: "long-string"
+            }),
             new NBField({
                 name: "id",
                 hidden: true,
-                placeholder: null
-            }, "string")
+                placeholder: null,
+                type: "string"
+            })
         ]),
         new NBField({
             name: "settings",
@@ -416,14 +396,17 @@ metaGroups.addService("groups", {
             new NBField({
                 name: "memberLimit",
                 label: "Member Limit: ",
-                placeholder: 99
-            }, "number")
+                placeholder: 99,
+                type: "number"
+            })
         ])
     ]),
     label: "Groups",
     multiple: true,
+    editable: false,
     toLoad: async () => {
         let data = (await base.do("load-groups")).data;
         return data;
     }
 });
+metaGroups.render();

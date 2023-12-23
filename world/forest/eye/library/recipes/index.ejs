@@ -12,6 +12,7 @@
     Return to the Lobby
 </a>
 
+<script src="/js/util/element.js"></script>
 <script src="/js/util/buttons.js"></script>
 <script src="/js/util/search-box.js"></script>
 <script src="/js/util/browser.js"></script>
@@ -19,29 +20,31 @@
 <script src="/js/floatable.js"></script>
 <script>
     const metaBrowser = new MetaBrowser({
-        label: "Your Recipes"
+        header: "Your Recipes"
     });
     metaBrowser.addService("recipes", {
         fields: new NBField({
             name: "recipe",
             label: "Recipe: ",
-            placeholder: "No Recipe",
-            multiple: true
+            placeholder: "No Recipe"
         }, [
             new NBField({
                 name: "name",
-                placeholder: "Recipe Name"
-            }, "string"),
+                placeholder: "Recipe Name",
+                type: "string"
+            }),
             new NBField({
                 name: "img",
                 label: "Image URL: ",
-                placeholder: "/img/food/default.jpg"
-            }, "image"),
+                placeholder: "/img/food/default.jpg",
+                type: "image"
+            }),
             new NBField({
                 name: "source",
                 label: "From: ",
-                placeholder: "Recipe Source"
-            }, "string"),
+                placeholder: "Recipe Source",
+                type: "string"
+            }),
             new NBField({
                 name: "ingredients",
                 label: "Ingredients: ",
@@ -50,28 +53,29 @@
             }, [
                 new NBField({
                     name: "amount",
-                    label: "",
-                    placeholder: 0
-                }, "number"),
+                    placeholder: "",
+                    type: "number"
+                }),
                 new NBField({
                     name: "measure",
-                    label: "",
-                    placeholder: "tbsp"
-                }, "string"),
+                    placeholder: "measure",
+                    type: "string"
+                }),
                 new NBField({
                     name: "ingredient",
-                    label: "",
-                    placeholder: "ingredient"
-                }, "string")
+                    placeholder: "ingredient",
+                    type: "string"
+                })
             ]),
             new NBField({
                 name: "directions",
                 label: "Directions: ",
                 placeholder: "No Directions",
-                multiple: true
-            }, "long-string") 
+                multiple: true,
+                type: "long-string"
+            }) 
         ]),
-        label: "Recipe:",
+        label: "Your Recipes",
         editable: true,
         multiple: true,
         toLoad: async () => {
@@ -81,6 +85,7 @@
             await base.do("save-recipe", { item, which, deleting });
         }
     });
+    metaBrowser.render();
 
     const floatBoard = new FloatBoard();
 </script>

@@ -8,6 +8,7 @@
     Exit the Workshop
 </a>
 
+<script src="/js/util/element.js"></script>
 <script src="/js/util/buttons.js"></script>
 <script src="/js/util/search-box.js"></script>
 <script src="/js/util/browser.js"></script>
@@ -15,25 +16,26 @@
 <script src="/js/floatable.js"></script>
 <script>
     const metaBrowser = new MetaBrowser({
-        label: "Your Projects"
+        header: "Your Projects"
     });
     metaBrowser.addService("projects", {
         fields: new NBField({
             name: "projects",
-            multiple: true,
             placeholder: "No Projects",
             label: "Project: "
         }, [
             new NBField({
                 name: "name",
                 placeholder: "No Name",
-                label: "Name: "
-            }, "string"),
+                label: "Name: ",
+                type: "string"
+            }),
             new NBField({
                 name: "description",
                 placeholder: "No Description",
-                label: "Description: "
-            }, "long-string"),
+                label: "Description: ",
+                type: "long-string"
+            }),
             new NBField({
                 name: "task",
                 placeholder: "No Tasks",
@@ -43,32 +45,36 @@
                 new NBField({
                     name: "name",
                     placeholder: "No Task Name",
-                    label: "Task: "
-                }, "string"),
+                    label: "Task: ",
+                    type: "string"
+                }),
                 new NBField({
                     name: "description",
                     placeholder: "No Description",
-                    label: "Description: "
-                }, "long-string"),
+                    label: "Description: ",
+                    type: "long-string"
+                }),
                 new NBField({
                     name: "completed",
                     placeholder: false,
-                    label: "Completed: "
-                }, "boolean")
+                    label: "Completed: ",
+                    type: "boolean"
+                }),
             ]),
             new NBField({
                 name: "resources",
                 placeholder: "No External Resources",
                 label: "External Resources: ",
-                multiple: true
-            }, "string"),
+                multiple: true,
+                type: "string"
+            }),
             new NBField({
                 name: "notes",
                 placeholder: "No Notes",
-                label: "Notes: "
-            }, "long-string"),
+                label: "Notes: ",
+                type: "long-string"
+            }),
         ]),
-        label: "Project:",
         editable: true,
         multiple: true,
         toLoad: async () => {
@@ -78,6 +84,7 @@
             await base.do("save-project", { item, which, deleting });
         }
     });
+    metaBrowser.render();
 
     const floatBoard = new FloatBoard();
 </script>

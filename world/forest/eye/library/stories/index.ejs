@@ -13,6 +13,7 @@
     Return to the Lobby
 </a>
 
+<script src="/js/util/element.js"></script>
 <script src="/js/util/buttons.js"></script>
 <script src="/js/util/search-box.js"></script>
 <script src="/js/util/browser.js"></script>
@@ -20,35 +21,38 @@
 <script src="/js/floatable.js"></script>
 <script>
     const metaBrowser = new MetaBrowser({
-        label: "Your Stories"
+        header: "Your Stories"
     });
     metaBrowser.addService("stories", {
         fields: new NBField({
             name: "story",
             label: "Story: ",
-            placeholder: "No Story",
-            multiple: true
+            placeholder: "No Story"
         }, [
             new NBField({
                 name: "title",
                 label: "Title: ",
-                placeholder: "Story Title"
-            }, "string"),
+                placeholder: "Story Title",
+                type: "string"
+            }),
             new NBField({
                 name: "img",
                 label: "Image: ",
-                placeholder: "/img/food/default.jpg"
-            }, "image"),
+                placeholder: "/img/food/default.jpg",
+                type: "image"
+            }),
             new NBField({
                 name: "source",
                 label: "Source: ",
-                placeholder: "Recipe Name"
-            }, "string"),
+                placeholder: "Recipe Name",
+                type: "string"
+            }),
             new NBField({
                 name: "content",
                 label: "Content: ",
-                placeholder: "Recipe Name"
-            }, "long-string")
+                placeholder: "Recipe Name",
+                type: "long-string"
+            })
         ]),
         label: "Story:",
         editable: true,
@@ -60,6 +64,7 @@
             await base.do("save-story", { item, which, deleting });
         }
     });
+    metaBrowser.render();
 
     const floatBoard = new FloatBoard();
 </script>

@@ -37,7 +37,7 @@ Date.prototype.toWithinAYear = function () {
     let today = new Date();
     let d = this.getDate();
     this.setDate(1);
-    if (this.getMonth() > today.getMonth()) this.setFullYear(today.getFullYear());
+    if (this.getMonth() >= today.getMonth()) this.setFullYear(today.getFullYear());
     else this.setFullYear(today.getFullYear() + 1);
     this.setDate(Math.min(d, this.getDaysInMonth()));
     return this;
