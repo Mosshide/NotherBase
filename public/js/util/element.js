@@ -104,10 +104,13 @@ class Element {
     }
 
     // removes all children from the element and returns them
-    removeChildren = () => {
-        let children = this.children;
-        this.children = [];
-        this.render();
+    closeChildren = () => {
+        let children = [];
+
+        while (this.children.length > 0) {
+            children.push(this.children[0].close());
+        }
+
         return children;
     }
 
@@ -171,6 +174,7 @@ class Element {
         this.$div.remove();
         if (this.parent) this.parent.removeChild(this);
         if (this.settings.onClose) this.settings.onClose();
+        return this;
     }
 }
 

@@ -195,7 +195,6 @@ class Agenda extends SearchBox {
                 list = this.todayList;
             }
             else if (testDate.getTime() < this.weekEnd.getTime()) {
-                console.log(testDate, this.weekEnd);
                 list = this.weekList;
             }
             else if (testDate.getTime() < this.monthEnd.getTime()) {
@@ -242,20 +241,21 @@ class Agenda extends SearchBox {
 
     // clears all lists
     clearLists = () => {
+        if (this.browser) this.browser.close();
         this.list.$div.empty();
-        this.oldList.removeChildren();
+        this.oldList.closeChildren();
         this.oldList.hide();
-        this.todayList.removeChildren();
+        this.todayList.closeChildren();
         this.todayList.hide();
-        this.todoList.removeChildren();
+        this.todoList.closeChildren();
         this.todoList.hide();
-        this.weekList.removeChildren();
+        this.weekList.closeChildren();
         this.weekList.hide();
-        this.monthList.removeChildren();
+        this.monthList.closeChildren();
         this.monthList.hide();
-        this.yearList.removeChildren();
+        this.yearList.closeChildren();
         this.yearList.hide();
-        this.moreList.removeChildren();
+        this.moreList.closeChildren();
         this.moreList.hide();
     }
 }
