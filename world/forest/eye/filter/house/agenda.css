@@ -37,7 +37,7 @@ main .hud .date {
 }
 
 .browser .nested.frequency {
-    width: 52% !important;
+    flex-wrap: nowrap !important;
 }
 
 .browser .nested.frequency select {
@@ -45,25 +45,23 @@ main .hud .date {
     height: 40px;
 }
 
-.browser .nested.recurring {
-    width: 40% !important;
-}
-
-.browser .nested.recurring ul {
-    justify-content: center;
-}
-
 .nested.timeHours {
     width: 20% !important;
+    flex-wrap: nowrap !important;
+}
+
+.nested.timeHours p {
+    text-align: right;
 }
 
 .nested.timeMinutes {
     width: 20% !important;
+    flex-wrap: nowrap !important;
 }
 
-.browser .edit.timeHours {
-    flex-wrap: nowrap;
-    width: 40% !important;
+.nested.timeMinutes h4 {
+    width: 5px !important;
+    padding: 0 !important;
 }
 
 .meta .buttons {
@@ -79,12 +77,9 @@ main .hud .date {
     height: auto !important;
 }
 
-.read.timeHours h4, .read.date h4, .read.time h4, .read.shared h4 {
-    display: none;
-}
-
-.read.date {
-    width: 46% !important;
+.nested.date {
+    width: 60% !important;
+    flex-wrap: nowrap !important;
 }
 
 .nested h4 {
@@ -97,12 +92,12 @@ main .hud .date {
     justify-content: space-between;
 }
 
-.read.sharing .read.name {
+.nested.sharing .nested.name {
     width: 80% !important;
 }
 
-.read.sharing .read.shared {
-    width: 17% !important;
+.nested.sharing .nested.shared {
+    width: 20% !important;
 }
 
 .search-box .selector>h4 {
