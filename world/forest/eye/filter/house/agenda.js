@@ -72,6 +72,8 @@ class Agenda extends SearchBox {
 
         this.addFilters(AgendaFilters, this.renderSearchResults);
 
+        this.removeChild(this.list);
+
         this.oldList = this.addChild(new Element("ul", {
             defaultClasses: "selector",
             header: "Old Tasks",
@@ -79,7 +81,7 @@ class Agenda extends SearchBox {
         }));
         this.todayList = this.addChild(new Element("ul", {
             defaultClasses: "selector",
-            header: "Schedule - Today",
+            header: "Today",
             hidden: true
         }));
         this.todoList = this.addChild(new Element("ul", {
@@ -245,7 +247,6 @@ class Agenda extends SearchBox {
             this.browser.close();
             this.browser = null;
         }
-        this.list.closeChildren();
         this.oldList.closeChildren();
         this.oldList.hide();
         this.todayList.closeChildren();
