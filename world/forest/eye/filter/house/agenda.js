@@ -241,8 +241,11 @@ class Agenda extends SearchBox {
 
     // clears all lists
     clearLists = () => {
-        if (this.browser) this.browser.close();
-        this.list.$div.empty();
+        if (this.browser) {
+            this.browser.close();
+            this.browser = null;
+        }
+        this.list.closeChildren();
         this.oldList.closeChildren();
         this.oldList.hide();
         this.todayList.closeChildren();
