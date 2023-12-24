@@ -295,7 +295,6 @@ class Browser extends Element {
             styles: "browser",
             ...settings
         });
-        this.state = "read";
         this.serving = serving;
 
         this.box = null;
@@ -305,7 +304,7 @@ class Browser extends Element {
         this.buttons.addButton(new Button("save", (e, self) => { this.save(); }, { placeholder: "Save" }));
         this.buttons.addButton(new Button("cancel", (e, self) => { this.cancel(); }, { placeholder: "Cancel" }));
         this.buttons.addButton(new Button("delete", (e, self) => { this.attemptDelete(); }, { placeholder: "Delete" }));
-        this.buttons.addButton(new Button("close", (e, self) => { this.close(); }, { placeholder: "Close" }));
+        this.buttons.addButton(new Button("close", (e, self) => { this.close(); this.serving.state = "search"; }, { placeholder: "Close" }));
         this.buttons.hideButton();
     }
 
@@ -342,7 +341,7 @@ class Browser extends Element {
     }
 
     save = async () => {
-        if (this.state === "edit" || this.state === "new") {
+        if (this.serving.state === "edit" || this.serving.state === "new") {
             this.item = this.box.getValue();
             
             if (this.settings.onSave) this.settings.onSave(this.item);
@@ -352,8 +351,8 @@ class Browser extends Element {
     }
 
     read = (serving = this.serving) => {
-        this.state = "read";
         this.serving = serving;
+        this.serving.state = "read";
 
         this.cancelDelete();
 
@@ -373,8 +372,8 @@ class Browser extends Element {
     }
 
     new = (serving = this.serving, itemOverride = null) => {
-        this.state = "new";
         this.serving = serving;
+        this.serving.state = "new";
 
         if (this.box) this.box.close();
         this.box = this.addChild(new ViewBox());
@@ -388,8 +387,8 @@ class Browser extends Element {
     }
 
     edit = (serving = this.serving, itemOverride = null) => {
-        this.state = "edit";
         this.serving = serving;
+        this.serving.state = "edit";
         
         if (this.box?.$div) this.box.close();
         this.box = this.addChild(new ViewBox(), false, true);
@@ -472,7 +471,6 @@ class MetaBrowser extends Container {
                         this.disabledElement.enable();
                         this.disabledElement.setValue(this.searchBox.extractLabel(this.serving.data[this.serving.selected]));
                     }
-                    this.serving.state = "search";
                     this.disabledElement = null;
                     this.browser = null;
                 }
@@ -511,7 +509,6 @@ class MetaBrowser extends Container {
                 element.disable();
                 this.disabledElement = element;
                 this.makeBrowser();
-                this.searchBox.browser = this.browser;
                 this.browser.read(this.serving);
                 element.addChild(this.browser);
             }
