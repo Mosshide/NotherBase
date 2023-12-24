@@ -104,10 +104,13 @@ class Element {
     }
 
     // removes all children from the element and returns them
-    removeChildren = () => {
-        let children = this.children;
-        this.children = [];
-        this.render();
+    closeChildren = () => {
+        let children = [];
+
+        while (this.children.length > 0) {
+            children.push(this.children[0].close());
+        }
+
         return children;
     }
 
@@ -171,6 +174,7 @@ class Element {
         this.$div.remove();
         if (this.parent) this.parent.removeChild(this);
         if (this.settings.onClose) this.settings.onClose();
+        return this;
     }
 }
 
@@ -275,17 +279,14 @@ class Input extends Element {
 // a class called TextArea that can be used to get user input
 class TextArea extends Element {
     constructor(settings = {}) {
-        super("label", {
-            attributes: { rows: "4" },
-            ...settings
-        });
+        super("label", settings);
     }
 
     // renders the element
     render = () => {
         this.$div = super.render();
 
-        this.$input = $(`<textarea placeholder="${this.settings.placeholder}">${this.value ? this.value : ""}</textarea>`).appendTo(this.$div);
+        this.$input = $(`<textarea rows="8" placeholder="${this.settings.placeholder}">${this.value ? this.value : ""}</textarea>`).appendTo(this.$div);
 
         if (this.enabled) this.enable();
         return this.$div;

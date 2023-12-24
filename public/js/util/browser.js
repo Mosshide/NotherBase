@@ -37,7 +37,7 @@ class ViewBox extends Element {
         this.editing = editing;
         this.settings.defaultClasses = `${this.fields.settings.name}${this.editing ? " edit" : " read"}${this.nested ? " nested" : ""}${this.fields.settings.multiple ? " multiple" : ""}`;
         this.settings.header = this.fields.settings.label;
-        this.removeChildren();
+        this.closeChildren();
         this.initModifiers();
         
         if (this.fields.settings.buttons || this.fields.settings.multiple) {

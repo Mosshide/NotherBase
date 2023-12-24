@@ -18,6 +18,14 @@
     background: var(--mediumBgColorGradient);
 }
 
+.browser label {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background: none;
+    justify-content: center;
+}
+
 .browser.open {
     opacity: 1;
     transition: all 0.3s ease-out;
@@ -44,15 +52,16 @@
     background: var(--mediumBgColorGradient);
     display: flex;
     flex-wrap: wrap;
-    align-content: flex-start;
+    align-content: center;
     justify-content: flex-start;
     margin: 0;
     overflow: auto;
+    align-items: center;
 }
 
 .browser .read.nested, .browser .edit.nested {
-    width: var(--fillFromMargin);
-    margin: var(--margin);
+    width: 100%;
+    margin: 0;
     padding: 0;
     background: none;
 }
@@ -95,7 +104,7 @@
     background: var(--mediumBgColorGradient);
     display: flex;
     flex-wrap: wrap;
-    align-content: flex-start;
+    align-content: center;
     justify-content: flex-start;
     align-items: center;
     margin: 0;
@@ -109,13 +118,10 @@
     margin-bottom: 0;
 }
 
-.browser .buttons.tabs {
-    height: 50px;
+.browser .buttons {
+    height: auto;
     width: 100%;
-    padding: 5px;
-    position: absolute;
-    left: 0;
-    bottom: -40px;
+    padding: 0;
     margin: 0;
 }
 
@@ -136,7 +142,7 @@
     height: var(--inputHeight) !important;
 }
 
-.browser .multiple .object {
+.browser .object {
     width: 100%;
     display: flex;
     padding: 0;
@@ -200,5 +206,5 @@
 
 .browser select {
     width: 100%;
-    height: 40px;
+    height: var(--inputHeight);
 }
