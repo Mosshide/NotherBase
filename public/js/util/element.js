@@ -275,17 +275,14 @@ class Input extends Element {
 // a class called TextArea that can be used to get user input
 class TextArea extends Element {
     constructor(settings = {}) {
-        super("label", {
-            attributes: { rows: "4" },
-            ...settings
-        });
+        super("label", settings);
     }
 
     // renders the element
     render = () => {
         this.$div = super.render();
 
-        this.$input = $(`<textarea placeholder="${this.settings.placeholder}">${this.value ? this.value : ""}</textarea>`).appendTo(this.$div);
+        this.$input = $(`<textarea rows="8" placeholder="${this.settings.placeholder}">${this.value ? this.value : ""}</textarea>`).appendTo(this.$div);
 
         if (this.enabled) this.enable();
         return this.$div;

@@ -136,13 +136,13 @@ class Agenda extends SearchBox {
             let testDate = new Date(item.date);
 
             if (testDate.getTime() < this.dayStart.getTime()) {
-                if (item.frequency === "weekly") while (testDate.getTime() < this.dayStart.getTime()) {
+                if (item.frequency.toLowerCase() === "weekly") while (testDate.getTime() < this.dayStart.getTime()) {
                     testDate.setDate(testDate.getDate() + 7);
                 }
-                else if (item.frequency === "monthly") {
+                else if (item.frequency.toLowerCase() === "monthly") {
                     testDate.toWithinAMonth();
                 }
-                else if (item.frequency === "yearly") {
+                else if (item.frequency.toLowerCase() === "yearly") {
                     testDate.toWithinAYear();
                 }
             }
@@ -177,13 +177,13 @@ class Agenda extends SearchBox {
             let testDate = new Date(item.date);
 
             if (testDate.getTime() < this.dayStart.getTime()) {
-                if (item.frequency === "weekly") while (testDate.getTime() < this.dayStart.getTime()) {
+                if (item.frequency.toLowerCase() == "weekly") while (testDate.getTime() < this.dayStart.getTime()) {
                     testDate.setDate(testDate.getDate() + 7);
                 }
-                else if (item.frequency === "monthly") {
+                else if (item.frequency.toLowerCase() == "monthly") {
                     testDate.toWithinAMonth();
                 }
-                else if (item.frequency === "yearly") {
+                else if (item.frequency.toLowerCase() == "yearly") {
                     testDate.toWithinAYear();
                 }
             }
@@ -195,6 +195,7 @@ class Agenda extends SearchBox {
                 list = this.todayList;
             }
             else if (testDate.getTime() < this.weekEnd.getTime()) {
+                console.log(testDate, this.weekEnd);
                 list = this.weekList;
             }
             else if (testDate.getTime() < this.monthEnd.getTime()) {
@@ -272,19 +273,16 @@ metaBrowser.addService("schedule", {
 }, [
     new NBField({
         name: "name",
-        label: "Name: ",
         placeholder: "Name",
         type: "string"
     }),
     new NBField({
         name: "date",
-        label: "Date: ",
         placeholder: Date.now(),
         type: "date"
     }),
     new NBField({
         name: "timeHours",
-        label: "Time: ",
         placeholder: "",
         options: [
             "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", 
@@ -294,6 +292,7 @@ metaBrowser.addService("schedule", {
     }),
     new NBField({
         name: "timeMinutes",
+        label: ":",
         placeholder: "",
         options: [
             "00", "01", "02", "03", "04", "05", "06", "07", "08", "09",
@@ -306,20 +305,14 @@ metaBrowser.addService("schedule", {
         type: "options"
     }),
     new NBField({
-        name: "recurring",
-        label: "Repeat Task: ",
-        placeholder: false,
-        type: "boolean"
-    }),
-    new NBField({
         name: "frequency",
-        label: "Frequency: ",
-        placeholder: " ",
+        label: "Repeats: ",
+        placeholder: "Once",
         options: [
-            " ",
-            "weekly",
-            "monthly",
-            "yearly"
+            "Once",
+            "Weekly",
+            "Monthly",
+            "Yearly"
         ],
         type: "options"
     }),
@@ -350,7 +343,6 @@ metaBrowser.addService("schedule", {
         }),
         new NBField({
             name: "shared",
-            label: "Shared: ",
             placeholder: false,
             type: "boolean"
         })

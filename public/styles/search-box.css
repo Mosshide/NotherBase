@@ -1,6 +1,6 @@
 .search-box {
     position: relative;
-    height: 50vh;
+    height: 70vh;
     width: var(--fillFromMargin);
     margin: var(--margin);
     border: none;
