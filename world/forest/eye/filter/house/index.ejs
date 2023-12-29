@@ -14,11 +14,7 @@
         <p class="day"></p>
         <p class="full-date"></p>
     </div>
-    <div class="weather">
-        <p class="name"></p>
-        <p class="temp">Loading the weather outside...</p>
-        <p class="forecast"></p>
-    </div>
+    <div class="bible-viewer"></div>
 </div>
 
 <div class="meta"></div>
@@ -59,6 +55,7 @@
 <script src="/js/util/buttons.js"></script>
 <script src="/js/util/search-box.js"></script>
 <script src="/js/util/browser.js"></script>
+<script src="/js/bible-viewer.js"></script>
 <script src="/js/billboard.js"></script>
 <script src="/js/entity.js"></script>
 <script>
@@ -92,15 +89,14 @@
     $(`.date .day`).text(dayName);
     $(`.date .full-date`).text(date.toLocaleDateString());
 
-    //get weather forecast
-    $.get(`https://api.weather.gov/points/46.7253,-122.9534`, (data) => {
-        if (data.properties.forecast) $.get(data.properties.forecast, (data) => {
-            let current = data.properties.periods[0];
-            $(`.weather .name`).text(`Forecast ${current.name}:`);
-            $(`.weather .temp`).text(`${current.temperature} °F`);
-            $(`.weather .forecast`).text(`${current.shortForecast}; ${current.windSpeed}`);
-        });
+    const bibleViewer = new BibleViewer({
+        header: "",
+        showUI: false,
+        initialBook: "James",
+        initialChapter: 3,
+        initialVerse: 2
     });
+    bibleViewer.render();
 
     <%- include("./agenda.js"); %>
 </script>

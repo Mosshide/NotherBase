@@ -426,6 +426,7 @@ class MetaBrowser extends Container {
             useBrowser: Browser, 
             useSearchBox: SearchBox,
             styles: "browser",
+            defaultClasses: "meta",
             ...settings
         });
 
@@ -444,7 +445,6 @@ class MetaBrowser extends Container {
     }
 
     render() {
-        this.settings.defaultClasses = "meta";
         this.$div = super.render(`.meta${this.settings.id ? `#${this.settings.id}` : ""}`);
 
         return this.$div;
