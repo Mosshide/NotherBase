@@ -69,4 +69,9 @@ class Buttons extends Element {
             }
         }
     }
+
+    removeChild = (child) => {
+        super.removeChild(child);
+        delete this.buttons[child.settings.id];
+    }
 }

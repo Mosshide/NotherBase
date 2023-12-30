@@ -15,14 +15,131 @@
 <script src="/js/entity.js"></script>
 <script src="/js/floatable.js"></script>
 <script>
+    class TreeBrowser extends Browser {
+        constructor(serving, settings) {
+            super(serving, settings);
+            
+            this.buttons.addButton(new Button("up", (e, self) => {
+                this.up();
+            }, { placeholder: "Up" }));
+            this.buttons.addButton(new Button("top", (e, self) => {
+                this.top();
+            }, { placeholder: "Top" }));
+            this.buttons.hideButton();
+
+            this.childButtons = this.addChild(new Buttons());
+        }
+
+        save = async () => {
+            if (this.serving.state === "edit" || this.serving.state === "new") {
+                let node = this.getItemNode();
+                node = this.box.getValue();
+                
+                if (this.settings.onSave) this.settings.onSave(this.item);
+
+                this.read();
+            }
+        }
+
+        read = (serving = this.serving) => {
+            this.serving = serving;
+            this.serving.state = "read";
+
+            this.cancelDelete();
+
+            if (this.box) this.box.close();
+            this.box = this.addChild(new ViewBox());
+
+            let item = this.getItemNode();
+            this.box.setValue(item, this.serving.fields, false);
+
+            this.buttons.showButton("close");
+            this.buttons.hideButton("save");
+            this.buttons.hideButton("cancel");
+            
+            if (this.serving.editable) {
+                this.buttons.showButton("edit");
+                this.buttons.showButton("delete");
+            }
+            else this.buttons.hideButton("edit");
+
+            this.childButtons.removeChildren();
+            for (let i = 0; i < item.length; i++) {
+                const element = array[i];
+                
+            }
+        }  
+
+        new = (serving = this.serving, itemOverride = null) => {
+            this.serving = serving;
+            this.serving.state = "new";
+
+            if (this.box) this.box.close();
+            this.box = this.addChild(new ViewBox());
+            this.item = itemOverride ? itemOverride : null;
+            this.serving.itemLocation = [];
+            this.box.setValue(this.getItemNode(), this.serving.fields, true);
+
+            this.buttons.hideButton("edit");
+            this.buttons.showButton("close");
+            this.buttons.showButton("save");
+            this.buttons.showButton("cancel");
+            this.buttons.hideButton("delete");
+        }
+
+        edit = (serving = this.serving, itemOverride = null) => {
+            this.serving = serving;
+            this.serving.state = "edit";
+            
+            if (this.box?.$div) this.box.close();
+            this.box = this.addChild(new ViewBox(), false, true);
+            this.box.setValue(itemOverride ? itemOverride : this.getItemNode(), this.serving.fields, true);
+
+            this.buttons.hideButton("edit");
+            this.buttons.hideButton("close");
+            this.buttons.showButton("save");
+            this.buttons.showButton("cancel");
+            this.buttons.hideButton("delete");
+
+            if (this.settings.onEdit) this.settings.onEdit();
+        }
+        
+        getItemNode = () => {
+            if (!Array.isArray(this.serving.itemLocation)) this.serving.itemLocation = [];
+            let item = this.serving.data[this.serving.selected];
+            for (let i = 0; i < this.serving.itemLocation.length; i++) {
+                item = item[this.serving.itemLocation[i]];
+            }
+            return item;
+        }
+
+        up = () => {
+            if (this.serving.itemLocation.length > 0) {
+                this.serving.itemLocation.pop();
+                this.read();
+            }
+        }
+
+        top = () => {
+            this.serving.itemLocation = [];
+            this.read();
+        }
+
+        down = (index) => {
+            this.serving.itemLocation.push(index);
+            this.read();
+        }
+    }
+
     const metaBrowser = new MetaBrowser({
-        header: "Your Projects"
+        header: "Your Projects",
+        useBrowser: TreeBrowser
     });
     metaBrowser.addService("projects", {
         fields: new NBField({
-            name: "projects",
-            placeholder: "No Projects",
-            label: "Project: "
+            name: "project-node",
+            placeholder: "No Info",
+            label: "Node: "
         }, [
             new NBField({
                 name: "name",
@@ -34,46 +151,9 @@
                 name: "description",
                 placeholder: "No Description",
                 label: "Description: ",
-                type: "long-string"
-            }),
-            new NBField({
-                name: "task",
-                placeholder: "No Tasks",
-                label: "Tasks: ",
+                type: "long-string",
                 multiple: true
-            }, [
-                new NBField({
-                    name: "name",
-                    placeholder: "No Task Name",
-                    label: "Task: ",
-                    type: "string"
-                }),
-                new NBField({
-                    name: "description",
-                    placeholder: "No Description",
-                    label: "Description: ",
-                    type: "long-string"
-                }),
-                new NBField({
-                    name: "completed",
-                    placeholder: false,
-                    label: "Completed: ",
-                    type: "boolean"
-                }),
-            ]),
-            new NBField({
-                name: "resources",
-                placeholder: "No External Resources",
-                label: "External Resources: ",
-                multiple: true,
-                type: "string"
-            }),
-            new NBField({
-                name: "notes",
-                placeholder: "No Notes",
-                label: "Notes: ",
-                type: "long-string"
-            }),
+            })
         ]),
         editable: true,
         multiple: true,
