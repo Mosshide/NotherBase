@@ -21,7 +21,7 @@
             
             this.buttons.enableButton("delete", (e, self) => { this.attemptDelete(); });
             this.buttons.enableButton("save", (e, self) => { this.save(); });
-            this.buttons.enableButton("cancel", (e, self) => { this.read(); });
+            this.buttons.enableButton("cancel", (e, self) => { this.read(this.serving, false); });
             this.buttons.enableButton("edit", (e, self) => { this.edit(); });
             this.buttons.addButton(new Button("up", (e, self) => {
                 this.up();
@@ -75,12 +75,13 @@
             
             if (this.settings.onSave) this.settings.onSave(this.serving.data[this.serving.selected]);
 
-            this.read();
+            this.read(this.serving, false);
         }
 
-        read = (serving = this.serving) => {
+        read = (serving = this.serving, resetLocation = true) => {
             this.serving = serving;
             this.serving.state = "read";
+            if (resetLocation) this.serving.itemLocation = [];
 
             this.cancelDelete();
 
@@ -155,7 +156,6 @@
             
             if (this.box?.$div) this.box.close();
             this.box = this.addChild(new ViewBox(), false, true);
-            console.log(this.serving);
             this.box.setValue(itemOverride ? itemOverride : this.getItemNode().data, this.serving.fields, true);
 
             this.buttons.hideButton("edit");
@@ -183,18 +183,17 @@
         up = () => {
             if (this.serving.itemLocation.length > 0) {
                 this.serving.itemLocation.pop();
-                this.read();
+                this.read(this.serving, false);
             }
         }
 
         top = () => {
-            this.serving.itemLocation = [];
             this.read();
         }
 
         down = (index) => {
             this.serving.itemLocation.push(index);
-            this.read();
+            this.read(this.serving, false);
         }
     }
 
