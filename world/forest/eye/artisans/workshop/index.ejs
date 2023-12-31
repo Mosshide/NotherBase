@@ -19,6 +19,10 @@
         constructor(serving, settings) {
             super(serving, settings);
             
+            this.buttons.enableButton("delete", (e, self) => { this.attemptDelete(); });
+            this.buttons.enableButton("save", (e, self) => { this.save(); });
+            this.buttons.enableButton("cancel", (e, self) => { this.read(); });
+            this.buttons.enableButton("edit", (e, self) => { this.edit(); });
             this.buttons.addButton(new Button("up", (e, self) => {
                 this.up();
             }, { placeholder: "Up" }));
@@ -30,15 +34,48 @@
             this.childButtons = this.addChild(new Buttons({ id: "child-buttons" }));
         }
 
-        save = async () => {
-            if (this.serving.state === "edit" || this.serving.state === "new") {
-                let node = this.getItemNode();
-                node.data = this.box.getValue();
-                
-                if (this.settings.onSave) this.settings.onSave(this.serving.data[this.serving.selected]);
+        attemptDelete = () => {
+            this.buttons.buttons.delete.$div.empty();
+            this.buttons.buttons.delete.disable();
 
-                this.read();
+            this.lastAttempt = Date.now();
+
+            this.$cancel = $(`<button id="cancel-delete">Cancel</button>`).appendTo(this.buttons.buttons.delete.$div);
+            this.$cancel.on("click", (e) => {
+                this.cancelDelete();
+                e.stopPropagation();
+            });
+
+            this.$confirm = $(`<button id="confirm-delete">Confirm Delete</button>`).appendTo(this.buttons.buttons.delete.$div);
+            this.$confirm.on("click", (e) => {
+                if (Date.now() - this.lastAttempt > 1000) {
+                    this.delete();
+                    e.stopPropagation();
+                }
+            });
+        }
+
+        delete = async () => {
+            if (this.serving.itemLocation.length === 0) {
+                if (this.settings.onDelete) this.settings.onDelete();
+                this.close();
             }
+            else {
+                let index = this.serving.itemLocation[this.serving.itemLocation.length - 1];
+                this.up();
+                item.children.splice(index, 1);
+                this.save();
+            }
+        }
+
+        save = async () => {
+            let node = this.getItemNode();
+            node.data = this.box.getValue();
+            this.serving.data[this.serving.selected].name = this.serving.data[this.serving.selected].data.name;
+            
+            if (this.settings.onSave) this.settings.onSave(this.serving.data[this.serving.selected]);
+
+            this.read();
         }
 
         read = (serving = this.serving) => {
@@ -78,7 +115,6 @@
             this.newChild = this.childButtons.addButton(new Button("new", (e, self) => {
                 this.newNode();
             }, { placeholder: "New" }));
-
         }  
 
         new = (serving = this.serving, itemOverride = null) => {
@@ -87,9 +123,8 @@
 
             if (this.box) this.box.close();
             this.box = this.addChild(new ViewBox());
-            this.item = itemOverride ? itemOverride : null;
             this.serving.itemLocation = [];
-            this.box.setValue({}, this.serving.fields, true);
+            this.box.setValue(itemOverride ? itemOverride : {}, this.serving.fields, true);
 
             this.buttons.hideButton("edit");
             this.buttons.showButton("close");
@@ -120,6 +155,7 @@
             
             if (this.box?.$div) this.box.close();
             this.box = this.addChild(new ViewBox(), false, true);
+            console.log(this.serving);
             this.box.setValue(itemOverride ? itemOverride : this.getItemNode().data, this.serving.fields, true);
 
             this.buttons.hideButton("edit");
