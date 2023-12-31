@@ -77,7 +77,8 @@ class SearchBox extends Element {
 
     extractLabel = (item) => {
         let label = null;
-        if (item) label = item.name || item.username || item.title || item.header || item.whenSearched || Object.values(item)[0];
+        if (item) label = item.name || item.username || item.title || 
+                            item.header || item.whenSearched || item.data?.name || Object.values(item)[0];
         if (!label) label = "No Name";
 
         if (typeof label !== "string") label = label.toString();

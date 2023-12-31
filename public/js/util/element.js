@@ -345,7 +345,7 @@ class Select extends Element {
         this.$div.empty();
 
         for (let i = 0; i < this.settings.options.length; i++) {
-            $(`<option value="${this.settings.options[i]}">${this.settings.options[i]}</option>`).appendTo(this.$div);
+            $(`<option id="${i}" value="${this.settings.options[i]}">${this.settings.options[i]}</option>`).appendTo(this.$div);
             // this.addChild(new Text("option", {
             //     placeholder: this.settings.options[i]
             // }));
@@ -361,12 +361,12 @@ class Select extends Element {
     }
 
     setValue = (which) => {
-        if (which) {
-            if (this.$div) this.$div.find(`option:contains("${which}")`).prop('selected', true);
+        if (which != null) {
+            if (this.$div) this.$div.val(which);
             this.value = which;
         }
         else {
-            if (this.$div) this.$div.find(`option:contains("${this.settings.placeholder}")`).prop('selected', true);
+            if (this.$div) this.$div.val(this.settings.placeholder);
             this.value = this.settings.placeholder;
         }
     }
@@ -376,11 +376,11 @@ class Select extends Element {
         return this.value;
     }
 
-    enable = (onInput = this.settings.onInput) => {
+    enable = (onChange = this.settings.onChange) => {
         this.enabled = true;
         this.$div.off();
 
-        if (onInput) this.settings.onInput = onInput;
+        if (onChange) this.settings.onChange = onChange;
         
         if (this.settings.onClick) {
             this.$div.on("click", (e) => {
@@ -389,8 +389,8 @@ class Select extends Element {
             });
         }
 
-        if (this.settings.onInput && this.$input) this.$input.on("input", (e) => { 
-            return this.settings.onInput(e.currentTarget.value.toLowerCase()); 
+        if (this.settings.onChange) this.$div.on("change", (e) => { 
+            return this.settings.onChange(e.currentTarget.value.toLowerCase(), e, this); 
         });
 
         this.$div.removeClass("disabled");
