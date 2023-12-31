@@ -7,9 +7,10 @@ main .hud {
     width: 100%;
 }
 
-main .hud .weather {
+main .hud .bible-viewer {
     width: 50%;
     padding: var(--padding);
+    height: auto;
 }
 
 main .hud .date {

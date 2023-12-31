@@ -299,7 +299,7 @@ class Browser extends Element {
 
         this.box = null;
         
-        this.buttons = this.addChild(new Buttons(this));
+        this.buttons = this.addChild(new Buttons({ id: "browser-ui" }));
         this.buttons.addButton(new Button("edit", (e, self) => { this.edit(); }, { placeholder: "Edit" }));
         this.buttons.addButton(new Button("save", (e, self) => { this.save(); }, { placeholder: "Save" }));
         this.buttons.addButton(new Button("cancel", (e, self) => { this.cancel(); }, { placeholder: "Cancel" }));
@@ -426,6 +426,7 @@ class MetaBrowser extends Container {
             useBrowser: Browser, 
             useSearchBox: SearchBox,
             styles: "browser",
+            defaultClasses: "meta",
             ...settings
         });
 
@@ -444,7 +445,6 @@ class MetaBrowser extends Container {
     }
 
     render() {
-        this.settings.defaultClasses = "meta";
         this.$div = super.render(`.meta${this.settings.id ? `#${this.settings.id}` : ""}`);
 
         return this.$div;
