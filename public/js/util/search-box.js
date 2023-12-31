@@ -78,7 +78,7 @@ class SearchBox extends Element {
     extractLabel = (item) => {
         let label = null;
         if (item) label = item.name || item.username || item.title || 
-                            item.header || item.whenSearched || item.data?.name || Object.values(item)[0];
+                            item.header || item.whenSearched;
         if (!label) label = "No Name";
 
         if (typeof label !== "string") label = label.toString();
@@ -148,7 +148,12 @@ class SearchBox extends Element {
                 id: i,
                 onClick: (e, element) => {
                     if (this.settings.onLiClick) this.settings.onLiClick(e, element);
-                } 
+                }, 
+                onClose: (e, element) => {
+                    for (let j = i; j < this.list.children.length; j++) {
+                        this.list.children[j].settings.id--;
+                    }
+                }
             }));
         }
     }

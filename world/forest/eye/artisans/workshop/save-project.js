@@ -12,7 +12,9 @@ export default async (req, user) => {
             //check that deletion is valid
             if (req.body.which > -1 && req.body.which < spirit.memory.data.length) {
                 //delete
+                console.log("deleting", spirit.memory.data, req.body.which);
                 spirit.memory.data.splice(req.body.which, 1);
+                console.log("deleted", spirit.memory.data, req.body.which);
             }
         }
         else {
