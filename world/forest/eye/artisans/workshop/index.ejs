@@ -63,6 +63,7 @@
             else {
                 let index = this.serving.itemLocation[this.serving.itemLocation.length - 1];
                 this.up();
+                let item = this.getItemNode();
                 item.children.splice(index, 1);
                 this.save();
             }
