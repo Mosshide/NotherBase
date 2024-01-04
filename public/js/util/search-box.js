@@ -121,6 +121,8 @@ class SearchBox extends Element {
         }
         this.list.closeChildren();
 
+        this.filter = this.filters.getValue("search");
+
         for (let i = 0; i < this.items.length; i++) {
             if (this.items[i]) {
                 this.renderItem(this.items[i], i);
@@ -140,9 +142,8 @@ class SearchBox extends Element {
     }
 
     renderItem = (item, i, newItem = false) => {
-        let filter = this.filters.getValue("search");
         let label = this.extractLabel(item);
-        if (label.toLowerCase().includes(filter) || newItem) {
+        if (label.toLowerCase().includes(this.filter) || newItem) {
             return this.list.addChild(new Text("li", { 
                 placeholder: label,
                 id: i,
