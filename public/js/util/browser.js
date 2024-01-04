@@ -502,6 +502,7 @@ class MetaBrowser extends Container {
         this.serving.state = "delete";
         this.serving.data.splice(this.serving.selected, 1);
         if (this.serving.toSave) this.serving.toSave(null, this.serving.selected, true);
+
     }
 
     addSearchBox = () => {
