@@ -236,7 +236,30 @@ class Agenda extends SearchBox {
                 id: i,
                 onClick: (e, element) => {
                     if (this.settings.onLiClick) this.settings.onLiClick(e, element);
-                } 
+                }, 
+                onClose: (e, element) => {
+                    for (let j = 0; j < this.oldList.children.length; j++) {
+                        if (this.oldList.children[j].settings.id > i) this.oldList.children[j].settings.id--;
+                    }
+                    for (let j = 0; j < this.todayList.children.length; j++) {
+                        if (this.todayList.children[j].settings.id > i) this.todayList.children[j].settings.id--;
+                    }
+                    for (let j = 0; j < this.todoList.children.length; j++) {
+                        if (this.todoList.children[j].settings.id > i) this.todoList.children[j].settings.id--;
+                    }
+                    for (let j = 0; j < this.weekList.children.length; j++) {
+                        if (this.weekList.children[j].settings.id > i) this.weekList.children[j].settings.id--;
+                    }
+                    for (let j = 0; j < this.monthList.children.length; j++) {
+                        if (this.monthList.children[j].settings.id > i) this.monthList.children[j].settings.id--;
+                    }
+                    for (let j = 0; j < this.yearList.children.length; j++) {
+                        if (this.yearList.children[j].settings.id > i) this.yearList.children[j].settings.id--;
+                    }
+                    for (let j = 0; j < this.moreList.children.length; j++) {
+                        if (this.moreList.children[j].settings.id > i) this.moreList.children[j].settings.id--;
+                    }
+                }
             }));
         }
     }
