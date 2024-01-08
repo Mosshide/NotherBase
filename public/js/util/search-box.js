@@ -149,11 +149,6 @@ class SearchBox extends Element {
                 id: i,
                 onClick: (e, element) => {
                     if (this.settings.onLiClick) this.settings.onLiClick(e, element);
-                }, 
-                onClose: (e, element) => {
-                    for (let j = i; j < this.list.children.length; j++) {
-                        this.list.children[j].settings.id--;
-                    }
                 }
             }));
         }
