@@ -17,84 +17,114 @@
 <script src="/js/entity.js"></script>
 <script src="/js/floatable.js"></script>
 <script>   
-    this.metaResearch = new MetaBrowser({
+    const metaResearch = new MetaBrowser({
         header: "Bible Research",
-        id: "bible-research"
+        id: "bible-research",
+        useBrowser: TreeBrowser
     });
-    this.metaResearch.render();
-    this.metaResearch.addService("bible-research-persons", {
+    metaResearch.addService("bible-notes", {
         fields: new NBField({
-            name: "persons",
-            label: "Person: ",
-            placeholder: "No Persons"
+            name: "note-node",
+            placeholder: "No Info",
+            label: "Node: "
         }, [
             new NBField({
                 name: "name",
-                placeholder: "No Persons",
-                type: "string"
-            }),
-            new NBField({
-                name: "aliases",
-                multiple: true,
-                label: "Aliases: ",
-                placeholder: "No Aliases",
+                placeholder: "No Name",
+                label: "Name: ",
                 type: "string"
             }),
             new NBField({
                 name: "description",
-                label: "Description: ",
                 placeholder: "No Description",
-                type: "long-string"
-            }),
+                label: "Description: ",
+                type: "long-string",
+                multiple: true
+            })
         ]),
-        label: "Persons",
         editable: true,
         multiple: true,
         toLoad: async () => {
-            let res = await base.load("bible-research-persons");
-            return res;
+            return await base.load("bible-notes");
         },
         toSave: async (item, which, deleting) => {
-            await base.do("save-person", { item, which, deleting });
+            await base.do("save-bible-note", { item, which, deleting });
         }
     });
-    this.metaResearch.addService("bible-research-themes", {
-        fields: new NBField({
-            name: "themes",
-            label: "Themes: ",
-            placeholder: "No Themes"
-        }, [
-            new NBField({
-                name: "name",
-                label: "Theme: ",
-                placeholder: "No Theme",
-                type: "string"
-            }),
-            new NBField({
-                name: "aliases",
-                multiple: true,
-                label: "Aliases: ",
-                placeholder: "No Aliases",
-                type: "string"
-            }),
-            new NBField({
-                name: "description",
-                label: "Description: ",
-                placeholder: "No Description",
-                type: "long-string"
-            }),
-        ]),
-        label: "Themes",
-        editable: true,
-        multiple: true,
-        toLoad: async () => {
-            let res = await base.load("bible-research-themes");
-            return res;
-        },
-        toSave: async (item, which, deleting) => {
-            await base.do("save-theme", { item, which, deleting });
-        }
-    });
+    metaResearch.render();
+    // metaResearch.addService("bible-research-persons", {
+    //     fields: new NBField({
+    //         name: "persons",
+    //         label: "Person: ",
+    //         placeholder: "No Persons"
+    //     }, [
+    //         new NBField({
+    //             name: "name",
+    //             placeholder: "No Persons",
+    //             type: "string"
+    //         }),
+    //         new NBField({
+    //             name: "aliases",
+    //             multiple: true,
+    //             label: "Aliases: ",
+    //             placeholder: "No Aliases",
+    //             type: "string"
+    //         }),
+    //         new NBField({
+    //             name: "description",
+    //             label: "Description: ",
+    //             placeholder: "No Description",
+    //             type: "long-string"
+    //         }),
+    //     ]),
+    //     label: "Persons",
+    //     editable: true,
+    //     multiple: true,
+    //     toLoad: async () => {
+    //         let res = await base.load("bible-research-persons");
+    //         return res;
+    //     },
+    //     toSave: async (item, which, deleting) => {
+    //         await base.do("save-person", { item, which, deleting });
+    //     }
+    // });
+    // metaResearch.addService("bible-research-themes", {
+    //     fields: new NBField({
+    //         name: "themes",
+    //         label: "Themes: ",
+    //         placeholder: "No Themes"
+    //     }, [
+    //         new NBField({
+    //             name: "name",
+    //             label: "Theme: ",
+    //             placeholder: "No Theme",
+    //             type: "string"
+    //         }),
+    //         new NBField({
+    //             name: "aliases",
+    //             multiple: true,
+    //             label: "Aliases: ",
+    //             placeholder: "No Aliases",
+    //             type: "string"
+    //         }),
+    //         new NBField({
+    //             name: "description",
+    //             label: "Description: ",
+    //             placeholder: "No Description",
+    //             type: "long-string"
+    //         }),
+    //     ]),
+    //     label: "Themes",
+    //     editable: true,
+    //     multiple: true,
+    //     toLoad: async () => {
+    //         let res = await base.load("bible-research-themes");
+    //         return res;
+    //     },
+    //     toSave: async (item, which, deleting) => {
+    //         await base.do("save-theme", { item, which, deleting });
+    //     }
+    // });
     
     const bibleViewer = new BibleViewer();
     bibleViewer.render();
