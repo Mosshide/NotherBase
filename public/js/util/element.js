@@ -71,7 +71,7 @@ class Element {
             this.$div.removeClass();
             if (this.settings.defaultClasses) this.$div.addClass(this.settings.defaultClasses);
             // add the id
-            if (this.id) this.$div.attr("id", this.id);
+            if (this.settings.id) this.$div.attr("id", this.settings.id);
             else this.$div.removeAttr("id");
             // add the src
             if (this.settings.src) this.$div.attr("src", this.settings.src);
