@@ -13,6 +13,11 @@ class AgendaFilters extends Filters {
             onClick: (e, self) => { this.updateFilter(self.getValue(), "showOld"); }
         }));
 
+        this.showYear = this.addChild(new CheckBox({
+            header: "Show Year",
+            onClick: (e, self) => { this.updateFilter(self.getValue(), "showYear"); }
+        }));
+
         this.showMore = this.addChild(new CheckBox({
             header: "Show More",
             onClick: (e, self) => { this.updateFilter(self.getValue(), "showMore"); }
@@ -27,6 +32,8 @@ class AgendaFilters extends Filters {
             this.$search.val(this.filter.search);
             // update the showOld checkbox value
             this.$showOld.prop("checked", this.filter.showOld);
+            // update the showYear checkbox value
+            this.$showYear.prop("checked", this.filter.showYear);
             // update the showMore checkbox value
             this.$showMore.prop("checked", this.filter.showMore);
         }
@@ -224,6 +231,9 @@ class Agenda extends SearchBox {
             }
             if (!this.filter.showOld) {
                 if (list === this.oldList) filtered = true;
+            }
+            if (!this.filter.showYear) {
+                if (list === this.yearList) filtered = true;
             }
             if (!this.filter.showMore) {
                 if (list === this.moreList) filtered = true;
