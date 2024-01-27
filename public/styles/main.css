@@ -144,6 +144,20 @@ main {
     z-index: 1;
 }
 
+main.full-view {
+    flex-direction: column;
+    overflow: auto;
+    overflow-y: hidden;
+    max-width: initial;
+    width: 95vw;
+    gap: 20px;
+    align-items: center;
+}
+
+main.full-view>* {
+    max-width: var(--maxMainWidth);
+}
+
 footer {
     position: absolute;
     display: flex;
@@ -160,6 +174,16 @@ footer {
     border: none;
     top: 0;
     left: 2.5vw;
+}
+
+footer .view-toggle {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 40px;
+    height: 40px;
+    background: var(--bgColor);
+    border-radius: 0 0 0 5px;
 }
 
 footer button {
@@ -746,5 +770,21 @@ iframe {
 
     .float-board {
         display: none;
+    }
+}
+
+@media screen and (max-width: 570px) {
+    footer .view-toggle {
+        display: none;
+    }
+
+    main.full-view {
+        flex-direction: row;
+        overflow: auto;
+        overflow-x: hidden;
+        max-width: var(--maxMainWidth);
+        width: var(--mainWidth);
+        gap: initial;
+        align-items: flex-end;
     }
 }
