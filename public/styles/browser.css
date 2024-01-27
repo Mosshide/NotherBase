@@ -208,3 +208,7 @@
     width: 100%;
     height: var(--inputHeight);
 }
+
+.browser>#child-buttons {
+    order: 99;
+}
