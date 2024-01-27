@@ -78,6 +78,10 @@ main .hud .date {
     overflow: auto;
 }
 
+.search-box>.buttons {
+    margin-bottom: -20px;
+}
+
 .selector {
     height: auto !important;
 }
