@@ -1,0 +1,45 @@
+<div class="meta"></div>
+
+<hr>
+
+<a class="return" href="/forest/eye/church/library">
+    Return to the Church Library
+</a>
+
+<script src="/js/util/element.js"></script>
+<script src="/js/util/buttons.js"></script>
+<script src="/js/util/search-box.js"></script>
+<script src="/js/util/browser.js"></script>
+<script>
+    const metaBrowser = new MetaBrowser({
+        header: "Prayer Journal"
+    });
+    metaBrowser.render();
+    metaBrowser.addService("schedule", {
+        fields: new NBField({
+        name: "entry",
+        label: "Entry: ",
+        placeholder: "No entry"
+    }, [
+        new NBField({
+            name: "title",
+            placeholder: "Title",
+            type: "string"
+        }),
+        new NBField({
+            name: "content",
+            label: "Description: ",
+            placeholder: "Description",
+            type: "long-string",
+            multiple: true
+        })
+    ]),
+    label: "Your Prayer Journal",
+    multiple: true,
+    toLoad: async () => {
+        return await base.load("prayer-journal");
+    },
+    toSave: async (item, which, deleting) => {
+        await base.do("save-entry", { item, which, deleting });
+    }});
+</script>
