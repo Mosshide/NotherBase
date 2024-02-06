@@ -1,123 +1,111 @@
 export default async (req, user) => {
-    const getInGroups = async (settings = {}) => {
-        settings = {
-            getName: true,
-            getMembers: false,
-            getJoinRequests: false,
-            getSettings: false,
-            ...settings
-        }
+    let dayStart = new Date();
+    dayStart.setHours(0);
+    dayStart.setMinutes(0);
+    dayStart.setSeconds(0);
+    dayStart.setMilliseconds(0);
 
-        let groups = await req.db.Spirit.recallAll("group");
-        let inGroups = [];
-        
-        for (let i = 0; i < groups.memory.length; i++) {
-            if (!groups.memory[i].data) groups.memory.splice(i, 1);
-            else {
-                if (Array.isArray(groups.memory[i].data.members)) {
-                    let groupInfo = {
-                        id: `${groups.memory[i].id}`,
-                        name: groups.memory[i].data.name,
-                        description: groups.memory[i].data.description,
-                        members: [],
-                        joinRequests: []
-                    }
-                    if (settings.getSettings) groupInfo.settings = groups.memory[i].data.settings;
-        
-                    let userFound = false;
+    Date.isLeapYear = function (year) { 
+        return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0)); 
+    };
     
-                    for (let j = 0; j < groups.memory[i].data.members.length; j++) {
-                        if (settings.getMembers) {
-                            let findUser = await req.db.User.recallOne(null, null, groups.memory[i].data.members[j].id);
-        
-                            groupInfo.members[j] = {
-                                id: groups.memory[i].data.members[j].id,
-                                name: findUser.memory.data.username,
-                                auth: groups.memory[i].data.members[j].auth
-                            }
-                        }
-                        
-                        if (groups.memory[i].data.members[j].id == `${user.id}`) userFound = true;
-                    }
-                    
-                    if (userFound) {
-                        if (settings.getJoinRequests) {
-                            if (!Array.isArray(groups.memory[i].data.joinRequests)) groups.memory[i].data.joinRequests = [];
-        
-                            for (let j = 0; j < groups.memory[i].data.joinRequests.length; j++) {
-                                let findUser = await req.db.User.recallOne(null, null, groups.memory[i].data.joinRequests[j].id);
-                                
-                                groupInfo.joinRequests[j] = {
-                                    id: groups.memory[i].data.joinRequests[j].id,
-                                    name: findUser.memory.data.username,
-                                    note: groups.memory[i].data.joinRequests[j].note
-                                }
-                            }
-                        }
-
-                        inGroups.push(groupInfo);
-                    }
-                }
-                else groups.memory[i].data.members = [];
-            }
-        }
-
-        await groups.commit();
-
-        return inGroups;
+    Date.getDaysInMonth = function (year, month) {
+        return [31, (Date.isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month];
+    };
+    
+    Date.prototype.isLeapYear = function () { 
+        return Date.isLeapYear(this.getFullYear()); 
+    };
+    
+    Date.prototype.getDaysInMonth = function () { 
+        return Date.getDaysInMonth(this.getFullYear(), this.getMonth());
+    };
+    
+    Date.prototype.addMonths = function (value) {
+        let n = this.getDate();
+        this.setDate(1);
+        this.setMonth(this.getMonth() + value);
+        this.setDate(Math.min(n, this.getDaysInMonth()));
+        return this;
+    };
+    
+    Date.prototype.toWithinAMonth = function () {
+        let today = new Date();
+        let d = this.getDate();
+        this.setDate(1);
+        this.setFullYear(today.getFullYear());
+        if (d > today.getDate()) this.setMonth(today.getMonth());
+        else this.setMonth(today.getMonth() + 1);
+        this.setDate(Math.min(d, this.getDaysInMonth()));
+        return this;
+    };
+    
+    Date.prototype.toWithinAYear = function () {
+        let today = new Date();
+        let d = this.getDate();
+        this.setDate(1);
+        if (this.getMonth() >= today.getMonth()) this.setFullYear(today.getFullYear());
+        else this.setFullYear(today.getFullYear() + 1);
+        this.setDate(Math.min(d, this.getDaysInMonth()));
+        return this;
     }
+    
+    Date.prototype.getDayOfTheWeek = function (mini = false) {
+        if (mini) return ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][this.getDay()];
+        return ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][this.getDay()];
+    };
 
     let schedule = await req.db.Spirit.recallOne("schedule", user.id);
 
-    // find groups the user is in
-    let inGroups = await getInGroups({
-        getMembers: true
+    for (let i = 0; i < schedule.memory.data.length; i++) {
+        if (schedule.memory.data[i].date) {
+            schedule.memory.data[i].workingDate = new Date(schedule.memory.data[i].date);
+
+            if (schedule.memory.data[i].workingDate.getTime() < dayStart.getTime()) {
+                if (schedule.memory.data[i].frequency.toLowerCase() === "weekly") while (schedule.memory.data[i].workingDate.getTime() < dayStart.getTime()) {
+                    schedule.memory.data[i].workingDate.setDate(schedule.memory.data[i].workingDate.getDate() + 7);
+                }
+                else if (schedule.memory.data[i].frequency.toLowerCase() === "monthly") {
+                    schedule.memory.data[i].workingDate.toWithinAMonth();
+                }
+                else if (schedule.memory.data[i].frequency.toLowerCase() === "yearly") {
+                    schedule.memory.data[i].workingDate.toWithinAYear();
+                }
+            }
+        }
+    }
+
+    // sort the data first by if there is a date, then by date, then by time, then by name
+    schedule.memory.data.sort((a, b) => {
+        if (a.workingDate && !b.workingDate) return 1;
+        if (!a.workingDate && b.workingDate) return -1;
+        if (a.workingDate && b.workingDate) {
+            if (a.workingDate < b.workingDate) return 1;
+            if (a.workingDate > b.workingDate) return -1;
+        }
+
+        // convert timeHours and timeMinutes to time
+        if (a.timeHours && a.timeMinutes) a.time = a.timeHours + a.timeMinutes;
+        if (b.timeHours && b.timeMinutes) b.time = b.timeHours + b.timeMinutes;
+        if (a.time && !b.time) return -1;
+        if (!a.time && b.time) return 1;
+        if (a.time && b.time) {
+            if (a.time < b.time) return 1;
+            if (a.time > b.time) return -1;
+        }
+
+        if (a.name && !b.name) return 1;
+        if (!a.name && b.name) return -1;
+        if (a.name && b.name) {
+            if (a.name < b.name) return 1;
+            if (a.name > b.name) return -1;
+        }
+
+        return 0;
     });
 
-    // shared default and make big member list
-    let relatedMembers = [];
-    for (let i = 0; i < inGroups.length; i++) {
-        inGroups[i].shared = false;
-        for (let j = 0; j < inGroups[i].members.length; j++) {
-            if (inGroups[i].members[j].id != user.id) {
-                let found = false;
-                for (let k = 0; k < relatedMembers.length; k++) {
-                    if (relatedMembers[k].id == inGroups[i].members[j].id) {
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) relatedMembers.push(inGroups[i].members[j]);
-            }
-        }
-    }
-    
-    // update groups in task sharing
-    if (!Array.isArray(schedule.memory.data)) schedule.memory.data = [];
-    for (let i = 0; i < schedule.memory.data.length; i++) {
-        //default
-        let old = schedule.memory.data[i].sharing;
-        if (!Array.isArray(old)) old = [];
-        schedule.memory.data[i].sharing = [];
+    for (let i = 0; i < schedule.memory.data.length; i++) schedule.memory.data[i].workingDate = null;
 
-        // see if keep old 
-        let which = -1;
-        for (let j = 0; j < inGroups.length; j++) {
-            let last = schedule.memory.data[i].sharing.push({
-                id: inGroups[j].id,
-                name: inGroups[j].name,
-                shared: false
-            });
-
-            for (let k = 0; k < old.length; k++) {
-                if (old[k].id == inGroups[j].id) {
-                    schedule.memory.data[i].sharing[last - 1].shared = old[k].shared;
-                    old.splice(k, 1);
-                    break;
-                };
-            }
-        }
-    }
     await schedule.commit();
 
     return schedule.memory.data;
