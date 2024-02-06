@@ -124,14 +124,35 @@ class Agenda extends SearchBox {
 
         this.filter = this.filters.getValue(null);
 
-        for (let i = 0; i < this.items.length; i++) {
-            if (this.items[i]) {        
-                this.renderItem(this.items[i], i);
-            }
-            else $(`<p>No Items</p>`).appendTo(this.list.$div);
-        };
         if (this.items.length < 1) {
             this.list.$div.append(`<p>No Items</p>`);
+        }
+        else {
+            for (let i = 0; i < this.items.length; i++) {
+                if (this.items[i]) {        
+                    this.getWorkingDate(this.items[i]);
+                    this.renderItem(this.items[i], i);
+                }
+                else $(`<p>Item Error</p>`).appendTo(this.list.$div);
+            };
+        }
+    }
+
+    getWorkingDate = (item) => {
+        if (item.date) {
+            item.workingDate = new Date(item.date);
+    
+            if (item.workingDate.getTime() < this.dayStart.getTime()) {
+                if (item.frequency.toLowerCase() === "weekly") while (item.workingDate.getTime() < this.dayStart.getTime()) {
+                    item.workingDate.setDate(item.workingDate.getDate() + 7);
+                }
+                else if (item.frequency.toLowerCase() === "monthly") {
+                    item.workingDate.toWithinAMonth();
+                }
+                else if (item.frequency.toLowerCase() === "yearly") {
+                    item.workingDate.toWithinAYear();
+                }
+            }
         }
     }
 
@@ -141,38 +162,25 @@ class Agenda extends SearchBox {
 
         if (typeof label !== "string") label = label.toString();
 
-        if (item.date) {
-            let testDate = new Date(item.date);
-
-            if (testDate.getTime() < this.dayStart.getTime()) {
-                if (item.frequency.toLowerCase() === "weekly") while (testDate.getTime() < this.dayStart.getTime()) {
-                    testDate.setDate(testDate.getDate() + 7);
-                }
-                else if (item.frequency.toLowerCase() === "monthly") {
-                    testDate.toWithinAMonth();
-                }
-                else if (item.frequency.toLowerCase() === "yearly") {
-                    testDate.toWithinAYear();
-                }
+        if (!item.workingDate) this.getWorkingDate(item);
+        if (item.workingDate) {
+            if (item.workingDate.getTime() < this.dayStart.getTime()) {
+                label = `${item.workingDate.toLocaleDateString()} - ${label}`;
             }
-
-            if (testDate.getTime() < this.dayStart.getTime()) {
-                label = `${testDate.toLocaleDateString()} - ${label}`;
-            }
-            else if (testDate.getTime() < this.dayEnd.getTime()) {
+            else if (item.workingDate.getTime() < this.dayEnd.getTime()) {
                 label = `${item.timeHours}:${item.timeMinutes} - ${label}`;
             }
-            else if (testDate.getTime() < this.weekEnd.getTime()) {
-                label = `${testDate.getDayOfTheWeek(true)} - ${label}`;
+            else if (item.workingDate.getTime() < this.weekEnd.getTime()) {
+                label = `${item.workingDate.getDayOfTheWeek(true)} - ${label}`;
             }
-            else if (testDate.getTime() < this.monthEnd.getTime()) {
-                label = `${testDate.getMonth() + 1}/${testDate.getDate()} - ${label}`;
+            else if (item.workingDate.getTime() < this.monthEnd.getTime()) {
+                label = `${item.workingDate.getMonth() + 1}/${item.workingDate.getDate()} - ${label}`;
             }
-            else if (testDate.getTime() < this.yearEnd.getTime()) {
-                label = `${testDate.getMonth() + 1}/${testDate.getDate()} - ${label}`;
+            else if (item.workingDate.getTime() < this.yearEnd.getTime()) {
+                label = `${item.workingDate.getMonth() + 1}/${item.workingDate.getDate()} - ${label}`;
             }
             else {
-                label = `${testDate.toLocaleDateString()} - ${label}`;
+                label = `${item.workingDate.toLocaleDateString()} - ${label}`;
             }
         };
 
@@ -182,34 +190,20 @@ class Agenda extends SearchBox {
     getList = (item) => {
         let list = this.todoList;
 
-        if (item.date) {
-            let testDate = new Date(item.date);
-
-            if (testDate.getTime() < this.dayStart.getTime()) {
-                if (item.frequency.toLowerCase() == "weekly") while (testDate.getTime() < this.dayStart.getTime()) {
-                    testDate.setDate(testDate.getDate() + 7);
-                }
-                else if (item.frequency.toLowerCase() == "monthly") {
-                    testDate.toWithinAMonth();
-                }
-                else if (item.frequency.toLowerCase() == "yearly") {
-                    testDate.toWithinAYear();
-                }
-            }
-
-            if (testDate.getTime() < this.dayStart.getTime()) {
+        if (item.workingDate) {
+            if (item.workingDate.getTime() < this.dayStart.getTime()) {
                 list = this.oldList;
             }
-            else if (testDate.getTime() < this.dayEnd.getTime()) {
+            else if (item.workingDate.getTime() < this.dayEnd.getTime()) {
                 list = this.todayList;
             }
-            else if (testDate.getTime() < this.weekEnd.getTime()) {
+            else if (item.workingDate.getTime() < this.weekEnd.getTime()) {
                 list = this.weekList;
             }
-            else if (testDate.getTime() < this.monthEnd.getTime()) {
+            else if (item.workingDate.getTime() < this.monthEnd.getTime()) {
                 list = this.monthList;
             }
-            else if (testDate.getTime() < this.yearEnd.getTime()) {
+            else if (item.workingDate.getTime() < this.yearEnd.getTime()) {
                 list = this.yearList;
             }
             else {
@@ -335,32 +329,7 @@ metaBrowser.addService("schedule", {
         label: "Description: ",
         placeholder: "Description",
         type: "long-string"
-    }),
-    new NBField({
-        name: "sharing",
-        label: "Sharing: ",
-        placeholder: "None",
-        multiple: true,
-        lockLength: true
-    }, [
-        new NBField({
-            name: "id",
-            hidden: true,
-            readOnly: true,
-            type: "string"
-        }),
-        new NBField({
-            name: "name",
-            placeholder: "No Group",
-            readOnly: true,
-            type: "string"
-        }),
-        new NBField({
-            name: "shared",
-            placeholder: false,
-            type: "boolean"
-        })
-    ])
+    })
 ]),
 label: "Your Tasks",
 multiple: true,
