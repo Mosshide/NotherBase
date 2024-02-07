@@ -168,7 +168,7 @@ class Agenda extends SearchBox {
                 label = `${item.workingDate.toLocaleDateString()} - ${label}`;
             }
             else if (item.workingDate.getTime() < this.dayEnd.getTime()) {
-                label = `${item.timeHours}:${item.timeMinutes} - ${label}`;
+                label = `${item.timeHours ? item.timeHours : "00"}:${item.timeMinutes ? item.timeMinutes : "00"} - ${label}`;
             }
             else if (item.workingDate.getTime() < this.weekEnd.getTime()) {
                 label = `${item.workingDate.getDayOfTheWeek(true)} - ${label}`;
