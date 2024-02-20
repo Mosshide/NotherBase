@@ -19,7 +19,8 @@ export default async (req, user) => {
             //check that a valid item was sent
             if (req.body.item) {
                 //edit or add a new item
-                spirit.memory.data[req.body.which] = req.body.item;
+                if (req.body.which > -1 && req.body.which < spirit.memory.data.length) spirit.memory.data[req.body.which] = req.body.item;
+                else spirit.memory.data.push(req.body.item);
             }
         }
 

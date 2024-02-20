@@ -305,6 +305,8 @@ class Browser extends Element {
         this.buttons.addButton(new Button("cancel", (e, self) => { this.cancel(); }, { placeholder: "Cancel" }));
         this.buttons.addButton(new Button("delete", (e, self) => { this.attemptDelete(); }, { placeholder: "Delete" }));
         this.buttons.addButton(new Button("close", (e, self) => { this.close(); this.serving.state = "search"; }, { placeholder: "Close" }));
+        this.buttons.addButton(new Button("undo", (e, self) => { this.editPreviousSave(); }, { placeholder: "Undo" }));
+        this.buttons.addButton(new Button("redo", (e, self) => { this.editNextSave(); }, { placeholder: "Redo" }));
         this.buttons.hideButton();
     }
 
@@ -358,11 +360,13 @@ class Browser extends Element {
 
         if (this.box) this.box.close();
         this.box = this.addChild(new ViewBox());
-        this.box.setValue(this.serving.data[this.serving.selected], this.serving.fields, false);
+        this.box.setValue(this.serving.data[this.serving.selected][this.serving.data[this.serving.selected].length - 1], this.serving.fields, false);
 
         this.buttons.showButton("close");
         this.buttons.hideButton("save");
         this.buttons.hideButton("cancel");
+        this.buttons.hideButton("undo");
+        this.buttons.hideButton("redo");
         
         if (this.serving.editable) {
             this.buttons.showButton("edit");
@@ -386,21 +390,40 @@ class Browser extends Element {
         this.buttons.hideButton("delete");
     }
 
-    edit = (serving = this.serving, itemOverride = null) => {
+    edit = (serving = this.serving, itemOverride = null, versionOverride = null) => {
         this.serving = serving;
         this.serving.state = "edit";
+        this.serving.selectedItemVersion = this.serving.data[this.serving.selected].length - 1;
+        if (versionOverride !== null) this.serving.selectedItemVersion = versionOverride;
         
         if (this.box?.$div) this.box.close();
         this.box = this.addChild(new ViewBox(), false, true);
-        this.box.setValue(itemOverride ? itemOverride : this.serving.data[this.serving.selected], this.serving.fields, true);
+        this.box.setValue(itemOverride ? itemOverride : this.serving.data[this.serving.selected][this.serving.selectedItemVersion], this.serving.fields, true);
 
         this.buttons.hideButton("edit");
         this.buttons.hideButton("close");
         this.buttons.showButton("save");
         this.buttons.showButton("cancel");
         this.buttons.hideButton("delete");
+        console.log(this.serving.selectedItemVersion);
+        if (this.serving.selectedItemVersion > 0) this.buttons.showButton("undo");
+        else this.buttons.hideButton("undo");
+        if (this.serving.selectedItemVersion < this.serving.data[this.serving.selected].length - 1) this.buttons.showButton("redo");
+        else this.buttons.hideButton("redo");
 
         if (this.settings.onEdit) this.settings.onEdit();
+    }
+
+    editPreviousSave = () => {
+        this.serving.selectedItemVersion--;
+        if (this.serving.selectedItemVersion < 0) this.serving.selectedItemVersion = 0;
+        this.edit(this.serving, null, this.serving.selectedItemVersion);
+    }
+
+    editNextSave = () => {
+        this.serving.selectedItemVersion++;
+        if (this.serving.selectedItemVersion >= this.serving.data[this.serving.selected].length) this.serving.selectedItemVersion = this.serving.data[this.serving.selected].length - 1;
+        this.edit(this.serving, null, this.serving.selectedItemVersion);
     }
 
     cancel = () => {
@@ -610,6 +633,7 @@ class MetaBrowser extends Container {
             useSearchBox: SearchBox,
             styles: "browser",
             defaultClasses: "meta",
+            backupLimit: 32,
             ...settings
         });
 
@@ -669,7 +693,8 @@ class MetaBrowser extends Container {
 
     save = (item) => {
         this.serving.state = "read";
-        this.serving.data[this.serving.selected] = item;
+        this.serving.data[this.serving.selected].push(item);
+        while (this.serving.data.length > this.settings.backupLimit) this.serving.data.shift();
         if (this.serving.toSave) this.serving.toSave(this.serving.data[this.serving.selected], this.serving.selected);
     }
 
@@ -740,6 +765,10 @@ class MetaBrowser extends Container {
         if (serving.toLoad) serving.toLoad().then((res) => {
             serving.data = res;
             if (!Array.isArray(serving.data)) serving.data = [serving.data];
+            for (let i = 0; i < serving.data.length; i++) {
+                //convert non-backupped to array
+                if (!Array.isArray(serving.data[i])) serving.data[i] = [serving.data[i]];
+            }
             if (select) this.selectService(service);
         });
     }
@@ -757,7 +786,11 @@ class MetaBrowser extends Container {
         this.serving = this.services[this.selectedService];
         this.buttons.hideButton(this.selectedService);
 
-        this.searchBox.setItems(this.serving.data, this.serving.editable ? (e, element) => {
+        let shallowItems = [];
+        for (let i = 0; i < this.serving.data.length; i++) {
+            shallowItems.push(this.serving.data[i][this.serving.data[i].length - 1]);
+        }
+        this.searchBox.setItems(shallowItems, this.serving.editable ? (e, element) => {
             if (this.browser) {
                 this.browser.close();
             }
