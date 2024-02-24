@@ -132,7 +132,6 @@ class Agenda extends SearchBox {
                 if (this.items[i]) {        
                     this.getWorkingDate(this.items[i]);
                     this.renderItem(this.items[i], i);
-                    this.items[i].workingDate = null;
                 }
                 else $(`<p>Item Error</p>`).appendTo(this.list.$div);
             };
