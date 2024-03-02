@@ -1,11 +1,8 @@
 <style>
     <%- include("./index.css") %>
 </style>
-<link rel="stylesheet" href="/styles/browser.css">
 
-<div class="floatables">
-    <div class="meta" id="stories"></div>
-</div>
+<div class="meta" id="stories"></div>
 
 <hr>
 
@@ -18,7 +15,6 @@
 <script src="/js/util/search-box.js"></script>
 <script src="/js/util/browser.js"></script>
 <script src="/js/entity.js"></script>
-<script src="/js/floatable.js"></script>
 <script>
     const metaBrowser = new MetaBrowser({
         header: "Your Stories"
@@ -65,6 +61,4 @@
         }
     });
     metaBrowser.render();
-
-    const floatBoard = new FloatBoard();
 </script>

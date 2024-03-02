@@ -1,7 +1,5 @@
-<div class="floatables bible-research">
-    <div class="bible-viewer"></div>
-    <div class="meta" id="bible-research"></div>
-</div>
+<div class="bible-viewer"></div>
+<div class="meta" id="bible-research"></div>
 
 <hr>
 
@@ -15,89 +13,42 @@
 <script src="/js/util/browser.js"></script>
 <script src="/js/bible-viewer.js"></script>
 <script src="/js/entity.js"></script>
-<script src="/js/floatable.js"></script>
 <script>   
     const metaResearch = new MetaBrowser({
         header: "Bible Research",
-        id: "bible-research"
+        id: "bible-research",
+        useBrowser: TreeBrowser
+    });
+    metaResearch.addService("bible-notes", {
+        fields: new NBField({
+            name: "note-node",
+            placeholder: "No Info"
+        }, [
+            new NBField({
+                name: "name",
+                placeholder: "No Name",
+                label: "Name: ",
+                type: "string"
+            }),
+            new NBField({
+                name: "description",
+                placeholder: "No Description",
+                label: "Description: ",
+                type: "long-string",
+                multiple: true
+            })
+        ]),
+        editable: true,
+        multiple: true,
+        toLoad: async () => {
+            return await base.loadAll("bible-notes");
+        },
+        toSave: async (item, deleting) => {
+            await base.do("save-bible-note", { item, deleting });
+        }
     });
     metaResearch.render();
-    metaResearch.addService("bible-research-persons", {
-        fields: new NBField({
-            name: "persons",
-            label: "Person: ",
-            placeholder: "No Persons"
-        }, [
-            new NBField({
-                name: "name",
-                placeholder: "No Persons",
-                type: "string"
-            }),
-            new NBField({
-                name: "aliases",
-                multiple: true,
-                label: "Aliases: ",
-                placeholder: "No Aliases",
-                type: "string"
-            }),
-            new NBField({
-                name: "description",
-                label: "Description: ",
-                placeholder: "No Description",
-                type: "long-string"
-            }),
-        ]),
-        label: "Persons",
-        editable: true,
-        multiple: true,
-        toLoad: async () => {
-            let res = await base.loadAll("bible-research-persons");
-            return res;
-        },
-        toSave: async (item, deleting) => {
-            await base.do("save-person", { item, deleting });
-        }
-    });
-    metaResearch.addService("bible-research-themes", {
-        fields: new NBField({
-            name: "themes",
-            label: "Themes: ",
-            placeholder: "No Themes"
-        }, [
-            new NBField({
-                name: "name",
-                label: "Theme: ",
-                placeholder: "No Theme",
-                type: "string"
-            }),
-            new NBField({
-                name: "aliases",
-                multiple: true,
-                label: "Aliases: ",
-                placeholder: "No Aliases",
-                type: "string"
-            }),
-            new NBField({
-                name: "description",
-                label: "Description: ",
-                placeholder: "No Description",
-                type: "long-string"
-            }),
-        ]),
-        label: "Themes",
-        editable: true,
-        multiple: true,
-        toLoad: async () => {
-            let res = await base.loadAll("bible-research-themes");
-            return res;
-        },
-        toSave: async (item, deleting) => {
-            await base.do("save-theme", { item, deleting });
-        }
-    });
     
     const bibleViewer = new BibleViewer();
     bibleViewer.render();
-
-    const floatBoard = new FloatBoard();
 </script>

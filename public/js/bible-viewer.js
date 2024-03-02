@@ -24,13 +24,17 @@ class BibleViewer extends Container {
         this.bibleInfo = [];
 
         this.content = this.addChild(new Text("p", {
-            defaultClasses: "bible-text",
+            defaultClasses: `bible-text ${this.settings.showUI ? "" : "no-ui"}`,
             placeholder: "Pick a book and chapter to read."
         }));
 
-        this.goButton = this.addChild(new Button("go", () => { this.openTo(); }, { 
-            placeholder: "Go",
+        this.ui = this.addChild(new Element("div", {
+            defaultClasses: "bible-ui",
             hidden: this.settings.showUI ? false : true
+        }));
+
+        this.goButton = this.ui.addChild(new Button("go", () => { this.openTo(); }, { 
+            placeholder: "Go"
         }));
     }
 
@@ -59,10 +63,9 @@ class BibleViewer extends Container {
             books.push(this.bibleInfo[i].name);
         }
 
-        this.bookSelect = this.addChild(new Select({
+        this.bookSelect = this.ui.addChild(new Select({
             onChange: this.selectBook,
-            options: books,
-            hidden: this.settings.showUI ? false : true
+            options: books
         }));
     }
 
@@ -78,10 +81,9 @@ class BibleViewer extends Container {
             chapters.push(i + 1);
         }
 
-        this.chapterSelect = this.addChild(new Select({
+        this.chapterSelect = this.ui.addChild(new Select({
             onChange: this.selectChapter,
-            options: chapters,
-            hidden: this.settings.showUI ? false : true
+            options: chapters
         }));
     }
 
@@ -121,5 +123,7 @@ class BibleViewer extends Container {
         this.setChapters();
         this.newLocation.chapter = this.location.chapter;
         this.chapterSelect.setValue((this.location.chapter + 1).toString());
+
+        this.$div.find("h4").text(`${this.bibleInfo[this.location.book].name} ${this.location.chapter + 1}${this.location.verse ? `:${this.location.verse + 1}` : ""}`);
     }
 }

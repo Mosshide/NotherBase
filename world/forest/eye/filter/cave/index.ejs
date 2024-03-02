@@ -9,13 +9,11 @@
 
 <hr>
 
-<div class="floatables">
-    <div class="nono-spirit">
-        <img id="move-nono-spirit" src="/img/nono/nono_spirit.png" alt="Nono Spirit">
-    </div>
-    
-    <div class="nono-board"></div>
+<div class="nono-spirit">
+    <img id="move-nono-spirit" src="/img/nono/nono_spirit.png" alt="Nono Spirit">
 </div>
+
+<div class="nono-board"></div>
 
 <hr>
 
@@ -42,7 +40,6 @@
 </a>
 
 <script src="/js/entity.js"></script>
-<script src="/js/floatable.js"></script>
 <script>
     <%- include("./nono.js"); %>
 
@@ -60,6 +57,4 @@
     };
     moveNono();
     setInterval(moveNono, 2000);
-
-    const floatBoard = new FloatBoard();
 </script>
