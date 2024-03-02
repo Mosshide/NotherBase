@@ -15,7 +15,7 @@
         header: "Prayer Journal"
     });
     metaBrowser.render();
-    metaBrowser.addService("schedule", {
+    metaBrowser.addService("prayer-journal", {
         fields: new NBField({
         name: "entry",
         label: "Entry: ",
@@ -37,9 +37,9 @@
     label: "Your Prayer Journal",
     multiple: true,
     toLoad: async () => {
-        return await base.load("prayer-journal");
+        return await base.loadAll("prayer-journal");
     },
-    toSave: async (item, which, deleting) => {
-        await base.do("save-entry", { item, which, deleting });
+    toSave: async (item, deleting) => {
+        await base.do("save-entry", { item, deleting });
     }});
 </script>
