@@ -762,12 +762,11 @@
             editable: true,
             multiple: true,
             toLoad: async () => {
-                return await base.load("portfolio-examples", "global");
+                return await base.loadAll("portfolio-examples", "global");
             },
-            toSave: async (item, which, deleting) => {
+            toSave: async (item, deleting) => {
                 await base.do("save-example", { 
                     item, 
-                    which,
                     route: "/pages/portfolio",
                     deleting
                 });

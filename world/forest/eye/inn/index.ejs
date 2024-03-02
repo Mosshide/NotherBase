@@ -52,13 +52,17 @@
 <script>
     let innBB = null;
 
-    base.load("eotf-inn-ads", "global").then((res) => {
-        console.log(<%= user.authLevels.includes("eotf-inn-ads") %>);
-        innBB = new Billboard("inn-ads", res.items, {
-            onSave: "save-ads",
-            free: <%= user.authLevels.includes("eotf-inn-ads") %>
-        });
-    });
+    // base.loadAll("eotf-inn-ads", "global").then((res) => {
+    //     console.log(<%= user.authLevels.includes("eotf-inn-ads") %>);
+    //     let items = [];
+    //     for (let i in res) {
+    //         items.push(res[i].data);
+    //     }
+    //     innBB = new Billboard("inn-ads", items, {
+    //         onSave: "save-ads",
+    //         free: <%= user.authLevels.includes("eotf-inn-ads") %>
+    //     });
+    // });
 
     const chat = new ChatBox("<%= user.username %>", "eotf-expidition-recruiting");
 </script>

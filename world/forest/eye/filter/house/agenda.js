@@ -118,10 +118,7 @@ class Agenda extends SearchBox {
         this.filter = this.filters.getValue(null);
 
         for (let i = 0; i < this.items.length; i++) {
-            if (this.items[i]) {        
-                this.renderItem(this.items[i], i);
-            }
-            else $(`<p>No Items</p>`).appendTo(this.list.$div);
+            this.renderItem(this.items[i], i);
         };
         if (this.items.length < 1) {
             this.list.$div.append(`<p>No Items</p>`);
@@ -129,12 +126,13 @@ class Agenda extends SearchBox {
     }
 
     extractLabel = (item) => {
-        let label = item.name || item.username || item.title || item.header || item.whenSearched || Object.values(item)[0];
-        if (!label) label = "No Name";
+        let label = null;
+        label = item?.name || item?.username || item?.title || item?.header || item?.whenSearched;
+        if (!label) label = item;
 
-        if (typeof label !== "string") label = label.toString();
+        if (typeof label !== "string") label = String(label);
 
-        if (item.date) {
+        if (item?.date) {
             let testDate = new Date(item.date);
 
             if (testDate.getTime() < this.dayStart.getTime()) {
@@ -175,7 +173,7 @@ class Agenda extends SearchBox {
     getList = (item) => {
         let list = this.todoList;
 
-        if (item.date) {
+        if (item?.date) {
             let testDate = new Date(item.date);
 
             if (testDate.getTime() < this.dayStart.getTime()) {
@@ -355,8 +353,37 @@ metaBrowser.addService("schedule", {
 label: "Your Tasks",
 multiple: true,
 toLoad: async () => {
-    return (await base.do("load-schedule")).data;
+    return await base.loadAll("schedule");
 },
-toSave: async (item, which, deleting) => {
-    await base.do("save-task", { item, which, deleting });
+toSave: async (item, deleting) => {
+    await base.do("save-task", { item, deleting });
 }});
+
+
+// // sort the data first by if there is a date, then by date, then by time, then by name
+// spirit.memory.data.sort((a, b) => {
+//     if (a.date && !b.date) return -1;
+//     if (!a.date && b.date) return 1;
+//     if (a.date && b.date) {
+//         if (a.date < b.date) return -1;
+//         if (a.date > b.date) return 1;
+//     }
+
+//     // convert timeHours and timeMinutes to time
+//     if (a.timeHours && a.timeMinutes) a.time = a.timeHours + a.timeMinutes;
+//     if (a.time && !b.time) return -1;
+//     if (!a.time && b.time) return 1;
+//     if (a.time && b.time) {
+//         if (a.time < b.time) return -1;
+//         if (a.time > b.time) return 1;
+//     }
+
+//     if (a.name && !b.name) return -1;
+//     if (!a.name && b.name) return 1;
+//     if (a.name && b.name) {
+//         if (a.name < b.name) return 1;
+//         if (a.name > b.name) return -1;
+//     }
+
+//     return 0;
+// });

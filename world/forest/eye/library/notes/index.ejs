@@ -45,10 +45,10 @@
         editable: true,
         multiple: true,
         toLoad: async () => {
-            return await base.load("notes");
+            return await base.loadAll("notes");
         },
-        toSave: async (item, which, deleting) => {
-            await base.do("save-note", { item, which, deleting });
+        toSave: async (item, deleting) => {
+            await base.do("save-note", { item, deleting });
         }
     });
     metaBrowser.render();

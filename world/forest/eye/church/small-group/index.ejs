@@ -82,11 +82,11 @@
         editable: true,
         multiple: true,
         toLoad: async () => {
-            let res = await base.load("small-group");
+            let res = await base.loadAll("small-group");
             return res;
         },
-        toSave: async (item, which, deleting) => {
-            await base.do("save-small-group", { item, which, deleting });
+        toSave: async (item, deleting) => {
+            await base.do("save-small-group", { item, deleting });
         }
     });
     metaBrowser.render();

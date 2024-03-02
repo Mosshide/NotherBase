@@ -79,10 +79,10 @@
         editable: true,
         multiple: true,
         toLoad: async () => {
-            return await base.load("recipes");
+            return await base.loadAll("recipes");
         },
-        toSave: async (item, which, deleting) => {
-            await base.do("save-recipe", { item, which, deleting });
+        toSave: async (item, deleting) => {
+            await base.do("save-recipe", { item, deleting });
         }
     });
     metaBrowser.render();

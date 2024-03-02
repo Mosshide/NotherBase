@@ -17,12 +17,12 @@
 <script src="/js/entity.js"></script>
 <script src="/js/floatable.js"></script>
 <script>   
-    this.metaResearch = new MetaBrowser({
+    const metaResearch = new MetaBrowser({
         header: "Bible Research",
         id: "bible-research"
     });
-    this.metaResearch.render();
-    this.metaResearch.addService("bible-research-persons", {
+    metaResearch.render();
+    metaResearch.addService("bible-research-persons", {
         fields: new NBField({
             name: "persons",
             label: "Person: ",
@@ -51,14 +51,14 @@
         editable: true,
         multiple: true,
         toLoad: async () => {
-            let res = await base.load("bible-research-persons");
+            let res = await base.loadAll("bible-research-persons");
             return res;
         },
-        toSave: async (item, which, deleting) => {
-            await base.do("save-person", { item, which, deleting });
+        toSave: async (item, deleting) => {
+            await base.do("save-person", { item, deleting });
         }
     });
-    this.metaResearch.addService("bible-research-themes", {
+    metaResearch.addService("bible-research-themes", {
         fields: new NBField({
             name: "themes",
             label: "Themes: ",
@@ -88,11 +88,11 @@
         editable: true,
         multiple: true,
         toLoad: async () => {
-            let res = await base.load("bible-research-themes");
+            let res = await base.loadAll("bible-research-themes");
             return res;
         },
-        toSave: async (item, which, deleting) => {
-            await base.do("save-theme", { item, which, deleting });
+        toSave: async (item, deleting) => {
+            await base.do("save-theme", { item, deleting });
         }
     });
     
