@@ -1,27 +1,31 @@
 export default async (req, user) => {
     if (user.memory.data.authLevels.includes("Creator")) {
-        if (req.body.delete) {
-            if (req.body.item.id) {
-                await req.db.Spirit.delete("user", null, null, req.body.item.id);
+        let towerCrud = async function (service, individual) {
+            if (!user.loggedIn()) {
+                return `You must be logged in to save a(n) ${individual}.`;
+            }
+            else if (!user.memory.data.authLevels.includes("Creator")) {
+                return `You must be a Creator to save a(n) ${individual}.`;
+            }
+            else if (!req.body.item?.id) {
+                let spirit = await req.db.Spirit.create(service, req.body.item.data, null);
+                await spirit.commit();
+                return `${individual} created.`;
+            }
+            else if (req.body.deleting) {
+                let del = await req.db.Spirit.delete(service, {}, null, req.body.item.id);
+                return `${del} deleted.`;
+            }
+            else {
+                let spirit = await req.db.Spirit.recallOne(service, null, {}, req.body.item.id);
+                spirit.memory.data = {
+                    ...spirit.memory.data,
+                    ...req.body.item.data
+                };
+                await spirit.commit();
+                return `${individual} saved.`;
             }
         }
-        else {
-            let spirit = null;
-
-            if (req.body.item.id) {
-                spirit = await req.db.Spirit.recallOne("user", null, null, req.body.item.id);
-
-                if (spirit) {
-                    let keys = Object.keys(req.body.item);
-                    for (let k = 0; k < keys.length; k++) {
-                        spirit.memory.data[keys[k]] = req.body.item[keys[k]];
-                    }
-    
-                    await spirit.commit();
-                }
-            }
-            
-            if (!spirit) spirit = await req.db.User.create(req.body.item.username, req.body.item.password ? req.body.item.password : "password", req.body.item.email);
-        }
+        return await towerCrud("user", "User");
     }
 }
