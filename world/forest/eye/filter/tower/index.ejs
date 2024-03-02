@@ -94,6 +94,7 @@
         const metaTower = new MetaBrowser({
             label: "Tower"
         });
+        metaTower.render();
         metaTower.addService("items", {
             fields: new NBField({
                 name: "item",
@@ -117,23 +118,17 @@
                     label: "Long Description: ",
                     placeholder: "No Description",
                     type: "string"
-                }),
-                new NBField({
-                    name: "id",
-                    placeholder: null,
-                    hidden: true,
-                    type: "string"
                 })
             ]),
             label: "Items",
             editable: true,
             multiple: true,
             toLoad: async () => {
-                let res = await base.do("get-items");
-                return res.data;
+                let res = await base.loadAll("items", "global");
+                return res;
             },
-            toSave: async (item, which, deleting) => {
-                await base.do("save-item", { item, which, deleting });
+            toSave: async (item, deleting) => {
+                await base.do("save-item", { item, deleting });
             }
         });
         metaTower.addService("users", {
@@ -161,25 +156,19 @@
                     label: "Email: ",
                     placeholder: "No Email",
                     type: "string"
-                }),
-                new NBField({
-                    name: "id",
-                    placeholder: null,
-                    hidden: true,
-                    type: "string"
-                }),
+                })
             ]),
             label: "Users",
             editable: true,
             multiple: true,
             toLoad: async () => {
-                let res = await base.do("get-users");
-                return res.data;
+                let res = await base.loadAll("user", "global");
+                return res;
             },
-            toSave: async (item, which, deleting) => {
-                await base.do("save-user", { item, which, deleting });
+            toSave: async (item, deleting) => {
+                await base.do("save-user", { item, deleting });
             }
         });
-        metaTower.render();
+        
     <% } %>
 </script>

@@ -41,10 +41,10 @@
         editable: true,
         multiple: true,
         toLoad: async () => {
-            return await base.load("bible-notes");
+            return await base.loadAll("bible-notes");
         },
-        toSave: async (item, which, deleting) => {
-            await base.do("save-bible-note", { item, which, deleting });
+        toSave: async (item, deleting) => {
+            await base.do("save-bible-note", { item, deleting });
         }
     });
     metaResearch.render();

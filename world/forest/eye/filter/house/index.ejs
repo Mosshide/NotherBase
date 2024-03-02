@@ -65,8 +65,8 @@
     let mailboxCD = 1000;
     let lastMailboxUpdate = 0;
 
-    base.load("house-mailbox").then((res) => {
-        if (typeof res == "string") $mailbox.val(res);
+    base.loadAll("house-mailbox").then((res) => {
+        if (typeof res[0].data == "string") $mailbox.val(res[0].data);
         //console.log(res);
     });
 

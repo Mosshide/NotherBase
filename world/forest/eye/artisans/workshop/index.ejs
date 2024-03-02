@@ -39,10 +39,10 @@
         editable: true,
         multiple: true,
         toLoad: async () => {
-            return await base.load("projects");
+            return await base.loadAll("projects");
         },
-        toSave: async (item, which, deleting) => {
-            await base.do("save-project", { item, which, deleting });
+        toSave: async (item, deleting) => {
+            await base.do("save-project", { item, deleting });
         }
     });
     metaBrowser.render();

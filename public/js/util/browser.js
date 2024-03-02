@@ -670,7 +670,10 @@ class MetaBrowser extends Container {
     save = (item) => {
         this.serving.state = "read";
         this.serving.data[this.serving.selected] = item;
-        if (this.serving.toSave) this.serving.toSave(this.serving.data[this.serving.selected], this.serving.selected);
+        if (this.serving.toSave) this.serving.toSave({
+            data: this.serving.data[this.serving.selected],
+            id: this.serving.loadedData[this.serving.selected]?._id
+        }, false);
     }
 
     edit = () => {
@@ -683,8 +686,11 @@ class MetaBrowser extends Container {
 
     delete = () => {
         this.serving.state = "delete";
+        if (this.serving.toSave) this.serving.toSave({ 
+            id: this.serving.loadedData[this.serving.selected]._id 
+        }, true);
         this.serving.data.splice(this.serving.selected, 1);
-        if (this.serving.toSave) this.serving.toSave(null, this.serving.selected, true);
+        this.serving.loadedData.splice(this.serving.selected, 1);
         this.searchBox.renderSearchResults();
     }
 
@@ -738,8 +744,14 @@ class MetaBrowser extends Container {
         let serving = this.services[service];
 
         if (serving.toLoad) serving.toLoad().then((res) => {
-            serving.data = res;
-            if (!Array.isArray(serving.data)) serving.data = [serving.data];
+            console.log(res);
+            serving.loadedData = res;
+            if (!Array.isArray(serving.loadedData)) serving.loadedData = [serving.data];
+            serving.data = [];
+            for (let i = 0; i < serving.loadedData.length; i++) {
+                if (serving.loadedData[i].data?._backupsEnabled) serving.data.push(serving.loadedData[i].data.backups[0].data);
+                else serving.data.push(serving.loadedData[i].data);
+            }
             if (select) this.selectService(service);
         });
     }
@@ -763,7 +775,7 @@ class MetaBrowser extends Container {
             }
             this.serving.selected = this.serving.data.length;
             this.serving.state = "new";
-            let newElement = this.searchBox.addItem({}, true);
+            let newElement = this.searchBox.addItem({ whenSearched: "No Name" }, true);
             newElement.disable();
             this.disabledElement = newElement;
             this.makeBrowser();

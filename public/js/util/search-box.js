@@ -77,11 +77,11 @@ class SearchBox extends Element {
 
     extractLabel = (item) => {
         let label = null;
-        if (item) label = item.name || item.username || item.title || 
-                            item.header || item.whenSearched;
-        if (!label) label = "No Name";
+        label = item?.name || item?.username || item?.title || 
+                item?.header || item?.whenSearched;
+        if (!label) label = item;
 
-        if (typeof label !== "string") label = label.toString();
+        if (typeof label !== "string") label = String(label);
         return label;
     }
 
@@ -124,9 +124,7 @@ class SearchBox extends Element {
         this.filter = this.filters.getValue("search");
 
         for (let i = 0; i < this.items.length; i++) {
-            if (this.items[i]) {
-                this.renderItem(this.items[i], i);
-            }
+            this.renderItem(this.items[i], i);
         };
         if (this.items.length < 1) {
             this.list.addChild(new Element("p", { 

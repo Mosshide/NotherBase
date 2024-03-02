@@ -1,26 +1,53 @@
 export default async (req, user) => {
-    //get the document in the database
-    let spirit = await req.db.Spirit.recallOne("portfolio-examples");
+    let migrate = async function (service, verifier, offset) {
+        let isDone = await req.db.Spirit.recallOne("migration-check");
+        if (!isDone.memory.data[service + offset.toString()]) {
+            isDone.memory.data[service + offset.toString()] = true;
+            await isDone.commit();
 
-    //normalize the document's data
-    if (!Array.isArray(spirit.memory.data)) spirit.memory.data = [];
-
-    //delete if requested
-    if (req.body.deleting) {
-        //check that deletion is valid
-        if (req.body.which > -1 && req.body.which < spirit.memory.data.length) {
-            //delete
-            spirit.memory.data.splice(req.body.which, 1);
+            let total = 0;
+            let tasks = await req.db.Spirit.recallAny(service);
+            for (let i = 0; i < tasks.memory.length; i++) {
+                if (tasks.memory[i].data) {
+                    if (!tasks.memory[i].data._backupsEnabled) {
+                        total += tasks.memory[i].data.length;
+                        for (let j = 0; j < tasks.memory[i].data.length; j++) {
+                            while (j < tasks.memory[i].data.length && !tasks.memory[i].data[j][verifier]) {
+                                tasks.memory[i].data.splice(j, 1);
+                                j++;
+                            }
+                            let newTask = await req.db.Spirit.create(service, {}, tasks.memory[i].parent);
+                            newTask.addBackup(tasks.memory[i].data[j]);
+                            await newTask.commit();
+                        }
+                        tasks.memory[i].service = `old-${service}`;
+                        tasks.memory[i].markModified("service");
+                    }
+                }
+            }
+            tasks.commit();
+            console.log(`Migrated ${tasks.memory.length} -> ${total} tasks.`);
         }
     }
-    else {
-        //check that a valid item was sent
-        if (req.body.item) {
-            //edit or add a new item
-            spirit.memory.data[req.body.which] = req.body.item;
+    migrate("portfolio-examples", "title", 7);
+
+    let basicGlobalCrud = async function (service, individual) {
+        if (!req.body.item?.id) {
+            let spirit = await req.db.Spirit.create(service, {}, null);
+            spirit.addBackup(req.body.item.data);
+            await spirit.commit();
+            return `${individual} created.`;
+        }
+        else if (req.body.deleting) {
+            let del = await req.db.Spirit.delete(service, {}, null, req.body.item.id);
+            return `${del} deleted.`;
+        }
+        else {
+            let spirit = await req.db.Spirit.recallOne(service, null, {}, req.body.item.id);
+            spirit.addBackup(req.body.item.data);
+            await spirit.commit();
+            return `${individual} saved.`;
         }
     }
-
-    //save the document in the database
-    await spirit.commit();
+    return await basicGlobalCrud("portfolio-examples", "Example");
 }
