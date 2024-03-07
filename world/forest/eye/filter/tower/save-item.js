@@ -10,7 +10,7 @@ export default async (req, user) => {
             let spirit = await req.db.Spirit.create(service, {}, null);
             spirit.addBackup(req.body.item.data);
             await spirit.commit();
-            return `${individual} created.`;
+            return { newID: spirit.memory._id, message: `created` };
         }
         else if (req.body.deleting) {
             let del = await req.db.Spirit.delete(service, {}, null, req.body.item.id);
@@ -23,5 +23,6 @@ export default async (req, user) => {
             return `${individual} saved.`;
         }
     }
+    
     return await towerCrud("items", "Item");
 }
