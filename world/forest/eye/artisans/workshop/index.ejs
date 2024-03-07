@@ -42,7 +42,7 @@
             return await base.loadAll("projects");
         },
         toSave: async (item, deleting) => {
-            await base.do("save-project", { item, deleting });
+            return await base.do("save-project", { item, deleting });
         }
     });
     metaBrowser.render();

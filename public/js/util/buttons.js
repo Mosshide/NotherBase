@@ -24,6 +24,7 @@ class Buttons extends Element {
     addButton = (button) => {
         this.buttons[button.settings.id] = button;
         this.addChild(button);
+        return button;
     }
 
     hideButton = (which = null) => {

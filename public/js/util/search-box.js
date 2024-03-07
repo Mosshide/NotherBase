@@ -79,7 +79,7 @@ class SearchBox extends Element {
         let label = null;
         label = item?.name || item?.username || item?.title || 
                 item?.header || item?.whenSearched;
-        if (!label) label = item;
+        if (!label) label = "Unnamed Item";
 
         if (typeof label !== "string") label = String(label);
         return label;

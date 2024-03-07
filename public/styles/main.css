@@ -101,6 +101,10 @@
     display: none !important;
 }
 
+button.disabled {
+    border: none;
+}
+
 .unselectable {
     user-select: none !important;
 }

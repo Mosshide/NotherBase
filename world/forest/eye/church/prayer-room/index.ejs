@@ -16,7 +16,7 @@
     });
     metaBrowser.render();
     metaBrowser.addService("prayer-journal", {
-        fields: new NBField({
+    fields: new NBField({
         name: "entry",
         label: "Entry: ",
         placeholder: "No entry"
@@ -40,6 +40,6 @@
         return await base.loadAll("prayer-journal");
     },
     toSave: async (item, deleting) => {
-        await base.do("save-entry", { item, deleting });
+        return await base.do("save-entry", { item, deleting });
     }});
 </script>
