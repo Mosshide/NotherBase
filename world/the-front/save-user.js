@@ -22,49 +22,18 @@ export default async (req, user) => {
             console.log(`Migrated ${tasks.memory.length} -> ${total} tasks.`);
         }
     }
-    //migrate("user", "username", 8);
+    migrate("user", "username", 9);
 
     let resetMigration = async function (service) {
         // let tasks = await req.db.Spirit.delete(service, {}, user.id);
         // console.log(tasks + " tasks deleted.");
-        tasks = await req.db.Spirit.recallAny(`old-${service}`);
+        let tasks = await req.db.Spirit.recallAny(`${service}`);
         for (let i = 0; i < tasks.memory.length; i++) {
             tasks.memory[i].service = service;
+            tasks.memory[i].data = tasks.memory[i].data.backups[0];
             tasks.memory[i].markModified("service");
         }
         tasks.commit();
     }
     //resetMigration("user");
-
-    let towerCrud = async function (service, individual) {
-        if (!user.loggedIn()) {
-            return `You must be logged in to save a(n) ${individual}.`;
-        }
-        else if (!user.memory.data.authLevels.includes("Creator")) {
-            return `You must be a Creator to save a(n) ${individual}.`;
-        }
-        else if (!req.body.item?.id) {
-            let spirit = await req.db.Spirit.create(service, req.body.item.data, null);
-            spirit.addBackup(req.body.item.data);
-            await spirit.commit();
-            return { newID: spirit.memory._id, message: `created` };
-        }
-        else if (req.body.deleting) {
-            let del = await req.db.Spirit.delete(service, {}, null, req.body.item.id);
-            return `${del} deleted.`;
-        }
-        else {
-            let spirit = await req.db.Spirit.recallOne(service, null, {}, req.body.item.id);
-            spirit.addBackup({
-                ...spirit.memory.data,
-                ...req.body.item.data
-            });
-            await spirit.commit();
-            return `${individual} saved.`;
-        }
-    }
-
-    if (user.memory.data.authLevels.includes("Creator")) {
-        return await towerCrud("user", "User");
-    }
 }
