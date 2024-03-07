@@ -1,31 +1,41 @@
 export default async (req, user) => {
-    if (user.memory.data.authLevels.includes("Creator")) {
-        let towerCrud = async function (service, individual) {
-            if (!user.loggedIn()) {
-                return `You must be logged in to save a(n) ${individual}.`;
-            }
-            else if (!user.memory.data.authLevels.includes("Creator")) {
-                return `You must be a Creator to save a(n) ${individual}.`;
-            }
-            else if (!req.body.item?.id) {
-                let spirit = await req.db.Spirit.create(service, req.body.item.data, null);
-                await spirit.commit();
-                return `${individual} created.`;
-            }
-            else if (req.body.deleting) {
-                let del = await req.db.Spirit.delete(service, {}, null, req.body.item.id);
-                return `${del} deleted.`;
-            }
-            else {
-                let spirit = await req.db.Spirit.recallOne(service, null, {}, req.body.item.id);
-                spirit.memory.data = {
-                    ...spirit.memory.data,
-                    ...req.body.item.data
-                };
-                await spirit.commit();
-                return `${individual} saved.`;
-            }
+    let towerCrud = async function (service, individual) {
+        if (!user.loggedIn()) {
+            return `You must be logged in to save a(n) ${individual}.`;
         }
+        else if (!user.data.authLevels.includes("Creator")) {
+            return `You must be a Creator to save a(n) ${individual}.`;
+        }
+        else if (!req.body.item?.id) {
+            let spirit = await req.db.Spirit.create(service, req.body.item.data, null);
+            spirit.addBackup(req.body.item.data);
+            await spirit.commit();
+            return { newID: spirit.memory._id, message: `created` };
+        }
+        else if (req.body.deleting) {
+            let del = await req.db.Spirit.delete(service, {}, null, req.body.item.id);
+            return `${del} deleted.`;
+        }
+        else {
+            let spirit = await req.db.Spirit.recallOne(service, null, {}, req.body.item.id);
+            spirit.addBackup({
+                ...spirit.memory.data.backups[0].data,
+                ...req.body.item.data
+            });
+            // if (spirit.memory.data.backups[0].data.data.username) {
+            //     spirit.memory.data.backups[0].data = {
+            //         ...spirit.memory.data.backups[0].data.data,
+            //         ...req.body.item.data
+            //     }
+            // }
+            console.log(spirit.memory.data.backups[0].data);
+            await spirit.commit();
+            return `${individual} saved.`;
+        }
+    }
+
+    
+    if (user.data.authLevels.includes("Creator")) {
         return await towerCrud("user", "User");
     }
 }

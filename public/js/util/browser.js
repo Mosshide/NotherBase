@@ -774,7 +774,7 @@ class MetaBrowser extends Container {
         this.serving.data[this.serving.selected] = item;
         if (!this.serving.loadedData[this.serving.selected]) this.serving.loadedData[this.serving.selected] = { data: { _backupsEnabled:true, backups: [] } };
         if (!this.serving.loadedData[this.serving.selected].data) this.serving.loadedData[this.serving.selected].data = { _backupsEnabled:true, backups: [] };
-        this.serving.loadedData[this.serving.selected].data.backups.unshift({ data: structuredClone(item) });
+        this.serving.loadedData[this.serving.selected].data.backups?.unshift({ data: structuredClone(item) });
         let res = null;
         if (this.serving.toSave) res = await this.serving.toSave({
             data: item,
