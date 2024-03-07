@@ -163,7 +163,6 @@
             multiple: true,
             toLoad: async () => {
                 let res = await base.loadAll("user", "global");
-                console.log(res);
                 return res;
             },
             toSave: async (item, deleting) => {

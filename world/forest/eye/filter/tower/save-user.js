@@ -22,18 +22,18 @@ export default async (req, user) => {
                 ...spirit.memory.data.backups[0].data,
                 ...req.body.item.data
             });
+            // once upon a time some data got too nested and this was the fix
             // if (spirit.memory.data.backups[0].data.data.username) {
             //     spirit.memory.data.backups[0].data = {
             //         ...spirit.memory.data.backups[0].data.data,
             //         ...req.body.item.data
             //     }
             // }
-            console.log(spirit.memory.data.backups[0].data);
             await spirit.commit();
             return `${individual} saved.`;
         }
     }
-
+    
     if (user.data.authLevels.includes("Creator")) {
         return await towerCrud("user", "User");
     }
