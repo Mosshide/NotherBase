@@ -22,7 +22,7 @@ export default async (req, user) => {
             console.log(`Migrated ${tasks.memory.length} -> ${total} tasks.`);
         }
     }
-    migrate("user", "username", 9);
+    //migrate("user", "username", 9);
 
     let resetMigration = async function (service) {
         // let tasks = await req.db.Spirit.delete(service, {}, user.id);
