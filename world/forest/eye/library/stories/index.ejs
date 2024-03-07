@@ -57,7 +57,7 @@
             return await base.loadAll("stories");
         },
         toSave: async (item, deleting) => {
-            await base.do("save-story", { item, deleting });
+            return await base.do("save-story", { item, deleting });
         }
     });
     metaBrowser.render();

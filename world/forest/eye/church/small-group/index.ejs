@@ -83,7 +83,7 @@
             return res;
         },
         toSave: async (item, deleting) => {
-            await base.do("save-small-group", { item, deleting });
+            return await base.do("save-small-group", { item, deleting });
         }
     });
     metaBrowser.render();

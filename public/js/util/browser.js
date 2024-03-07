@@ -298,6 +298,7 @@ class Browser extends Element {
         this.serving = serving;
 
         this.box = null;
+        this.usingBackup = 0;
         
         this.buttons = this.addChild(new Buttons({ id: "browser-ui" }));
         this.buttons.addButton(new Button("edit", (e, self) => { this.edit(); }, { placeholder: "Edit" }));
@@ -305,6 +306,8 @@ class Browser extends Element {
         this.buttons.addButton(new Button("cancel", (e, self) => { this.cancel(); }, { placeholder: "Cancel" }));
         this.buttons.addButton(new Button("delete", (e, self) => { this.attemptDelete(); }, { placeholder: "Delete" }));
         this.buttons.addButton(new Button("close", (e, self) => { this.close(); this.serving.state = "search"; }, { placeholder: "Close" }));
+        this.buttons.addButton(new Button("undo", (e, self) => { this.undo(); }, { placeholder: "Undo" }));
+        this.buttons.addButton(new Button("redo", (e, self) => { this.redo(); }, { placeholder: "Redo" }));
         this.buttons.hideButton();
     }
 
@@ -353,6 +356,7 @@ class Browser extends Element {
     read = (serving = this.serving) => {
         this.serving = serving;
         this.serving.state = "read";
+        this.usingBackup = 0;
 
         this.cancelDelete();
 
@@ -363,6 +367,8 @@ class Browser extends Element {
         this.buttons.showButton("close");
         this.buttons.hideButton("save");
         this.buttons.hideButton("cancel");
+        this.buttons.hideButton("undo");
+        this.buttons.hideButton("redo");
         
         if (this.serving.editable) {
             this.buttons.showButton("edit");
@@ -392,13 +398,19 @@ class Browser extends Element {
         
         if (this.box?.$div) this.box.close();
         this.box = this.addChild(new ViewBox(), false, true);
-        this.box.setValue(itemOverride ? itemOverride : this.serving.data[this.serving.selected], this.serving.fields, true);
+        this.box.setValue(itemOverride !== null ? itemOverride : this.serving.data[this.serving.selected], this.serving.fields, true);
 
         this.buttons.hideButton("edit");
         this.buttons.hideButton("close");
         this.buttons.showButton("save");
         this.buttons.showButton("cancel");
         this.buttons.hideButton("delete");
+        if (this.serving.enableBackups) {
+            if (this.serving.loadedData[this.serving.selected].data?.backups) {
+                if (this.serving.loadedData[this.serving.selected].data.backups.length - 1 > this.usingBackup) this.buttons.showButton("undo");
+            }
+            if (this.usingBackup > 0) this.buttons.showButton("redo");
+        }
 
         if (this.settings.onEdit) this.settings.onEdit();
     }
@@ -408,11 +420,27 @@ class Browser extends Element {
 
         if (this.settings.onCancel) this.settings.onCancel();
     }    
+
+    undo = () => {
+        this.cancelDelete();
+        this.usingBackup++;
+        this.edit(this.serving, this.serving.loadedData[this.serving.selected].data.backups[this.usingBackup]?.data ? this.serving.loadedData[this.serving.selected].data.backups[this.usingBackup].data : {});
+        if (this.serving.loadedData[this.serving.selected].data.backups.length - 1 <= this.usingBackup) this.buttons.hideButton("undo");
+    }
+
+    redo = () => {
+        this.cancelDelete();
+        this.usingBackup--;
+        this.edit(this.serving, this.serving.loadedData[this.serving.selected].data.backups[this.usingBackup]?.data ? this.serving.loadedData[this.serving.selected].data.backups[this.usingBackup].data : {});
+        if (this.usingBackup <= 0) this.buttons.hideButton("redo");
+    }
 }
 
 class TreeBrowser extends Browser {
     constructor(serving, settings) {
         super(serving, settings);
+
+        this.usingBackup = 0;
         
         this.buttons.enableButton("delete", (e, self) => { this.attemptDelete(); });
         this.buttons.enableButton("save", (e, self) => { this.save(); });
@@ -460,24 +488,39 @@ class TreeBrowser extends Browser {
             this.up();
             let item = this.getItemNode();
             item.children.splice(index, 1);
-            this.save();
+            await this.save();
         }
     }
 
     save = async () => {
-        let node = this.getItemNode();
-        node.data = this.box.getValue();
-        this.serving.data[this.serving.selected].name = this.serving.data[this.serving.selected].data.name;
-        
-        if (this.settings.onSave) this.settings.onSave(this.serving.data[this.serving.selected]);
+        if (this.usingBackup == 0) {
+            let node = this.getItemNode();
+            node.data = this.box.getValue();
+            this.serving.data[this.serving.selected].name = this.serving.data[this.serving.selected].data.name;
+            this.serving.data[this.serving.selected].saveLocation = this.serving.itemLocation;
+            
+            if (this.settings.onSave) this.settings.onSave(this.serving.data[this.serving.selected]);
+        }
+        else if (this.usingBackup > 0) {
+            let node = this.getBackupItemNode(this.usingBackup);
+            node.data = this.box.getValue();
+            this.serving.loadedData[this.serving.selected].data.backups[this.usingBackup].data.saveLocation = this.serving.itemLocation;
+            this.serving.loadedData[this.serving.selected].data.backups[this.usingBackup].data.name = this.serving.loadedData[this.serving.selected].data.backups[this.usingBackup].data.name;
 
+            if (this.settings.onSave) this.settings.onSave(this.serving.loadedData[this.serving.selected].data.backups[this.usingBackup].data);
+        }
+
+        this.usingBackup = 0;
         this.read(this.serving, false);
     }
 
     read = (serving = this.serving, resetLocation = true) => {
         this.serving = serving;
         this.serving.state = "read";
-        if (resetLocation) this.serving.itemLocation = [];
+        if (resetLocation || this.usingBackup > 0) {
+            this.serving.itemLocation = [];
+            this.usingBackup = 0;
+        }
 
         this.cancelDelete();
 
@@ -494,6 +537,8 @@ class TreeBrowser extends Browser {
         else this.buttons.hideButton("top");
         this.buttons.hideButton("save");
         this.buttons.hideButton("cancel");
+        this.buttons.hideButton("undo");
+        this.buttons.hideButton("redo");
         
         if (this.serving.editable) {
             this.buttons.showButton("edit");
@@ -552,8 +597,10 @@ class TreeBrowser extends Browser {
         
         if (this.box?.$div) this.box.close();
         this.box = this.addChild(new ViewBox(), false, true);
-        this.box.setValue(itemOverride ? itemOverride : this.getItemNode().data, this.serving.fields, true);
 
+        let item = this.getItemNode();
+        this.box.setValue(itemOverride ? itemOverride.data : item.data, this.serving.fields, true);
+        
         this.buttons.hideButton("edit");
         this.buttons.hideButton("close");
         this.buttons.showButton("save");
@@ -563,16 +610,53 @@ class TreeBrowser extends Browser {
         else this.buttons.hideButton("up");
         if (this.serving.itemLocation.length > 0) this.buttons.showButton("top");
         else this.buttons.hideButton("top");
+        if (this.serving.loadedData[this.serving.selected].data.backups.length - 1 > this.usingBackup) this.buttons.showButton("undo");
+        if (this.usingBackup > 0) this.buttons.showButton("redo");
+
+        this.childButtons.closeChildren();
+        if (itemOverride) {
+            if (!Array.isArray(itemOverride.children)) itemOverride.children = [];
+            for (let i = 0; i < itemOverride.children.length; i++) {
+                let child = itemOverride.children[i];
+                let button = this.childButtons.addButton(new Button(child.data.name, (e, self) => {}, { placeholder: child.data.name }));
+                button.disable();
+            }
+        }
+        else {
+            if (!Array.isArray(item.children)) item.children = [];
+            for (let i = 0; i < item.children.length; i++) {
+                let child = item.children[i];
+                let button = this.childButtons.addButton(new Button(child.data.name, (e, self) => {}, { placeholder: child.data.name }));
+                button.disable();
+            }
+        }
 
         if (this.settings.onEdit) this.settings.onEdit();
     }
     
     getItemNode = () => {
         if (!Array.isArray(this.serving.itemLocation)) this.serving.itemLocation = [];
+        if (typeof this.serving.data[this.serving.selected] !== "object") this.serving.data[this.serving.selected] = { data: this.serving.data[this.serving.selected], children: [] };
         let item = this.serving.data[this.serving.selected];
         for (let i = 0; i < this.serving.itemLocation.length; i++) {
             item = item.children[this.serving.itemLocation[i]];
+            if (typeof item !== "object") break;
         }
+
+        if (typeof item !== "object") item = { data: item, children: [] };
+        return item;
+    }
+
+    getBackupItemNode = (backup) => {
+        if (!Array.isArray(this.serving.itemLocation)) this.serving.itemLocation = [];
+        if (typeof this.serving.loadedData[this.serving.selected].data.backups[backup].data !== "object") this.serving.loadedData[this.serving.selected].data.backups[backup].data = { data: this.serving.loadedData[this.serving.selected].data.backups[backup].data, children: [] };
+        let item = this.serving.loadedData[this.serving.selected].data.backups[backup].data;
+        for (let i = 0; i < this.serving.itemLocation.length; i++) {
+            item = item.children[this.serving.itemLocation[i]];
+            if (typeof item !== "object") break;
+        }
+
+        if (typeof item !== "object") item = { data: item, children: [] };
         return item;
     }
 
@@ -590,6 +674,24 @@ class TreeBrowser extends Browser {
     down = (index) => {
         this.serving.itemLocation.push(index);
         this.read(this.serving, false);
+    }
+
+    undo = () => {
+        this.cancelDelete();
+        this.usingBackup++;
+        this.serving.itemLocation = this.serving.loadedData[this.serving.selected].data.backups[this.usingBackup].data?.saveLocation;
+        let item = this.getBackupItemNode(this.usingBackup);
+        this.edit(this.serving, item ? item : {});
+        if (this.serving.loadedData[this.serving.selected].data.backups.length - 1 <= this.usingBackup) this.buttons.hideButton("undo");
+    }
+
+    redo = () => {
+        this.cancelDelete();
+        this.usingBackup--;
+        this.serving.itemLocation = this.serving.loadedData[this.serving.selected].data.backups[this.usingBackup].data?.saveLocation;
+        let item = this.getBackupItemNode(this.usingBackup);
+        this.edit(this.serving, item ? item : {});
+        if (this.usingBackup <= 0) this.buttons.hideButton("redo");
     }
 }
 
@@ -667,13 +769,18 @@ class MetaBrowser extends Container {
         }
     }
 
-    save = (item) => {
+    save = async (item) => {
         this.serving.state = "read";
         this.serving.data[this.serving.selected] = item;
-        if (this.serving.toSave) this.serving.toSave({
-            data: this.serving.data[this.serving.selected],
+        if (!this.serving.loadedData[this.serving.selected]) this.serving.loadedData[this.serving.selected] = { data: { _backupsEnabled:true, backups: [] } };
+        if (!this.serving.loadedData[this.serving.selected].data) this.serving.loadedData[this.serving.selected].data = { _backupsEnabled:true, backups: [] };
+        this.serving.loadedData[this.serving.selected].data.backups.unshift({ data: structuredClone(item) });
+        let res = null;
+        if (this.serving.toSave) res = await this.serving.toSave({
+            data: item,
             id: this.serving.loadedData[this.serving.selected]?._id
         }, false);
+        if (res.data?.newID) this.serving.loadedData[this.serving.selected]._id = res.data.newID;
     }
 
     edit = () => {
@@ -722,6 +829,7 @@ class MetaBrowser extends Container {
             data: [],
             fields: new NBField(),
             editable: true,
+            enableBackups: true,
             toLoad: null, //async () => { return null; },
             toSave: null, //async (items, which) => { },
             ...settings
@@ -744,16 +852,24 @@ class MetaBrowser extends Container {
         let serving = this.services[service];
 
         if (serving.toLoad) serving.toLoad().then((res) => {
-            console.log(res);
             serving.loadedData = res;
-            if (!Array.isArray(serving.loadedData)) serving.loadedData = [serving.data];
+            if (!Array.isArray(serving.loadedData)) serving.loadedData = [serving.loadedData];
             serving.data = [];
             for (let i = 0; i < serving.loadedData.length; i++) {
-                if (serving.loadedData[i].data?._backupsEnabled) serving.data.push(serving.loadedData[i].data.backups[0].data);
-                else serving.data.push(serving.loadedData[i].data);
+                if (serving.loadedData[i].data?._backupsEnabled) serving.data.push(structuredClone(serving.loadedData[i].data.backups[0].data));
+                else serving.data.push(structuredClone(serving.loadedData[i].data));
             }
             if (select) this.selectService(service);
         });
+    }
+
+    sortData = (customSort = (a, b) => { return 0; }) => {
+        this.serving.data.sort(customSort);
+        this.serving.loadedData.sort((a, b) => { 
+            a = a.data.backups[0].data;
+            b = b.data.backups[0].data;
+            return customSort(a, b);
+         });
     }
 
     selectService = (service) => {

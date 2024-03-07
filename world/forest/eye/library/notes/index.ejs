@@ -45,7 +45,7 @@
             return await base.loadAll("notes");
         },
         toSave: async (item, deleting) => {
-            await base.do("save-note", { item, deleting });
+            return await base.do("save-note", { item, deleting });
         }
     });
     metaBrowser.render();

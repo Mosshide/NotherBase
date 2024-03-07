@@ -128,7 +128,7 @@
                 return res;
             },
             toSave: async (item, deleting) => {
-                await base.do("save-item", { item, deleting });
+                return await base.do("save-item", { item, deleting });
             }
         });
         metaTower.addService("users", {
@@ -166,7 +166,7 @@
                 return res;
             },
             toSave: async (item, deleting) => {
-                await base.do("save-user", { item, deleting });
+                return await base.do("save-user", { item, deleting });
             }
         });
         

@@ -44,7 +44,7 @@
             return await base.loadAll("bible-notes");
         },
         toSave: async (item, deleting) => {
-            await base.do("save-bible-note", { item, deleting });
+            return await base.do("save-bible-note", { item, deleting });
         }
     });
     metaResearch.render();
