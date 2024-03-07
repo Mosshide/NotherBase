@@ -3,7 +3,7 @@ export default async (req, user) => {
         if (!user.loggedIn()) {
             return `You must be logged in to save a(n) ${individual}.`;
         }
-        else if (!user.memory.data.authLevels.includes("Creator")) {
+        else if (!user.data.authLevels.includes("Creator")) {
             return `You must be a Creator to save a(n) ${individual}.`;
         }
         else if (!req.body.item?.id) {
@@ -23,6 +23,6 @@ export default async (req, user) => {
             return `${individual} saved.`;
         }
     }
-    
+
     return await towerCrud("items", "Item");
 }
