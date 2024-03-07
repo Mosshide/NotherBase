@@ -14,9 +14,7 @@ export default async function viewHistory(req, user) {
                 sendTickets.push(page.memory[i]);
             }
         }
-        else console.log("No backups found.", page.memory[i].data);
     }
-    console.log(sendTickets);
 
     return sendTickets;
 }
