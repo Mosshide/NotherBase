@@ -182,6 +182,8 @@
                     route: "/pages/it"
                 });
 
+                console.log(response);
+
                 if (response.status === "success") {
                     this.tickets = response.data;
     
@@ -192,17 +194,17 @@
                         let total = 0;
 
                         for (let i = 0; i < this.tickets.length; i++) {
-                            if (this.tickets[i].used) total += this.tickets[i].used;
+                            if (this.tickets[i].data.backups[0].data.used) total += parseFloat(this.tickets[i].data.backups[0].data.used);
                             const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
 
                             this.$ticketsList.append(`<li class="history-ticket">
-                                <h4 id="title">Request: ${this.tickets[i].title}</h4>
-                                <p>Ticket Number: ${this.tickets[i].id}</p>
-                                <p id="date">Created On: ${(new Date(this.tickets[i].date)).toDateString()}</p>
-                                <p id="quoted">Hours Quoted: ${this.tickets[i].quoted ? this.tickets[i].quoted : "none"}</p>
-                                <p id="date">Resolved On: ${this.tickets[i].resolved ? (new Date(this.tickets[i].resolved)).toLocaleDateString('en-US', options) : "Unresolved"}</p>
-                                <p id="used">Hours Used: ${this.tickets[i].used ? this.tickets[i].used : "none"}</p>
-                                <p id="desc">Description: ${this.tickets[i].description}</p>
+                                <h4 id="title">Request: ${this.tickets[i].data.backups[0].data.title}</h4>
+                                <p>Ticket Number: ${this.tickets[i].data.backups[0].data.id}</p>
+                                <p id="date">Created On: ${(new Date(this.tickets[i].data.backups[0].data.date)).toDateString()}</p>
+                                <p id="quoted">Hours Quoted: ${this.tickets[i].data.backups[0].data.quoted ? this.tickets[i].data.backups[0].data.quoted : "none"}</p>
+                                <p id="date">Resolved On: ${this.tickets[i].data.backups[0].data.resolved ? (new Date(this.tickets[i].data.backups[0].data.resolved)).toLocaleDateString('en-US', options) : "Unresolved"}</p>
+                                <p id="used">Hours Used: ${this.tickets[i].data.backups[0].data.used ? this.tickets[i].data.backups[0].data.used : "none"}</p>
+                                <p id="desc">Description: ${this.tickets[i].data.backups[0].data.description}</p>
                                 </li>`);
                         }
 

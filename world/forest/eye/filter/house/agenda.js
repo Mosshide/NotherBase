@@ -179,12 +179,13 @@ class Agenda extends SearchBox {
         }
         else {
             for (let i = 0; i < this.items.length; i++) {
-                if (this.items[i]) {       
+                if (this.items[i]) {     
                     this.getWorkingDate(this.items[i]);
+                    this.getWorkingDate(metaBrowser.serving.loadedData[i].data.backups[0].data);
                 }
             };
             // sort the data first by if there is a date, then by date, then by time, then by name
-            this.items.sort((a, b) => {
+            metaBrowser.sortData((a, b) => {
                 if (!a && !b) return 0;
                 if (a && !b) return -1;
                 if (!a && b) return 1;
@@ -243,7 +244,7 @@ class Agenda extends SearchBox {
     extractLabel = (item) => {
         let label = null;
         label = item?.name || item?.username || item?.title || item?.header || item?.whenSearched;
-        if (!label) label = item;
+        if (!label) label = "Unnamed Task";
 
         if (typeof label !== "string") label = String(label);
 
@@ -419,10 +420,8 @@ metaBrowser.addService("schedule", {
 label: "Your Tasks",
 multiple: true,
 toLoad: async () => {
-    let loaded = await base.loadAll("schedule");
-    
-    return loaded;
+    return await base.loadAll("schedule");
 },
 toSave: async (item, deleting) => {
-    await base.do("save-task", { item, deleting });
+    return await base.do("save-task", { item, deleting });
 }});

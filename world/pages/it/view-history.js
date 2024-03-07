@@ -1,20 +1,19 @@
 export default async function viewHistory(req, user) {
-    let page = await req.db.Spirit.recallOne("it", user.id);
-
-    let pageData = page.memory.data;
+    let page = await req.db.Spirit.recallAll("it", user.id);
 
     let sendTickets = [];
     let afterDate = new Date(req.body.dateStart + "T00:00");
     let beforeDate = new Date(req.body.dateEnd + "T00:00");
 
-    for (let i = 0; i < pageData.length; i++) {
-        if (!pageData[i].id) pageData[i].id = Date.now();
-        if (!pageData[i].comments) pageData[i].comments = [];
+    for (let i = 0; i < page.memory.length; i++) {
+        if (!page.memory[i].data.backups[0].data.id) page.memory[i].data.backups[0].data.id = Date.now();
+        if (!page.memory[i].data.backups[0].data.comments) page.memory[i].data.backups[0].data.comments = [];
 
-        if (pageData[i].date >= afterDate && pageData[i].date <= beforeDate) {
-            sendTickets.push(pageData[i]);
+        if (page.memory[i].data.backups[0].data.date >= afterDate && page.memory[i].data.backups[0].data.date <= beforeDate) {
+            sendTickets.push(page.memory[i]);
         }
     }
+    console.log(sendTickets);
 
     return sendTickets;
 }
