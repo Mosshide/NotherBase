@@ -198,11 +198,12 @@ class Agenda extends SearchBox {
         
                 // convert timeHours and timeMinutes to time
                 if (a.timeHours && a.timeMinutes) a.time = a.timeHours + a.timeMinutes;
+                if (b.timeHours && b.timeMinutes) b.time = b.timeHours + b.timeMinutes;
                 if (a.time && !b.time) return -1;
                 if (!a.time && b.time) return 1;
                 if (a.time && b.time) {
-                    if (a.time < b.time) return -1;
-                    if (a.time > b.time) return 1;
+                    if (a.time < b.time) return 1;
+                    if (a.time > b.time) return -1;
                 }
         
                 if (a.name && !b.name) return -1;
