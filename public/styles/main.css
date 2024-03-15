@@ -153,6 +153,7 @@ main.full-view {
     overflow: auto;
     overflow-y: hidden;
     max-width: initial;
+    height: calc(100vh - (2 * var(--thickMargin)) - 40px);
     width: 95vw;
     gap: 20px;
     align-items: center;
@@ -790,5 +791,12 @@ iframe {
         width: var(--mainWidth);
         gap: initial;
         align-items: flex-end;
+    }
+}
+
+@media screen and (min-width: 570px) {
+    main.full-view hr {
+        height: 100%;
+        width: 0;
     }
 }

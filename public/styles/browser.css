@@ -212,3 +212,11 @@
 .browser>#child-buttons {
     order: 99;
 }
+
+@media screen and (min-width: 570px) {
+    main.full-view .meta {
+        width: 50%;
+        max-width: 50%;
+        height: 100%;
+    }
+}
