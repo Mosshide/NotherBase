@@ -34,11 +34,11 @@
     --borderRadius: 3px;
     /* font */
     --h1Size: 32px;
-    --h2Size: 26px;
-    --h3Size: 22px;
-    --h4Size: 20px;
-    --h5Size: 18px;
-    --pSize: 16px;
+    --h2Size: 22px;
+    --h3Size: 18px;
+    --h4Size: 18px;
+    --h5Size: 16px;
+    --pSize: 14px;
     --tinyText: 14px;
     --inputHeight: 42px;
     /* boxes */
@@ -48,7 +48,7 @@
     --margin: 5px;
     --thickMargin: 20px;
     --tabMargin: 50px;
-    --mainWidth: 95vw;
+    --mainWidth: 97vw;
     --maxMainWidth: 500px;
     --fillFromMargin: calc(100% - (2 * var(--margin)));
     --fillFromThickMargin: calc(100% - (2 * var(--thickMargin)));
@@ -87,6 +87,7 @@
     margin: 0;
     font-family: 'Roboto', sans-serif;
     font-weight: lighter;
+    border-radius: var(--borderRadius);
 }
 
 .alt * {
@@ -110,10 +111,14 @@
     opacity: 0;
 }
 
+html {
+    height: 100%;
+}
+
 body {
     background: var(--bgCanvas);
     background: var(--bgCanvasGradient);
-    height: 100vh;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -126,13 +131,12 @@ main {
     position: absolute;
     width: var(--mainWidth);
     max-width: var(--maxMainWidth);
-    min-height: 500px;
-    max-height: calc(100vh - (2 * var(--thickMargin)) - 40px);
+    height: calc(100% - 50px);
     box-shadow: var(--boxShadow);
     padding: 0;
     border-radius: 5px;
-    top: 50px;
-    left: 2.5vw;
+    top: 44px;
+    left: 1vw;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
@@ -171,9 +175,10 @@ footer {
     border-radius: 0px 0px 5px 5px;
     box-shadow: var(--boxShadow);
     padding: 0;
+    padding-left: 1vw;
     border: none;
     top: 0;
-    left: 2.5vw;
+    left: 1vw;
 }
 
 footer .view-toggle {
@@ -249,7 +254,7 @@ h1, h2, h3, h4, h5, h6 {
 
 h1 {
     font-size: var(--h1Size);
-    border-bottom: var(--standardBorder);
+    padding: var(--thickPadding);
 }
 
 h2 {
@@ -275,7 +280,7 @@ h6 {
 
 hr {
     border: none;
-    border: 20px solid var(--textColor);
+    border: 10px solid var(--textColor);
     margin-top: var(--thickMargin);
     margin-bottom: var(--thickMargin);
     width: 100%;
