@@ -54,10 +54,10 @@
         editable: true,
         multiple: true,
         toLoad: async () => {
-            return await base.load("stories");
+            return await base.loadAll("stories");
         },
-        toSave: async (item, which, deleting) => {
-            await base.do("save-story", { item, which, deleting });
+        toSave: async (item, deleting) => {
+            return await base.do("save-story", { item, deleting });
         }
     });
     metaBrowser.render();

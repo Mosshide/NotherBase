@@ -115,9 +115,9 @@
                         route: "/pages/it-admin"
                     })).data;
                 },
-                toSave: async (item, which, deleting) => {
-                    console.log(item, which, deleting);
-                    await base.do("save-it", { item, which, deleting, route: "/pages/it-admin" });
+                toSave: async (item, deleting) => {
+                    console.log(item, deleting);
+                    return await base.do("save-it", { item, deleting, route: "/pages/it-admin" });
                 }
             });
         }

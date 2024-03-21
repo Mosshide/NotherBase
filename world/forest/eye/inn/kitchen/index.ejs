@@ -42,10 +42,10 @@
         editable: true,
         multiple: true,
         toLoad: async () => {
-            return await base.load("kitchen-pantry");
+            return await base.loadAll("kitchen-pantry");
         },
-        toSave: async (item, which, deleting) => {
-            await base.do("save-kitchen", { item, which, deleting, part: "pantry" });
+        toSave: async (item, deleting) => {
+            return await base.do("save-kitchen", { item, deleting, part: "pantry" });
         }
     });
     metaBrowser.addService("freezer", {
@@ -75,10 +75,10 @@
         editable: true,
         multiple: true,
         toLoad: async () => {
-            return await base.load("kitchen-freezer");
+            return await base.loadAll("kitchen-freezer");
         },
-        toSave: async (item, which, deleting) => {
-            await base.do("save-kitchen", { item, which, deleting, part: "freezer" });
+        toSave: async (item, deleting) => {
+            return await base.do("save-kitchen", { item, deleting, part: "freezer" });
         }
     });
     metaBrowser.addService("meats", {
@@ -108,10 +108,10 @@
         editable: true,
         multiple: true,
         toLoad: async () => {
-            return await base.load("kitchen-meats");
+            return await base.loadAll("kitchen-meats");
         },
-        toSave: async (item, which, deleting) => {
-            await base.do("save-kitchen", { item, which, deleting, part: "meats" });
+        toSave: async (item, deleting) => {
+            return await base.do("save-kitchen", { item, deleting, part: "meats" });
         }
     });
     metaBrowser.addService("veggies", {
@@ -141,10 +141,10 @@
         editable: true,
         multiple: true,
         toLoad: async () => {
-            return await base.load("kitchen-veggies");
+            return await base.loadAll("kitchen-veggies");
         },
-        toSave: async (item, which, deleting) => {
-            await base.do("save-kitchen", { item, which, deleting, part: "veggies" });
+        toSave: async (item, deleting) => {
+            return await base.do("save-kitchen", { item, deleting, part: "veggies" });
         }
     });
     metaBrowser.addService("drinks", {
@@ -174,10 +174,10 @@
         editable: true,
         multiple: true,
         toLoad: async () => {
-            return await base.load("kitchen-drinks");
+            return await base.loadAll("kitchen-drinks");
         },
-        toSave: async (item, which, deleting) => {
-            await base.do("save-kitchen", { item, which, deleting, part: "drinks" });
+        toSave: async (item, deleting) => {
+            return await base.do("save-kitchen", { item, deleting, part: "drinks" });
         }
     });
     metaBrowser.addService("snacks", {
@@ -207,10 +207,10 @@
         editable: true,
         multiple: true,
         toLoad: async () => {
-            return await base.load("kitchen-snacks");
+            return await base.loadAll("kitchen-snacks");
         },
-        toSave: async (item, which, deleting) => {
-            await base.do("save-kitchen", { item, which, deleting, part: "snacks" });
+        toSave: async (item, deleting) => {
+            return await base.do("save-kitchen", { item, deleting, part: "snacks" });
         }
     });
     metaBrowser.addService("other", {
@@ -240,10 +240,10 @@
         editable: true,
         multiple: true,
         toLoad: async () => {
-            return await base.load("kitchen-other");
+            return await base.loadAll("kitchen-other");
         },
-        toSave: async (item, which, deleting) => {
-            await base.do("save-kitchen", { item, which, deleting, part: "other" });
+        toSave: async (item, deleting) => {
+            return await base.do("save-kitchen", { item, deleting, part: "other" });
         }
     });
     metaBrowser.render();

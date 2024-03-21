@@ -761,13 +761,13 @@
             ]),
             editable: true,
             multiple: true,
+            enableBackups: false,
             toLoad: async () => {
-                return await base.load("portfolio-examples", "global");
+                return await base.loadAll("portfolio-examples", "global");
             },
-            toSave: async (item, which, deleting) => {
-                await base.do("save-example", { 
+            toSave: async (item, deleting) => {
+                return await base.do("save-example", { 
                     item, 
-                    which,
                     route: "/pages/portfolio",
                     deleting
                 });

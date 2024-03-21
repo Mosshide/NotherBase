@@ -1,3 +1,53 @@
+Date.isLeapYear = function (year) { 
+    return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0)); 
+};
+
+Date.getDaysInMonth = function (year, month) {
+    return [31, (Date.isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month];
+};
+
+Date.prototype.isLeapYear = function () { 
+    return Date.isLeapYear(this.getFullYear()); 
+};
+
+Date.prototype.getDaysInMonth = function () { 
+    return Date.getDaysInMonth(this.getFullYear(), this.getMonth());
+};
+
+Date.prototype.addMonths = function (value) {
+    let n = this.getDate();
+    this.setDate(1);
+    this.setMonth(this.getMonth() + value);
+    this.setDate(Math.min(n, this.getDaysInMonth()));
+    return this;
+};
+
+Date.prototype.toWithinAMonth = function () {
+    let today = new Date();
+    let d = this.getDate();
+    this.setDate(1);
+    this.setFullYear(today.getFullYear());
+    if (d > today.getDate()) this.setMonth(today.getMonth());
+    else this.setMonth(today.getMonth() + 1);
+    this.setDate(Math.min(d, this.getDaysInMonth()));
+    return this;
+};
+
+Date.prototype.toWithinAYear = function () {
+    let today = new Date();
+    let d = this.getDate();
+    this.setDate(1);
+    if (this.getMonth() >= today.getMonth()) this.setFullYear(today.getFullYear());
+    else this.setFullYear(today.getFullYear() + 1);
+    this.setDate(Math.min(d, this.getDaysInMonth()));
+    return this;
+}
+
+Date.prototype.getDayOfTheWeek = function (mini = false) {
+    if (mini) return ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][this.getDay()];
+    return ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][this.getDay()];
+};
+
 // an extension of the Filters class called AgendaFilters
 // this class has a few extra filters that are specific to the agenda
 class AgendaFilters extends Filters {
@@ -129,8 +179,44 @@ class Agenda extends SearchBox {
         }
         else {
             for (let i = 0; i < this.items.length; i++) {
-                if (this.items[i]) {        
+                if (this.items[i]) {     
                     this.getWorkingDate(this.items[i]);
+                    this.getWorkingDate(metaBrowser.serving.loadedData[i].data.backups[0].data);
+                }
+            };
+            // sort the data first by if there is a date, then by date, then by time, then by name
+            metaBrowser.sortData((a, b) => {
+                if (!a && !b) return 0;
+                if (a && !b) return -1;
+                if (!a && b) return 1;
+                if (a.workingDate && !b.workingDate) return -1;
+                if (!a.workingDate && b.workingDate) return 1;
+                if (a.workingDate && b.workingDate) {
+                    if (a.workingDate > b.workingDate) return -1;
+                    if (a.workingDate < b.workingDate) return 1;
+                }
+        
+                // convert timeHours and timeMinutes to time
+                if (a.timeHours && a.timeMinutes) a.time = a.timeHours + a.timeMinutes;
+                if (b.timeHours && b.timeMinutes) b.time = b.timeHours + b.timeMinutes;
+                if (a.time && !b.time) return -1;
+                if (!a.time && b.time) return 1;
+                if (a.time && b.time) {
+                    if (a.time < b.time) return 1;
+                    if (a.time > b.time) return -1;
+                }
+        
+                if (a.name && !b.name) return -1;
+                if (!a.name && b.name) return 1;
+                if (a.name && b.name) {
+                    if (a.name < b.name) return 1;
+                    if (a.name > b.name) return -1;
+                }
+        
+                return 0;
+            });
+            for (let i = 0; i < this.items.length; i++) {
+                if (this.items[i]) {       
                     this.renderItem(this.items[i], i);
                 }
                 else $(`<p>Item Error</p>`).appendTo(this.list.$div);
@@ -157,10 +243,11 @@ class Agenda extends SearchBox {
     }
 
     extractLabel = (item) => {
-        let label = item.name || item.username || item.title || item.header || item.whenSearched || Object.values(item)[0];
-        if (!label) label = "No Name";
+        let label = null;
+        label = item?.name || item?.username || item?.title || item?.header || item?.whenSearched;
+        if (!label) label = "Unnamed Task";
 
-        if (typeof label !== "string") label = label.toString();
+        if (typeof label !== "string") label = String(label);
 
         if (!item.workingDate) this.getWorkingDate(item);
         if (item.workingDate) {
@@ -334,8 +421,8 @@ metaBrowser.addService("schedule", {
 label: "Your Tasks",
 multiple: true,
 toLoad: async () => {
-    return (await base.do("load-schedule")).data;
+    return await base.loadAll("schedule");
 },
-toSave: async (item, which, deleting) => {
-    await base.do("save-task", { item, which, deleting });
+toSave: async (item, deleting) => {
+    return await base.do("save-task", { item, deleting });
 }});

@@ -14,7 +14,7 @@ let remove = function (e, buttons) {
     let userID = $(e.currentTarget).find("p.id").text();
     base.do("remove-member", {
         userID,
-        groupID: metaGroups.serving.data[metaGroups.serving.selected].id
+        groupID: metaGroups.serving.loadedData[metaGroups.serving.selected]._id 
     }).then((res) => { 
         metaGroups.load();
         switch (res.data) {
@@ -74,7 +74,7 @@ let demote = (e, userID, buttons) => {
         title: e.currentTarget.innerText, 
         userID, 
         demote: true, 
-        groupID: metaGroups.serving.data[metaGroups.serving.selected].id 
+        groupID: metaGroups.serving.loadedData[metaGroups.serving.selected]._id 
     }).then((res) => { 
         metaGroups.load();
         switch (res.data) {
@@ -137,7 +137,7 @@ let promote = (buttons, $input, userID) => {
     base.do("save-auth", { 
         title: $input.val(), 
         userID, 
-        groupID: metaGroups.serving.data[metaGroups.serving.selected].id 
+        groupID: metaGroups.serving.loadedData[metaGroups.serving.selected]._id 
     }).then((res) => { 
         metaGroups.load();
         switch (res.data) {
@@ -194,7 +194,7 @@ let accept = (e) => {
 
     base.do("save-joins", {
         userID,
-        groupID: metaGroups.serving.data[metaGroups.serving.selected].id 
+        groupID: metaGroups.serving.loadedData[metaGroups.serving.selected]._id  
     }).then((res) => { 
         metaGroups.load(); 
         switch (res.data) {
@@ -254,7 +254,7 @@ let reject = (e) => {
 
     base.do("save-joins", {
         userID,
-        groupID: metaGroups.serving.data[metaGroups.serving.selected].id,
+        groupID: metaGroups.serving.loadedData[metaGroups.serving.selected]._id,
         reject: true
     }).then((res) => { 
         metaGroups.load(); 

@@ -15,29 +15,20 @@ export default async function (req, user) {
             if (!groups.memory[i].data) groups.memory.splice(i, 1);
             else {
                 if (Array.isArray(groups.memory[i].data.members)) {
-                    let groupInfo = {
-                        id: groups.memory[i].id,
-                        name: groups.memory[i].data.name,
-                        description: groups.memory[i].data.description,
-                        members: [],
-                        joinRequests: []
-                    }
-                    if (settings.getSettings) groupInfo.settings = groups.memory[i].data.settings;
-        
                     let userFound = false;
     
-                    for (let j = 0; j < groups.memory[i].data.members.length; j++) {
-                        if (settings.getMembers) {
-                            let findUser = await req.db.User.recallOne(null, null, groups.memory[i].data.members[j].id);
-        
-                            groupInfo.members[j] = {
-                                id: groups.memory[i].data.members[j].id,
-                                name: findUser.memory.data.username,
-                                auth: groups.memory[i].data.members[j].auth
+                    if (settings.getMembers) {
+                        for (let j = 0; j < groups.memory[i].data.members.length; j++) {
+                            let findUser = null;
+                            if (groups.memory[i].data.members[j].id == `${user.id}`) {
+                                userFound = true;
+                                groups.memory[i].data.members[j].name = user.memory.data.username;
+                            }
+                            else {
+                                findUser = await req.db.User.recallOne(null, null, groups.memory[i].data.members[j].id);
+                                if (findUser) groups.memory[i].data.members[j].name = findUser.memory.data.username;
                             }
                         }
-                        
-                        if (groups.memory[i].data.members[j].id == `${user.id}`) userFound = true;
                     }
                     
                     if (userFound) {
@@ -47,15 +38,11 @@ export default async function (req, user) {
                             for (let j = 0; j < groups.memory[i].data.joinRequests.length; j++) {
                                 let findUser = await req.db.User.recallOne(null, null, groups.memory[i].data.joinRequests[j].id);
                                 
-                                groupInfo.joinRequests[j] = {
-                                    id: groups.memory[i].data.joinRequests[j].id,
-                                    name: findUser.memory.data.username,
-                                    note: groups.memory[i].data.joinRequests[j].note
-                                }
+                                groups.memory[i].data.joinRequests[j].name = findUser.memory.data.username;
                             }
                         }
 
-                        inGroups.push(groupInfo);
+                        inGroups.push(groups.memory[i]);
                     }
                 }
                 else groups.memory[i].data.members = [];
