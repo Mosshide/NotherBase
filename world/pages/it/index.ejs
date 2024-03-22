@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Roboto+Condensed:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="/styles/main.css">
 </head>
 
@@ -19,7 +19,7 @@
     </style>
 
     <main>
-        <h2>IT Request Tracker</h2>
+        <h1>IT Request Tracker</h1>
 
         <div class="login form">
             <label>
@@ -33,7 +33,7 @@
         </div>
         
         <div class="submit form invisible">
-            <h5>Submit a Request for <%= user ? user.username : "none" %></h5>
+            <h3>Submit a Request for <%= user ? user.username : "none" %></h3>
             <label>
                 Title of Request:<input type="text" placeholder="title" id="title">
             </label>

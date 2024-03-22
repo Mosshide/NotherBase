@@ -26,6 +26,8 @@
     --sideWallBG: rgba(151, 145, 138, 0.041);
     --backWallBG: rgba(151, 145, 138, 0.128);
     --foundationBG: rgba(29, 17, 5, 0.10);
+    --glassBG: rgba(255, 255, 255, 0.048);
+    --glassBGHover: rgba(255, 255, 255, 0.103);
     /* borders */
     --standardBorder: 1px solid var(--textColor);
     --thickBorder: 5px solid var(--textColor);
@@ -34,11 +36,11 @@
     --borderRadius: 3px;
     /* font */
     --h1Size: 32px;
-    --h2Size: 26px;
-    --h3Size: 22px;
-    --h4Size: 20px;
-    --h5Size: 18px;
-    --pSize: 16px;
+    --h2Size: 22px;
+    --h3Size: 18px;
+    --h4Size: 18px;
+    --h5Size: 16px;
+    --pSize: 14px;
     --tinyText: 14px;
     --inputHeight: 42px;
     /* boxes */
@@ -48,7 +50,7 @@
     --margin: 5px;
     --thickMargin: 20px;
     --tabMargin: 50px;
-    --mainWidth: 95vw;
+    --mainWidth: 97vw;
     --maxMainWidth: 500px;
     --fillFromMargin: calc(100% - (2 * var(--margin)));
     --fillFromThickMargin: calc(100% - (2 * var(--thickMargin)));
@@ -87,6 +89,7 @@
     margin: 0;
     font-family: 'Roboto', sans-serif;
     font-weight: lighter;
+    border-radius: var(--borderRadius);
 }
 
 .alt * {
@@ -114,10 +117,14 @@ button.disabled {
     opacity: 0;
 }
 
+html {
+    height: 100%;
+}
+
 body {
     background: var(--bgCanvas);
     background: var(--bgCanvasGradient);
-    height: 100vh;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -130,13 +137,12 @@ main {
     position: absolute;
     width: var(--mainWidth);
     max-width: var(--maxMainWidth);
-    min-height: 500px;
-    max-height: calc(100vh - (2 * var(--thickMargin)) - 40px);
+    height: calc(100% - 50px);
     box-shadow: var(--boxShadow);
     padding: 0;
     border-radius: 5px;
-    top: 50px;
-    left: 2.5vw;
+    top: 44px;
+    left: 1vw;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
@@ -176,9 +182,10 @@ footer {
     border-radius: 0px 0px 5px 5px;
     box-shadow: var(--boxShadow);
     padding: 0;
+    padding-left: 1vw;
     border: none;
     top: 0;
-    left: 2.5vw;
+    left: 1vw;
 }
 
 footer .view-toggle {
@@ -189,6 +196,10 @@ footer .view-toggle {
     height: 40px;
     background: var(--bgColor);
     border-radius: 0 0 0 5px;
+}
+
+footer .view-toggle:hover {
+    background: var(--hoverColor);
 }
 
 footer button {
@@ -247,44 +258,61 @@ article {
     overflow: auto;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1 {
+    font-size: var(--h1Size);
+    padding: var(--thickPadding);
     width: 100%;
     text-align: center;
 }
 
-h1 {
-    font-size: var(--h1Size);
-    border-bottom: var(--standardBorder);
-}
-
 h2 {
     font-size: var(--h2Size);
+    padding: var(--thickPadding);
+    width: 100%;
+    text-align: left;
 }
 
 h3 {
     font-size: var(--h3Size);
+    padding: var(--padding);
+    width: 100%;
+    text-align: left;
 }
 
 h4 {
     font-size: var(--h4Size);
     border-bottom: var(--standardBorder);
+    width: 100%;
+    text-align: center;
+    padding: var(--padding);
 }
 
 h5 {
     font-size: var(--h5Size);
+    width: 100%;
+    padding: var(--padding);
+    text-align: left;
 }
 
 h6 {
     font-size: var(--pSize);
+    width: auto;
+    padding: var(--padding);
+    text-align: left;
 }
 
 hr {
     border: none;
-    border: 20px solid var(--textColor);
+    border: 10px solid var(--textColor);
     margin-top: var(--thickMargin);
     margin-bottom: var(--thickMargin);
     width: 100%;
     border-radius: 2px;
+}
+
+main.full-view hr {
+    height: 100%;
+    width: 0;
 }
 
 p {
@@ -292,7 +320,7 @@ p {
     width: 100%;
     padding: var(--padding);
     font-size: var(--pSize);
-    min-height: calc(var(--pSize) + 2 * var(--padding));
+    height: auto;
 }
 
 ul {
@@ -362,7 +390,7 @@ input[type=submit] {
 }
 
 button {
-    background: var(--clickable);
+    background: var(--glassBG);
     padding: var(--padding);
     border-radius: var(--borderRadius);
     border: var(--standardBorder);
@@ -373,7 +401,14 @@ button {
     font-size: clamp(var(--littleP), var(--pSize), var(--littleP) * 2);
 }
 
-input[type=submit]:hover, button:hover {
+button:hover {
+    border: var(--brightBorder);
+    color: var(--textColorBright);
+    cursor: pointer;
+    background: var(--glassBGHover);
+}
+
+input[type=submit]:hover {
     border: var(--brightBorder);
     color: var(--textColorBright);
     cursor: pointer;
@@ -792,11 +827,9 @@ iframe {
         gap: initial;
         align-items: flex-end;
     }
-}
 
-@media screen and (min-width: 570px) {
     main.full-view hr {
-        height: 100%;
-        width: 0;
+        height: 0;
+        width: 100%;
     }
 }
