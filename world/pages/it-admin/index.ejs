@@ -14,16 +14,11 @@
 </head>
 
 <main>
-    <style>
-        <%- include("../it/it.css"); %>
-    </style>
 
     <% if (user && user.authLevels.includes("ITAD")) { %>
         <input type="text" id="filter">
         <button onclick="load()">Load</button>
-        <div class="browser"></div>
-        <div class="search-box"></div>
-        <div class="meta buttons"></div>
+        <div class="meta"></div>
     <% } else { %>
         <div class="login form">
             <label>
@@ -40,8 +35,8 @@
     <button class="logout invisible" onclick="tracker.logout()">Logout</button>
     <p id="alert"></p>
 
-    <footer></footer>
 </main>
+<footer></footer>
 
 <script src="/js/base.js"></script>
 <script src="/js/util/element.js"></script>
