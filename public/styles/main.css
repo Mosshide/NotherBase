@@ -26,6 +26,8 @@
     --sideWallBG: rgba(151, 145, 138, 0.041);
     --backWallBG: rgba(151, 145, 138, 0.128);
     --foundationBG: rgba(29, 17, 5, 0.10);
+    --glassBG: rgba(255, 255, 255, 0.048);
+    --glassBGHover: rgba(255, 255, 255, 0.103);
     /* borders */
     --standardBorder: 1px solid var(--textColor);
     --thickBorder: 5px solid var(--textColor);
@@ -196,6 +198,10 @@ footer .view-toggle {
     border-radius: 0 0 0 5px;
 }
 
+footer .view-toggle:hover {
+    background: var(--hoverColor);
+}
+
 footer button {
     margin: 0;
     height: 100%;
@@ -252,35 +258,47 @@ article {
     overflow: auto;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1 {
+    font-size: var(--h1Size);
+    padding: var(--thickPadding);
     width: 100%;
     text-align: center;
 }
 
-h1 {
-    font-size: var(--h1Size);
-    padding: var(--thickPadding);
-}
-
 h2 {
     font-size: var(--h2Size);
+    padding: var(--thickPadding);
+    width: 100%;
+    text-align: left;
 }
 
 h3 {
     font-size: var(--h3Size);
+    padding: var(--padding);
+    width: 100%;
+    text-align: left;
 }
 
 h4 {
     font-size: var(--h4Size);
     border-bottom: var(--standardBorder);
+    width: 100%;
+    text-align: center;
+    padding: var(--padding);
 }
 
 h5 {
     font-size: var(--h5Size);
+    width: 100%;
+    padding: var(--padding);
+    text-align: left;
 }
 
 h6 {
     font-size: var(--pSize);
+    width: auto;
+    padding: var(--padding);
+    text-align: left;
 }
 
 hr {
@@ -292,12 +310,17 @@ hr {
     border-radius: 2px;
 }
 
+main.full-view hr {
+    height: 100%;
+    width: 0;
+}
+
 p {
     color: var(--textColor);
     width: 100%;
     padding: var(--padding);
     font-size: var(--pSize);
-    min-height: calc(var(--pSize) + 2 * var(--padding));
+    height: auto;
 }
 
 ul {
@@ -367,7 +390,7 @@ input[type=submit] {
 }
 
 button {
-    background: var(--clickable);
+    background: var(--glassBG);
     padding: var(--padding);
     border-radius: var(--borderRadius);
     border: var(--standardBorder);
@@ -378,7 +401,14 @@ button {
     font-size: clamp(var(--littleP), var(--pSize), var(--littleP) * 2);
 }
 
-input[type=submit]:hover, button:hover {
+button:hover {
+    border: var(--brightBorder);
+    color: var(--textColorBright);
+    cursor: pointer;
+    background: var(--glassBGHover);
+}
+
+input[type=submit]:hover {
     border: var(--brightBorder);
     color: var(--textColorBright);
     cursor: pointer;
@@ -797,11 +827,9 @@ iframe {
         gap: initial;
         align-items: flex-end;
     }
-}
 
-@media screen and (min-width: 570px) {
     main.full-view hr {
-        height: 100%;
-        width: 0;
+        height: 0;
+        width: 100%;
     }
 }
