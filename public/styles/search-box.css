@@ -63,10 +63,11 @@
 
 .search-box .filters label h4 {
     border: none;
+    width: auto;
 }
 
 .search-box .filters label input {
-    width: 70%;
+    width: 100%;
     margin: 0;
 }
 
