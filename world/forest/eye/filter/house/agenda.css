@@ -86,3 +86,9 @@
     border: none;
     order: 999999999;
 }
+
+@media screen and (min-width: 570px) {
+    .meta {
+        height: calc(100% - 210px) !important;
+    }
+}

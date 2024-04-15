@@ -165,10 +165,6 @@ main.full-view {
     align-items: center;
 }
 
-main.full-view>* {
-    max-width: var(--maxMainWidth);
-}
-
 footer {
     position: absolute;
     display: flex;
@@ -662,6 +658,7 @@ iframe {
 
 .dialogue {
     width: var(--fillFromMargin);
+    max-width: var(--maxMainWidth);
     border-radius: var(--borderRadius);
     display: flex;
     justify-content: center;
@@ -813,23 +810,41 @@ iframe {
     }
 }
 
-@media screen and (max-width: 570px) {
-    footer .view-toggle {
+@media screen and (min-width: 570px) {
+    /* footer .view-toggle {
         display: none;
-    }
+    } */
 
     main.full-view {
-        flex-direction: row;
-        overflow: auto;
-        overflow-x: hidden;
-        max-width: var(--maxMainWidth);
-        width: var(--mainWidth);
-        gap: initial;
-        align-items: flex-end;
+        justify-content: flex-start;
+        gap: 0;
+        column-gap: 5px;
     }
 
-    main.full-view hr {
+    main.full-view hr.forced {
+        width: var(--maxMainWidth);
         height: 0;
-        width: 100%;
+    }
+
+    .go {
+        width: 200px;
+        max-width: var(--maxMainWidth);
+    }
+    
+    .to {
+        width: 200px;
+        max-width: var(--maxMainWidth);
+    }
+    
+    .return {
+        max-width: var(--maxMainWidth);
+    }
+    
+    .do {
+        max-width: var(--maxMainWidth);
+    }
+
+    main>p {
+        max-width: var(--maxMainWidth);
     }
 }
