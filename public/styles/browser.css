@@ -213,10 +213,13 @@
     order: 99;
 }
 
+.meta .search-box {
+    height: calc(100% - 50px);
+}
+
 @media screen and (min-width: 570px) {
     main.full-view .meta {
-        width: 50%;
-        max-width: 50%;
+        width: 700px;
         height: 100%;
     }
 }

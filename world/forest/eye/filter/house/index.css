@@ -29,7 +29,7 @@ main .hud {
     flex-wrap: wrap;
     justify-content: space-between;
     align-content: center;
-    min-height: 90px;
+    height: 150px;
     width: 100%;
 }
 
@@ -63,4 +63,14 @@ main .hud .date {
 .porch {
     width: 100%;
     margin: 0;
+}
+
+@media screen and (min-width: 570px) {
+    main.full-view  .hud {
+        width: 700px;
+    }
+
+    main.full-view .porch {
+        width: 700px;
+    }
 }
