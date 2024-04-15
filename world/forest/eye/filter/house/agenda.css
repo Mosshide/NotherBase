@@ -88,7 +88,7 @@
 }
 
 @media screen and (min-width: 570px) {
-    .meta {
+    main.full-view .meta {
         height: calc(100% - 210px) !important;
     }
 }

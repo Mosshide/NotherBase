@@ -826,25 +826,25 @@ iframe {
         height: 0;
     }
 
-    .go {
+    main.full-view .go {
         width: 200px;
         max-width: var(--maxMainWidth);
     }
     
-    .to {
+    main.full-view .to {
         width: 200px;
         max-width: var(--maxMainWidth);
     }
     
-    .return {
+    main.full-view .return {
         max-width: var(--maxMainWidth);
     }
     
-    .do {
+    main.full-view .do {
         max-width: var(--maxMainWidth);
     }
 
-    main>p {
+    main.full-view>p {
         max-width: var(--maxMainWidth);
     }
 }

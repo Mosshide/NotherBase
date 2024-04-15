@@ -66,11 +66,11 @@ main .hud .date {
 }
 
 @media screen and (min-width: 570px) {
-    main .hud {
+    main.full-view  .hud {
         width: 700px;
     }
 
-    .porch {
+    main.full-view .porch {
         width: 700px;
     }
 }
