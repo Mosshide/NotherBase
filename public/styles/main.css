@@ -810,11 +810,13 @@ iframe {
     }
 }
 
-@media screen and (min-width: 570px) {
-    /* footer .view-toggle {
+@media screen and (max-width: 570px) {
+    footer .view-toggle {
         display: none;
-    } */
+    }
+}
 
+@media screen and (min-width: 570px) {
     main.full-view {
         justify-content: flex-start;
         gap: 0;
