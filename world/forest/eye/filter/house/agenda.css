@@ -52,7 +52,7 @@
 }
 
 .search-box>.buttons {
-    margin-bottom: -20px;
+    margin-bottom: 0;
 }
 
 .selector {
@@ -85,4 +85,10 @@
 .search-box .selector>h4 {
     border: none;
     order: 999999999;
+}
+
+@media screen and (min-width: 570px) {
+    main.full-view .meta {
+        height: calc(100% - 210px) !important;
+    }
 }
