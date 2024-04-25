@@ -383,6 +383,7 @@ class Browser extends Element {
 
         if (this.box) this.box.close();
         this.box = this.addChild(new ViewBox());
+        console.log(itemOverride);
         this.box.setValue(itemOverride ? itemOverride : null, this.serving.fields, true);
 
         this.buttons.hideButton("edit");
@@ -712,6 +713,7 @@ class MetaBrowser extends Container {
             useSearchBox: SearchBox,
             styles: "browser",
             defaultClasses: "meta",
+            showFilters: true,
             ...settings
         });
 
@@ -802,7 +804,7 @@ class MetaBrowser extends Container {
     }
 
     addSearchBox = () => {
-        this.searchBox = new this.settings.useSearchBox({
+        let settings = {
             onLiClick: (e, element) => {
                 if (this.browser) {
                     this.browser.close();
@@ -815,7 +817,9 @@ class MetaBrowser extends Container {
                 this.browser.read(this.serving);
                 element.addChild(this.browser);
             }
-        });
+        };
+        if (!this.settings.showFilters) settings.filters = "none";
+        this.searchBox = new this.settings.useSearchBox(settings);
         this.addChild(this.searchBox);
     }
 
@@ -829,6 +833,7 @@ class MetaBrowser extends Container {
             data: [],
             fields: new NBField(),
             editable: true,
+            max: -1,
             enableBackups: true,
             toLoad: null, //async () => { return null; },
             toSave: null, //async (items, which) => { },
@@ -891,14 +896,14 @@ class MetaBrowser extends Container {
             }
             this.serving.selected = this.serving.data.length;
             this.serving.state = "new";
-            let newElement = this.searchBox.addItem({ whenSearched: "No Name" }, true);
+            let newElement = this.searchBox.addItem(null, true);
             newElement.disable();
             this.disabledElement = newElement;
             this.makeBrowser();
             this.searchBox.browser = this.browser;
             this.browser.new(this.serving);
             newElement.addChild(this.browser);
-        } : null);
+        } : null, this.serving.max);
         this.searchBox.setFilters(this.serving.lastFilter);
         
         if (this.serving.state == "edit") {

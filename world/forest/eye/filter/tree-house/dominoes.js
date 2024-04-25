@@ -1,17 +1,21 @@
-class Bone {
-    constructor(values, onClick) {
+// bones are 0-6
+class Bone extends Element {
+    constructor(values) {
+        super("div", {
+            defaultClasses: "bone"
+        });
+        this.location = "yard";
         this.positon = [0, 0];
         this.rotation = 0;
         this.faceUp = false;
         this.touching = [ null, null, null, null ];
         this.values = values;
-        this.player = null;
         $(".bone-yard").append(`<div class="bone in-yard" id="${values[0]}-${values[1]}"></div>`);
         this.$div = $(".bone-yard").children().last();
         this.width = parseInt(this.$div.css("width"), 10);
         this.height = parseInt(this.$div.css("height"), 10);
 
-        this.$div.on("click", {bone: this}, onClick);
+        this.enable(this.click);
     }
 
     flipUp() {
@@ -105,25 +109,65 @@ class Bone {
 
         bone.moveTo(position, 0);
     }
+
+    click = (e) => {
+        console.log(`clicked ${e.data.bone.values}`);
+        if (this.waiting && this.turn === 1 && e.data.bone.location === "hand") {
+            if (e.data.bone == this.players[1].heldBone) {
+                this.board.takeBackPlacement()
+                this.players[1].unChooseBone(e.data.bone);
+            }
+            // else if (this.players[1].heldBone !== null) {
+            //     this.board.finishPlacement(this.players[1].playBone(), e.data.bone);
+            //     this.players[1].addPoints(this.board.grabPoints());
+            // }
+            // else this.board.beginPlacement(this.players[1].chooseBone(e.data.bone));
+        }
+    }
 }
 
-class Board {
-    constructor(onBoneClick, onBoardClick) {
-        $(".bone-yard").empty();
-        this.boneyard = [];
-        this.bonesOnBoard = [];
-        this.ends = [];
-        this.$board = $(".board");
-        this.$board.empty();
-        this.$board.on("click", onBoardClick);
-        this.width = parseInt(this.$board.css("height"), 10);
-        this.height = parseInt(this.$board.css("width"), 10);
+// a yard class
+class Yard extends Element {
+    constructor() {
+        super("div", {
+            defaultClasses: "yard"
+        });
 
+        this.reset();
+    }
+
+    reset() {
         for (let i = 0; i < 7; i++) {
             for (let j = 0; j < 7; j++) {
-                this.boneyard.push(new Bone([i, j], onBoneClick));
+                this.addChild(new Bone([i, j]));
             }
         }
+    }
+
+    getBone() {
+        if (this.children.length > 0) {
+            let chosen = Math.floor(Math.random() * this.children.length);
+
+            this.children[chosen].flipUp();
+            this.children[chosen].$div.removeClass("in-yard");
+
+            return this.removeChild(this.children[chosen]);
+        }
+        else return null;
+    }
+}
+
+class Board extends Element {
+    constructor(dominoGame) {
+        super("div", {
+            defaultClasses: "board"
+        });
+        this.yard = this.addChild(new Yard());
+        
+        this.bonesOnBoard = [];
+        this.ends = [];
+        this.width = 600;
+        this.height = 600;        
     }
 
     place(choice, bigBone = false) {
@@ -212,18 +256,6 @@ class Board {
         else return 0;
     }
 
-    getBoneFromYard() {
-        if (this.boneyard.length > 0) {
-            let chosen = Math.floor(Math.random() * this.boneyard.length);
-
-            this.boneyard[chosen].flipUp();
-            this.boneyard[chosen].$div.removeClass("in-yard");
-
-            return this.boneyard.splice(chosen, 1)[0];
-        }
-        else return null;
-    }
-
     updateOptions(bone) {
         for (let i = 0; i < this.bonesOnBoard.length; i++) {
             this.bonesOnBoard[i].$div.removeClass("highlighted");
@@ -250,33 +282,54 @@ class Board {
 
         return this.grabPoints();
     }
+
+    click = (e) => {
+        console.log("clicked board");
+        if (this.waiting && this.turn === 1) {
+            if (this.players[1].heldBone !== null) {
+                this.board.finishPlacement(this.players[1].playBone());
+                this.players[1].addPoints(this.board.grabPoints());
+                this.turn = 0;
+                this.startTurn();
+            }
+        }
+    }
 }
 
-class Player {
-    constructor(name, $handDiv, $scoreDiv) {
-        this.hand = [];
-        this.board = null;
-        this.choice = {
-            bone: null,
-            target: null,
-            pole: -1
-        };
-        this.score = 0;
-        this.options = [];
-        this.name = name;
-        this.$handDiv = $handDiv;
-        this.$scoreDiv = $scoreDiv;
+// a score class
+class Score extends Element {
+    constructor() {
+        super("div", {
+            defaultClasses: "score"
+        });
+        this.amount = 0;
+    }
+
+    addPoints(points) {
+        this.amount += points;
+        this.$div.text(this.amount);
+    }
+
+    clear() {
+        this.amount = 0;
+        this.$div.text(this.amount);
+    }
+}
+
+// a hand class
+class Hand extends Element {
+    constructor(player) {
+        super("div", {
+            defaultClasses: "hand"
+        });
+
+        this.player = player;
         this.heldBone = null;
-        this.$handDiv.empty();
     }
 
     draw(bone) {
-        console.log(`${this.name} drawing`);
-        
-        bone.player = this;
-        this.hand.push(bone);
-        bone.$div.appendTo(this.$handDiv);
-
+        bone.location = "hand";
+        this.addChild(bone);
         return bone.values;
     }
 
@@ -288,18 +341,18 @@ class Player {
         this.board.updateOptions(bone);
     }
 
-    checkForDraw(bigBone = false) {
+    checkForDraw(board, bigBone = false) {
         this.options = [];
 
         if (!bigBone) {
-            for (let i = 0; i < this.board.ends.length; i++) {
+            for (let i = 0; i < this.player.board.ends.length; i++) {
                 for (let j = 0; j < this.hand.length; j++) {
-                    if (this.hand[j].fits(this.board.ends[i])) this.options.push(j);
+                    if (this.hand[j].fits(this.player.board.ends[i])) this.options.push(j);
                 }
             }
 
             if (this.options.length <= 0) {
-                let bone = this.board.getBoneFromYard();
+                let bone = this.player.board.yard.getBone();
                 if (bone !== null) {
                     this.draw(bone);
                     this.checkForDraw();
@@ -321,6 +374,8 @@ class Player {
 
             this.options = [chosen];
         }
+
+        this.updateOptionsVisuals();
     }
 
     updateOptionsVisuals(only = null) {
@@ -333,18 +388,6 @@ class Player {
                 }
             }
             else this.hand[only].highlight();
-        }
-    }
-
-    autoTurn(bigbone = false) {
-        let chosen = -1;
-        if (bigbone) chosen = this.options[0];
-        else chosen = this.options[Math.floor(Math.random() * this.options.length)];
-
-        return {
-            bone: this.hand.splice(chosen, 1)[0],
-            target: "auto",
-            pole: "auto"
         }
     }
 
@@ -375,7 +418,7 @@ class Player {
 
         return null;
     }
-
+    
     unChooseBone(bone) {
         bone.unHold();
         this.heldBone = null;
@@ -386,52 +429,95 @@ class Player {
         if (this.hand.length <= 0) return true;
         else return false;
     }
+}
+
+class Player extends Element {
+    constructor(dominoGame, name) {
+        super("div", {
+            defaultClasses: "player"
+        });
+        this.name = name;
+        this.dominoGame = dominoGame;
+        this.hand = this.addChild(new Hand(this));
+        this.score = this.addChild(new Score());
+        this.board = null;
+        this.choice = {
+            bone: null,
+            target: null,
+            pole: -1
+        };
+        this.options = [];
+        this.waiting = false;
+    }
+
+    startTurn(bigBone = false) {
+        this.$div.addClass("turn-to-play");
+        this.hand.checkForDraw(this.board, bigBone);
+        this.waiting = true;
+    }
+
+    endTurn() {
+        this.$div.removeClass("turn-to-play");
+        this.score.addPoints(this.board.grabPoints());
+    }
 
     displayWinner(player) {
         $(".opponent-hand").text(`${player} won!`);
     }
 
-    clear() {
-        this.hand = [];
-        this.$handDiv.empty();
-        this.$scoreDiv.empty();
-    }
-
-    addPoints(points) {
-        this.score += points;
-        this.$scoreDiv.text(this.score);
-    }
-
-    startTurn() {
-        this.$handDiv.addClass("turn-to-play");
-    }
-
-    endTurn() {
-        this.$handDiv.removeClass("turn-to-play");
+    displayLoser(player) {
+        $(".player-hand").text(`${player} lost!`);
     }
 }
 
-class DominoGame {
+class Bot extends Player {
+    constructor(name) {
+        super();
+    }
+
+    autoTurn(bigbone = false) {
+        this.$handDiv.addClass("turn-to-play");
+        this.checkForDraw(bigBone);
+        this.updateOptionsVisuals();
+
+        //
+        let chosen = -1;
+        if (bigbone) chosen = this.options[0];
+        else chosen = this.options[Math.floor(Math.random() * this.options.length)];
+
+        this.choice = {
+            bone: this.hand[chosen],
+            target: "auto",
+            pole: -1
+        };
+
+        //
+        this.$handDiv.removeClass("turn-to-play");
+        this.board.place(this.choice);
+        this.addPoints(this.board.grabPoints());
+    }
+}
+
+class DominoGame extends Container {
     constructor() {
+        super({
+            defaultClasses: "table"
+        });
         this.turn = -1;
-        this.waiting = false;
         this.board = null;
         this.players = null;
         this.scoreToWin = 100;
 
-        $("#play").on("click", (e) => {
-            $("#play").toggleClass("invisible");
-            this.startGame();
-        });
+        this.buttons = this.addChild(new Buttons({ id: "dominoes-ui" }));
+        this.buttons.addButton(new Button("play", (e, self) => { this.startGame(); }, { placeholder: "Play" }));
+
+        this.players = [this.addChild(new Bot(this, "Server")), this.addChild(new Player(this, "You"))];
+        this.board = null;
     }
 
     startGame() {
         console.log("Starting Game");
-        
-        this.players = [
-            new Player("Server", $(".opponent-hand"), $("#score1")), 
-            new Player("You", $(".your-hand"), $("#score2"))
-        ];
+        this.buttons.hideButton();
 
         this.startRound();
     }
@@ -441,18 +527,18 @@ class DominoGame {
 
         this.turn = -1;
         while (this.turn === -1) {
-            this.board = new Board(this.clickBone, this.clickBoard);
-            for (let i = 0; i < this.players.length; i++) {
-                this.players[i].board = this.board;
-                this.players[i].clear();
-            }
-
+            // reset the board and hands
+            this.removeChild(this.board);
+            this.board = this.addChild(new Board(this));
+            
+            // draw 7 bones for each player
             let max = -1;
-
             for (let i = 0; i < 7; i++) {
                 for (let j = 0; j < this.players.length; j++) {
-                    let check = this.players[j].draw(this.board.getBoneFromYard());
+                    let bone = this.board.yard.getBone();
+                    let check = this.players[j].hand.draw(bone);
 
+                    // check for biggest double
                     if (check[0] === check[1]) {
                         if (check[0] > max) {
                             max = check[0];
@@ -473,85 +559,48 @@ class DominoGame {
         console.log("Starting Turn");
         
         if (this.turn === 0) {
-            this.players[0].startTurn();
-            this.players[0].checkForDraw(bigBone);
-            this.board.place(this.players[0].autoTurn(), bigBone);
-            this.players[0].addPoints(this.board.grabPoints());
-            if (this.players[0].checkForDomino()) this.resolveDomino(0);
-            this.players[0].endTurn();
+            this.players[0].autoTurn(bigBone);
+            // this.players[0].checkForDraw(bigBone);
+            // this.board.place(this.players[0].autoTurn(), bigBone);
+            // this.players[0].addPoints(this.board.grabPoints());
+            // if (this.players[0].checkForDomino()) this.resolveDomino(0);
+            // this.players[0].endTurn();
 
             this.turn = 1;
             this.startTurn();
         }
         else if (this.turn === 1) {
-            this.players[1].startTurn();
-            this.players[1].checkForDraw(bigBone);
-            this.players[1].updateOptionsVisuals();
-            this.waiting = true;
+            this.players[1].startTurn(bigBone);
         }
     }
 
     endTurn() {
         console.log("Ending Turn");
-        
-        this.board.place(this.players[1].choice);
-        this.players[1].addPoints(this.board.grabPoints());
-        if (this.players[1].checkForDomino()) this.resolveDomino(1);
-
-        this.turn = 0;
+        if (this.players[this.turn].checkForDomino()) this.resolveDomino();
+        this.turn = Math.abs(this.turn - 1);
         startTurn();
     }
 
-    resolveDomino(player) {
+    resolveDomino() {
         console.log("Resolving Domino");
-        
-        this.players[player].addPoints(this.board.domino());
-
+        this.players[this.turn].addPoints(this.board.domino(), this.players[Math.abs(this.turn - 1)].domino());
+        for (let i = 0; i < this.players.length; i++) {
+            this.players[i].clear();
+        }
         this.checkForWin();
-
         this.startRound();
     }
 
     checkForWin() {
         console.log("Checking for Win");
-        
-        for (let i = 0; i < this.players.length; i++) {
-            if (this.players[i].score >= this.scoreToWin) {
-                this.players[0].displayWinner(this.players[i].name);
+        if (this.players[this.turn].score >= this.scoreToWin) {
+            this.players[this.turn].displayWinner();
+            this.players[Math.abs(this.turn - 1)].displayLoser();
 
-                $("#play").toggleClass("invisible");
-            }
-        }
-    }
-
-    clickBone = (e) => {
-        console.log(`clicked ${e.data.bone.values}`);
-
-        if (this.waiting && this.turn === 1) {
-            if (e.data.bone == this.players[1].heldBone) {
-                this.board.takeBackPlacement()
-                this.players[1].unChooseBone(e.data.bone);
-            }
-            else if (this.players[1].heldBone !== null) {
-                this.board.finishPlacement(this.players[1].playBone(), e.data.bone);
-                this.players[1].addPoints(this.board.grabPoints());
-            }
-            else this.board.beginPlacement(this.players[1].chooseBone(e.data.bone));
-        }
-    }
-
-    clickBoard = (e) => {
-        console.log("clicked board");
-
-        if (this.waiting && this.turn === 1) {
-            if (this.players[1].heldBone !== null) {
-                this.board.finishPlacement(this.players[1].playBone());
-                this.players[1].addPoints(this.board.grabPoints());
-                this.turn = 0;
-                this.startTurn();
-            }
+            $("#play").removeClass("invisible");
         }
     }
 }
 
 const dominoGame = new DominoGame();
+dominoGame.render(".table");
