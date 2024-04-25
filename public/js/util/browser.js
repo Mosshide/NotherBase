@@ -383,7 +383,6 @@ class Browser extends Element {
 
         if (this.box) this.box.close();
         this.box = this.addChild(new ViewBox());
-        console.log(itemOverride);
         this.box.setValue(itemOverride ? itemOverride : null, this.serving.fields, true);
 
         this.buttons.hideButton("edit");
@@ -637,8 +636,10 @@ class TreeBrowser extends Browser {
     
     getItemNode = () => {
         if (!Array.isArray(this.serving.itemLocation)) this.serving.itemLocation = [];
+        if (this.serving.data[this.serving.selected] === null) this.serving.data[this.serving.selected] = { data: {}, children: [] };
         if (typeof this.serving.data[this.serving.selected] !== "object") this.serving.data[this.serving.selected] = { data: this.serving.data[this.serving.selected], children: [] };
         let item = this.serving.data[this.serving.selected];
+        
         for (let i = 0; i < this.serving.itemLocation.length; i++) {
             item = item.children[this.serving.itemLocation[i]];
             if (typeof item !== "object") break;
