@@ -87,6 +87,7 @@
         label: "Notes",
         editable: true,
         multiple: true,
+        max: 7,
         toLoad: async () => {
             let res = await base.loadAll("square-bb", "global");
             return res;

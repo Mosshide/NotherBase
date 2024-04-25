@@ -79,9 +79,9 @@ class SearchBox extends Element {
     extractLabel = (item) => {
         let label = null;
         
-        label = item?.name || item?.username || item?.title || 
-                item?.header || item?.whenSearched || item?.note ||
-                typeof item === "string" ? item : null;
+        if (item instanceof String) label = item;
+        else label = item?.name || item?.username || item?.title || 
+                item?.header || item?.whenSearched || item?.note;
         if (!label) label = "Unnamed Item";
 
         if (typeof label !== "string") label = String(label);
@@ -101,12 +101,13 @@ class SearchBox extends Element {
         return null;
     }
 
-    setItems = (items, onNew = this.settings.onNew) => {
+    setItems = (items, onNew = this.settings.onNew, max = -1) => {
         this.items = items;
+        this.max = max;
         
         if (!Array.isArray(this.items)) this.items = [this.items];
 
-        if (onNew) {
+        if (onNew && (this.max < 0 || this.items.length < this.max)) {
             this.buttons.show("new");
             this.settings.onNew = onNew;
         }
@@ -134,10 +135,24 @@ class SearchBox extends Element {
                 placeholder: "No Items"
             }));
         }
+
+        if (this.settings.onNew && (this.max < 0 || this.items.length < this.max)) {
+            this.buttons.show("new");
+        }
+        else {
+            this.buttons.hide("new");
+        }
     }
 
     addItem = (item = {}, newItem = false) => {
         this.items.push(item);
+
+        if (this.settings.onNew && (this.max < 0 || this.items.length < this.max)) {
+            this.buttons.show("new");
+        }
+        else {
+            this.buttons.hide("new");
+        }
 
         return this.renderItem(item, this.items.length - 1, newItem);
     }

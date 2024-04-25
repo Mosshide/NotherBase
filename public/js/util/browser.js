@@ -833,6 +833,7 @@ class MetaBrowser extends Container {
             data: [],
             fields: new NBField(),
             editable: true,
+            max: -1,
             enableBackups: true,
             toLoad: null, //async () => { return null; },
             toSave: null, //async (items, which) => { },
@@ -902,7 +903,7 @@ class MetaBrowser extends Container {
             this.searchBox.browser = this.browser;
             this.browser.new(this.serving);
             newElement.addChild(this.browser);
-        } : null);
+        } : null, this.serving.max);
         this.searchBox.setFilters(this.serving.lastFilter);
         
         if (this.serving.state == "edit") {
