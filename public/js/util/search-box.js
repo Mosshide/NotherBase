@@ -69,6 +69,7 @@ class SearchBox extends Element {
 
         if (this.settings.filters === "default") this.filters = this.addChild(new Filters(this.renderSearchResults));
         else this.filters = null;
+        if (this.settings.filters === "none") this.buttons.hideButton("toggleFilters");
 
         this.list = this.addChild(new Element("ul", {
             defaultClasses: "selector"        
@@ -77,7 +78,7 @@ class SearchBox extends Element {
 
     extractLabel = (item) => {
         let label = null;
-        console.log(item);
+        
         label = item?.name || item?.username || item?.title || 
                 item?.header || item?.whenSearched || item?.note ||
                 typeof item === "string" ? item : null;
@@ -123,7 +124,7 @@ class SearchBox extends Element {
         }
         this.list.closeChildren();
 
-        this.filter = this.filters.getValue("search");
+        this.filter = this.filters ? this.filters.getValue("search") : "";
 
         for (let i = 0; i < this.items.length; i++) {
             this.renderItem(this.items[i], i);

@@ -74,7 +74,8 @@
 <script src="/js/dialogue.js"></script>
 <script>
     const metaBrowser = new MetaBrowser({
-        header: "Community Billboard"
+        header: "Community Billboard",
+        showFilters: false
     });
     metaBrowser.addService("square-bb", {
         fields: new NBField({
@@ -88,24 +89,13 @@
         multiple: true,
         toLoad: async () => {
             let res = await base.loadAll("square-bb", "global");
-            console.log(res);
             return res;
         },
         toSave: async (item, deleting) => {
-            console.log(item, deleting);
             return await base.do("save-square-bb", { item, deleting });
         }
     });
     metaBrowser.render();
-    // let squareBB = null;
-
-    // base.loadAll("square-bb", "global").then((res) => {
-    //     console.log(res);
-    //     squareBB = new Billboard("square-bb", res[0].data.items, { 
-    //         onSave: "save-square-bb",
-    //         maxItems: 5
-    //     });
-    // });
 
     class IndexSign {
         constructor() {

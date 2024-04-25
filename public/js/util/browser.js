@@ -713,6 +713,7 @@ class MetaBrowser extends Container {
             useSearchBox: SearchBox,
             styles: "browser",
             defaultClasses: "meta",
+            showFilters: true,
             ...settings
         });
 
@@ -803,7 +804,7 @@ class MetaBrowser extends Container {
     }
 
     addSearchBox = () => {
-        this.searchBox = new this.settings.useSearchBox({
+        let settings = {
             onLiClick: (e, element) => {
                 if (this.browser) {
                     this.browser.close();
@@ -816,7 +817,9 @@ class MetaBrowser extends Container {
                 this.browser.read(this.serving);
                 element.addChild(this.browser);
             }
-        });
+        };
+        if (!this.settings.showFilters) settings.filters = "none";
+        this.searchBox = new this.settings.useSearchBox(settings);
         this.addChild(this.searchBox);
     }
 
