@@ -383,6 +383,7 @@ class Browser extends Element {
 
         if (this.box) this.box.close();
         this.box = this.addChild(new ViewBox());
+        console.log(itemOverride);
         this.box.setValue(itemOverride ? itemOverride : null, this.serving.fields, true);
 
         this.buttons.hideButton("edit");
@@ -891,7 +892,7 @@ class MetaBrowser extends Container {
             }
             this.serving.selected = this.serving.data.length;
             this.serving.state = "new";
-            let newElement = this.searchBox.addItem({ whenSearched: "No Name" }, true);
+            let newElement = this.searchBox.addItem(null, true);
             newElement.disable();
             this.disabledElement = newElement;
             this.makeBrowser();

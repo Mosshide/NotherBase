@@ -1,7 +1,6 @@
 <style>
     <%- include("./index.css"); %>
 </style>
-<link rel="stylesheet" href="/styles/billboard.css">
 
 <div class="sign" id="index">
     <h3>The Eye of the Forest</h3>
@@ -39,8 +38,7 @@
     <button onclick="/*base.do('toss-in-well', { amount: parseInt($('.well input').val()) })*/">Toss</button>
 </div>
 
-<h5>Community Billboard</h5>
-<div class="billboard" id="square-bb"></div>
+<div class="meta" id="square-bb"></div>
 
 <div id="pile">
     <div id="debris">
@@ -68,13 +66,42 @@
     Head into the Filter
 </a>
 
-<script src="/js/billboard.js"></script>
+
+<script src="/js/util/element.js"></script>
+<script src="/js/util/buttons.js"></script>
+<script src="/js/util/search-box.js"></script>
+<script src="/js/util/browser.js"></script>
 <script src="/js/dialogue.js"></script>
 <script>
-    let squareBB = null;
+    const metaBrowser = new MetaBrowser({
+        header: "Community Billboard"
+    });
+    metaBrowser.addService("square-bb", {
+        fields: new NBField({
+            name: "note",
+            label: "Note: ",
+            placeholder: "No Note",
+            type: "string"
+        }),
+        label: "Notes",
+        editable: true,
+        multiple: true,
+        toLoad: async () => {
+            let res = await base.loadAll("square-bb", "global");
+            console.log(res);
+            return res;
+        },
+        toSave: async (item, deleting) => {
+            console.log(item, deleting);
+            return await base.do("save-square-bb", { item, deleting });
+        }
+    });
+    metaBrowser.render();
+    // let squareBB = null;
 
-    // base.load("square-bb", "global").then((res) => {
-    //     squareBB = new Billboard("square-bb", res.items, { 
+    // base.loadAll("square-bb", "global").then((res) => {
+    //     console.log(res);
+    //     squareBB = new Billboard("square-bb", res[0].data.items, { 
     //         onSave: "save-square-bb",
     //         maxItems: 5
     //     });

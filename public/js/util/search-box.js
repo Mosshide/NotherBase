@@ -77,8 +77,10 @@ class SearchBox extends Element {
 
     extractLabel = (item) => {
         let label = null;
+        console.log(item);
         label = item?.name || item?.username || item?.title || 
-                item?.header || item?.whenSearched;
+                item?.header || item?.whenSearched || item?.note ||
+                typeof item === "string" ? item : null;
         if (!label) label = "Unnamed Item";
 
         if (typeof label !== "string") label = String(label);
