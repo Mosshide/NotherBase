@@ -1,7 +1,6 @@
 <style>
     <%- include("./index.css"); %>
 </style>
-<link rel="stylesheet" href="/styles/billboard.css">
 
 <div class="sign" id="index">
     <h3>The Eye of the Forest</h3>
@@ -39,8 +38,7 @@
     <button onclick="/*base.do('toss-in-well', { amount: parseInt($('.well input').val()) })*/">Toss</button>
 </div>
 
-<h5>Community Billboard</h5>
-<div class="billboard" id="square-bb"></div>
+<div class="meta" id="square-bb"></div>
 
 <div id="pile">
     <div id="debris">
@@ -68,17 +66,37 @@
     Head into the Filter
 </a>
 
-<script src="/js/billboard.js"></script>
+
+<script src="/js/util/element.js"></script>
+<script src="/js/util/buttons.js"></script>
+<script src="/js/util/search-box.js"></script>
+<script src="/js/util/browser.js"></script>
 <script src="/js/dialogue.js"></script>
 <script>
-    let squareBB = null;
-
-    // base.load("square-bb", "global").then((res) => {
-    //     squareBB = new Billboard("square-bb", res.items, { 
-    //         onSave: "save-square-bb",
-    //         maxItems: 5
-    //     });
-    // });
+    const metaBrowser = new MetaBrowser({
+        header: "Community Billboard",
+        showFilters: false
+    });
+    metaBrowser.addService("square-bb", {
+        fields: new NBField({
+            name: "note",
+            label: "Note: ",
+            placeholder: "No Note",
+            type: "string"
+        }),
+        label: "Notes",
+        editable: true,
+        multiple: true,
+        max: 7,
+        toLoad: async () => {
+            let res = await base.loadAll("square-bb", "global");
+            return res;
+        },
+        toSave: async (item, deleting) => {
+            return await base.do("save-square-bb", { item, deleting });
+        }
+    });
+    metaBrowser.render();
 
     class IndexSign {
         constructor() {
