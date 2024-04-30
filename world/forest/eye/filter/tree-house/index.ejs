@@ -9,6 +9,8 @@
         A modest cabin rests amidts the branches of a
         thick oak. Finally, a chance to rest.
     </p>
+
+    <div class="projector" id="tree"></div>
     
     <div class="chat-box" id="tree-house"></div>
     
@@ -42,7 +44,10 @@
 <script src="/js/util/element.js"></script>
 <script src="/js/util/buttons.js"></script>
 <script src="/js/chat-box.js"></script>
+<script src="/js/projector.js"></script>
 <script>
+    const projector = new Projector("tree", <%= user.authLevels.includes("Creator") %> ? "save-tree-projector" : null);
+
     const chat = new ChatBox("<%= user.username %>", "tree-house");
     console.log(chat);
 

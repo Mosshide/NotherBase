@@ -33,6 +33,7 @@ export default async (req, user) => {
             return `${individual} saved.`;
         }
     }
+
     
     if (user.data.authLevels.includes("Creator")) {
         return await towerCrud("user", "User");
