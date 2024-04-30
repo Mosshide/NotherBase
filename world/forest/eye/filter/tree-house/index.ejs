@@ -49,7 +49,6 @@
     const projector = new Projector("tree", <%= user.authLevels.includes("Creator") %> ? "save-tree-projector" : null);
 
     const chat = new ChatBox("<%= user.username %>", "tree-house");
-    console.log(chat);
 
     <%- include("./dominoes.js"); %> 
 </script>

@@ -297,34 +297,39 @@ class Board extends Element {
 }
 
 // a score class
-class Score extends Element {
+class Score extends Text {
     constructor() {
         super("div", {
             defaultClasses: "score"
         });
-        this.amount = 0;
+        this.points = 0;
     }
 
     addPoints(points) {
-        this.amount += points;
-        this.$div.text(this.amount);
+        this.points += points;
+        this.setValue(this.points);
     }
 
     clear() {
-        this.amount = 0;
-        this.$div.text(this.amount);
+        this.value = 0;
+        this.setValue(this.points);
     }
 }
 
 // a hand class
 class Hand extends Element {
-    constructor(player) {
+    constructor(game, name) {
         super("div", {
-            defaultClasses: "hand"
+            defaultClasses: "hand",
+            id: name
         });
 
-        this.player = player;
+        this.game = game;
         this.heldBone = null;
+        this.score = this.addChild(new Score());
+        this.score.clear();
+        this.player = new Bot(this.game, "Bot");
+        this.state = "out-of-game";
     }
 
     draw(bone) {
@@ -438,9 +443,7 @@ class Player extends Element {
         });
         this.name = name;
         this.dominoGame = dominoGame;
-        this.hand = this.addChild(new Hand(this));
-        this.score = this.addChild(new Score());
-        this.board = null;
+        this.hand = null;
         this.choice = {
             bone: null,
             target: null,
@@ -471,8 +474,8 @@ class Player extends Element {
 }
 
 class Bot extends Player {
-    constructor(name) {
-        super();
+    constructor(game, name) {
+        super(game, name);
     }
 
     autoTurn(bigbone = false) {
@@ -504,15 +507,14 @@ class DominoGame extends Container {
             defaultClasses: "table"
         });
         this.turn = -1;
-        this.board = null;
         this.players = null;
         this.scoreToWin = 100;
 
         this.buttons = this.addChild(new Buttons({ id: "dominoes-ui" }));
         this.buttons.addButton(new Button("play", (e, self) => { this.startGame(); }, { placeholder: "Play" }));
 
-        this.players = [this.addChild(new Bot(this, "Server")), this.addChild(new Player(this, "You"))];
-        this.board = null;
+        this.hands = [this.addChild(new Hand(this, "player-1")), this.addChild(new Hand(this, "player-2"))];
+        this.board = this.addChild(new Board(this));
     }
 
     startGame() {

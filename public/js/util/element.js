@@ -182,6 +182,7 @@ class Element {
 class Text extends Element {
     constructor(elementType = "p", settings = {}) {
         super(elementType, {
+            placeholder: "",
             ...settings
         });
     }
@@ -190,7 +191,7 @@ class Text extends Element {
     render = () => {
         this.$div = super.render();
 
-        if (this.value) this.$div.append(this.value);
+        if (this.value != null) this.$div.append(this.value);
         else this.$div.append(this.settings.placeholder);
 
         return this.$div;
@@ -198,9 +199,8 @@ class Text extends Element {
 
     setValue = (value) => {
         if (value) {
-            value = value.toString();
-            value = value.replace(/(?:\r\n|\r|\n)/g, '<br />');
-            this.value = value;
+            this.value = value.toString();
+            this.value = this.value.replace(/(?:\r\n|\r|\n)/g, '<br />');
         }
         this.render();
     }
