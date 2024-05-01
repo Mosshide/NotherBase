@@ -89,13 +89,13 @@ class CardsAgainstBible extends Container {
         else if (this.state === "playing") {
             this.startGame.hide();
             this.join.hide();
+            this.skipRound.show();
 
             this.playersText.setValue(`Players: ${this.players.join(", ")}`);
 
             this.cards.closeChildren();
             this.prompt = this.cards.addChild(new Text("p", { placeholder: data.prompt }));
             if (this.players[this.judge] !== "<%= user.username %>") {
-                this.skipRound.hide();
                 this.alert.setValue("You are the choosing an answer!");
                 // add answer cards
                 for (let i = 0; i < data.hand["<%= user.username %>"].length; i++) {
@@ -109,19 +109,18 @@ class CardsAgainstBible extends Container {
             }
             else {
                 this.alert.setValue("You are the waiting Judge!");
-                this.skipRound.show();
             }
         }
         else if (this.state === "judging") {
             this.startGame.hide();
             this.join.hide();
+            this.skipRound.show();
 
             this.playersText.setValue(`Players: ${this.players.join(", ")}`);
 
             this.cards.closeChildren();
             this.prompt = this.cards.addChild(new Text("p", { placeholder: data.prompt }));
             if (this.players[this.judge] === "<%= user.username %>") {
-                this.skipRound.hide();
                 this.alert.setValue("Choose the best answer");
                 // add answer cards
                 let keys = Object.keys(data.chosen);
@@ -137,7 +136,6 @@ class CardsAgainstBible extends Container {
             else {
                 this.alert.setValue("Waiting for Judge");
                 this.prompt = this.cards.addChild(new Text("p", { placeholder: data.hand["<%= user.username %>"][data.chosen["<%= user.username %>"]] }));
-                this.skipRound.show();
             }
         }
     }
