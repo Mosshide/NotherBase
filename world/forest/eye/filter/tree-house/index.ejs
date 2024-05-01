@@ -1,7 +1,8 @@
 <style>
     <%- include("./inside.css"); %>
     <%- include("./couch.css"); %>
-    <%- include("./dominoes.css"); %>
+    <%- //include("./dominoes.css"); %>
+    <%- include("./cards-against-Bible.css"); %>
 </style>
 
 <section>
@@ -9,8 +10,11 @@
         A modest cabin rests amidts the branches of a
         thick oak. Finally, a chance to rest.
     </p>
+
+    <div class="projector" id="tree"></div>
     
     <div class="chat-box" id="tree-house"></div>
+    <div class="invisible chat-box" id="cards-against-Bible"></div>
     
     <div class="couch">
         <div class="couch-part back-rest" id="1"></div>
@@ -42,9 +46,13 @@
 <script src="/js/util/element.js"></script>
 <script src="/js/util/buttons.js"></script>
 <script src="/js/chat-box.js"></script>
+<script src="/js/projector.js"></script>
 <script>
-    const chat = new ChatBox("<%= user.username %>", "tree-house");
-    console.log(chat);
+    const projector = new Projector("tree", <%= user.authLevels.includes("Creator") %> ? "save-tree-projector" : null);
 
-    <%- include("./dominoes.js"); %> 
+    const chat = new ChatBox("<%= user.username %>", "tree-house");
+    const hiddenChat = new ChatBox("<%= user.username %>", "cards-against-Bible");
+
+    // <%- include("./dominoes.js"); %> 
+    <%- include("./cards-against-Bible.js"); %> 
 </script>

@@ -1,0 +1,18 @@
+.table {
+    margin: 40px 0;
+    background-color: var(--tableColor);
+    /* background-image: url("/img/textures/wood.jpg"); */
+    background-size: 80px 80px;
+    image-rendering: pixelated;
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+    border: outset 5px var(--tableColor);
+    box-shadow: 2px 2px 2px var(--shadow);
+    position: relative;
+}
+
+.table * {
+    color: var(--dominoColor);
+}
