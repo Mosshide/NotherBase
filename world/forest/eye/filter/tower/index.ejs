@@ -169,6 +169,39 @@
                 return await base.do("save-user", { item, deleting });
             }
         });
-        
+        metaTower.addService("cards-against-Bible-prompts", {
+            fields: new NBField({
+                name: "prompt",
+                label: "Prompt: ",
+                placeholder: "No Prompt",
+                type: "string"
+            }),
+            label: "Prompts",
+            editable: true,
+            multiple: true,
+            toLoad: async () => {
+                return await base.loadAll("cards-against-Bible-prompts", "global");
+            },
+            toSave: async (item, deleting) => {
+                return await base.do("save-prompt", { item, deleting });
+            }
+        });
+        metaTower.addService("cards-against-Bible-answers", {
+            fields: new NBField({
+                name: "answer",
+                label: "Answer: ",
+                placeholder: "No Answer",
+                type: "string"
+            }),
+            label: "Answers",
+            editable: true,
+            multiple: true,
+            toLoad: async () => {
+                return await base.loadAll("cards-against-Bible-answers", "global");
+            },
+            toSave: async (item, deleting) => {
+                return await base.do("save-answer", { item, deleting });
+            }
+        });
     <% } %>
 </script>
