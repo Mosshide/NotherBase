@@ -5,6 +5,7 @@ export default async function (req, user) {
     else return {
         state: "waiting",
         players: [],
-        judge: -1
+        judge: -1,
+        score: {}
     };
 }

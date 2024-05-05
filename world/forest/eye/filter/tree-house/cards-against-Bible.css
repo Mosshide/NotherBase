@@ -1,3 +1,7 @@
+:root {
+    --chosenColor: #4e3300;
+}
+
 .table {
     margin: 40px 0;
     background-color: var(--tableColor);
@@ -15,4 +19,13 @@
 
 .table * {
     color: var(--dominoColor);
+}
+
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.card.chosen {
+    background-color: var(--chosenColor);
 }
