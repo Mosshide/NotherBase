@@ -11,7 +11,9 @@ export default async function (req, user) {
         state: "waiting",
         players: [],
         judge: -1,
-        ...spirit.memory.data
+        score: {},
+        ...spirit.memory.data,
+        expiration: Date.now() + 1000 * 30
     };
     
     if (spirit.memory.data.state === "waiting") {

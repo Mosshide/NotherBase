@@ -9,6 +9,7 @@ export default async function (req, user) {
         state: "waiting",
         players: [],
         judge: -1,
+        score: {},
         ...spirit.memory.data
     };
     

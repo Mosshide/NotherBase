@@ -7,8 +7,10 @@ class CardsAgainstBible extends Container {
         this.state = "waiting"; // waiting, picking, judging, or done
         this.players = [];
         this.judge = -1;
+        this.username = '<%= query.test ? "test" : user.username %>';
 
         hiddenChat.socket.on('chat message', (data) => { this.checkUpdate(data); });
+        hiddenChat.socket.on('connect', () => { this.checkUpdate({ text: "updated" }); });
     }
 
     // sets up the game
@@ -17,9 +19,8 @@ class CardsAgainstBible extends Container {
         this.players = [];
         this.judge = -1;
 
-        this.alert = this.addChild(new Text("h3", { placeholder: "Click an Open Spot to Join" }));
         this.playersText = this.addChild(new Text("p", { placeholder: "Players: " }));
-
+        
         this.buttons = this.addChild(new Buttons());
         this.join = this.buttons.addChild(new Text("button", { defaultClasses: "join", placeholder: "Join" }));
         this.join.enable(() => {
@@ -34,6 +35,8 @@ class CardsAgainstBible extends Container {
             this.skip();
         });
         this.skipRound.hide();
+
+        this.alert = this.addChild(new Text("h3", { placeholder: "Click an Open Spot to Join" }));
 
         this.cards = this.addChild(new Element("div", { defaultClasses: "cards" }));
     }
@@ -66,8 +69,19 @@ class CardsAgainstBible extends Container {
         if (this.state === "waiting") {
             this.join.show();
             this.skipRound.hide();
-            this.playersText.setValue(`Players: ${this.players.join(", ")} - ${12 - this.players.length} spots left`);
+            let outText = "Players: ";
+            for (let i = 0; i < this.players.length; i++) {
+                outText += `${this.players[i]} - ${data.score[this.players[i]] || 0}`;
+                if (i < this.players.length - 1) outText += ", ";
+            }
+            outText += ` - ${12 - this.players.length} spots left`;
+            this.playersText.setValue(outText);
             this.cards.closeChildren();
+            // add last prompt and last winner and winning card
+            if (data.winner && data.prompt) {
+                this.cards.addChild(new Text("p", { placeholder: `Last Prompt: ${data.prompt}` }));
+                this.cards.addChild(new Text("p", { placeholder: `Last Winner: ${data.winner} with ${data.hand[data.winner][data.chosen[data.winner]]}` }));
+            }
             this.alert.setValue("Click an Open Spot to Join");
 
             if (this.players.includes("<%= user.username %>")) {
@@ -89,22 +103,31 @@ class CardsAgainstBible extends Container {
         else if (this.state === "playing") {
             this.startGame.hide();
             this.join.hide();
-            this.skipRound.show();
+            if (data.expiration < Date.now()) this.skipRound.show();
+            else this.skipRound.hide();
 
             this.playersText.setValue(`Players: ${this.players.join(", ")}`);
 
             this.cards.closeChildren();
-            this.prompt = this.cards.addChild(new Text("p", { placeholder: data.prompt }));
-            if (this.players[this.judge] !== "<%= user.username %>") {
-                this.alert.setValue("You are the choosing an answer!");
-                // add answer cards
-                for (let i = 0; i < data.hand["<%= user.username %>"].length; i++) {
-                    let card = this.cards.addChild(new Text("button", { placeholder: data.hand["<%= user.username %>"][i] }));
-                    card.enable(() => {
-                        base.do("play-card", { card: i }).then((res) => {
-                            hiddenChat.sendMessage("updated");
+            this.prompt = this.cards.addChild(new Text("p", { placeholder: `Prompt: ${data.prompt}` }));
+            if (this.players[this.judge] !== this.username) {
+                if (data.hand[this.username]?.length) {
+                    this.alert.setValue("You are the choosing an answer!");
+                    // add answer cards
+                    for (let i = 0; i < data.hand[this.username].length; i++) {
+                        let card = this.cards.addChild(new Text("button", { 
+                            placeholder: data.hand[this.username][i],
+                            defaultClasses: `card ${data.chosen[this.username] === i ? "chosen" : ""}`
+                        }));
+                        card.enable(() => {
+                            base.do("play-card", { card: i }).then((res) => {
+                                hiddenChat.sendMessage("updated");
+                            });
                         });
-                    });
+                    }
+                }
+                else {
+                    this.alert.setValue("Waiting for the next round to start");
                 }
             }
             else {
@@ -114,20 +137,23 @@ class CardsAgainstBible extends Container {
         else if (this.state === "judging") {
             this.startGame.hide();
             this.join.hide();
-            this.skipRound.show();
+            if (data.expiration < Date.now()) this.skipRound.show();
+            else this.skipRound.hide();
 
             this.playersText.setValue(`Players: ${this.players.join(", ")}`);
 
             this.cards.closeChildren();
-            this.prompt = this.cards.addChild(new Text("p", { placeholder: data.prompt }));
-            if (this.players[this.judge] === "<%= user.username %>") {
+            this.prompt = this.cards.addChild(new Text("p", { placeholder: `Prompt: ${data.prompt}` }));
+            if (this.players[this.judge] === this.username) {
                 this.alert.setValue("Choose the best answer");
                 // add answer cards
                 let keys = Object.keys(data.chosen);
                 for (let i = 0; i < keys.length; i++) {
                     let card = this.cards.addChild(new Text("button", { placeholder: data.hand[keys[i]][data.chosen[keys[i]]] }));
+                    //give the card a random order
+                    card.$div.css("order", 2 + Math.floor(Math.random() * keys.length * 10));
                     card.enable(() => {
-                        base.do("judge-card", { card: i }).then((res) => {
+                        base.do("judge-card", { winner: keys[i] }).then((res) => {
                             hiddenChat.sendMessage("updated");
                         });
                     });
@@ -135,7 +161,7 @@ class CardsAgainstBible extends Container {
             }
             else {
                 this.alert.setValue("Waiting for Judge");
-                this.prompt = this.cards.addChild(new Text("p", { placeholder: data.hand["<%= user.username %>"][data.chosen["<%= user.username %>"]] }));
+                if (data.hand[this.username]?.length) this.cards.addChild(new Text("p", { placeholder: `Your Answer: ${data.hand[this.username][data.chosen[this.username]]}` }));
             }
         }
     }
