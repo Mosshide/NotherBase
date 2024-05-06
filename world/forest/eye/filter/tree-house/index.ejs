@@ -28,6 +28,21 @@
     </div>
 </section>
 
+<section>
+    <label>
+        <h5>Submit a Prompt: </h5>
+        <input type="text" id="prompt" placeholder="Prompt" />
+        <p id="prompt-alert"></p>
+        <button onclick="submitPrompt()">Submit</button>
+    </label>
+    <label>
+        <h5>Submit an Answer: </h5>
+        <input type="text" id="answer" placeholder="Answer" />
+        <p id="answer-alert"></p>
+        <button onclick="submitAnswer()">Submit</button>
+    </label>
+</section>
+
 <div class="table">
     <!-- <div class="opponent-hand"></div>
     <div class="board"></div>
@@ -55,4 +70,26 @@
 
     // <%- include("./dominoes.js"); %> 
     <%- include("./cards-against-Bible.js"); %> 
+
+    const submitPrompt = () => {
+        let prompt = $("input#prompt").val();
+        if (prompt) {
+            base.do("submit-prompt", { text: prompt }).then((res) => {
+                $("#prompt-alert").text("Prompt submitted.");
+            });
+        } else {
+            $("#prompt-alert").text("Please enter a prompt.");
+        }
+    };
+
+    const submitAnswer = () => {
+        let answer = $("input#answer").val();
+        if (answer) {
+            base.do("submit-answer", { text: answer }).then((res) => {
+                $("#answer-alert").text("Answer submitted.");
+            });
+        } else {
+            $("#answer-alert").text("Please enter an answer.");
+        }
+    };
 </script>
