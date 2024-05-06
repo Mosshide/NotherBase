@@ -111,7 +111,7 @@
                 },
                 toSave: async (item, deleting) => {
                     console.log(item, deleting);
-                    return await base.do("save-it", { item, deleting, route: "/pages/it-admin" });
+                    return await base.do("save-it", { item, deleting, route: "/pages/it-admin", which: filter });
                 }
             });
         }
