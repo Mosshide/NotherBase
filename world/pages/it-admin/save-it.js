@@ -1,5 +1,7 @@
 import basicCrud from "../../forest/scripts/crud.js";
 
 export default async (req, user) => {
-    return await basicCrud(req, user, "it", "Entry");
+    let userToFind = await req.db.User.recallOne(req.body.which);
+    if (userToFind) return await basicCrud(req, userToFind, "it", "Entry");
+    else return "not found";
 }
