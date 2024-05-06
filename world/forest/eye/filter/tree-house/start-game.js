@@ -15,17 +15,27 @@ export default async function (req, user) {
         ...spirit.memory.data,
         expiration: Date.now() + 1000 * 30
     };
+
+    let promptsPool = [];
+    prompts.memory.forEach(prompt => {
+        if (prompt.data.category && prompt.data.category !== "" || prompt.data.category !== " " || prompt.data.category !== "No Category") promptsPool.push(prompt.data.backups[0].data);
+    });
+
+    let answersPool = [];
+    answers.memory.forEach(answer => {
+        if (answer.data.category && answer.data.category !== "" || answer.data.category !== " " || answer.data.category !== "No Category") answersPool.push(answer.data.backups[0].data);
+    });
     
     if (spirit.memory.data.state === "waiting") {
         if (!Array.isArray(spirit.memory.data.players)) spirit.memory.data.players = [];
         
-        if (spirit.memory.data.players.length >= 3 && answers.memory.length >= 7 * spirit.memory.data.players.length) {
+        if (spirit.memory.data.players.length >= 3 && answersPool.length >= 7 * spirit.memory.data.players.length) {
             spirit.memory.data.state = "playing";
             // assign random judge
             spirit.memory.data.judge = Math.floor(Math.random() * spirit.memory.data.players.length);
             // pick random prompt card
-            if (prompts.memory.length > 0) {
-                spirit.memory.data.prompt = prompts.memory[Math.floor(Math.random() * prompts.memory.length)].data.backups[0].data;
+            if (promptsPool.length > 0) {
+                spirit.memory.data.prompt = promptsPool[Math.floor(Math.random() * prompts.memory.length)];
             }
             else spirit.memory.data.prompt = "Prompt Card 0";
             // shuffle answer cards
@@ -41,7 +51,7 @@ export default async function (req, user) {
                         random = Math.floor(Math.random() * answers.memory.length);
                     }
 
-                    spirit.memory.data.hand[player].push(answers.memory[random].data.backups[0].data);
+                    spirit.memory.data.hand[player].push(answersPool[random]);
                     drawn.push(random);
                 }
             });
