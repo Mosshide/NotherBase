@@ -230,9 +230,9 @@ class ViewBox extends Element {
                 if (this.child.length == 0) this.setValue();
             }
             if (this.editing && this.fields.settings.multiple && !this.fields.settings.readOnly && this.nested && !this.fields.settings.lockLength) {
-                child.upButton = child.addChild(new Button("up", (e, self) => { this.moveChildUp(which); }, { defaultClasses: "moveUp", placeholder: "Up ↑" }));
-                child.downButton = child.addChild(new Button("down", (e, self) => { this.moveChildDown(which); }, { defaultClasses: "moveDown", placeholder: "↓ Down" }));
-                child.removeButton = child.addChild(new Button("remove", (e, self) => { child.close(); }, { defaultClasses: "remove", placeholder: "X" }));
+                child.removeButton = child.preChild(new Button("remove", (e, self) => { child.close(); }, { defaultClasses: "remove", placeholder: "X" }));
+                child.downButton = child.preChild(new Button("down", (e, self) => { this.moveChildDown(which); }, { defaultClasses: "moveDown", placeholder: "↓ Down" }));
+                child.upButton = child.preChild(new Button("up", (e, self) => { this.moveChildUp(which); }, { defaultClasses: "moveUp", placeholder: "Up ↑" }));
             }
         }
 

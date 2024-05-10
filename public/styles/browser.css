@@ -131,20 +131,20 @@
     margin: 0;
     width: 25%;
     margin-left: 5px;
-    margin-bottom: 15px;
+    margin-top: 15px;
 }
 
 .browser button.moveDown {
     margin: 0;
     width: 25%;
     margin-left: 5px;
-    margin-bottom: 15px;
+    margin-top: 15px;
 }
 
 .browser button.remove {
     margin: 0;
     margin-left: 25%;
-    margin-bottom: 15px;
+    margin-top: 15px;
 }
 
 .browser input {

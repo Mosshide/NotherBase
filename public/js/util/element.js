@@ -93,6 +93,14 @@ class Element {
         return child;
     }
 
+    // prepends a child to the element
+    preChild = (child) => {
+        this.children.unshift(child);
+        child.setParent(this);
+        child.$div.prependTo(this.$div);
+        return child;
+    }
+
     // sets the parent of the element
     setParent = (parent) => {
         this.parent = parent;
@@ -243,7 +251,7 @@ class Input extends Element {
     render = () => {
         this.$div = super.render();
 
-        this.$input = $(`<input type="${this.settings.inputType}" value="${this.value ? this.value : ""}" placeholder="${this.settings.placeholder}">`).prependTo(this.$div);
+        this.$input = $(`<input type="${this.settings.inputType}" value="${this.value ? this.value : ""}" placeholder="${this.settings.placeholder}">`).appendTo(this.$div);
 
         if (this.enabled) this.enable();
 
@@ -293,7 +301,7 @@ class TextArea extends Element {
     render = () => {
         this.$div = super.render();
 
-        this.$input = $(`<textarea rows="8" placeholder="${this.settings.placeholder}">${this.value ? this.value : ""}</textarea>`).prependTo(this.$div);
+        this.$input = $(`<textarea rows="8" placeholder="${this.settings.placeholder}">${this.value ? this.value : ""}</textarea>`).appendTo(this.$div);
 
         if (this.enabled) this.enable();
         return this.$div;
@@ -417,7 +425,7 @@ class CheckBox extends Element {
         this.$div = super.render();
 
         // create the element
-        this.$input = $(`<input type="checkbox">`).prependTo(this.$div);
+        this.$input = $(`<input type="checkbox">`).appendTo(this.$div);
 
         if (this.value !== null) this.$input.prop("checked", this.value);
         else if (this.settings.placeholder !== null) this.$input.prop("checked", this.settings.placeholder);
