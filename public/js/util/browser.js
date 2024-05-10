@@ -46,7 +46,7 @@ class ViewBox extends Element {
                 this.buttons.addButton(new Button(button.id, button.settings.onClick, button.settings));
             });
             if (this.fields.settings.multiple && this.editing && !this.fields.settings.lockLength) this.buttons.addButton(new Button("add", (e, self) => { 
-                this.createChild(); 
+                this.createChild(null, this.child.length); 
             }, { placeholder: "Add" }));
         }
 
@@ -56,11 +56,11 @@ class ViewBox extends Element {
         }
         if (item.length == 0 && !this.fields.settings.lockLength) item.push(null);
         for (let i = 0; i < item.length; i++) {
-            this.createChild(item[i]);
+            this.createChild(item[i], i);
         } 
     }
 
-    createChild = (item) => {
+    createChild = (item, which) => {
         let child = null;
 
         if (this.fields.settings.type == "object") {
@@ -224,12 +224,15 @@ class ViewBox extends Element {
         }
         
         if (child) {
+            child.settings.defaultCSS.order = which + 2;
             child.settings.onClose = () => {
                 this.child.splice(this.child.indexOf(child), 1);
                 if (this.child.length == 0) this.setValue();
             }
             if (this.editing && this.fields.settings.multiple && !this.fields.settings.readOnly && this.nested && !this.fields.settings.lockLength) {
-                child.addChild(new Button("remove", (e, self) => { child.close(); }, { placeholder: "X" }));
+                child.removeButton = child.preChild(new Button("remove", (e, self) => { child.close(); }, { defaultClasses: "remove", placeholder: "X" }));
+                child.downButton = child.preChild(new Button("down", (e, self) => { this.moveChildDown(which); }, { defaultClasses: "moveDown", placeholder: "↓ Down" }));
+                child.upButton = child.preChild(new Button("up", (e, self) => { this.moveChildUp(which); }, { defaultClasses: "moveUp", placeholder: "Up ↑" }));
             }
         }
 
@@ -263,6 +266,68 @@ class ViewBox extends Element {
         }
 
         return toGo;
+    }
+
+    moveChildUp = (which) => {
+        if (which >= 0 && which < this.child.length) {
+            if (which == 0) {
+                let temp = this.child[0];
+                this.child[0] = this.child[this.child.length - 1];
+                this.child[0].settings.defaultCSS.order = 2;
+                this.child[0].initModifiers();
+                this.child[0].upButton.enable((e, self) => { this.moveChildUp(0); });
+                this.child[0].downButton.enable((e, self) => { this.moveChildDown(0); });
+                this.child[this.child.length - 1] = temp;
+                this.child[this.child.length - 1].settings.defaultCSS.order = this.child.length + 1;
+                this.child[this.child.length - 1].initModifiers();
+                this.child[this.child.length - 1].upButton.enable((e, self) => { this.moveChildUp(this.child.length - 1); });
+                this.child[this.child.length - 1].downButton.enable((e, self) => { this.moveChildDown(this.child.length - 1); });
+            }
+            else {
+                let temp = this.child[which];
+                this.child[which] = this.child[which - 1];
+                this.child[which].settings.defaultCSS.order = which + 2;
+                this.child[which].initModifiers();
+                this.child[which].upButton.enable((e, self) => { this.moveChildUp(which); });
+                this.child[which].downButton.enable((e, self) => { this.moveChildDown(which); });
+                this.child[which - 1] = temp;
+                this.child[which - 1].settings.defaultCSS.order = which + 1;
+                this.child[which - 1].initModifiers();
+                this.child[which - 1].upButton.enable((e, self) => { this.moveChildUp(which - 1); });
+                this.child[which - 1].downButton.enable((e, self) => { this.moveChildDown(which - 1); });
+            }
+        }
+    }
+
+    moveChildDown = (which) => {
+        if (which >= 0 && which < this.child.length) {
+            if (which == this.child.length - 1) {
+                let temp = this.child[this.child.length - 1];
+                this.child[this.child.length - 1] = this.child[0];
+                this.child[this.child.length - 1].settings.defaultCSS.order = this.child.length + 1;
+                this.child[this.child.length - 1].initModifiers();
+                this.child[this.child.length - 1].upButton.enable((e, self) => { this.moveChildUp(this.child.length - 1); });
+                this.child[this.child.length - 1].downButton.enable((e, self) => { this.moveChildDown(this.child.length - 1); });
+                this.child[0] = temp;
+                this.child[0].settings.defaultCSS.order = 2;
+                this.child[0].initModifiers();
+                this.child[0].upButton.enable((e, self) => { this.moveChildUp(0); });
+                this.child[0].downButton.enable((e, self) => { this.moveChildDown(0); });
+            }
+            else {
+                let temp = this.child[which];
+                this.child[which] = this.child[which + 1];
+                this.child[which].settings.defaultCSS.order = which + 2;
+                this.child[which].initModifiers();
+                this.child[which].upButton.enable((e, self) => { this.moveChildUp(which); });
+                this.child[which].downButton.enable((e, self) => { this.moveChildDown(which); });
+                this.child[which + 1] = temp;
+                this.child[which + 1].settings.defaultCSS.order = which + 3;
+                this.child[which + 1].initModifiers();
+                this.child[which + 1].upButton.enable((e, self) => { this.moveChildUp(which + 1); });
+                this.child[which + 1].downButton.enable((e, self) => { this.moveChildDown(which + 1); });
+            }
+        }
     }
 }
 
