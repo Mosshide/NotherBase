@@ -5,6 +5,7 @@ class Element {
         this.settings = {
             defaultClasses: "",
             attributes: {},
+            defaultCSS: {},
             id: null,
             src: null,
             placeholder: "",
@@ -70,6 +71,12 @@ class Element {
             // add the default classes
             this.$div.removeClass();
             if (this.settings.defaultClasses) this.$div.addClass(this.settings.defaultClasses);
+            // add the default css
+            if (this.settings.defaultCSS) {
+                for (let key in this.settings.defaultCSS) {
+                    this.$div.css(key, this.settings.defaultCSS[key]);
+                }
+            }
             // add the id
             if (this.settings.id) this.$div.attr("id", this.settings.id);
             else this.$div.removeAttr("id");
@@ -225,7 +232,7 @@ class Alert extends Text {
 // a class called Input that can be used to get user input
 class Input extends Element {
     constructor(inputType = "text", settings = {}) {
-        super("label", {
+        super("div", {
             inputType: inputType,
             step: null,
             ...settings
@@ -236,7 +243,7 @@ class Input extends Element {
     render = () => {
         this.$div = super.render();
 
-        this.$input = $(`<input type="${this.settings.inputType}" value="${this.value ? this.value : ""}" placeholder="${this.settings.placeholder}">`).appendTo(this.$div);
+        this.$input = $(`<input type="${this.settings.inputType}" value="${this.value ? this.value : ""}" placeholder="${this.settings.placeholder}">`).prependTo(this.$div);
 
         if (this.enabled) this.enable();
 
@@ -279,14 +286,14 @@ class Input extends Element {
 // a class called TextArea that can be used to get user input
 class TextArea extends Element {
     constructor(settings = {}) {
-        super("label", settings);
+        super("div", settings);
     }
 
     // renders the element
     render = () => {
         this.$div = super.render();
 
-        this.$input = $(`<textarea rows="8" placeholder="${this.settings.placeholder}">${this.value ? this.value : ""}</textarea>`).appendTo(this.$div);
+        this.$input = $(`<textarea rows="8" placeholder="${this.settings.placeholder}">${this.value ? this.value : ""}</textarea>`).prependTo(this.$div);
 
         if (this.enabled) this.enable();
         return this.$div;
@@ -400,7 +407,7 @@ class Select extends Element {
 // a class called CheckBox that can be used to get user input
 class CheckBox extends Element {
     constructor(settings = {}) {
-        super("label", {
+        super("div", {
             ...settings
         });
     }
@@ -410,7 +417,7 @@ class CheckBox extends Element {
         this.$div = super.render();
 
         // create the element
-        this.$input = $(`<input type="checkbox">`).appendTo(this.$div);
+        this.$input = $(`<input type="checkbox">`).prependTo(this.$div);
 
         if (this.value !== null) this.$input.prop("checked", this.value);
         else if (this.settings.placeholder !== null) this.$input.prop("checked", this.settings.placeholder);
