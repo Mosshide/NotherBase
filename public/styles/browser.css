@@ -18,12 +18,14 @@
     background: var(--mediumBgColorGradient);
 }
 
-.browser label {
+.browser div {
     width: 100%;
     margin: 0;
     padding: 0;
     background: none;
-    justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
 }
 
 .browser.open {
@@ -125,6 +127,26 @@
     margin: 0;
 }
 
+.browser button.moveUp {
+    margin: 0;
+    width: 25%;
+    margin-left: 5px;
+    margin-top: 15px;
+}
+
+.browser button.moveDown {
+    margin: 0;
+    width: 25%;
+    margin-left: 5px;
+    margin-top: 15px;
+}
+
+.browser button.remove {
+    margin: 0;
+    margin-left: 25%;
+    margin-top: 15px;
+}
+
 .browser input {
     width: 100%;
     margin: 0;
@@ -132,14 +154,6 @@
 
 .browser .with-buttons {
     margin-bottom: 50px !important;
-}
-
-.browser .multiple button.remove {
-    width: 10%;
-    margin: var(--margin);
-    border-radius: 0;
-    border: 1px solid var(--textColor);
-    height: var(--inputHeight) !important;
 }
 
 .browser .object {

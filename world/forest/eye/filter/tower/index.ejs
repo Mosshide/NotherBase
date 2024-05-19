@@ -92,7 +92,7 @@
         });
 
         const metaTower = new MetaBrowser({
-            label: "Tower"
+            header: "Tower"
         });
         metaTower.render();
         metaTower.addService("items", {
@@ -169,6 +169,65 @@
                 return await base.do("save-user", { item, deleting });
             }
         });
-        
+        metaTower.addService("cards-against-Bible-prompts", {
+            fields: new NBField({
+                name: "prompt",
+                label: "Prompt: ",
+                placeholder: "No Prompt"
+            }, [
+                new NBField({
+                    name: "text",
+                    label: "Text: ",
+                    placeholder: "No Text",
+                    type: "string"
+                }),
+                new NBField({
+                    name: "category",
+                    label: "Category: ",
+                    placeholder: "No Category",
+                    type: "options",
+                    options: ["No Category", "Place", "Person", "Time"]
+                })
+            ]),
+            label: "Prompts",
+            editable: true,
+            multiple: true,
+            toLoad: async () => {
+                return await base.loadAll("cards-against-Bible-prompts", "global");
+            },
+            toSave: async (item, deleting) => {
+                return await base.do("save-prompt", { item, deleting });
+            }
+        });
+        metaTower.addService("cards-against-Bible-answers", {
+            fields: new NBField({
+                name: "answer",
+                label: "Answer: ",
+                placeholder: "No Answer"
+            }, [
+                new NBField({
+                    name: "text",
+                    label: "Text: ",
+                    placeholder: "No Text",
+                    type: "string"
+                }),
+                new NBField({
+                    name: "category",
+                    label: "Category: ",
+                    placeholder: "No Category",
+                    type: "options",
+                    options: ["No Category", "Place", "Person", "Time"]
+                })
+            ]),
+            label: "Answers",
+            editable: true,
+            multiple: true,
+            toLoad: async () => {
+                return await base.loadAll("cards-against-Bible-answers", "global");
+            },
+            toSave: async (item, deleting) => {
+                return await base.do("save-answer", { item, deleting });
+            }
+        });
     <% } %>
 </script>

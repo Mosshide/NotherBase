@@ -5,6 +5,7 @@ class Element {
         this.settings = {
             defaultClasses: "",
             attributes: {},
+            defaultCSS: {},
             id: null,
             src: null,
             placeholder: "",
@@ -70,6 +71,12 @@ class Element {
             // add the default classes
             this.$div.removeClass();
             if (this.settings.defaultClasses) this.$div.addClass(this.settings.defaultClasses);
+            // add the default css
+            if (this.settings.defaultCSS) {
+                for (let key in this.settings.defaultCSS) {
+                    this.$div.css(key, this.settings.defaultCSS[key]);
+                }
+            }
             // add the id
             if (this.settings.id) this.$div.attr("id", this.settings.id);
             else this.$div.removeAttr("id");
@@ -83,6 +90,14 @@ class Element {
         this.children.push(child);
         child.setParent(this);
         child.$div.appendTo(this.$div);
+        return child;
+    }
+
+    // prepends a child to the element
+    preChild = (child) => {
+        this.children.unshift(child);
+        child.setParent(this);
+        child.$div.prependTo(this.$div);
         return child;
     }
 
@@ -182,6 +197,7 @@ class Element {
 class Text extends Element {
     constructor(elementType = "p", settings = {}) {
         super(elementType, {
+            placeholder: "",
             ...settings
         });
     }
@@ -190,7 +206,7 @@ class Text extends Element {
     render = () => {
         this.$div = super.render();
 
-        if (this.value) this.$div.append(this.value);
+        if (this.value != null) this.$div.append(this.value);
         else this.$div.append(this.settings.placeholder);
 
         return this.$div;
@@ -198,9 +214,8 @@ class Text extends Element {
 
     setValue = (value) => {
         if (value) {
-            value = value.toString();
-            value = value.replace(/(?:\r\n|\r|\n)/g, '<br />');
-            this.value = value;
+            this.value = value.toString();
+            this.value = this.value.replace(/(?:\r\n|\r|\n)/g, '<br />');
         }
         this.render();
     }
@@ -225,7 +240,7 @@ class Alert extends Text {
 // a class called Input that can be used to get user input
 class Input extends Element {
     constructor(inputType = "text", settings = {}) {
-        super("label", {
+        super("div", {
             inputType: inputType,
             step: null,
             ...settings
@@ -279,7 +294,7 @@ class Input extends Element {
 // a class called TextArea that can be used to get user input
 class TextArea extends Element {
     constructor(settings = {}) {
-        super("label", settings);
+        super("div", settings);
     }
 
     // renders the element
@@ -400,7 +415,7 @@ class Select extends Element {
 // a class called CheckBox that can be used to get user input
 class CheckBox extends Element {
     constructor(settings = {}) {
-        super("label", {
+        super("div", {
             ...settings
         });
     }

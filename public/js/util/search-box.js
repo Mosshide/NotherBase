@@ -69,6 +69,7 @@ class SearchBox extends Element {
 
         if (this.settings.filters === "default") this.filters = this.addChild(new Filters(this.renderSearchResults));
         else this.filters = null;
+        if (this.settings.filters === "none") this.buttons.hideButton("toggleFilters");
 
         this.list = this.addChild(new Element("ul", {
             defaultClasses: "selector"        
@@ -77,8 +78,10 @@ class SearchBox extends Element {
 
     extractLabel = (item) => {
         let label = null;
-        label = item?.name || item?.username || item?.title || 
-                item?.header || item?.whenSearched;
+        
+        if (typeof item === "string") label = item;
+        else label = item?.name || item?.username || item?.title || 
+                item?.header || item?.whenSearched || item?.note || item?.text;
         if (!label) label = "Unnamed Item";
 
         if (typeof label !== "string") label = String(label);
@@ -98,12 +101,13 @@ class SearchBox extends Element {
         return null;
     }
 
-    setItems = (items, onNew = this.settings.onNew) => {
+    setItems = (items, onNew = this.settings.onNew, max = -1) => {
         this.items = items;
+        this.max = max;
         
         if (!Array.isArray(this.items)) this.items = [this.items];
 
-        if (onNew) {
+        if (onNew && (this.max < 0 || this.items.length < this.max)) {
             this.buttons.show("new");
             this.settings.onNew = onNew;
         }
@@ -121,7 +125,7 @@ class SearchBox extends Element {
         }
         this.list.closeChildren();
 
-        this.filter = this.filters.getValue("search");
+        this.filter = this.filters ? this.filters.getValue("search") : "";
 
         for (let i = 0; i < this.items.length; i++) {
             this.renderItem(this.items[i], i);
@@ -131,10 +135,24 @@ class SearchBox extends Element {
                 placeholder: "No Items"
             }));
         }
+
+        if (this.settings.onNew && (this.max < 0 || this.items.length < this.max)) {
+            this.buttons.show("new");
+        }
+        else {
+            this.buttons.hide("new");
+        }
     }
 
     addItem = (item = {}, newItem = false) => {
         this.items.push(item);
+
+        if (this.settings.onNew && (this.max < 0 || this.items.length < this.max)) {
+            this.buttons.show("new");
+        }
+        else {
+            this.buttons.hide("new");
+        }
 
         return this.renderItem(item, this.items.length - 1, newItem);
     }

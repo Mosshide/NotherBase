@@ -27,7 +27,7 @@ Date.prototype.toWithinAMonth = function () {
     let d = this.getDate();
     this.setDate(1);
     this.setFullYear(today.getFullYear());
-    if (d > today.getDate()) this.setMonth(today.getMonth());
+    if (d >= today.getDate()) this.setMonth(today.getMonth());
     else this.setMonth(today.getMonth() + 1);
     this.setDate(Math.min(d, this.getDaysInMonth()));
     return this;
@@ -249,8 +249,8 @@ class Agenda extends SearchBox {
 
         if (typeof label !== "string") label = String(label);
 
-        if (!item.workingDate) this.getWorkingDate(item);
-        if (item.workingDate) {
+        if (item && !item.workingDate) this.getWorkingDate(item);
+        if (item && item.workingDate) {
             if (item.workingDate.getTime() < this.dayStart.getTime()) {
                 label = `${item.workingDate.toLocaleDateString()} - ${label}`;
             }
@@ -277,7 +277,7 @@ class Agenda extends SearchBox {
     getList = (item) => {
         let list = this.todoList;
 
-        if (item.workingDate) {
+        if (item && item.workingDate) {
             if (item.workingDate.getTime() < this.dayStart.getTime()) {
                 list = this.oldList;
             }
