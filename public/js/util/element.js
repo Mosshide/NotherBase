@@ -191,6 +191,11 @@ class Element {
         if (this.settings.onClose) this.settings.onClose();
         return this;
     }
+
+    // sets or gets the css of the element
+    css = (style, value = null) => {
+        if (this.$div) this.$div.css(style, value);
+    }
 }
 
 // a class called Text that can be used to display text
