@@ -5,7 +5,7 @@ class Fish extends Element {
             id: id
         });
         this.pond = pond;
-        this.$tail = null;
+        this.tail = null;
         this.color = null;
         this.darkColor = null;
         this.position = null;
@@ -22,7 +22,7 @@ class Fish extends Element {
     }
 
     update = () => {
-        this.$tail.$div.removeClass("wag");
+        this.tail.$div.removeClass("wag");
         let newPosition = [];
 
         if (this.jumping) {
@@ -30,6 +30,7 @@ class Fish extends Element {
             newPosition = [this.position[0], 75];
             this.jumping = false;
             this.pond.catchFish(this);
+            this.close();
         }
         else {
             this.direction = this.direction + (-5 + Math.random() * 10);
@@ -72,7 +73,7 @@ class Fish extends Element {
         });
 
         
-        this.$tail.$div.addClass("wag");
+        this.tail.$div.addClass("wag");
 
         if (this.direction > 270 || this.direction < 90) this.css("transform", `rotate(${this.direction}deg) scaleX(${this.xSize}) scaleY(${this.ySize})`);
         else this.css("transform", `rotate(${this.direction - 180}deg) scaleX(${-this.xSize}) scaleY(${this.ySize})`);
@@ -81,11 +82,11 @@ class Fish extends Element {
     render = () => {
         super.render();
 
-        this.$tail = this.addChild(new Element("div", { defaultClasses: "tail" }));
+        this.tail = this.addChild(new Element("div", { defaultClasses: "tail" }));
         this.color = [Math.floor(Math.random() * 255), Math.floor(Math.random() * 255), Math.floor(Math.random() * 255)];
         this.css("background-color", `rgb(${this.color[0]}, ${this.color[1]}, ${this.color[2]})`);
         this.darkColor = [this.color[0] / 2, this.color[2], this.color[1]];
-        this.$tail.css("background-color", `rgb(${this.darkColor[0]}, ${this.darkColor[1]}, ${this.darkColor[2]})`);
+        this.tail.css("background-color", `rgb(${this.darkColor[0]}, ${this.darkColor[1]}, ${this.darkColor[2]})`);
         this.position = [1 + Math.floor(Math.random() * 90), 60 - Math.floor(Math.random() * 55)];
         this.css("left", `${this.position[0]}%`);
         this.css("bottom", `${this.position[1]}%`);
@@ -166,9 +167,25 @@ class Pond extends Container {
 
     catchFish = (which) => {
         this.fishCaught++;
-        this.removeChild(which);
+        ui.fishCaught.setValue(`Fish Caught: ${this.fishCaught}`);
+    }
+}
+
+class UI extends Container {
+    constructor() {
+        super({
+            defaultClasses: "ui"
+        });
+
+        this.fishCaught = this.addChild(new Text("h4", {
+            defaultClasses: "fishCaught",
+            placeholder: "Fish Caught: 0"
+        }));
     }
 }
 
 let pond = new Pond();
 pond.render(".water");
+
+let ui = new UI();
+ui.render(".ui");
