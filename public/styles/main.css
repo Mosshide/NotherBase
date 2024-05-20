@@ -625,21 +625,38 @@ iframe {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    width: 700px;
+    width: 100%;
+    height: auto;
+}
+
+.login-cover .form {
+    border: none;
 }
 
 .login-cover a {
     padding: var(--padding);
-    margin: 40px;
+    margin: 0 40px;
     border: none;
 }
 
 .login-cover h3 {
-    margin: 40px 0;
+    margin: 0;
+    text-align: center;
+}
+
+.login-cover h4 {
+    border: none;
+    text-align: left;
 }
 
 .login-cover button {
-    width: 250px;
+    width: 80%;
+    padding: 20px;
+    margin: 20px;
+}
+
+.login-cover a img {
+    width: 50%;
 }
 
 .dialogue {
