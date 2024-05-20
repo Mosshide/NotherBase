@@ -229,7 +229,12 @@ class Agenda extends SearchBox {
             item.workingDate = new Date(item.date);
     
             if (item.workingDate.getTime() < this.dayStart.getTime()) {
-                if (item.frequency.toLowerCase() === "weekly") while (item.workingDate.getTime() < this.dayStart.getTime()) {
+                if (item.frequency.toLowerCase() === "daily") {
+                    item.workingDate.setFullYear(this.nowDate.getFullYear());
+                    item.workingDate.setMonth(this.nowDate.getMonth());
+                    item.workingDate.setDate(this.nowDate.getDate());
+                }
+                else if (item.frequency.toLowerCase() === "weekly") while (item.workingDate.getTime() < this.dayStart.getTime()) {
                     item.workingDate.setDate(item.workingDate.getDate() + 7);
                 }
                 else if (item.frequency.toLowerCase() === "monthly") {
@@ -405,6 +410,7 @@ metaBrowser.addService("schedule", {
         placeholder: "Once",
         options: [
             "Once",
+            "Daily",
             "Weekly",
             "Monthly",
             "Yearly"
