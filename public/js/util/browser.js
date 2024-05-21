@@ -471,8 +471,8 @@ class Browser extends Element {
         this.buttons.showButton("cancel");
         this.buttons.hideButton("delete");
         if (this.serving.enableBackups) {
-            if (this.serving.loadedData[this.serving.selected].data?.backups) {
-                if (this.serving.loadedData[this.serving.selected].data.backups.length - 1 > this.usingBackup) this.buttons.showButton("undo");
+            if (this.serving.loadedData[this.serving.selected].memory.backups) {
+                if (this.serving.loadedData[this.serving.selected].memory.backups.length - 1 > this.usingBackup) this.buttons.showButton("undo");
             }
             if (this.usingBackup > 0) this.buttons.showButton("redo");
         }
@@ -489,14 +489,14 @@ class Browser extends Element {
     undo = () => {
         this.cancelDelete();
         this.usingBackup++;
-        this.edit(this.serving, this.serving.loadedData[this.serving.selected].data.backups[this.usingBackup]?.data ? this.serving.loadedData[this.serving.selected].data.backups[this.usingBackup].data : {});
-        if (this.serving.loadedData[this.serving.selected].data.backups.length - 1 <= this.usingBackup) this.buttons.hideButton("undo");
+        this.edit(this.serving, this.serving.loadedData[this.serving.selected].memory.backups[this.usingBackup]?.data ? this.serving.loadedData[this.serving.selected].memory.backups[this.usingBackup].data : {});
+        if (this.serving.loadedData[this.serving.selected].memory.backups.length - 1 <= this.usingBackup) this.buttons.hideButton("undo");
     }
 
     redo = () => {
         this.cancelDelete();
         this.usingBackup--;
-        this.edit(this.serving, this.serving.loadedData[this.serving.selected].data.backups[this.usingBackup]?.data ? this.serving.loadedData[this.serving.selected].data.backups[this.usingBackup].data : {});
+        this.edit(this.serving, this.serving.loadedData[this.serving.selected].memory.backups[this.usingBackup]?.data ? this.serving.loadedData[this.serving.selected].memory.backups[this.usingBackup].data : {});
         if (this.usingBackup <= 0) this.buttons.hideButton("redo");
     }
 }
@@ -569,10 +569,10 @@ class TreeBrowser extends Browser {
         else if (this.usingBackup > 0) {
             let node = this.getBackupItemNode(this.usingBackup);
             node.data = this.box.getValue();
-            this.serving.loadedData[this.serving.selected].data.backups[this.usingBackup].data.saveLocation = this.serving.itemLocation;
-            this.serving.loadedData[this.serving.selected].data.backups[this.usingBackup].data.name = this.serving.loadedData[this.serving.selected].data.backups[this.usingBackup].data.name;
+            this.serving.loadedData[this.serving.selected].memory.backups[this.usingBackup].data.saveLocation = this.serving.itemLocation;
+            this.serving.loadedData[this.serving.selected].memory.backups[this.usingBackup].data.name = this.serving.loadedData[this.serving.selected].memory.backups[this.usingBackup].data.name;
 
-            if (this.settings.onSave) this.settings.onSave(this.serving.loadedData[this.serving.selected].data.backups[this.usingBackup].data);
+            if (this.settings.onSave) this.settings.onSave(this.serving.loadedData[this.serving.selected].memory.backups[this.usingBackup].data);
         }
 
         this.usingBackup = 0;
@@ -675,7 +675,7 @@ class TreeBrowser extends Browser {
         else this.buttons.hideButton("up");
         if (this.serving.itemLocation.length > 0) this.buttons.showButton("top");
         else this.buttons.hideButton("top");
-        if (this.serving.loadedData[this.serving.selected].data.backups.length - 1 > this.usingBackup) this.buttons.showButton("undo");
+        if (this.serving.loadedData[this.serving.selected].memory.backups.length - 1 > this.usingBackup) this.buttons.showButton("undo");
         if (this.usingBackup > 0) this.buttons.showButton("redo");
 
         this.childButtons.closeChildren();
@@ -716,8 +716,8 @@ class TreeBrowser extends Browser {
 
     getBackupItemNode = (backup) => {
         if (!Array.isArray(this.serving.itemLocation)) this.serving.itemLocation = [];
-        if (typeof this.serving.loadedData[this.serving.selected].data.backups[backup].data !== "object") this.serving.loadedData[this.serving.selected].data.backups[backup].data = { data: this.serving.loadedData[this.serving.selected].data.backups[backup].data, children: [] };
-        let item = this.serving.loadedData[this.serving.selected].data.backups[backup].data;
+        if (typeof this.serving.loadedData[this.serving.selected].memory.backups[backup].data !== "object") this.serving.loadedData[this.serving.selected].memory.backups[backup].data = { data: this.serving.loadedData[this.serving.selected].memory.backups[backup].data, children: [] };
+        let item = this.serving.loadedData[this.serving.selected].memory.backups[backup].data;
         for (let i = 0; i < this.serving.itemLocation.length; i++) {
             item = item.children[this.serving.itemLocation[i]];
             if (typeof item !== "object") break;
@@ -746,16 +746,16 @@ class TreeBrowser extends Browser {
     undo = () => {
         this.cancelDelete();
         this.usingBackup++;
-        this.serving.itemLocation = this.serving.loadedData[this.serving.selected].data.backups[this.usingBackup].data?.saveLocation;
+        this.serving.itemLocation = this.serving.loadedData[this.serving.selected].memory.backups[this.usingBackup].data?.saveLocation;
         let item = this.getBackupItemNode(this.usingBackup);
         this.edit(this.serving, item ? item : {});
-        if (this.serving.loadedData[this.serving.selected].data.backups.length - 1 <= this.usingBackup) this.buttons.hideButton("undo");
+        if (this.serving.loadedData[this.serving.selected].backups.length - 1 <= this.usingBackup) this.buttons.hideButton("undo");
     }
 
     redo = () => {
         this.cancelDelete();
         this.usingBackup--;
-        this.serving.itemLocation = this.serving.loadedData[this.serving.selected].data.backups[this.usingBackup].data?.saveLocation;
+        this.serving.itemLocation = this.serving.loadedData[this.serving.selected].memory.backups[this.usingBackup].data?.saveLocation;
         let item = this.getBackupItemNode(this.usingBackup);
         this.edit(this.serving, item ? item : {});
         if (this.usingBackup <= 0) this.buttons.hideButton("redo");
@@ -840,15 +840,20 @@ class MetaBrowser extends Container {
     save = async (item) => {
         this.serving.state = "read";
         this.serving.data[this.serving.selected] = item;
-        if (!this.serving.loadedData[this.serving.selected]) this.serving.loadedData[this.serving.selected] = { data: { _backupsEnabled:true, backups: [] } };
-        if (!this.serving.loadedData[this.serving.selected].data) this.serving.loadedData[this.serving.selected].data = { _backupsEnabled:true, backups: [] };
-        this.serving.loadedData[this.serving.selected].data.backups?.unshift({ data: structuredClone(item) });
+        if (!this.serving.loadedData[this.serving.selected]) this.serving.loadedData[this.serving.selected] = { memory: { data: {}, backups: [] } };
+        this.serving.loadedData[this.serving.selected].memory.backups.unshift({
+            _lastUpdate: Date.now(),
+            data: this.serving.loadedData[this.serving.selected].memory.data
+        });
+
+        this.serving.loadedData[this.serving.selected].memory.data = item;
         let res = null;
         if (this.serving.toSave) res = await this.serving.toSave({
             data: item,
-            id: this.serving.loadedData[this.serving.selected]?._id
+            id: this.serving.loadedData[this.serving.selected]?.memory._id
         }, false);
-        if (res.data?.newID) this.serving.loadedData[this.serving.selected]._id = res.data.newID;
+        if (res.data?.newID) this.serving.loadedData[this.serving.selected].memory._id = res.data.newID;
+        console.log(res);
     }
 
     edit = () => {
@@ -862,7 +867,7 @@ class MetaBrowser extends Container {
     delete = () => {
         this.serving.state = "delete";
         if (this.serving.toSave) this.serving.toSave({ 
-            id: this.serving.loadedData[this.serving.selected]._id 
+            id: this.serving.loadedData[this.serving.selected].memory._id 
         }, true);
         this.serving.data.splice(this.serving.selected, 1);
         this.serving.loadedData.splice(this.serving.selected, 1);
@@ -927,8 +932,7 @@ class MetaBrowser extends Container {
             if (!Array.isArray(serving.loadedData)) serving.loadedData = [serving.loadedData];
             serving.data = [];
             for (let i = 0; i < serving.loadedData.length; i++) {
-                if (serving.loadedData[i].data?._backupsEnabled) serving.data.push(structuredClone(serving.loadedData[i].data.backups[0].data));
-                else serving.data.push(structuredClone(serving.loadedData[i].data));
+                serving.data.push(structuredClone(serving.loadedData[i].memory.data));
             }
             if (select) this.selectService(service);
         });
@@ -937,8 +941,8 @@ class MetaBrowser extends Container {
     sortData = (customSort = (a, b) => { return 0; }) => {
         this.serving.data.sort(customSort);
         this.serving.loadedData.sort((a, b) => { 
-            a = a.data.backups[0].data;
-            b = b.data.backups[0].data;
+            a = a.memory.data;
+            b = b.memory.data;
             return customSort(a, b);
          });
     }

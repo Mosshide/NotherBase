@@ -181,7 +181,6 @@ class Agenda extends SearchBox {
             for (let i = 0; i < this.items.length; i++) {
                 if (this.items[i]) {     
                     this.getWorkingDate(this.items[i]);
-                    this.getWorkingDate(metaBrowser.serving.loadedData[i].data.backups[0].data);
                 }
             };
             // sort the data first by if there is a date, then by date, then by time, then by name
@@ -329,7 +328,7 @@ class Agenda extends SearchBox {
             list.show();
             return list.addChild(new Text("li", { 
                 placeholder: label,
-                id: i,
+                id: `${i}`,
                 onClick: (e, element) => {
                     if (this.settings.onLiClick) this.settings.onLiClick(e, element);
                 }

@@ -65,8 +65,7 @@
     let lastMailboxUpdate = 0;
 
     base.loadAll("house-mailbox").then((res) => {
-        if (typeof res[0].data == "string") $mailbox.val(res[0].data);
-        //console.log(res);
+        if (typeof res[0].memory.data == "string") $mailbox.val(res[0].memory.data);
     });
 
     $mailbox.on("input", (e) => { 
@@ -75,6 +74,7 @@
         setTimeout(() => {
             let now = Date.now();
             if (now - lastMailboxUpdate > mailboxCD) {
+                console.log("set-mailbox", e.currentTarget.value);
                 base.do("set-mailbox", { item: e.currentTarget.value });
             }
         }, mailboxCD);
