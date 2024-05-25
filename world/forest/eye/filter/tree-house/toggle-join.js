@@ -23,12 +23,12 @@ export default async function (req, user) {
             }
         }
 
-        if (!spirit.memory.data.players.includes(user.data.username)) {
-            if (spirit.memory.data.players.length < 12) spirit.memory.data.players.push(user.data.username);
+        if (!spirit.memory.data.players.includes(user.memory.data.username)) {
+            if (spirit.memory.data.players.length < 12) spirit.memory.data.players.push(user.memory.data.username);
         }
         else {
             //splice out the player
-            spirit.memory.data.players.splice(spirit.memory.data.players.indexOf(user.data.username), 1);
+            spirit.memory.data.players.splice(spirit.memory.data.players.indexOf(user.memory.data.username), 1);
         }
     }
 

@@ -6,7 +6,7 @@ export default async function (req, user, service, individual) {
         return { newID: spirit.memory._id, message: `created` };
     }
     else if (req.body.deleting) {
-        let del = await req.db.Spirit.delete(service, {}, null, req.body.item.id);
+        let del = await req.db.Spirit.delete(service, null, {}, req.body.item.id);
         return `deleted.`;
     }
     else {

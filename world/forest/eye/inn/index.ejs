@@ -14,16 +14,16 @@
     <div class="stream"></div>
     <div class="chat-box" id="eotf-expidition-recruiting"></div>
 
-    <p>
+    <!-- <p>
         Register here to be part of the next
         expedition into the snowy tundra!
     </p>
     <ul></ul>
-    <button>Register for this Expedition</button>
+    <button>Register for this Expedition</button> -->
 </div>
 
-<h4>Community Notices</h4>
-<div class="billboard" id="inn-ads"></div>
+<!-- <h4>Community Notices</h4>
+<div class="billboard" id="inn-ads"></div> -->
 
 
 
@@ -47,22 +47,22 @@
     Head into the Filter
 </a>
 
-<script src="/js/billboard.js"></script>
+<script src="/js/util/billboard.js"></script>
 <script src="/js/chat-box.js"></script>
 <script>
     let innBB = null;
 
     // base.loadAll("eotf-inn-ads", "global").then((res) => {
-    //     console.log(<%= user.authLevels.includes("eotf-inn-ads") %>);
+    //     console.log(<%= user.memory.data.authLevels.includes("eotf-inn-ads") %>);
     //     let items = [];
     //     for (let i in res) {
     //         items.push(res[i].data);
     //     }
     //     innBB = new Billboard("inn-ads", items, {
     //         onSave: "save-ads",
-    //         free: <%= user.authLevels.includes("eotf-inn-ads") %>
+    //         free: <%= user.memory.data.authLevels.includes("eotf-inn-ads") %>
     //     });
     // });
 
-    const chat = new ChatBox("<%= user.username %>", "eotf-expidition-recruiting");
+    const chat = new ChatBox("<%= user.memory.data.username %>", "eotf-expidition-recruiting");
 </script>

@@ -3,7 +3,7 @@ export default async function (req, user) {
 
     if (!Array.isArray(spirit.memory.data.joinRequests)) spirit.memory.data.joinRequests = [];
     spirit.memory.data.joinRequests.push({
-        id: user.id,
+        id: user.memory._id,
         note: req.body.note
     });
     await spirit.commit();

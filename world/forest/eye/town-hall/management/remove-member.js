@@ -1,5 +1,5 @@
 export default async function(req, user) {
-    if (user.id) {
+    if (req.session.currentUser) {
         let spirit = await req.db.Spirit.recallOne("group", null, null, req.body.groupID);
 
         let leader = null;
@@ -11,7 +11,7 @@ export default async function(req, user) {
                 removal = spirit.memory.data.members[i];
                 which = i;
             }
-            if (spirit.memory.data.members[i].id == user.id) leader = spirit.memory.data.members[i];
+            if (spirit.memory.data.members[i].id == user.memory._id) leader = spirit.memory.data.members[i];
         }
 
         if (leader.auth.includes("Leader")) {
