@@ -1,9 +1,9 @@
 export default async (req, user) => {
     let towerCrud = async function (service, individual) {
-        if (!user.loggedIn()) {
+        if (!req.session.currentUser) {
             return `You must be logged in to save a(n) ${individual}.`;
         }
-        else if (!user.data.authLevels.includes("Creator")) {
+        else if (!user.memory.data.authLevels.includes("Creator")) {
             return `You must be a Creator to save a(n) ${individual}.`;
         }
         else if (!req.body.item?.id) {

@@ -363,7 +363,7 @@ class Browser extends Element {
         this.serving = serving;
 
         this.box = null;
-        this.usingBackup = 0;
+        this.usingBackup = -1;
         
         this.buttons = this.addChild(new Buttons({ id: "browser-ui" }));
         this.buttons.addButton(new Button("edit", (e, self) => { this.edit(); }, { placeholder: "Edit" }));
@@ -421,7 +421,7 @@ class Browser extends Element {
     read = (serving = this.serving) => {
         this.serving = serving;
         this.serving.state = "read";
-        this.usingBackup = 0;
+        this.usingBackup = -1;
 
         this.cancelDelete();
 
@@ -474,7 +474,7 @@ class Browser extends Element {
             if (this.serving.loadedData[this.serving.selected].memory.backups) {
                 if (this.serving.loadedData[this.serving.selected].memory.backups.length - 1 > this.usingBackup) this.buttons.showButton("undo");
             }
-            if (this.usingBackup > 0) this.buttons.showButton("redo");
+            if (this.usingBackup >= 0) this.buttons.showButton("redo");
         }
 
         if (this.settings.onEdit) this.settings.onEdit();
@@ -496,8 +496,13 @@ class Browser extends Element {
     redo = () => {
         this.cancelDelete();
         this.usingBackup--;
-        this.edit(this.serving, this.serving.loadedData[this.serving.selected].memory.backups[this.usingBackup]?.data ? this.serving.loadedData[this.serving.selected].memory.backups[this.usingBackup].data : {});
-        if (this.usingBackup <= 0) this.buttons.hideButton("redo");
+        if (this.usingBackup < 0) {
+            this.buttons.hideButton("redo");
+            this.edit(this.serving, this.serving.loadedData[this.serving.selected].memory.data ? this.serving.loadedData[this.serving.selected].memory.data : {});
+        }
+        else {
+            this.edit(this.serving, this.serving.loadedData[this.serving.selected].memory.backups[this.usingBackup]?.data ? this.serving.loadedData[this.serving.selected].memory.backups[this.usingBackup].data : {});
+        }
     }
 }
 
@@ -505,7 +510,7 @@ class TreeBrowser extends Browser {
     constructor(serving, settings) {
         super(serving, settings);
 
-        this.usingBackup = 0;
+        this.usingBackup = -1;
         
         this.buttons.enableButton("delete", (e, self) => { this.attemptDelete(); });
         this.buttons.enableButton("save", (e, self) => { this.save(); });
@@ -558,7 +563,7 @@ class TreeBrowser extends Browser {
     }
 
     save = async () => {
-        if (this.usingBackup == 0) {
+        if (this.usingBackup == -1) {
             let node = this.getItemNode();
             node.data = this.box.getValue();
             this.serving.data[this.serving.selected].name = this.serving.data[this.serving.selected].data.name;
@@ -566,7 +571,7 @@ class TreeBrowser extends Browser {
             
             if (this.settings.onSave) this.settings.onSave(this.serving.data[this.serving.selected]);
         }
-        else if (this.usingBackup > 0) {
+        else if (this.usingBackup >= 0) {
             let node = this.getBackupItemNode(this.usingBackup);
             node.data = this.box.getValue();
             this.serving.loadedData[this.serving.selected].memory.backups[this.usingBackup].data.saveLocation = this.serving.itemLocation;
@@ -575,16 +580,16 @@ class TreeBrowser extends Browser {
             if (this.settings.onSave) this.settings.onSave(this.serving.loadedData[this.serving.selected].memory.backups[this.usingBackup].data);
         }
 
-        this.usingBackup = 0;
+        this.usingBackup = -1;
         this.read(this.serving, false);
     }
 
     read = (serving = this.serving, resetLocation = true) => {
         this.serving = serving;
         this.serving.state = "read";
-        if (resetLocation || this.usingBackup > 0) {
+        if (resetLocation || this.usingBackup >= 0) {
             this.serving.itemLocation = [];
-            this.usingBackup = 0;
+            this.usingBackup = -1;
         }
 
         this.cancelDelete();
@@ -676,7 +681,7 @@ class TreeBrowser extends Browser {
         if (this.serving.itemLocation.length > 0) this.buttons.showButton("top");
         else this.buttons.hideButton("top");
         if (this.serving.loadedData[this.serving.selected].memory.backups.length - 1 > this.usingBackup) this.buttons.showButton("undo");
-        if (this.usingBackup > 0) this.buttons.showButton("redo");
+        if (this.usingBackup >= 0) this.buttons.showButton("redo");
 
         this.childButtons.closeChildren();
         if (itemOverride) {
@@ -749,16 +754,24 @@ class TreeBrowser extends Browser {
         this.serving.itemLocation = this.serving.loadedData[this.serving.selected].memory.backups[this.usingBackup].data?.saveLocation;
         let item = this.getBackupItemNode(this.usingBackup);
         this.edit(this.serving, item ? item : {});
-        if (this.serving.loadedData[this.serving.selected].backups.length - 1 <= this.usingBackup) this.buttons.hideButton("undo");
+        if (this.serving.loadedData[this.serving.selected].memory.backups.length - 1 <= this.usingBackup) this.buttons.hideButton("undo");
     }
 
     redo = () => {
         this.cancelDelete();
         this.usingBackup--;
-        this.serving.itemLocation = this.serving.loadedData[this.serving.selected].memory.backups[this.usingBackup].data?.saveLocation;
-        let item = this.getBackupItemNode(this.usingBackup);
-        this.edit(this.serving, item ? item : {});
-        if (this.usingBackup <= 0) this.buttons.hideButton("redo");
+        
+        if (this.usingBackup < 0) {
+            this.serving.itemLocation = this.serving.loadedData[this.serving.selected].memory.data?.saveLocation;
+            let item = this.getItemNode(this.usingBackup);
+            this.buttons.hideButton("redo");
+            this.edit(this.serving, item ? item : {});
+        }
+        else {
+            this.serving.itemLocation = this.serving.loadedData[this.serving.selected].memory.backups[this.usingBackup].data?.saveLocation;
+            let item = this.getBackupItemNode(this.usingBackup);
+            this.edit(this.serving, item ? item : {});
+        }
     }
 }
 
@@ -840,7 +853,9 @@ class MetaBrowser extends Container {
     save = async (item) => {
         this.serving.state = "read";
         this.serving.data[this.serving.selected] = item;
-        if (!this.serving.loadedData[this.serving.selected]) this.serving.loadedData[this.serving.selected] = { memory: { data: {}, backups: [] } };
+        if (!this.serving.loadedData[this.serving.selected]) {
+            this.serving.loadedData[this.serving.selected] = { memory: { data: {}, backups: [] } };
+        }
         this.serving.loadedData[this.serving.selected].memory.backups.unshift({
             _lastUpdate: Date.now(),
             data: this.serving.loadedData[this.serving.selected].memory.data
@@ -853,7 +868,6 @@ class MetaBrowser extends Container {
             id: this.serving.loadedData[this.serving.selected]?.memory._id
         }, false);
         if (res.data?.newID) this.serving.loadedData[this.serving.selected].memory._id = res.data.newID;
-        console.log(res);
     }
 
     edit = () => {
@@ -902,6 +916,7 @@ class MetaBrowser extends Container {
             lastEdit: {},
             label: "Service",
             data: [],
+            loadedData: [],
             fields: new NBField(),
             editable: true,
             max: -1,
@@ -939,8 +954,8 @@ class MetaBrowser extends Container {
     }
 
     sortData = (customSort = (a, b) => { return 0; }) => {
-        this.serving.data.sort(customSort);
-        this.serving.loadedData.sort((a, b) => { 
+        if (Array.isArray(this.serving.data)) this.serving.data.sort(customSort);
+        if (Array.isArray(this.serving.loadedData)) this.serving.loadedData.sort((a, b) => { 
             a = a.memory.data;
             b = b.memory.data;
             return customSort(a, b);

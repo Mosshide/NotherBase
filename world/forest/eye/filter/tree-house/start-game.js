@@ -18,12 +18,12 @@ export default async function (req, user) {
 
     let promptsPool = [];
     prompts.memory.forEach(prompt => {
-        if (prompt.data.category && prompt.data.category !== "" || prompt.data.category !== " " || prompt.data.category !== "No Category") promptsPool.push(prompt.data.backups[0].data);
+        if (prompt.memory.data.category && prompt.memory.data.category !== "" || prompt.memory.data.category !== " " || prompt.memory.data.category !== "No Category") promptsPool.push(prompt.memory.data);
     });
 
     let answersPool = [];
     answers.memory.forEach(answer => {
-        if (answer.data.category && answer.data.category !== "" || answer.data.category !== " " || answer.data.category !== "No Category") answersPool.push(answer.data.backups[0].data);
+        if (answer.memory.data.category && answer.memory.data.category !== "" || answer.memory.data.category !== " " || answer.memory.data.category !== "No Category") answersPool.push(answer.memory.data);
     });
     
     if (spirit.memory.data.state === "waiting") {
@@ -35,7 +35,7 @@ export default async function (req, user) {
             spirit.memory.data.judge = Math.floor(Math.random() * spirit.memory.data.players.length);
             // pick random prompt card
             if (promptsPool.length > 0) {
-                spirit.memory.data.prompt = promptsPool[Math.floor(Math.random() * prompts.memory.length)];
+                spirit.memory.data.prompt = promptsPool[Math.floor(Math.random() * prompts.length)];
             }
             else spirit.memory.data.prompt = "Prompt Card 0";
             // shuffle answer cards
@@ -46,9 +46,9 @@ export default async function (req, user) {
             spirit.memory.data.players.forEach(player => {
                 spirit.memory.data.hand[player] = [];
                 for (let i = 0; i < 7; i++) {
-                    let random = Math.floor(Math.random() * answers.memory.length);
+                    let random = Math.floor(Math.random() * answers.length);
                     while (drawn.includes(random)) {
-                        random = Math.floor(Math.random() * answers.memory.length);
+                        random = Math.floor(Math.random() * answers.length);
                     }
 
                     spirit.memory.data.hand[player].push(answersPool[random]);
