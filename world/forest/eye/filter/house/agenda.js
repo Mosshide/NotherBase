@@ -126,9 +126,9 @@ class Agenda extends SearchBox {
     
             if (item.workingDate.getTime() < dayStart.getTime()) {
                 if (item.frequency.toLowerCase() === "daily") {
-                    item.workingDate.setFullYear(Agenda.nowDate.getFullYear());
-                    item.workingDate.setMonth(Agenda.nowDate.getMonth());
-                    item.workingDate.setDate(Agenda.nowDate.getDate());
+                    item.workingDate.setFullYear(nowDate.getFullYear());
+                    item.workingDate.setMonth(nowDate.getMonth());
+                    item.workingDate.setDate(nowDate.getDate());
                 }
                 else if (item.frequency.toLowerCase() === "weekly") while (item.workingDate.getTime() < dayStart.getTime()) {
                     item.workingDate.setDate(item.workingDate.getDate() + 7);
