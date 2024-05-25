@@ -84,7 +84,7 @@
         $("#knock").toggleClass("invisible");
     });
 
-    <% if (user.authLevels.includes("Creator")) { %>
+    <% if (user.memory.data.authLevels.includes("Creator")) { %>
         $("#knock").toggleClass("invisible");
         $("#cover").toggleClass("invisible");
         $(".floor button#toggle").on("click", function (e) {

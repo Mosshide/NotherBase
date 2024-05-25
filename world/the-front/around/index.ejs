@@ -73,7 +73,7 @@
     const weather = new WeatherSystem("random");
     
     <% if (user) { %>
-        let chat = new ChatBox("<%= user.username %>", "the-front-park-bench");
+        let chat = new ChatBox("<%= user.memory.data.username %>", "the-front-park-bench");
     <% } else { %>
         let chat = new ChatBox("An Unknown Person", "the-front-park-bench");
     <% } %>

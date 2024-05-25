@@ -11,7 +11,7 @@ class Projector {
 
     load = async () => {
         let loaded = await base.loadAll(`${this.id}-projector`, "global");
-        if (loaded[0]?.data.url) this.$iframe.attr("src", loaded[0].data.url);
+        if (loaded[0]?.memory?.data?.url) this.$iframe.attr("src", loaded[0].memory.data.url);
     }
 
     save = async (url = this.$urlInput.val()) => {

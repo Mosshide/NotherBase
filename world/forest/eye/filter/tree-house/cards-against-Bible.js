@@ -55,6 +55,7 @@ class CardsAgainstBible extends Container {
     checkUpdate(message) {
         if (message.text === "updated") {
             base.do("get-updates", {}).then((res) => {
+                console.log(res.data.prompt.text);
                 this.update(res.data);
             });
         }
@@ -84,7 +85,7 @@ class CardsAgainstBible extends Container {
             }
             this.alert.setValue("Click an Open Spot to Join");
 
-            if (this.players.includes("<%= user.username %>")) {
+            if (this.players.includes("<%= user.memory.data.username %>")) {
                 this.join.setValue("Leave");
                 this.join.$div.addClass("player");
             }

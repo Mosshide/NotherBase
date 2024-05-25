@@ -1,6 +1,7 @@
 export default async (req, user) => {
     //check if logged in
-    if (user.id) {
+    console.log(req.session.currentUser);
+    if (req.session.currentUser) {
         //get the document in the database
         let spirit = await req.db.Spirit.recallOne("house-mailbox", user.id);
 
@@ -12,5 +13,6 @@ export default async (req, user) => {
             //save the document in the database
             await spirit.commit(req.body.item); 
         }
+        console.log(spirit.memory);
     }
 }

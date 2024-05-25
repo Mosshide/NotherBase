@@ -84,4 +84,6 @@
     const weather = new WeatherSystem("random");
     <%- include("./clipboards.js"); %>
     <%- include("./keeper.js"); %>
+
+    base.do("migrate", { route: "/the-front/keeper" });
 </script>
