@@ -49,7 +49,7 @@ class Yard extends Ground {
                     position: { minX: 0, minY: -5, maxX: 95, maxY: 95 },
                     rotation: { minAngle: -5, maxAngle: 5 }
                 }],
-                growth: { minTime: 20000, spawnTime: 100, maxTime: 40000 },
+                growth: { minTime: 2000, spawnTime: 100, maxTime: 4000 },
                 size: { minX: 10, minY: 100, maxX: 10, maxY: 100 },
                 children: {
                     branch: {
@@ -67,7 +67,7 @@ class Yard extends Ground {
                     position: { minX: 0, minY: 70, maxX: 50, maxY: 100 },
                     rotation: { minAngle: -40, maxAngle: 40 }
                 }],
-                growth: { minTime: 10000, spawnTime: 11000, maxTime: 20000 },
+                growth: { minTime: 1000, spawnTime: 1100, maxTime: 2000 },
                 size: { minX: 2, minY: 10, maxX: 5, maxY: 50 },
                 children: {
                     branch: {

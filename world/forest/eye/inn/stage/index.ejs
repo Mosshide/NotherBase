@@ -15,12 +15,12 @@
 
 <div class="chat-box" id="eotf-inn-stage"></div>
 
-<div class="stream-signup">
+<!-- <div class="stream-signup">
     <h4>Sign up for open mic night every night!</h4>
     <input type="text" placeholder="your stream url">
     <input type="datetime-local" id="date">
     <button>Submit Application</button>
-</div>
+</div> -->
 
 <hr>
 
@@ -31,11 +31,11 @@
 <script src="/js/chat-box.js"></script>
 <script src="/js/stream.js"></script>
 <script>
-    const chat = new ChatBox("<%= user.username %>", "eotf-inn-stage");
+    const chat = new ChatBox("<%= user.memory.data.username %>", "eotf-inn-stage");
 
     let stream = null;
 
-    base.load("eotf-inn-stage").then((res) => {
-        stream = new Stream("eotf-inn-stage", res);
-    });
+    // base.load("eotf-inn-stage").then((res) => {
+    //     stream = new Stream("eotf-inn-stage", res);
+    // });
 </script>

@@ -15,7 +15,7 @@
 
 <script>
     <% if (user) { %>
-        let chat = new ChatBox("<%= user.username %>", "eotf-theater");
+        let chat = new ChatBox("<%= user.memory.data.username %>", "eotf-theater");
     <% } else { %>
         let chat = new ChatBox("An Unknown Person", "eotf-theater");
     <% } %>

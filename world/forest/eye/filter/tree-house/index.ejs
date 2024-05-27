@@ -63,10 +63,10 @@
 <script src="/js/chat-box.js"></script>
 <script src="/js/projector.js"></script>
 <script>
-    const projector = new Projector("tree", <%= user.authLevels.includes("Creator") %> ? "save-tree-projector" : null);
+    const projector = new Projector("tree", <%= user.memory.data.authLevels.includes("Creator") %> ? "save-tree-projector" : null);
 
-    const chat = new ChatBox("<%= user.username %>", "tree-house");
-    const hiddenChat = new ChatBox("<%= user.username %>", "cards-against-Bible");
+    const chat = new ChatBox("<%= user.memory.data.username %>", "tree-house");
+    const hiddenChat = new ChatBox("<%= user.memory.data.username %>", "cards-against-Bible");
 
     // <%- include("./dominoes.js"); %> 
     <%- include("./cards-against-Bible.js"); %> 
