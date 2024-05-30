@@ -14,11 +14,15 @@
 <script src="/js/bible-viewer.js"></script>
 <script src="/js/entity.js"></script>
 <script>   
+    const bibleViewer = new BibleViewer();
+    bibleViewer.render();
+
     const metaResearch = new MetaBrowser({
         header: "Bible Research",
         id: "bible-research",
         useBrowser: TreeBrowser
     });
+    metaResearch.render();
     metaResearch.addService("bible-notes", {
         fields: new NBField({
             name: "note-node",
@@ -47,8 +51,4 @@
             return await base.do("save-bible-note", { item, deleting });
         }
     });
-    metaResearch.render();
-    
-    const bibleViewer = new BibleViewer();
-    bibleViewer.render();
 </script>
