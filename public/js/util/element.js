@@ -31,7 +31,7 @@ class Element {
 
     static attemptStyle(which) {
         if (!Element.styled[which]) {
-            $("head").append(`<link href='/styles/${which}.css' rel='stylesheet' />`);
+            $("head").append(`<link async href='/styles/${which}.css' rel='stylesheet' />`);
             Element.styled[which] = true;
         }
     }
@@ -410,7 +410,7 @@ class Select extends Element {
         }
 
         if (this.settings.onChange) this.$div.on("change", (e) => { 
-            return this.settings.onChange(e.currentTarget.value.toLowerCase(), e, this); 
+            return this.settings.onChange(e.currentTarget.value, e, this); 
         });
 
         this.$div.removeClass("disabled");

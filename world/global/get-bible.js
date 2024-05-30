@@ -3,10 +3,9 @@ export default async function (req, user) {
     //66 books
 
     let query = {
-        book: 0,
-        chapter: null,
-        verse: null,
-        ...req.body
+        book: req.body.book,
+        chapter: req.body.chapter,
+        verse: req.body.verse
     }
 
     if (query.verse !== null) {
