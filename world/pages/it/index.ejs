@@ -46,7 +46,7 @@
         </div>
 
         <div class="history form invisible">
-            <h5>Request Ticket History</h5>
+            <h3>Request Ticket History for <%= user ? user.memory.data.username : "none" %></h3>
             <label>
                 Start Date:
                 <input type="date" id="start-date">
@@ -186,6 +186,7 @@
                     this.tickets = response.data;
     
                     this.$ticketsList.empty();
+                    this.$ticketsList.append('<h3>IT Request History for <%= user ? user.memory.data.username : "none" %></h3>');
                     this.$ticketsList.append(`<button id="close" onclick="tracker.closeHistory()">&#60; Close Request History</button>`);
 
                     if (this.tickets.length > 0) {
