@@ -14,7 +14,7 @@
 </head>
 
 <main>
-    <% if (user && user.authLevels.includes("ITAD")) { %>
+    <% if (user && user.memory.data.authLevels.includes("ITAD")) { %>
         <input type="text" id="filter">
         <button onclick="load()">Load</button>
         <div class="meta"></div>
@@ -45,7 +45,7 @@
 <script>
     const base = new Base();
 
-    <% if (user && user.authLevels.includes("ITAD")) { %>
+    <% if (user && user.memory.data.authLevels.includes("ITAD")) { %>
         const metaBrowser = new MetaBrowser({ header: "it admin" });
 
         const load = () => {
@@ -104,13 +104,13 @@
                 editable: true,
                 multiple: true,
                 toLoad: async () => {
-                    return (await base.do("load-it", {
+                    let res = await base.do("load-it", {
                         which: filter,
                         route: "/pages/it-admin"
-                    })).data;
+                    });
+                    return res.data;
                 },
                 toSave: async (item, deleting) => {
-                    console.log(item, deleting);
                     return await base.do("save-it", { item, deleting, route: "/pages/it-admin", which: filter });
                 }
             });
