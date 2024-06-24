@@ -12,9 +12,16 @@
     --shadowColor: rgb(82, 82, 82);
 }
 
+body {
+    height: auto;
+    min-height: 100%;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
 main {
     align-content: flex-start;
-    box-shadow: 5px 5px var(--shadowColor);
+    box-shadow: none;
     width: 100%;
     max-width: 900px;
     position: initial;
@@ -22,6 +29,7 @@ main {
     z-index: 0;
     border-radius: 5px 5px 0 0;
     height: auto;
+    overflow: auto;
 }
 
 footer {
@@ -29,7 +37,7 @@ footer {
     justify-content: flex-end;
     flex-wrap: wrap;
     position: initial;
-    box-shadow: 5px 5px var(--shadowColor);
+    box-shadow: none;
     width: 100%;
     max-width: 900px;
     padding: var(--padding);
