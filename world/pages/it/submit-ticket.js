@@ -10,7 +10,7 @@ export default async function submitTicket(req, user) {
         ...req.body.ticket
     }
 
-    let page = await req.db.Spirit.create("it", {}, user.id);
+    let page = await req.db.Spirit.create("it", {}, user.memory._id);
 
     page.addBackup(newTicket);   
     await page.commit(); 
