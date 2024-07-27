@@ -523,6 +523,9 @@ class TreeBrowser extends Browser {
             this.top();
         }, { placeholder: "Top" }));
         this.buttons.hideButton();
+        this.buttons.addButton(new Button("view", (e, self) => {
+            this.viewDoc();
+        }, { placeholder: "View Doc" }));
 
         this.childButtons = this.addChild(new Buttons({ id: "child-buttons" }));
     }
@@ -772,6 +775,72 @@ class TreeBrowser extends Browser {
             let item = this.getBackupItemNode(this.usingBackup);
             this.edit(this.serving, item ? item : {});
         }
+    }
+
+    viewDoc = () => {
+        this.popup = this.addChild(new Element("div", { defaultClasses: "popup" }));
+        this.popup.addChild(new Button("close", (e, self) => { this.popup.close(); }, { placeholder: "X" }));
+        
+        let nodes = [this.serving.data[this.serving.selected]];
+        let currentNode = nodes[0];
+        let location = [];
+        do {
+            let stringifiedLocation = this.locationToString(location);
+            this.popup.addChild(new Text("h3", { placeholder: stringifiedLocation ? stringifiedLocation + " - " + currentNode.data.name : currentNode.data.name }));
+            for (let i = 0; i < currentNode.data.description.length; i++) {
+                this.popup.addChild(new Text("p", { placeholder: currentNode.data.description[i] }));
+            }
+            
+            if (currentNode.children.length > 0) {
+                nodes.push(currentNode.children[0]);
+                currentNode = currentNode.children[0];
+                location.push(0);
+            }
+            else {
+                nodes.pop();
+                currentNode = nodes[nodes.length - 1];
+                location[location.length - 1]++;
+                while (nodes.length > 1 && currentNode.children.length <= location[location.length - 1]) {
+                    nodes.pop();
+                    currentNode = nodes[nodes.length - 1];
+                    location.pop();
+                    location[location.length - 1]++;
+                };
+                
+                if (nodes.length <= 1 && currentNode.children.length <= location[location.length - 1]) {
+                    currentNode = null;
+                    break;
+                }
+                else {
+                    nodes.push(currentNode.children[location[location.length - 1]]);
+                    currentNode = nodes[nodes.length - 1];
+                }
+            }
+        } while (currentNode != null);
+    }
+
+    locationToString = (location = []) => {
+        let str = "";
+        for (let i = 0; i < location.length; i++) {
+            // convert interger to outline alphanumeric following this pattern:
+            // A, 1, a, 1 repeating
+            let num = location[i] + 1;
+            switch (i % 4) {
+                case 0:
+                    str += String.fromCharCode(65 + Math.floor(num / 4));
+                    break;
+                case 1:
+                    str += num;
+                    break;
+                case 2:
+                    str += String.fromCharCode(97 + Math.floor(num / 4));
+                    break;
+                case 3:
+                    str += num;
+                    break;
+            }
+        }
+        return str;
     }
 }
 
