@@ -787,7 +787,7 @@ class TreeBrowser extends Browser {
         do {
             let stringifiedLocation = this.locationToString(location);
             this.popup.addChild(new Text("h3", { placeholder: stringifiedLocation ? stringifiedLocation + " - " + currentNode.data.name : currentNode.data.name }));
-            for (let i = 0; i < currentNode.data.description.length; i++) {
+            if (Array.isArray(currentNode.data.description)) for (let i = 0; i < currentNode.data.description.length; i++) {
                 this.popup.addChild(new Text("p", { placeholder: currentNode.data.description[i] }));
             }
             
@@ -827,13 +827,13 @@ class TreeBrowser extends Browser {
             let num = location[i] + 1;
             switch (i % 4) {
                 case 0:
-                    str += String.fromCharCode(65 + Math.floor(num / 4));
+                    str += String.fromCharCode(64 + num);
                     break;
                 case 1:
                     str += num;
                     break;
                 case 2:
-                    str += String.fromCharCode(97 + Math.floor(num / 4));
+                    str += String.fromCharCode(96 + num);
                     break;
                 case 3:
                     str += num;
