@@ -393,13 +393,16 @@ class Browser extends Element {
             e.stopPropagation();
         });
 
-        this.$confirm = $(`<button id="confirm-delete">Confirm Delete</button>`).appendTo(this.buttons.buttons.delete.$div);
+        this.$confirm = $(`<button class="disabled" id="confirm-delete">Confirm Delete</button>`).appendTo(this.buttons.buttons.delete.$div);        
         this.$confirm.on("click", (e) => {
             if (Date.now() - this.lastAttempt > 1000) {
                 this.delete();
                 e.stopPropagation();
             }
         });
+        setTimeout(() => {
+            this.$confirm.removeClass("disabled");
+        }, 1000);
     }
 
     cancelDelete = () => {
@@ -522,10 +525,16 @@ class TreeBrowser extends Browser {
         this.buttons.addButton(new Button("top", (e, self) => {
             this.top();
         }, { placeholder: "Top" }));
-        this.buttons.hideButton();
         this.buttons.addButton(new Button("view", (e, self) => {
             this.viewDoc();
         }, { placeholder: "View Doc" }));
+        this.buttons.addButton(new Button("copy", (e, self) => {
+            this.copy();
+        }, { placeholder: "Copy" }));
+        this.buttons.addButton(new Button("paste", (e, self) => {
+            this.paste();
+        }, { placeholder: "Paste" }));
+        this.buttons.hideButton();
 
         this.childButtons = this.addChild(new Buttons({ id: "child-buttons" }));
     }
@@ -542,13 +551,16 @@ class TreeBrowser extends Browser {
             e.stopPropagation();
         });
 
-        this.$confirm = $(`<button id="confirm-delete">Confirm Delete</button>`).appendTo(this.buttons.buttons.delete.$div);
+        this.$confirm = $(`<button class="disabled" id="confirm-delete">Confirm Delete</button>`).appendTo(this.buttons.buttons.delete.$div);
         this.$confirm.on("click", (e) => {
             if (Date.now() - this.lastAttempt > 1000) {
                 this.delete();
                 e.stopPropagation();
             }
         });
+        setTimeout(() => {
+            this.$confirm.removeClass("disabled");
+        }, 1000);
     }
 
     delete = async () => {
@@ -604,6 +616,7 @@ class TreeBrowser extends Browser {
         this.box.setValue(item.data, this.serving.fields, false);
 
         this.buttons.showButton("close");
+        this.buttons.showButton("view");
         if (this.serving.itemLocation.length > 1) this.buttons.showButton("up");
         else this.buttons.hideButton("up");
         if (this.serving.itemLocation.length > 0) this.buttons.showButton("top");
@@ -616,6 +629,15 @@ class TreeBrowser extends Browser {
         if (this.serving.editable) {
             this.buttons.showButton("edit");
             this.buttons.showButton("delete");
+            this.buttons.showButton("copy");
+            if (this.serving.clipboard) {
+                this.buttons.showButton("paste");
+                let name =  this.serving.clipboard.data.name ||  this.serving.clipboard.data.username ||  this.serving.clipboard.data.title || 
+                    this.serving.clipboard.data.header ||  this.serving.clipboard.data.whenSearched ||  this.serving.clipboard.data.note ||  this.serving.clipboard.data.text;
+                if (name.length > 10) name = name.slice(0, 8) + "...";
+                this.buttons.buttons.paste.setValue("Paste " + name);
+            }
+            else this.buttons.hideButton("paste");
         }
         else this.buttons.hideButton("edit");
 
@@ -676,6 +698,9 @@ class TreeBrowser extends Browser {
         
         this.buttons.hideButton("edit");
         this.buttons.hideButton("close");
+        this.buttons.hideButton("view");
+        this.buttons.hideButton("copy");
+        this.buttons.hideButton("paste");
         this.buttons.showButton("save");
         this.buttons.showButton("cancel");
         this.buttons.hideButton("delete");
@@ -775,6 +800,30 @@ class TreeBrowser extends Browser {
             let item = this.getBackupItemNode(this.usingBackup);
             this.edit(this.serving, item ? item : {});
         }
+    }
+
+    copy = () => {
+        //get the node and its children
+        this.serving.clipboard = JSON.parse(JSON.stringify(this.getItemNode()));
+        //edit the paste button to show the name of the node
+        this.buttons.showButton("paste");
+        let name =  this.serving.clipboard.data.name ||  this.serving.clipboard.data.username ||  this.serving.clipboard.data.title || 
+            this.serving.clipboard.data.header ||  this.serving.clipboard.data.whenSearched ||  this.serving.clipboard.data.note ||  this.serving.clipboard.data.text;
+        console.log(this.serving.clipboard);
+        
+        if (name.length > 10) name = name.slice(0, 8) + "...";
+        this.buttons.buttons.paste.setValue("Paste " + name);
+    }
+
+    paste = () => {
+        //get the node and its children
+        let pasting = JSON.parse(JSON.stringify(this.serving.clipboard));
+        //get the parent node
+        let parent = this.getItemNode();
+        //add the node to the parent
+        parent.children.push(pasting);
+        //save the parent
+        this.save();
     }
 
     viewDoc = () => {

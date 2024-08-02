@@ -106,6 +106,14 @@
 
 button.disabled {
     border: none;
+    background: var(--bgColor);
+}
+
+button.disabled:hover {
+    cursor: default;
+    border: none;
+    background: var(--bgColor);
+    color: var(--textColor);
 }
 
 .unselectable {
