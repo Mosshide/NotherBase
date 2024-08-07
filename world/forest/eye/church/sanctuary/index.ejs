@@ -36,5 +36,5 @@
     });
 
     
-    const projector = new Projector("sanctuary", <%= user.authLevels.includes("Creator") %> ? "save-projector" : null);
+    const projector = new Projector("sanctuary", <%= user.memory.data.authLevels.includes("Creator") %> ? "save-church-projector" : null);
 </script>

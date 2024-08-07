@@ -8,22 +8,16 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Roboto+Condensed:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="/styles/main.css">
 </head>
 
 <main>
-    <style>
-        <%- include("../it/it.css"); %>
-    </style>
-
-    <% if (user && user.authLevels.includes("ITAD")) { %>
+    <% if (user && user.memory.data.authLevels.includes("ITAD")) { %>
         <input type="text" id="filter">
         <button onclick="load()">Load</button>
-        <div class="browser"></div>
-        <div class="search-box"></div>
-        <div class="meta buttons"></div>
+        <div class="meta"></div>
     <% } else { %>
         <div class="login form">
             <label>
@@ -40,8 +34,8 @@
     <button class="logout invisible" onclick="tracker.logout()">Logout</button>
     <p id="alert"></p>
 
-    <footer></footer>
 </main>
+<footer></footer>
 
 <script src="/js/base.js"></script>
 <script src="/js/util/element.js"></script>
@@ -51,7 +45,7 @@
 <script>
     const base = new Base();
 
-    <% if (user && user.authLevels.includes("ITAD")) { %>
+    <% if (user && user.memory.data.authLevels.includes("ITAD")) { %>
         const metaBrowser = new MetaBrowser({ header: "it admin" });
 
         const load = () => {
@@ -110,14 +104,14 @@
                 editable: true,
                 multiple: true,
                 toLoad: async () => {
-                    return (await base.do("load-it", {
+                    let res = await base.do("load-it", {
                         which: filter,
                         route: "/pages/it-admin"
-                    })).data;
+                    });
+                    return res.data;
                 },
-                toSave: async (item, which, deleting) => {
-                    console.log(item, which, deleting);
-                    await base.do("save-it", { item, which, deleting, route: "/pages/it-admin" });
+                toSave: async (item, deleting) => {
+                    return await base.do("save-it", { item, deleting, route: "/pages/it-admin", which: filter });
                 }
             });
         }

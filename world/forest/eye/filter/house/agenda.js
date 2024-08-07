@@ -1,3 +1,80 @@
+Date.isLeapYear = function (year) { 
+    return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0)); 
+};
+
+Date.getDaysInMonth = function (year, month) {
+    return [31, (Date.isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month];
+};
+
+Date.prototype.isLeapYear = function () { 
+    return Date.isLeapYear(this.getFullYear()); 
+};
+
+Date.prototype.getDaysInMonth = function () { 
+    return Date.getDaysInMonth(this.getFullYear(), this.getMonth());
+};
+
+Date.prototype.addMonths = function (value) {
+    let n = this.getDate();
+    this.setDate(1);
+    this.setMonth(this.getMonth() + value);
+    this.setDate(Math.min(n, this.getDaysInMonth()));
+    return this;
+};
+
+Date.prototype.toWithinAMonth = function () {
+    let today = new Date();
+    let d = this.getDate();
+    this.setDate(1);
+    this.setFullYear(today.getFullYear());
+    if (d >= today.getDate()) this.setMonth(today.getMonth());
+    else this.setMonth(today.getMonth() + 1);
+    this.setDate(Math.min(d, this.getDaysInMonth()));
+    return this;
+};
+
+Date.prototype.toWithinAYear = function () {
+    let today = new Date();
+    let d = this.getDate();
+    this.setDate(1);
+    if (this.getMonth() >= today.getMonth()) this.setFullYear(today.getFullYear());
+    else this.setFullYear(today.getFullYear() + 1);
+    this.setDate(Math.min(d, this.getDaysInMonth()));
+    return this;
+}
+
+Date.prototype.getDayOfTheWeek = function (mini = false) {
+    if (mini) return ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][this.getDay()];
+    return ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][this.getDay()];
+};
+
+let nowDate = new Date();
+
+let dayStart = new Date(nowDate.getTime());
+dayStart.setHours(0);
+dayStart.setMinutes(0);
+dayStart.setSeconds(0);
+dayStart.setMilliseconds(0);
+
+let dayEnd = new Date(nowDate.getTime());
+dayEnd.setHours(23);
+dayEnd.setMinutes(59);
+dayEnd.setSeconds(59);
+dayEnd.setMilliseconds(999);
+
+let weekEnd = new Date(nowDate.getTime());
+weekEnd.setDate(weekEnd.getDate() + 7);
+weekEnd.setHours(23);
+weekEnd.setMinutes(59);
+weekEnd.setSeconds(59);
+weekEnd.setMilliseconds(999);
+
+let monthEnd = new Date(nowDate.getTime());
+monthEnd.setMonth(monthEnd.getMonth() + 1);
+
+let yearEnd = new Date(nowDate.getTime());
+yearEnd.setFullYear(yearEnd.getFullYear() + 1);
+
 // an extension of the Filters class called AgendaFilters
 // this class has a few extra filters that are specific to the agenda
 class AgendaFilters extends Filters {
@@ -43,39 +120,35 @@ class AgendaFilters extends Filters {
 // an extension of the SearchBox class called Agenda
 // this class has a few extra lists that are specific to the agenda
 class Agenda extends SearchBox {
+    static getWorkingDate = (item) => {
+        if (item.date) {
+            item.workingDate = new Date(item.date);
+    
+            if (item.workingDate.getTime() < dayStart.getTime()) {
+                if (item.frequency.toLowerCase() === "daily") {
+                    item.workingDate.setFullYear(nowDate.getFullYear());
+                    item.workingDate.setMonth(nowDate.getMonth());
+                    item.workingDate.setDate(nowDate.getDate());
+                }
+                else if (item.frequency.toLowerCase() === "weekly") while (item.workingDate.getTime() < dayStart.getTime()) {
+                    item.workingDate.setDate(item.workingDate.getDate() + 7);
+                }
+                else if (item.frequency.toLowerCase() === "monthly") {
+                    item.workingDate.toWithinAMonth();
+                }
+                else if (item.frequency.toLowerCase() === "yearly") {
+                    item.workingDate.toWithinAYear();
+                }
+            }
+        }
+    }
+
     constructor(settings = {}) {
         super({
             defaultClasses: "search-box agenda",
             filters: null,
             ...settings
         });
-
-        this.nowDate = new Date();
-
-        this.dayStart = new Date(this.nowDate.getTime());
-        this.dayStart.setHours(0);
-        this.dayStart.setMinutes(0);
-        this.dayStart.setSeconds(0);
-        this.dayStart.setMilliseconds(0);
-
-        this.dayEnd = new Date(this.nowDate.getTime());
-        this.dayEnd.setHours(23);
-        this.dayEnd.setMinutes(59);
-        this.dayEnd.setSeconds(59);
-        this.dayEnd.setMilliseconds(999);
-
-        this.weekEnd = new Date(this.nowDate.getTime());
-        this.weekEnd.setDate(this.weekEnd.getDate() + 7);
-        this.weekEnd.setHours(23);
-        this.weekEnd.setMinutes(59);
-        this.weekEnd.setSeconds(59);
-        this.weekEnd.setMilliseconds(999);
-
-        this.monthEnd = new Date(this.nowDate.getTime());
-        this.monthEnd.setMonth(this.monthEnd.getMonth() + 1);
-
-        this.yearEnd = new Date(this.nowDate.getTime());
-        this.yearEnd.setFullYear(this.yearEnd.getFullYear() + 1);
 
         this.addFilters(AgendaFilters, this.renderSearchResults);
 
@@ -129,54 +202,36 @@ class Agenda extends SearchBox {
         }
         else {
             for (let i = 0; i < this.items.length; i++) {
-                if (this.items[i]) {        
-                    this.getWorkingDate(this.items[i]);
+                if (this.items[i]) {       
                     this.renderItem(this.items[i], i);
                 }
                 else $(`<p>Item Error</p>`).appendTo(this.list.$div);
             };
         }
-    }
-
-    getWorkingDate = (item) => {
-        if (item.date) {
-            item.workingDate = new Date(item.date);
-    
-            if (item.workingDate.getTime() < this.dayStart.getTime()) {
-                if (item.frequency.toLowerCase() === "weekly") while (item.workingDate.getTime() < this.dayStart.getTime()) {
-                    item.workingDate.setDate(item.workingDate.getDate() + 7);
-                }
-                else if (item.frequency.toLowerCase() === "monthly") {
-                    item.workingDate.toWithinAMonth();
-                }
-                else if (item.frequency.toLowerCase() === "yearly") {
-                    item.workingDate.toWithinAYear();
-                }
-            }
-        }
-    }
+    }   
 
     extractLabel = (item) => {
-        let label = item.name || item.username || item.title || item.header || item.whenSearched || Object.values(item)[0];
-        if (!label) label = "No Name";
+        let label = null;
+        label = item?.name || item?.username || item?.title || item?.header || item?.whenSearched;
+        if (!label) label = "Unnamed Task";
 
-        if (typeof label !== "string") label = label.toString();
+        if (typeof label !== "string") label = String(label);
 
-        if (!item.workingDate) this.getWorkingDate(item);
-        if (item.workingDate) {
-            if (item.workingDate.getTime() < this.dayStart.getTime()) {
+        if (item && !item.workingDate) Agenda.getWorkingDate(item);
+        if (item && item.workingDate) {
+            if (item.workingDate.getTime() < dayStart.getTime()) {
                 label = `${item.workingDate.toLocaleDateString()} - ${label}`;
             }
-            else if (item.workingDate.getTime() < this.dayEnd.getTime()) {
-                label = `${item.timeHours}:${item.timeMinutes} - ${label}`;
+            else if (item.workingDate.getTime() < dayEnd.getTime()) {
+                label = `${item.timeHours ? item.timeHours : "00"}:${item.timeMinutes ? item.timeMinutes : "00"} - ${label}`;
             }
-            else if (item.workingDate.getTime() < this.weekEnd.getTime()) {
+            else if (item.workingDate.getTime() < weekEnd.getTime()) {
                 label = `${item.workingDate.getDayOfTheWeek(true)} - ${label}`;
             }
-            else if (item.workingDate.getTime() < this.monthEnd.getTime()) {
+            else if (item.workingDate.getTime() < monthEnd.getTime()) {
                 label = `${item.workingDate.getMonth() + 1}/${item.workingDate.getDate()} - ${label}`;
             }
-            else if (item.workingDate.getTime() < this.yearEnd.getTime()) {
+            else if (item.workingDate.getTime() < yearEnd.getTime()) {
                 label = `${item.workingDate.getMonth() + 1}/${item.workingDate.getDate()} - ${label}`;
             }
             else {
@@ -190,20 +245,20 @@ class Agenda extends SearchBox {
     getList = (item) => {
         let list = this.todoList;
 
-        if (item.workingDate) {
-            if (item.workingDate.getTime() < this.dayStart.getTime()) {
+        if (item && item.workingDate) {
+            if (item.workingDate.getTime() < dayStart.getTime()) {
                 list = this.oldList;
             }
-            else if (item.workingDate.getTime() < this.dayEnd.getTime()) {
+            else if (item.workingDate.getTime() < dayEnd.getTime()) {
                 list = this.todayList;
             }
-            else if (item.workingDate.getTime() < this.weekEnd.getTime()) {
+            else if (item.workingDate.getTime() < weekEnd.getTime()) {
                 list = this.weekList;
             }
-            else if (item.workingDate.getTime() < this.monthEnd.getTime()) {
+            else if (item.workingDate.getTime() < monthEnd.getTime()) {
                 list = this.monthList;
             }
-            else if (item.workingDate.getTime() < this.yearEnd.getTime()) {
+            else if (item.workingDate.getTime() < yearEnd.getTime()) {
                 list = this.yearList;
             }
             else {
@@ -237,7 +292,7 @@ class Agenda extends SearchBox {
             list.show();
             return list.addChild(new Text("li", { 
                 placeholder: label,
-                id: i,
+                id: `${i}`,
                 onClick: (e, element) => {
                     if (this.settings.onLiClick) this.settings.onLiClick(e, element);
                 }
@@ -318,6 +373,7 @@ metaBrowser.addService("schedule", {
         placeholder: "Once",
         options: [
             "Once",
+            "Daily",
             "Weekly",
             "Monthly",
             "Yearly"
@@ -334,8 +390,49 @@ metaBrowser.addService("schedule", {
 label: "Your Tasks",
 multiple: true,
 toLoad: async () => {
-    return (await base.do("load-schedule")).data;
+    let res = await base.loadAll("schedule");
+
+    for (let i = 0; i < res.length; i++) {
+        if (res[i]) {     
+            Agenda.getWorkingDate(res[i].memory.data);
+        }
+    };
+    // sort the data first by if there is a date, then by date, then by time, then by name
+    res.sort((a, b) => {
+        a = a.memory.data;
+        b = b.memory.data;
+        if (!a && !b) return 0;
+        if (a && !b) return -1;
+        if (!a && b) return 1;
+        if (a.workingDate && !b.workingDate) return -1;
+        if (!a.workingDate && b.workingDate) return 1;
+        if (a.workingDate && b.workingDate) {
+            if (a.workingDate > b.workingDate) return -1;
+            if (a.workingDate < b.workingDate) return 1;
+        }
+
+        // convert timeHours and timeMinutes to time
+        if (a.timeHours && a.timeMinutes) a.time = a.timeHours + a.timeMinutes;
+        if (b.timeHours && b.timeMinutes) b.time = b.timeHours + b.timeMinutes;
+        if (a.time && !b.time) return -1;
+        if (!a.time && b.time) return 1;
+        if (a.time && b.time) {
+            if (a.time < b.time) return 1;
+            if (a.time > b.time) return -1;
+        }
+
+        if (a.name && !b.name) return -1;
+        if (!a.name && b.name) return 1;
+        if (a.name && b.name) {
+            if (a.name < b.name) return 1;
+            if (a.name > b.name) return -1;
+        }
+
+        return 0;
+    });
+
+    return res;
 },
-toSave: async (item, which, deleting) => {
-    await base.do("save-task", { item, which, deleting });
+toSave: async (item, deleting) => {
+    return await base.do("save-task", { item, deleting });
 }});

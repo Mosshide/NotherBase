@@ -20,7 +20,7 @@
 
     <main>
         <h1>NotherBase Documentation</h1>
-        <h2>notherbase-fs Version: 3.2.14</h2>
+        <h2>notherbase-fs Version: 3.4.3</h2>
 
         <details>
             <summary><h3>General Web Development Setup</h3></summary>
@@ -56,7 +56,7 @@
 npm i -g nodemon
 </pre>
 
-            <h4>Create your own Base</h4>
+            <h4>Create Your Own Base</h4>
             <p>
                 By installing notherbase-fs to an npm package, one can setup 
                 an Express.js server with automatic routes and a MongoDB connection.
@@ -93,7 +93,7 @@ const yourBase = new NotherBaseFS(__dirname);
                 may provide their own. The MONGODB_URI and SECRET variables are 
                 needed to connect to a MongoDB database, which is needed for the 
                 server to start. The NOREPLY and EMAILPW variables allow the server to
-                send emails out with their Gmail account and an app-specific password.
+                send emails out with a Gmail account and an app-specific password.
             </p>
 <pre class="code">
 PORT=4567
@@ -113,25 +113,54 @@ node yourBase.js
 <pre class="code">
 nodemon yourBase.js
 </pre>
+
+            <h5>Loose git file is corrupt error?</h5>
+<pre class="code">
+find .git/objects/ -size 0 -exec rm -f {} \;
+git fetch origin
+</pre>
         </details>
 
         <details open>
             <summary><h3>notherbase-fs</h3></summary>
 
+            <p>
+                notherbase-fs is the engine running NotherBase. It is an npm package
+                that includes basic content which enables testing. 
+                Install in another package to create a simple server and database
+                quickly.
+            </p>
+
             <details>
-                <summary><h5>About</h5></summary>
-                <p>
-                    notherbase-fs is the engine running NotherBase. It is an npm package
-                    that includes basic content which enables testing. 
-                    Install in another package to create a simple server and database
-                    quickly.
-                </p>
+                <summary><h5>class NotherBase</h5></summary>
+  
+                <article>
+                    <details>
+                        <summary>constructor(contentPath, globals = null, settings = {})</summary>
+                        <article>
+                            <div class="purpose">Starts a NotherBase server.</div>
+                            <div class="input">
+                                contentPath (String): The path to the base's content directory.
+                            </div>
+                            <div class="input">
+                                globals (Object): An object of global variables that are attached to incoming requests
+                                for use in server scripts.
+                            </div>
+                            <div class="input">
+                                settings.siteTitle (String): The title of the site. Shows on tabs.
+                            </div>
+                            <div class="input">
+                                settings.favicon (String): A file URL to the path of the favicon.
+                            </div>
+                        </article>
+                    </details>
+                </article>
             </details>
 
             <details>
                 <summary><h5>Explorer</h5></summary>
                 <p>
-                    The server now needs some content. Create a new directory in the package directory
+                    The server now needs some content. Create a new directory in your base's directory
                     and name it "world." 
                 </p>
 
@@ -148,15 +177,14 @@ nodemon yourBase.js
 </pre>
                 <p>
                     The content should now be available at http://localhost:PORT. Where PORT
-                    should be the port number specified in the .env file. It will automatically
-                    redirect to http://localhost:PORT/the-front. The "index.ejs" file created earlier gets inserted
-                    automatically into the body element of the rendered html, so feel free to
-                    add any styles, scripts or other elements that can go in an html body.
+                    should be the port number specified in the .env file. The "index.ejs" file created earlier gets inserted
+                    automatically into the main element of the rendered html, so feel free to
+                    add any styles, scripts or other elements that can go in an html main element.
                 </p>
                 <p>
                     Add more directories in /the-front to automatically create new routes.
-                    The routes will automatically try to render "index.ejs" files. For example,
-                    to add another page at http://localhost:PORT/the-front/example, create the file "/the-front/example/index.ejs".
+                    The routes will automatically try to render contained "index.ejs" files. For example,
+                    to add another page at http://localhost:PORT/example, create the file "/the-front/example/index.ejs".
                     Automatic route creation only goes one level deep, so /the-front/example/test would not
                     create a route.
                 </p>
@@ -164,13 +192,35 @@ nodemon yourBase.js
                 <h6>Inside the Base</h6>
                 <p>
                     Regions inside the base work similarly to the Front. The automatic route creation
-                    follows this pattern: http://localhost:PORT/region/area/poi/detail. Points of interest and details get
-                    routes, so for example these files will get automatically rendered: 
-                    /a-region/some-area/old-poi/index.ejs or /a-region/some-area/old-poi/a-detail/index.ejs
+                    follows this pattern: http://localhost:PORT/region/area/poi/detail. Only points of interest and details get
+                    routes in regions, so for example these files will get automatic route creation: 
+                </p>
+                <p>
+                    /a-region/some-area/old-poi/index.ejs as http://localhost:PORT/a-region/some-area/old-poi
+                </p>
+                <p>or</p>
+                <p>
+                    /a-region/some-area/old-poi/my-detail/index.ejs as http://localhost:PORT/a-region/some-area/old-poi/my-detail
                 </p>
                 <p>
                     Add these region directories at the same level as /the-front.
                 </p>
+
+                <h6>Context Passed to the EJS Renderer</h6>
+<pre class="code">
+let context = {
+    userID: null,
+    user: null,
+    siteTitle: req.siteTitle,
+    main: req.main,
+    query: req.query,
+    route: req.path,
+    requireUser: req.lock
+}
+
+let user = await req.db.Spirit.recallOne("user",  null, { email: req.session.currentUser });
+context.user = user;
+</pre>
             </details>
 
             <details>
@@ -185,7 +235,7 @@ nodemon yourBase.js
                     Creating this void page is very important, because attempts to access routes
                     that do not exist will redirect to http://localhost:PORT/void. It is also important
                     to note that for the /pages routes, the "index.ejs" files that get rendered are not
-                    inserted into an html body and so need to be full html documents.
+                    inserted into a main element (unlike regions and the-front) and so need to be full html documents.
                 </p>
                 <p>
                     These pages are not meant to be part of normal base navigation, but rather are
@@ -194,247 +244,22 @@ nodemon yourBase.js
             </details>
 
             <details>
-                <summary><h5>Server Scripts and Database Access</h5></summary>
-                
-                <p>Use load() to grab a save file from the specified spirit.</p>
-<pre class="code">
-base.load(service).then((res) => {});
-</pre>
-                <p>
-                    Many scripts need to be ran on the server to enable features like multiplayer
-                    interaction and data security. Use base.do() to run "script-name.js", a file
-                    that should be in the same directory as the client render that's calling it.
-                </p>
-<pre class="code">
-let res = await base.do("script-name", data);
-</pre>
-
-                <h6>Server Scripts</h6>
-                <p>
-                    Scripts that are run on the server should follow the format below
-                    for compatibility.
-                </p>
-<pre class="code">
-export default async (req, user) => {
-}
-</pre>
-
-                <h6>database Access</h6>
-                <p>
-                    In your server script, recall a spirit in the database via its service,
-                    parent, matching data and _id. 
-                </p>
-<pre class="code">
-export default async (req, user) => {
-    let spirit = await req.db.Spirit.recallOne(service, parent = null, data = {}, id = null);
-    spirit.memory.data.items.push(req.body.data);
-    await spirit.commit(data = null);
-}
-</pre>
-                <p>
-                    In your server script, access special spirits and their useful functions
-                    at req.db.*. The "user" parameter is actually an instance of the angel 
-                    req.db.User, in which the player's spirit is already recalled. The 
-                    user.offsetItem() function allows changes to be made to the player's 
-                    inventory in a single line. Be sure the item name is spelled correctly.
-                </p>
-<pre class="code">
-await user.offsetItem("Item Name", 1);
-</pre>
-            </details>
-
-            <details>
-                <summary><h5>Base</h5></summary>
-                <p>
-                    An object called "base" is included automatically in "the-front" and "world"
-                    client renders. Use base.load() to quickly grab the data from the 
-                    specified service. Use .then() to avoid await at top-level.
-                </p>
-
-                <article>
-                    <details>
-                        <summary>class Base {}</summary>
-
-                        <article>
-                            <details>
-                                <summary>Properties</summary>
-                                this.playerInventory = new this.#Inventory();<br>
-                                this.playerAttributes = new this.#PlayerAttributes();<br>
-                                this.playerAccount = new this.#AccountServices();<br>
-                                this.menuClosing = false;<br>
-                            </details>
-
-                            <details>
-                                <summary>static commune = async (route, data = null) => {}</summary>
-                                <article>
-                                    <div class="purpose">
-                                        Sends a POST to the spirit world for "/s/user" functions.
-                                    </div>
-                                    <div class="input">
-                                        route (String): The user function you need to run.
-                                    </div>
-                                    <div class="input">
-                                        data (Object): Data sent in the POST body.
-                                    </div>
-                                    <div class="output">
-                                        Returns: the response object returned from the POST.
-                                    </div>
-                                </article>
-                            </details>
-    
-                            <details>
-                                <summary>logout = async () => {}</summary>
-                                <article>
-                                    <div class="purpose">Communes with the spirit world to compel the user to logout.</div>
-                                    <div class="output">Returns: response from communion.</div>
-                                </article>
-                            </details>
-    
-                            <details>
-                                <summary>attemptRegister = async (email, username, password) => {}</summary>
-                                <article>
-                                    <div class="purpose">Communes to create a new account.</div>
-                                    <div class="input">
-                                        email
-                                    </div>
-                                    <div class="input">
-                                        username
-                                    </div>
-                                    <div class="input">
-                                        password
-                                    </div>
-                                    <div class="output">
-                                        Returns: Response from communion.
-                                    </div>
-                                </article>
-                            </details>
-
-                            <details>
-                                <summary>attemptLogin = async (email, password) => {};</summary>
-                                <article>
-                                    <div class="purpose">Communes to login.</div>
-                                    <div class="input">
-                                        email
-                                    </div>
-                                    <div class="input">
-                                        password
-                                    </div>
-                                    <div class="output">
-                                        Returns: Response from communion.
-                                    </div>
-                                </article>
-                            </details>
-    
-                            <details>
-                                <summary>resetPassword = async (email, test = false) => {}</summary>
-                                <article>
-                                    <div class="purpose">Communes to reset password.</div>
-                                    <div class="input">
-                                        email
-                                    </div>
-                                    <div class="input">
-                                        test: Whether this password reset is a development test.
-                                    </div>
-                                    <div class="output">
-                                        Returns: Response from communion.
-                                    </div>
-                                </article>
-                            </details>
-
-                            <details>
-                                <summary>changePassword = async (token, email, password, confirmation) => {}</summary>
-                                <article>
-                                    <div class="purpose">Communes to change a user's password.</div>
-                                    <div class="input">
-                                        token
-                                    </div>
-                                    <div class="input">
-                                        email
-                                    </div>
-                                    <div class="input">
-                                        password
-                                    </div>
-                                    <div class="input">
-                                        confirmation
-                                    </div>
-                                    <div class="output">Returns: Response from communion.</div>
-                                </article>
-                            </details>
-    
-                            <details>
-                                <summary>do = async (what, data = null) => {}</summary>
-                                <article>
-                                    <div class="purpose">Runs a server script.</div>
-                                    <div class="input">
-                                        what (String): the script to run.
-                                    </div>
-                                    <div class="input">
-                                        data: input data passed to the sript that gets run. Can 
-                                        override "route."
-                                    </div>
-                                    <div class="output">Returns: Response from the script that was run.</div>
-                                </article>
-                            </details>
-
-                            <details>
-                                <summary>load = async (service, scope = "local") => {}</summary>
-                                <article>
-                                    <div class="purpose"></div>
-                                    <div class="input">
-                                        service (String): the name of the spirit to load
-                                    </div>
-                                    <div class="input">
-                                        scope (String): "local" or "global". Load the user's personal spirit or
-                                        the spirit shared by all users.
-                                    </div>
-                                    <div class="output">Returns: the data of the spirit that was loaded.</div>
-                                </article>
-                            </details>
-                        </article>
-                    </details>
-
-                    <details>
-                        <summary>#AccountServices = class AccountServices {}</summary>
-
-                        <article>
-                            <details>
-                                <summary>Properties</summary>
-                                this.username = "";
-                                this.email = "";
-                                this.lastUpdate = 0;
-                            </details>
-
-                            <details>
-                                <summary>async updateEmail() {}</summary>
-                                
-                            </details>
-
-                            <details>
-                                <summary>async updateUsername() {}</summary>
-                                
-                            </details>
-                        </article>
-                    </details>
-                </article>
-            </details>
-
-            <details>
                 <summary><h5>Spirits</h5></summary> 
 
                 <h6>What are Spirits?</h6>
                 <p>
-                    A spirit in NotherBase is a document in the database.
+                    A spirit in NotherBase is a document in the database. A spirit
+                    with no parent is a global spirit.
                 </p>
 
                 <article>
                     <details>
-                        <summary>class Spirit {}</summary>
+                        <summary>class Spirit</summary>
 
                         <article>
                             <details>
-                                <summary>Properties</summary>
-<pre>
-this.memory = { data: {} };
+                                <summary>Static Properties</summary>
+<pre class="code">
 static db = mongoose.model('spirits', new mongoose.Schema({
     _lastUpdate: Number,
     service: String,
@@ -445,6 +270,17 @@ static db = mongoose.model('spirits', new mongoose.Schema({
     },
     data: {}
 }));
+</pre>
+                            </details>
+                            <details>
+                                <summary>Constructor</summary>
+<pre class="code">
+constructor(memory = {}) {
+    this.memory = {
+        data: {},
+        ...memory
+    };
+}
 </pre>
                             </details>
 
@@ -494,13 +330,22 @@ static db = mongoose.model('spirits', new mongoose.Schema({
                             </details>
 
                             <details>
-                                <summary>static recallAll = async (service) => {}</summary>
+                                <summary>static recallAll = async (service, parent = null, data = {}, id = null) => {}</summary>
                                 <article>
                                     <div class="purpose">
                                         Recalls all spirits of a given service in the database.
                                     </div>
                                     <div class="input">
                                         service (String): The name of the spirit.
+                                    </div>
+                                    <div class="input">
+                                        parent (ObjectId): The spirit's parent.
+                                    </div>
+                                    <div class="input">
+                                        data (Object): Data to match.
+                                    </div>
+                                    <div class="input">
+                                        id (ObjectId): The exact spirit by id.
                                     </div>
                                     <div class="output">
                                         Returns: the spirits found.
@@ -527,22 +372,43 @@ static db = mongoose.model('spirits', new mongoose.Schema({
                                         id (ObjectId): The exact spirit by id.
                                     </div>
                                     <div class="output">
+                                        Returns: the spirit found or null.
+                                    </div>
+                                </article>
+                            </details>
+
+                            <details>
+                                <summary>static recallOrCreateOne = async (service, parent = null, data = {}, id = null) => {}</summary>
+                                <article>
+                                    <div class="purpose">
+                                        Recalls a spirit in the database.
+                                    </div>
+                                    <div class="input">
+                                        service (String): The name of the spirit.
+                                    </div>
+                                    <div class="input">
+                                        data (Object): Data to match.
+                                    </div>
+                                    <div class="input">
+                                        parent (ObjectId): The spirit's parent.
+                                    </div>
+                                    <div class="input">
+                                        id (ObjectId): The exact spirit by id.
+                                    </div>
+                                    <div class="output">
                                         Returns: the spirit found or a new spirit is created.
                                     </div>
                                 </article>
                             </details>
 
                             <details>
-                                <summary>static commit = async (data = this.memory.data, which = -1) => {}</summary>
+                                <summary>static commit = async (data = this.memory.data) => {}</summary>
                                 <article>
                                     <div class="purpose">
                                         Saves a document's updated data to the database.
                                     </div>
                                     <div class="input">
                                         data (Object): The data to overrride with.
-                                    </div>
-                                    <div class="input">
-                                        which (Integer): Data to match.
                                     </div>
                                     <div class="output">
                                         Returns: "Updated"
@@ -551,13 +417,16 @@ static db = mongoose.model('spirits', new mongoose.Schema({
                             </details>
 
                             <details>
-                                <summary>static delete = async (service, data = {}, id = null) => {}</summary>
+                                <summary>static delete = async (service, parent = null, data = {}, id = null) => {}</summary>
                                 <article>
                                     <div class="purpose">
                                         Deletes spirits in the database.
                                     </div>
                                     <div class="input">
                                         service (String): The name of the spirit.
+                                    </div>
+                                    <div class="input">
+                                        parent (ObjectId): The spirit's parent.
                                     </div>
                                     <div class="input">
                                         data (Object): Data to match.
@@ -570,161 +439,41 @@ static db = mongoose.model('spirits', new mongoose.Schema({
                                     </div>
                                 </article>
                             </details>
-                        </article>
-                    </details>
 
-                    <details>
-                        <summary>class User extends Spirit {}</summary>
-
-                        <article>
                             <details>
-                                <summary>Properties</summary>
-                                this.email = email;
-                                this.id = id;
-                            </details>
-    
-                            <details>
-                                <summary>static create = async (username, password, email) => {}</summary>
+                                <summary>normalizeDataToArray = () => {} </summary>
                                 <article>
                                     <div class="purpose">
-                                        Creates a user spirit in the database.
+                                        Overrides the spirit's data object to an array if it isn't one.
                                     </div>
-                                    <div class="input">
-                                        username (String): The username of the user.
-                                    </div>
-                                    <div class="input">
-                                        password (String): The password of the user.
-                                    </div>
-                                    <div class="input">
-                                        email (String): The email of the user.
-                                    </div>
-                                    <div class="output">
-                                        Returns: the user spirit created.
-                                    </div>
-                                </article>
                             </details>
 
                             <details>
-                                <summary>static recallOne = async (email = null, username = null, id = null) => {}</summary>
+                                <summary>addBackup = (data, max = 5) => {}</summary>
                                 <article>
                                     <div class="purpose">
-                                        Recalls a user's spirit.
+                                        Adds a backup of the spirit's data to the spirit's backups. Then overrides
+                                        the spirit's data object to the input data. Keeps max number of backups.
                                     </div>
                                     <div class="input">
-                                        email (String): The email of the user.
+                                        data (Object): The data to backup.
                                     </div>
                                     <div class="input">
-                                        username (String): The username of the user.
+                                        max (Number): The maximum number of backups to keep.
                                     </div>
-                                    <div class="input">
-                                        id (ObjectId): The exact id of the user's spirit.
-                                    </div>
-                                    <div class="output">
-                                        Returns: the user spirit that was found.
-                                    </div>
-                                </article>
-                            </details>
-
-                            <details>
-                                <summary>static delete = async (email) => {}</summary>
-                                <article>
-                                    <div class="purpose">
-                                        Deletes a user by email.
-                                    </div>
-                                    <div class="input">
-                                        email (String): The email of the user.
-                                    </div>
-                                    <div class="output">
-                                        Returns: the number of spirits deleted.
-                                    </div>
-                                </article>
                             </details>
                         </article>
                     </details>
 
                     <details>
-                        <summary>class Item extends Spirit {}</summary>
-
-                        <article>
-                            <details>
-                                <summary>Properties</summary>
-                                this.name = name;
-                            </details>
-    
-                            <details>
-                                <summary>static create = async (name, short, long) => {}</summary>
-                                <article>
-                                    <div class="purpose">
-                                        Creates an item spirit in the database.
-                                    </div>
-                                    <div class="input">
-                                        name (String): The name of the item.
-                                    </div>
-                                    <div class="input">
-                                        short (String): The short description.
-                                    </div>
-                                    <div class="input">
-                                        long (String): The long description.
-                                    </div>
-                                    <div class="output">
-                                        Returns: the item spirit created.
-                                    </div>
-                                </article>
-                            </details>
-
-                            <details>
-                                <summary>static recallAll = async () => {}</summary>
-                                <article>
-                                    <div class="purpose">
-                                        Recalls all items.
-                                    </div>
-                                    <div class="output">
-                                        Returns: the item spirits found.
-                                    </div>
-                                </article>
-                            </details>
-
-                            <details>
-                                <summary>static recallOne = async (name) => {}</summary>
-                                <article>
-                                    <div class="purpose">
-                                        Recalls an item spirit in the database.
-                                    </div>
-                                    <div class="input">
-                                        name (String): The name of the item.
-                                    </div>
-                                    <div class="output">
-                                        Returns: the item spirit found.
-                                    </div>
-                                </article>
-                            </details>
-
-                            <details>
-                                <summary>static delete = async (name) => {}</summary>
-                                <article>
-                                    <div class="purpose">
-                                        Deletes an item spirit in the database.
-                                    </div>
-                                    <div class="input">
-                                        name (String): The name of the item.
-                                    </div>
-                                    <div class="output">
-                                        Returns: the number of spirits deleted.
-                                    </div>
-                                </article>
-                            </details>
-                        </article>
-                    </details>
-
-                    <details>
-                        <summary>class SendMail {}</summary>
+                        <summary>class SendMail</summary>
 
                         <article>    
                             <details>
                                 <summary>const passwordReset = async (toEmail, resetToken) => {}</summary>
                                 <article>
                                     <div class="purpose">
-                                        Sends an email with a password reset code. WIP haha
+                                        Sends an email with a password reset token.
                                     </div>
                                     <div class="input">
                                         toEmail (String): The email of the user.
@@ -733,7 +482,7 @@ static db = mongoose.model('spirits', new mongoose.Schema({
                                         resetToken (Number): The token that will be sent.
                                     </div>
                                     <div class="output">
-                                        Returns: hmm.
+                                        Returns: whatever the nodemailer transporter returns on sendMail.
                                     </div>
                                 </article>
                             </details>
@@ -742,25 +491,258 @@ static db = mongoose.model('spirits', new mongoose.Schema({
                                 <summary>const send = async (toEmail, subject, html) => {}</summary>
                                 <article>
                                     <div class="purpose">
-                                        Sends an email. WIP haha
+                                        Sends an email.
                                     </div>
                                     <div class="input">
-                                        toEmail (String): The email address of the user.
+                                        toEmail (String): The email address to send to.
                                     </div>
                                     <div class="input">
                                         subject (String): The subject of the email.
                                     </div>
                                     <div class="input">
-                                        html (String): The html of the user.
+                                        html (String): The html of the email.
                                     </div>
                                     <div class="output">
-                                        Returns: hmmm.
+                                        Returns: whatever the nodemailer transporter returns on sendMail.
                                     </div>
                                 </article>
                             </details>
                         </article>
                     </details>
                 </article>
+            </details>
+
+            <details>
+                <summary><h5>Server Scripts and Database Access</h5></summary>
+                
+                <p>Use loadAll() to grab saved files from the specified spirit.</p>
+<pre class="code">
+base.loadAll(service).then((res) => {});
+</pre>
+                <p>
+                    Many scripts need to be ran on the server to enable features like multiplayer
+                    interaction and data security. Use base.do() to run "script-name.js", a file
+                    that should be in the same directory as the current path.
+                </p>
+                <p>
+                    Include route: "desired-path" in the data object to override the script's path.
+                </p>
+<pre class="code">
+let res = await base.do("script-name", data);
+</pre>
+
+                <h6>Server Scripts</h6>
+                <p>
+                    Scripts that are run on the server should follow the format below
+                    for compatibility.
+                </p>
+<pre class="code">
+export default async (req, user, io) => {
+    // Script code here
+}
+</pre>
+
+                <h6>Database Access</h6>
+                <p>
+                    In your server script, recall a spirit in the database via its service,
+                    parent, matching data or id. 
+                </p>
+<pre class="code">
+export default async (req, user) => {
+    let spirit = await req.db.Spirit.recallOne(service, parent = null, data = {}, id = null);
+    await spirit.commit(req.body.newData);
+}
+</pre>
+            </details>
+
+            <details>
+                <summary><h5>class Base</h5></summary>
+                <p>
+                    An object called "base" is included automatically in the render context, but not for 
+                    standalone pages. Use base.loadAll(service, scope) to quickly grab the data from the 
+                    specified service. Use .then(response) to avoid await at top-level.
+                </p>
+
+                <details>
+                    <summary>Constructor</summary>
+<pre class="code">
+constructor() {}
+</pre>
+                    
+                </details>
+
+                <details>
+                    <summary>static commune = async (route, data = null) => {}</summary>
+                    <article>
+                        <div class="purpose">
+                            Sends a POST to the spirit world for "/s/user" functions.
+                        </div>
+                        <div class="input">
+                            route (String): The user function you need to run.
+                        </div>
+                        <div class="input">
+                            data (Object): Data sent in the POST body.
+                        </div>
+                        <div class="output">
+                            Returns: the response object returned from the POST.
+                        </div>
+                    </article>
+                </details>
+
+                <details>
+                    <summary>logout = async (test = false) => {}</summary>
+                    <article>
+                        <div class="purpose">Communes with the spirit world to compel the user to logout.</div>
+                        <div class="input">
+                            test (Boolean): If true, the user will be logged out, but the page won't reload.
+                        </div>
+                        <div class="output">Returns: response from communion.</div>
+                    </article>
+                </details>
+
+                <details>
+                    <summary>attemptRegister = async (email, username, password) => {}</summary>
+                    <article>
+                        <div class="purpose">Communes to create a new account.</div>
+                        <div class="input">
+                            email
+                        </div>
+                        <div class="input">
+                            username
+                        </div>
+                        <div class="input">
+                            password
+                        </div>
+                        <div class="output">
+                            Returns: Response from communion.
+                        </div>
+                    </article>
+                </details>
+
+                <details>
+                    <summary>attemptLogin = async (email, password) => {};</summary>
+                    <article>
+                        <div class="purpose">Communes to login.</div>
+                        <div class="input">
+                            email
+                        </div>
+                        <div class="input">
+                            password
+                        </div>
+                        <div class="output">
+                            Returns: Response from communion.
+                        </div>
+                    </article>
+                </details>
+
+                <details>
+                    <summary>resetPassword = async (email, test = false) => {}</summary>
+                    <article>
+                        <div class="purpose">Communes to initiate a password reset.</div>
+                        <div class="input">
+                            email
+                        </div>
+                        <div class="input">
+                            test: If true, an email will not be sent, but the reset token will print in the console.
+                        </div>
+                        <div class="output">
+                            Returns: Response from communion.
+                        </div>
+                    </article>
+                </details>
+
+                <details>
+                    <summary>changePassword = async (token, email, password, confirmation) => {}</summary>
+                    <article>
+                        <div class="purpose">Communes to change a user's password.</div>
+                        <div class="input">
+                            token
+                        </div>
+                        <div class="input">
+                            email
+                        </div>
+                        <div class="input">
+                            password
+                        </div>
+                        <div class="input">
+                            confirmation
+                        </div>
+                        <div class="output">Returns: Response from communion.</div>
+                    </article>
+                </details>
+
+                <details>
+                    <summary>do = async (what, data = null) => {}</summary>
+                    <article>
+                        <div class="purpose">Runs a server script.</div>
+                        <div class="input">
+                            what (String): the script to run.
+                        </div>
+                        <div class="input">
+                            data: input data passed to the sript that gets run. SEt data.route to override the script's path.
+                        </div>
+                        <div class="output">Returns: Response from the script that was run.</div>
+                    </article>
+                </details>
+
+                <details>
+                    <summary>loadAll = async (service, scope = "local", data = {}, id = null) => {}</summary>
+                    <article>
+                        <div class="purpose"></div>
+                        <div class="input">
+                            service (String): the name of the spirit to load
+                        </div>
+                        <div class="input">
+                            scope (String): "local" or "global". Load the user's personal spirits or
+                            the spirits shared by all users.
+                        </div>
+                        <div class="input">
+                            data (Object): Data to match.
+                        </div>
+                        <div class="input">
+                            id (ObjectId): The exact spirit by id.
+                        </div>
+                        <div class="output">Returns: the spirits that were found.</div>
+                    </article>
+                </details>
+
+                <details>
+                    <summary>load = async (service, scope = "local", data = {}, id = null) => {}</summary>
+                    <article>
+                        <div class="purpose">Loads a single spirit.</div>
+                        <div class="input">
+                            service (String): the name of the spirit to load
+                        </div>
+                        <div class="input">
+                            scope (String): "local" or "global". Load the user's personal spirits or
+                            the spirits shared by all users.
+                        </div>
+                        <div class="input">
+                            data (Object): Data to match.
+                        </div>
+                        <div class="input">
+                            id (ObjectId): The exact spirit by id.
+                        </div>
+                        <div class="output">Returns: the spirit that was found.</div>
+                    </article>
+                </details>
+                
+                <details>
+                    <summary>createToggleViewButton = async () => {}</summary>
+                    <article>
+                        <div class="purpose">Creates a button that toggles the main element width.</div>
+                    </article>
+                </details>
+
+                <details>
+                    <summary>toggleView = async (save = true) => {} </summary>
+                    <article>
+                        <div class="purpose">Toggles the main element width.</div>
+                        <div class="input">
+                            save (Boolean): If true, the view state will be saved in the user's spirit.
+                        </div>
+                    </article>
+                </details>
             </details>
 
             <details>
@@ -774,7 +756,7 @@ static db = mongoose.model('spirits', new mongoose.Schema({
 &lt;div class="chat-box" id="element-id"&gt;&lt;/div&gt;
 &lt;script src="/js/chat-box.js"&gt;&lt;/script&gt;
 &lt;script&gt;
-    let chat = new ChatBox("&lt;%= user.username %&gt;", "element-id");
+    let chat = new ChatBox("&lt;%= user.memory.data.username %&gt;", "element-id");
 &lt;/script&gt;
 </pre>
 
@@ -821,7 +803,7 @@ npm i
 <pre class="code">
 PORT=4567
 MONGODB_URI="mongodb+srv://genDev:password@notherbase.compd.mongodb.net/notherbase-test?retryWrites=true&w=majority"
-SECRET="ahahhahaah"
+SECRET="random"
 NOREPLY="wyatt@notherbase.com"
 EMAILPW=""
 </pre>
@@ -858,23 +840,6 @@ git config --global user.name “Your Name”
             <details>
                 <summary><h5>Spirit of NotherBase</h5></summary>
                 <p>This will detail the direction of design for NotherBase.</p>
-                <h6>Goals</h6>
-                <p>Here will be the goals of NotherBase.</p>
-                <h6>Major Products</h6>
-                <p>Here will be the major products of NotherBase.</p>
-                <h6>Aesthetic</h6>
-                <p>Here will be the aesthetic goals of NotherBase.</p>
-            </details>
-
-            <details>
-                <summary><h5>Spirits in NotherBase</h5></summary>
-                <p>
-                    This will detail the direction of design for the various spirits 
-                    in NotherBase.
-                </p>
-
-                <h6>Streams</h6>
-                <p>Here will be the direction for stream spirits.</p>
             </details>
         </details>
     </main>

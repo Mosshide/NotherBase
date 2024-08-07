@@ -1,8 +1,8 @@
 .search-box {
     position: relative;
     height: 70vh;
-    width: var(--fillFromMargin);
-    margin: var(--margin);
+    width: 100%;
+    margin: 0;
     border: none;
     background: none;
     align-content: flex-start;
@@ -32,7 +32,7 @@
     margin: 0;
     align-content: flex-start;
     border: none;
-    padding: var(--padding);
+    padding: 0;
     background: none;
     display: flex;
     flex-direction: column-reverse;
@@ -57,16 +57,20 @@
     transition: max-height 0.3s ease-out;
 }
 
-.search-box .filters label {
+.search-box .filters div {
+    width: 100%;
+    display: flex;
     flex-wrap: nowrap;
+    margin: 5px;
 }
 
-.search-box .filters label h4 {
+.search-box .filters div h4 {
     border: none;
+    width: auto;
 }
 
-.search-box .filters label input {
-    width: 70%;
+.search-box .filters div input {
+    width: 100%;
     margin: 0;
 }
 

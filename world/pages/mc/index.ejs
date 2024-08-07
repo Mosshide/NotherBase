@@ -11,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="/styles/main.css">
+    <script src="/js/base.js"></script>
 </head>
 <body>
     <main>
@@ -34,19 +35,37 @@
         
         <div class="monitor">
             <div class="screen">
-                <p>Wyatt's Bedrock Minecraft Server</p>
-                <p>Address: 73.11.150.171</p>
-                <p>Port: 19132</p>
+                <p>Wyatt's Java Minecraft Server (Fabric 1.21)</p>
+                <p>Address: mc.notherbase.com</p>
+                <p>Local Address: 10.0.0.187</p>
+                <p>Port: 25565</p>
                 <p id="status">Status: Offline</p>
                 <p id="players">Players: 0</p>
             </div>
         </div>
 
+        <% if (query.scope == "local") { %>
+            <a href="/mc">Internet Results</a>
+        <% } else { %>
+            <a href="/mc?scope=local">LAN Results</a>
+        <% } %>
+
         <script>
-            $.post(`/forest/clearing/wyatts-house/basement/serve/mc-status`, function (data) {
-                if (data.scriptResult.players) {
-                    $("#status").text(`Status: Online`);
-                    $("#players").text(`Players: ${data.scriptResult.players.online}`);
+            let base = new Base();
+            let scope = "global";
+            <% if (query.scope) { %>
+                scope = "<%= query.scope %>";
+            <% } %>
+
+            base.do("mc-status", {
+                route: "/pages/mc",
+                scope
+            }).then((res) => {
+                console.log(res);
+                
+                if (res.data.status === "online") {
+                    $("#status").text("Status: Online");
+                    $("#players").text(`Players: ${res.data.online}/${res.data.max}`);
                 }
             });
         </script>

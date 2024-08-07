@@ -24,11 +24,53 @@ main {
     align-items: flex-start;
 }
 
-.date .day {
+main .hud {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-content: center;
+    height: 150px;
+    width: 100%;
+}
+
+main .hud .bible-viewer {
+    width: auto;
+    padding: var(--padding);
+    height: auto;
+}
+
+main .hud .date {
+    width: 100%;
+    padding: var(--padding) var(--thickPadding);
+    display: flex;
+    align-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.hud .date .day {
+    font-size: var(--h2Size);
+    padding: 0;
+    width: auto;
     font-weight: bold;
+}
+
+.hud .date .full-date {
+    padding: 0;
+    width: auto;
 }
 
 .porch {
     width: 100%;
     margin: 0;
+}
+
+@media screen and (min-width: 570px) {
+    main.full-view  .hud {
+        width: 700px;
+    }
+
+    main.full-view .porch {
+        width: 700px;
+    }
 }

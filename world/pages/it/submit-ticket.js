@@ -10,10 +10,10 @@ export default async function submitTicket(req, user) {
         ...req.body.ticket
     }
 
-    let page = await req.db.Spirit.recallOne("it", user.id);
+    let page = await req.db.Spirit.create("it", {}, user.memory._id);
 
-    if (Array.isArray(page.memory.data)) await page.commit([...page.memory.data, newTicket]);
-    else await page.commit([newTicket]);
+    page.addBackup(newTicket);   
+    await page.commit(); 
 
     await req.db.SendMail.send(user.memory.data.email, `New IT Request Submitted Successfully`, `
         <h1>Request: ${newTicket.title}</h1> <br>
@@ -22,7 +22,7 @@ export default async function submitTicket(req, user) {
         Description: ${newTicket.description}
     `);
 
-    await req.db.SendMail.send("wyattsushi@gmail.com", `New IT Request from ${user.memory.data.username}`, `
+    await req.db.SendMail.send("wyatt@notherbase.com", `New IT Request from ${user.memory.data.username}`, `
         <h1>Request: ${newTicket.title}</h1> <br>
         Ticket ID: ${newTicket.id} <br>
         Submitted On: ${new Date(newTicket.date).toLocaleString()} <br>

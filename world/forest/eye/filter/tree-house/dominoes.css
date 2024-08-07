@@ -1,11 +1,12 @@
 .table {
-    margin-top: 40px;
+    margin: 40px 0;
     background-color: var(--tableColor);
-    background-image: url("/img/textures/wood.jpg");
+    /* background-image: url("/img/textures/wood.jpg"); */
     background-size: 80px 80px;
     image-rendering: pixelated;
-    width: 600px;
-    height: 600px;
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    height: auto;
     border-radius: 5px;
     border: outset 5px var(--tableColor);
     box-shadow: 2px 2px 2px var(--shadow);
@@ -16,18 +17,43 @@
     color: var(--dominoColor);
 }
 
-.opponent-hand {
+.table .buttons {
+    width: 25%;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.hand {
     position: absolute;
     background-color: var(--dominoShadow);
-    width: 100%;
-    height: 50px;
-    left: 0;
-    top: 0;
+    width: 25%;
+    height: 25%;
+    right: 0;
+    top: 10%;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
-    border: outset 2px rgba(255, 0, 0, 0.651);
+    border: outset 2px rgba(0, 0, 0, 0.651);
+}
+
+.hand#player-1 {
+    right: 0;
+    top: 60%;
+}
+
+.score {
+    position: absolute;
+    background-color: var(--dominoShadow);
+    width: 25%;
+    height: 25%;
+    right: 0;
+    top: 35%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: outset 2px rgba(0, 0, 0, 0.651);
 }
 
 .bone {
@@ -79,9 +105,9 @@
     position: absolute;
     background-color: var(--dominoShadow);
     width: 70%;
-    height: calc(100% - 110px);
-    left: 5px;
-    top: 55px;
+    height: 100%;
+    left: 0;
+    top: 0;
     border: outset 2px rgba(54, 54, 54, 0.651);
 }
 
@@ -93,59 +119,28 @@
     border: outset 2px var(--dominoHighlightedColor);
 }
 
-.bone-yard {
+.board .yard {
     position: absolute;
     background-color: var(--dominoShadow);
-    width: calc(30% - 15px);
-    height: 25%;
-    right: 5px;
-    top: 37.5%;
+    width: 15%;
+    height: 5%;
+    right: 0;
+    bottom: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     border: outset 2px rgba(255, 255, 255, 0.651);
 }
 
-#score1 {
-    position: absolute;
-    background-color: var(--dominoShadow);
-    width: 20%;
-    height: 15%;
-    right: 15px;
-    top: 65px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: outset 2px rgba(255, 0, 0, 0.651);
-}
-
-#score2 {
-    position: absolute;
-    background-color: var(--dominoShadow);
-    width: 20%;
-    height: 15%;
-    right: 15px;
-    top: calc(50% + 65px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: outset 2px rgba(0, 0, 255, 0.527);
-}
-
-.your-hand {
-    position: absolute;
-    background-color: var(--dominoShadow);
-    width: 100%;
-    height: 50px;
-    left: 0;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    border: outset 2px rgba(0, 0, 255, 0.527);
-}
-
 .turn-to-play {
     background-color: rgba(238, 170, 69, 0.548);
+}
+
+@media screen and (min-width: 570px) {
+    .full-view .table {
+        width: auto;
+        height: 100%;
+        aspect-ratio: 1 / 1;
+        max-width: initial;
+    }
 }

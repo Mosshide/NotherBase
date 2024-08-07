@@ -8,61 +8,48 @@ export default async function (req, user) {
             ...settings
         }
 
-        let groups = await req.db.Spirit.recallAll("group");
-        let inGroups = [];
-        
-        for (let i = 0; i < groups.memory.length; i++) {
-            if (!groups.memory[i].data) groups.memory.splice(i, 1);
-            else {
-                if (Array.isArray(groups.memory[i].data.members)) {
-                    let groupInfo = {
-                        id: groups.memory[i].id,
-                        name: groups.memory[i].data.name,
-                        description: groups.memory[i].data.description,
-                        members: [],
-                        joinRequests: []
-                    }
-                    if (settings.getSettings) groupInfo.settings = groups.memory[i].data.settings;
-        
-                    let userFound = false;
-    
-                    for (let j = 0; j < groups.memory[i].data.members.length; j++) {
-                        if (settings.getMembers) {
-                            let findUser = await req.db.User.recallOne(null, null, groups.memory[i].data.members[j].id);
-        
-                            groupInfo.members[j] = {
-                                id: groups.memory[i].data.members[j].id,
-                                name: findUser.memory.data.username,
-                                auth: groups.memory[i].data.members[j].auth
-                            }
-                        }
-                        
-                        if (groups.memory[i].data.members[j].id == `${user.id}`) userFound = true;
-                    }
-                    
-                    if (userFound) {
-                        if (settings.getJoinRequests) {
-                            if (!Array.isArray(groups.memory[i].data.joinRequests)) groups.memory[i].data.joinRequests = [];
-        
-                            for (let j = 0; j < groups.memory[i].data.joinRequests.length; j++) {
-                                let findUser = await req.db.User.recallOne(null, null, groups.memory[i].data.joinRequests[j].id);
-                                
-                                groupInfo.joinRequests[j] = {
-                                    id: groups.memory[i].data.joinRequests[j].id,
-                                    name: findUser.memory.data.username,
-                                    note: groups.memory[i].data.joinRequests[j].note
-                                }
-                            }
-                        }
-
-                        inGroups.push(groupInfo);
-                    }
+        let groups = await req.db.Spirit.recallAll("group", null, {
+            members: {
+                $elemMatch: {
+                    id: `${user.memory._id}`
                 }
-                else groups.memory[i].data.members = [];
             }
-        }
+        });
 
-        await groups.commit();
+        let foundUsers = {};
+        let inGroups = [];
+
+        for (let i = 0; i < groups.length; i++) {
+            // get members' usernames
+            for (let j = 0; j < groups[i].memory.data.members.length; j++) {
+                if (groups[i].memory.data.members[j].id == `${user.memory._id}`) {
+                    groups[i].memory.data.members[j].name = user.memory.data.username;
+                }
+                else {
+                    if (!foundUsers[groups[i].memory.data.members[j].id]) {
+                        foundUsers[groups[i].memory.data.members[j].id] = await req.db.Spirit.recallOne("user", null, {}, groups[i].memory.data.members[j].id);
+                    }
+                    if (foundUsers[groups[i].memory.data.members[j].id]) groups[i].memory.data.members[j].name = foundUsers[groups[i].memory.data.members[j].id].memory.data.username;
+                }
+            }
+
+            // get join requests' usernames
+            for (let j = 0; j < groups[i].memory.data.joinRequests.length; j++) {
+                if (groups[i].memory.data.joinRequests[j].id) {
+                    if (!foundUsers[groups[i].memory.data.joinRequests[j].id]) {
+                        foundUsers[groups[i].memory.data.joinRequests[j].id] = await req.db.Spirit.recallOne("user", null, {}, groups[i].memory.data.joinRequests[j].id);
+                    }
+                    if (foundUsers[groups[i].memory.data.joinRequests[j].id]) groups[i].memory.data.joinRequests[j].name = foundUsers[groups[i].memory.data.joinRequests[j].id].memory.data.username;
+                }
+                else {
+                    groups[i].memory.data.joinRequests.splice(j, 1);
+                    j--;
+                    await groups[i].commit();
+                }
+            }
+
+            inGroups.push(groups[i]);
+        }
 
         return inGroups;
     }

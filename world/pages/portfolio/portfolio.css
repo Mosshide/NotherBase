@@ -14,6 +14,7 @@
     --green: #709176;
     --blue: #00487C;
     --game-size: 500px;
+    --maxMainWidth: 1000px;
 }
 
 * {
@@ -31,8 +32,15 @@ main {
     position: initial;
     max-height: initial;
     height: auto;
-    max-width: 800px;
-    margin-top: 10px;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    border-radius: 0;
+    border: none;
+}
+
+h3 {
+    text-align: center;
 }
 
 footer {
@@ -151,6 +159,20 @@ nav .buttons {
     width: initial;
 }
 
+section {
+    padding: 10px calc((100% - var(--maxMainWidth)) / 2);
+    border: none;
+    border-radius: 0;
+    margin: 0;
+    width: 100%;
+}
+
+section>img {
+    width: 100%;
+    height: auto;
+    max-width: 400px;
+}
+
 .text {
     width: 100%;
     min-height: 10vh;
@@ -158,6 +180,7 @@ nav .buttons {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+    max-width: var(--maxMainWidth);
 }
 
 #notherbase {
@@ -173,8 +196,6 @@ nav .buttons {
 #notherbase-fs {
     background-color: var(--extreme-dark);
     padding: 10px;
-    border: 5% solid var(--bgColor);
-    border-radius: 0% 0% 50px 50px;
     width: 90%;
     flex-direction: row-reverse;
 }
@@ -217,7 +238,7 @@ nav .buttons {
         padding: 40px 10px;
     }
 
-    .text, section img, section iframe {
+    .text, section iframe {
         width: 100%;
         padding: 5px;
     }
