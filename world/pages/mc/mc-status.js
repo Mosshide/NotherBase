@@ -1,7 +1,7 @@
 import { pingJava } from '@minescope/mineping';
 
 export default async (req, user, io) => {
-    const data = await pingJava(req.body.scope == "local" ? "10.0.0.187" : "67.185.48.118");
+    const data = await pingJava(req.body.scope == "local" ? "10.0.0.187" : "mc.notherbase.com");
 
     return {
         status: "online",
