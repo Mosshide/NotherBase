@@ -11,7 +11,7 @@ const notherBaseFS = new NotherBaseFS({ nkjvBible }, {
     pebblewireless: {
         title: 'Pebble Wireless',
         directory: fileURLToPath(new URL('./pebblebase', import.meta.url)),
-        icon: '/public/img/drum.png'
+        icon: '/public/img/logo.png'
     },
     loveincoflewiscounty: {
         title: 'Love INC of Lewis County',
