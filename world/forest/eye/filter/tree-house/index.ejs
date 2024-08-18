@@ -1,8 +1,8 @@
 <style>
     <%- include("./inside.css"); %>
     <%- include("./couch.css"); %>
-    <%- //include("./dominoes.css"); %>
-    <%- include("./cards-against-Bible.css"); %>
+    <%- include("./dominoes/dominoes.css"); %>
+    <%- //include("./cards-against-Bible.css"); %>
 </style>
 
 <section>
@@ -28,7 +28,7 @@
     </div>
 </section>
 
-<section>
+<!-- <section>
     <label>
         <h5>Submit a Prompt: </h5>
         <input type="text" id="prompt" placeholder="Prompt" />
@@ -41,16 +41,9 @@
         <p id="answer-alert"></p>
         <button onclick="submitAnswer()">Submit</button>
     </label>
-</section>
+</section> -->
 
-<div class="table">
-    <!-- <div class="opponent-hand"></div>
-    <div class="board"></div>
-    <div id="score1"></div>
-    <div class="bone-yard"></div>
-    <div id="score2"></div>
-    <div class="your-hand"></div> -->
-</div>
+<div class="table"></div>
 
 <hr>
 
@@ -68,8 +61,8 @@
     const chat = new ChatBox("<%= user.memory.data.username %>", "tree-house");
     const hiddenChat = new ChatBox("<%= user.memory.data.username %>", "cards-against-Bible");
 
-    // <%- include("./dominoes.js"); %> 
-    <%- include("./cards-against-Bible.js"); %> 
+    <%- include("./dominoes/dominoes.js"); %> 
+    <%- //include("./cards-against-Bible.js"); %> 
 
     const submitPrompt = () => {
         let prompt = $("input#prompt").val();

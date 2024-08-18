@@ -1,0 +1,88 @@
+/* update bg */
+.hero {
+    
+}
+
+.hero * {
+    color: var(--second-color);
+}
+
+.hero h2 {
+    width: auto;
+    max-width: var(--max-main-width);
+    margin: 0;
+    margin-bottom: 20px;
+}
+
+.hero>img {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    object-fit: cover;
+    object-position: center;
+    position: absolute;
+}
+
+.hero>p {
+    margin-bottom: 20px;
+}
+
+.trans {
+    background: var(--third-color);
+}
+
+section.news {
+    background: var(--fourth-color);
+    height: auto;
+    padding: 0;
+}
+
+section.news .card-list {
+    padding-left: 20vw;
+    display: flex;
+    justify-content: flex-start;
+    gap: 40px;
+    width: 100%;
+}
+
+.Christ-centered {
+    background: var(--main-color);
+}
+
+.Christ-centered * {
+    color: var(--second-color);
+}
+
+.souper {
+    background: url('/img/souper-poster.jpg') !important;
+    background-size: cover !important;
+    position: relative;
+}
+
+.donate-heart {
+    width: 30%;
+    height: auto;
+    margin: 0 10px;
+}
+
+/* styles for screens under 1000px wide */
+@media only screen and (max-width: 1000px) {
+    .souper {
+        background-size: cover !important;
+        background-repeat: no-repeat !important;
+    }
+
+    section.news .card-list {
+        padding-left: 0;
+        gap: 25px;
+    }
+}
+
+/* styles for screens under 1500px wide */
+@media only screen and (max-width: 1500px) {
+    .hero {
+        background: url('/img/office/chehalis_sky_web_medium.webp');
+        background-size: cover;
+        background-position: center;
+    }
+}
