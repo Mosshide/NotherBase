@@ -18,8 +18,8 @@
     --hoverColor: rgb(49, 49, 49);
     --hoverTextColor: rgb(216, 171, 112);
     --shadowColor: rgba(7, 7, 7, 0.616);
-    --textColor: rgb(185, 135, 69);
-    --textColorBright: rgb(221, 181, 130);
+    --textColor: rgb(39, 28, 14);
+    --textColorBright: rgb(105, 87, 63);
     --woodColor: rgb(133, 96, 62);
     --darkWoodColor: rgb(70, 50, 32);
     --ceilingBG: rgba(202, 202, 202, 0.034);
@@ -40,7 +40,7 @@
     --h3Size: 18px;
     --h4Size: 18px;
     --h5Size: 16px;
-    --pSize: 14px;
+    --pSize: 16px;
     --tinyText: 14px;
     --inputHeight: 42px;
     /* boxes */
@@ -142,24 +142,63 @@ body {
 }
 
 main {
-    position: absolute;
-    width: var(--mainWidth);
-    max-width: var(--maxMainWidth);
-    height: calc(100% - 50px);
-    box-shadow: var(--boxShadow);
+    position: relative;
+    width: 100%;
+    max-width: initial;
+    height: 100%;
     padding: 0;
-    border-radius: 5px;
-    top: 44px;
-    left: 1vw;
+    top: 0;
+    left: 0;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
     align-content: flex-start;
     align-items: flex-end;
-    background-color: var(--bgColor);
     overflow: auto;
     overflow-x: hidden;
     z-index: 1;
+    background: rgb(223, 222, 222);
+    box-shadow: none;
+    border-radius: 0;
+}
+
+nav {
+    display: flex;
+    width: 100%;
+    height: 80px;
+    align-items: center;
+}
+
+nav h1 {
+    width: 50%;
+    margin: 0;
+    padding: 0;
+    padding-left: 64px;
+    height: auto;
+    text-align: left;
+}
+
+nav h2 {
+    width: 50%;
+    margin: 0;
+    padding: 0;
+    height: auto;
+    text-align: right;
+    padding-right: 64px;
+}
+
+nav a {
+    width: 50%;
+    padding: 0;
+    margin: 0;
+    border: none;
+    text-decoration: none;
+    background: none;
+}
+
+nav a:hover {
+    cursor: pointer;
+    border: none;
 }
 
 footer {
@@ -218,9 +257,9 @@ footer a {
 
 section {
     width: var(--fillFromMargin);
-    margin: var(--margin);
-    background: var(--darkBgColor);
-    border: var(--darkBorder);
+    margin: 50px 50px;
+    background: none;
+    border: none;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
@@ -229,6 +268,8 @@ section {
     align-content: flex-end;
     min-height: 30px;
     position: relative;
+    padding: 150px 50px;
+    border-radius: 25px;
 }
 
 article {
@@ -452,6 +493,13 @@ a.subtle:hover {
     border-radius: 0;
 }
 
+a.mid-sentence {
+    padding: 3px;
+    margin: 0;
+    border: none;
+    text-decoration: underline;
+    background: none;
+}
 
 ul.selector>li {
     width: var(--fillFromMargin);
@@ -499,7 +547,6 @@ ul.selector>li.disabled {
     background: var(--hoverColor);
 }
 
-
 .login-cover {
     display: flex;
     flex-wrap: wrap;
@@ -536,6 +583,14 @@ ul.selector>li.disabled {
 
 .login-cover a img {
     width: 50%;
+}
+
+section.customization {
+    background: rgb(194, 168, 136);
+}
+
+section.more-info {
+    background: rgb(228, 163, 184);
 }
 
 @media screen and (max-width: 1000px) {
