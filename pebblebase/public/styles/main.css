@@ -18,8 +18,8 @@
     --hoverColor: rgb(49, 49, 49);
     --hoverTextColor: rgb(216, 171, 112);
     --shadowColor: rgba(7, 7, 7, 0.616);
-    --textColor: rgb(185, 135, 69);
-    --textColorBright: rgb(221, 181, 130);
+    --textColor: rgb(39, 28, 14);
+    --textColorBright: rgb(105, 87, 63);
     --woodColor: rgb(133, 96, 62);
     --darkWoodColor: rgb(70, 50, 32);
     --ceilingBG: rgba(202, 202, 202, 0.034);
@@ -157,7 +157,7 @@ main {
     overflow: auto;
     overflow-x: hidden;
     z-index: 1;
-    background: rgb(22, 22, 22);
+    background: rgb(223, 222, 222);
     box-shadow: none;
     border-radius: 0;
 }
@@ -258,8 +258,8 @@ footer a {
 section {
     width: var(--fillFromMargin);
     margin: 50px 50px;
-    background: var(--darkBgColor);
-    border: var(--darkBorder);
+    background: none;
+    border: none;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
@@ -547,7 +547,6 @@ ul.selector>li.disabled {
     background: var(--hoverColor);
 }
 
-
 .login-cover {
     display: flex;
     flex-wrap: wrap;
@@ -584,6 +583,14 @@ ul.selector>li.disabled {
 
 .login-cover a img {
     width: 50%;
+}
+
+section.customization {
+    background: rgb(194, 168, 136);
+}
+
+section.more-info {
+    background: rgb(228, 163, 184);
 }
 
 @media screen and (max-width: 1000px) {
