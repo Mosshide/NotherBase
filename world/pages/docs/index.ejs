@@ -79,13 +79,42 @@ npm i notherbase-fs
 
             <p>
                 Create a yourBase.js file and use the code below to import notherbase-fs, 
-                grab the local directory and initialize the server.
+                grab local directories and initialize the server. This allows
+                different domains to be connected to your server and be routed automatically.
             </p>
 <pre class="code">
 import NotherBaseFS from "notherbase-fs";
 import { fileURLToPath } from 'node:url';
-const __dirname = fileURLToPath(new URL('./world', import.meta.url));
-const yourBase = new NotherBaseFS(__dirname);
+
+const yourbasefs = new NotherBaseFS({ globals }, {
+    yourbase: {
+        title: 'YourBase',
+        directory: fileURLToPath(new URL('./yourbase', import.meta.url)),
+        icon: '/public/img/yourbase-logo.png'
+    },
+    anotherbase: {
+        title: 'AnotherBase',
+        directory: fileURLToPath(new URL('./anotherbase', import.meta.url)),
+        icon: '/public/img/logo.png'
+    }
+});
+</pre>
+            <p>
+                Edit your device's hosts file to locally route to your test server, using
+                whatever domains you like. In Windows for example, the hosts file can be
+                found at C:\Windows\System32\drivers\etc. Add something like the following
+                to the bottom of the file. You will probably need to edit permissions in order to
+                save over the file.
+            </p>
+<pre class="code">
+    localhost       	yourbase.local
+    ::1             	yourbase.local
+    localhost       	www.yourbase.local
+    ::1             	www.yourbase.local
+    localhost       	anotherbase.local
+    ::1             	anotherbase.local
+    localhost       	www.anotherbase.local
+    ::1             	www.anotherbase.local
 </pre>
             <p>
                 Create a file named .env and provide the environment variables below.
