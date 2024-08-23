@@ -107,29 +107,34 @@ const yourbasefs = new NotherBaseFS({ globals }, {
                 save over the file.
             </p>
 <pre class="code">
-    localhost       	yourbase.local
-    ::1             	yourbase.local
-    localhost       	www.yourbase.local
-    ::1             	www.yourbase.local
-    localhost       	anotherbase.local
-    ::1             	anotherbase.local
-    localhost       	www.anotherbase.local
-    ::1             	www.anotherbase.local
+localhost       	yourbase.local
+::1             	yourbase.local
+localhost       	www.yourbase.local
+::1             	www.yourbase.local
+localhost       	anotherbase.local
+::1             	anotherbase.local
+localhost       	www.anotherbase.local
+::1             	www.anotherbase.local
 </pre>
             <p>
                 Create a file named .env and provide the environment variables below.
                 The PORT variable is needed for testing. Hosting platforms like Heroku
                 may provide their own. The MONGODB_URI and SECRET variables are 
                 needed to connect to a MongoDB database, which is needed for the 
-                server to start. The NOREPLY and EMAILPW variables allow the server to
-                send emails out with a Gmail account and an app-specific password.
+                server to start. PRODUCTION should be false for test servers to enable
+                sessions over http, or true to enable sessions on a proxied https server 
+                like Heroku. The NOREPLY, CLIENTID, CLIENTSECRET and CLIENTREFRESH variables 
+                allow the server to send emails out with a Gmail account and OAuth2.
             </p>
 <pre class="code">
 PORT=4567
 MONGODB_URI="mongodb+srv://user:password@examplebase.compd.mongodb.net/examplebase?retryWrites=true&w=majority"
 SECRET="somesecret"
+PRODUCTION="false"
 NOREPLY="e@mail.com"
-EMAILPW="dendfsmdy!dtut"
+CLIENTID="dendfsmdbgn345h46thdtut"
+CLIENTSECRET="9edbv9e8hb98ehbsio9u8bhoe8"
+CLIENTREFRESH="1//etnkgnbgnboet8hao9fhbs9ioghru8veiu7"
 </pre>
 
             <h4>Running the Development Server</h4>
