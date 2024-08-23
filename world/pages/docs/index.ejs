@@ -252,7 +252,7 @@ let context = {
     requireUser: req.lock
 }
 
-let user = await req.db.Spirit.recallOne("user",  null, { email: req.session.currentUser });
+let user = await req.db.Spirit.recallOne("user",  null, { username: req.session.currentUser });
 context.user = user;
 </pre>
             </details>
@@ -686,14 +686,14 @@ constructor() {}
                 </details>
 
                 <details>
-                    <summary>changePassword = async (token, email, password, confirmation) => {}</summary>
+                    <summary>changePassword = async (token, username, password, confirmation) => {}</summary>
                     <article>
                         <div class="purpose">Communes to change a user's password.</div>
                         <div class="input">
                             token
                         </div>
                         <div class="input">
-                            email
+                            username
                         </div>
                         <div class="input">
                             password
