@@ -20,7 +20,7 @@
 
     <main>
         <h1>NotherBase Documentation</h1>
-        <h2>notherbase-fs Version: 3.4.3</h2>
+        <h2>notherbase-fs Version: 4.0.23</h2>
 
         <details>
             <summary><h3>General Web Development Setup</h3></summary>
@@ -107,29 +107,40 @@ const yourbasefs = new NotherBaseFS({ globals }, {
                 save over the file.
             </p>
 <pre class="code">
-    localhost       	yourbase.local
-    ::1             	yourbase.local
-    localhost       	www.yourbase.local
-    ::1             	www.yourbase.local
-    localhost       	anotherbase.local
-    ::1             	anotherbase.local
-    localhost       	www.anotherbase.local
-    ::1             	www.anotherbase.local
+localhost       	yourbase.local
+::1             	yourbase.local
+localhost       	www.yourbase.local
+::1             	www.yourbase.local
+localhost       	anotherbase.local
+::1             	anotherbase.local
+localhost       	www.anotherbase.local
+::1             	www.anotherbase.local
 </pre>
             <p>
                 Create a file named .env and provide the environment variables below.
                 The PORT variable is needed for testing. Hosting platforms like Heroku
                 may provide their own. The MONGODB_URI and SECRET variables are 
                 needed to connect to a MongoDB database, which is needed for the 
-                server to start. The NOREPLY and EMAILPW variables allow the server to
-                send emails out with a Gmail account and an app-specific password.
+                server to start. PRODUCTION should be false for test servers to enable
+                sessions over http, or true to enable sessions on a proxied https server 
+                like Heroku. The NOREPLY, CLIENTID, CLIENTSECRET and CLIENTREFRESH variables 
+                allow the server to send emails out with a Gmail account and OAuth2.
             </p>
+            <P>
+                The WINDOWS variable should be false for Linux and true for Windows. 
+                This is needed to properly handle file paths. The production server 
+                on Heroku should have this set to false.
+            </P>
 <pre class="code">
 PORT=4567
 MONGODB_URI="mongodb+srv://user:password@examplebase.compd.mongodb.net/examplebase?retryWrites=true&w=majority"
 SECRET="somesecret"
-NOREPLY="e@mail.com"
-EMAILPW="dendfsmdy!dtut"
+PRODUCTION="false"
+WINDOWS="false"
+NOREPLY="e@gmail.com"
+CLIENTID="dendfsmdbgn345h46thdtut"
+CLIENTSECRET="9edbv9e8hb98ehbsio9u8bhoe8"
+CLIENTREFRESH="1//etnkgnbgnboet8hao9fhbs9ioghru8veiu7"
 </pre>
 
             <h4>Running the Development Server</h4>
@@ -161,25 +172,25 @@ git fetch origin
             </p>
 
             <details>
-                <summary><h5>class NotherBase</h5></summary>
+                <summary><h5>class NotherBaseFS</h5></summary>
   
                 <article>
                     <details>
-                        <summary>constructor(contentPath, globals = null, settings = {})</summary>
+                        <summary>constructor(globals = null, bases = {})</summary>
                         <article>
                             <div class="purpose">Starts a NotherBase server.</div>
-                            <div class="input">
-                                contentPath (String): The path to the base's content directory.
-                            </div>
                             <div class="input">
                                 globals (Object): An object of global variables that are attached to incoming requests
                                 for use in server scripts.
                             </div>
                             <div class="input">
-                                settings.siteTitle (String): The title of the site. Shows on tabs.
+                                bases.nameOfBase.title (String): The title of the site. Shows on tabs.
                             </div>
                             <div class="input">
-                                settings.favicon (String): A file URL to the path of the favicon.
+                                bases.nameOfBase.directory (String): Use fileURLToPath("./yourBase-world").
+                            </div>
+                            <div class="input">
+                                bases.nameOfBase.icon (String): A path offset from the directory to the favicon.
                             </div>
                         </article>
                     </details>
@@ -190,7 +201,7 @@ git fetch origin
                 <summary><h5>Explorer</h5></summary>
                 <p>
                     The server now needs some content. Create a new directory in your base's directory
-                    and name it "world." 
+                    and name it "yourBase-world." 
                 </p>
 
                 <h6>The Front</h6>
@@ -205,7 +216,7 @@ git fetch origin
 &lt;p&gt;Hello World&lt;/p&gt;
 </pre>
                 <p>
-                    The content should now be available at http://localhost:PORT. Where PORT
+                    The content should now be available at http://yourbase.local:PORT. Where PORT
                     should be the port number specified in the .env file. The "index.ejs" file created earlier gets inserted
                     automatically into the main element of the rendered html, so feel free to
                     add any styles, scripts or other elements that can go in an html main element.
@@ -213,7 +224,7 @@ git fetch origin
                 <p>
                     Add more directories in /the-front to automatically create new routes.
                     The routes will automatically try to render contained "index.ejs" files. For example,
-                    to add another page at http://localhost:PORT/example, create the file "/the-front/example/index.ejs".
+                    to add another page at http://yourbase.local:PORT/example, create the file "/the-front/example/index.ejs".
                     Automatic route creation only goes one level deep, so /the-front/example/test would not
                     create a route.
                 </p>
@@ -221,15 +232,15 @@ git fetch origin
                 <h6>Inside the Base</h6>
                 <p>
                     Regions inside the base work similarly to the Front. The automatic route creation
-                    follows this pattern: http://localhost:PORT/region/area/poi/detail. Only points of interest and details get
+                    follows this pattern: http://yourbase.local:PORT/region/area/poi/detail. Only points of interest and details get
                     routes in regions, so for example these files will get automatic route creation: 
                 </p>
                 <p>
-                    /a-region/some-area/old-poi/index.ejs as http://localhost:PORT/a-region/some-area/old-poi
+                    /a-region/some-area/old-poi/index.ejs as http://yourbase.local:PORT/a-region/some-area/old-poi
                 </p>
                 <p>or</p>
                 <p>
-                    /a-region/some-area/old-poi/my-detail/index.ejs as http://localhost:PORT/a-region/some-area/old-poi/my-detail
+                    /a-region/some-area/old-poi/my-detail/index.ejs as http://yourbase.local:PORT/a-region/some-area/old-poi/my-detail
                 </p>
                 <p>
                     Add these region directories at the same level as /the-front.
@@ -247,7 +258,7 @@ let context = {
     requireUser: req.lock
 }
 
-let user = await req.db.Spirit.recallOne("user",  null, { email: req.session.currentUser });
+let user = await req.db.Spirit.recallOne("user",  null, { username: req.session.currentUser });
 context.user = user;
 </pre>
             </details>
@@ -256,15 +267,15 @@ context.user = user;
                 <summary><h5>Pages and the Void</h5></summary>
                 <p>
                     Add a /pages directory at the same level as /the-front. 
-                    Create an "/void/index.ejs" directory and file in the void directory. This directory 
-                    and others like it will automatically create the simple routes of http://localhost:PORT/name, 
+                    Create a "/void/index.ejs" directory and file in the void directory. This directory 
+                    and others like it will automatically create the simple routes of http://yourbase.local:PORT/name, 
                     where name is the name of the directory.
                 </p>
                 <p>
-                    Creating this void page is very important, because attempts to access routes
-                    that do not exist will redirect to http://localhost:PORT/void. It is also important
+                    Creating this void page is very important in particular, because attempts to access routes
+                    that do not exist will redirect to http://yourbase.local:PORT/void. It is also important
                     to note that for the /pages routes, the "index.ejs" files that get rendered are not
-                    inserted into a main element (unlike regions and the-front) and so need to be full html documents.
+                    inserted into a main element (unlike world regions including the-front) and so need to be full html documents.
                 </p>
                 <p>
                     These pages are not meant to be part of normal base navigation, but rather are
@@ -517,7 +528,7 @@ constructor(memory = {}) {
                             </details>
 
                             <details>
-                                <summary>const send = async (toEmail, subject, html) => {}</summary>
+                                <summary>const send = async (toEmail, subject, html, name = "NotherBase") => {}</summary>
                                 <article>
                                     <div class="purpose">
                                         Sends an email.
@@ -530,6 +541,9 @@ constructor(memory = {}) {
                                     </div>
                                     <div class="input">
                                         html (String): The html of the email.
+                                    </div>
+                                    <div class="input">
+                                        name (String): The name of the sender.
                                     </div>
                                     <div class="output">
                                         Returns: whatever the nodemailer transporter returns on sendMail.
@@ -630,12 +644,9 @@ constructor() {}
                 </details>
 
                 <details>
-                    <summary>attemptRegister = async (email, username, password) => {}</summary>
+                    <summary>attemptRegister = async (username, password) => {}</summary>
                     <article>
                         <div class="purpose">Communes to create a new account.</div>
-                        <div class="input">
-                            email
-                        </div>
                         <div class="input">
                             username
                         </div>
@@ -649,11 +660,11 @@ constructor() {}
                 </details>
 
                 <details>
-                    <summary>attemptLogin = async (email, password) => {};</summary>
+                    <summary>attemptLogin = async (username, password) => {};</summary>
                     <article>
                         <div class="purpose">Communes to login.</div>
                         <div class="input">
-                            email
+                            username
                         </div>
                         <div class="input">
                             password
@@ -665,33 +676,14 @@ constructor() {}
                 </details>
 
                 <details>
-                    <summary>resetPassword = async (email, test = false) => {}</summary>
-                    <article>
-                        <div class="purpose">Communes to initiate a password reset.</div>
-                        <div class="input">
-                            email
-                        </div>
-                        <div class="input">
-                            test: If true, an email will not be sent, but the reset token will print in the console.
-                        </div>
-                        <div class="output">
-                            Returns: Response from communion.
-                        </div>
-                    </article>
-                </details>
-
-                <details>
-                    <summary>changePassword = async (token, email, password, confirmation) => {}</summary>
+                    <summary>changePassword = async (oldPassword, newPassword, confirmation) => {}</summary>
                     <article>
                         <div class="purpose">Communes to change a user's password.</div>
                         <div class="input">
-                            token
+                            oldPassword
                         </div>
                         <div class="input">
-                            email
-                        </div>
-                        <div class="input">
-                            password
+                            newPassword
                         </div>
                         <div class="input">
                             confirmation
@@ -708,7 +700,8 @@ constructor() {}
                             what (String): the script to run.
                         </div>
                         <div class="input">
-                            data: input data passed to the sript that gets run. SEt data.route to override the script's path.
+                            data: input data passed to the sript that gets run. Set data.route to override the script's path.
+                            (Example: { route: "/pages/desired-path" })
                         </div>
                         <div class="output">Returns: Response from the script that was run.</div>
                     </article>
@@ -818,26 +811,6 @@ git clone https://github.com/You/YourFork.git
 </pre>
 
                 <p>
-                    Enter the new directory and install all package dependencies.
-                </p>
-<pre class="code">
-cd YourFork
-npm i
-</pre>
-
-                <p>
-                    Create a file named .env and insert the environment variables below.
-                    Ask Wyatt for password details.
-                </p>
-<pre class="code">
-PORT=4567
-MONGODB_URI="mongodb+srv://genDev:password@notherbase.compd.mongodb.net/notherbase-test?retryWrites=true&w=majority"
-SECRET="random"
-NOREPLY="wyatt@notherbase.com"
-EMAILPW=""
-</pre>
-
-                <p>
                     Make your changes then stage them, commit them and sync them to GitHub.
                     This is all easily done in the left side panel of VS Code. Use the commands below
                     if you need to do it in the terminal.
@@ -851,7 +824,7 @@ gcsm "text describing your changes"
 git push
 </pre>
                 <p>
-                    Git may get upset and require the details below - I don't know.
+                    Git may get upset and require the details below to identify you.
                 </p>
 <pre class="code">
 git config --global user.email you@example.com
