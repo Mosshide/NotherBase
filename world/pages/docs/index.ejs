@@ -126,11 +126,17 @@ localhost       	www.anotherbase.local
                 like Heroku. The NOREPLY, CLIENTID, CLIENTSECRET and CLIENTREFRESH variables 
                 allow the server to send emails out with a Gmail account and OAuth2.
             </p>
+            <P>
+                The WINDOWS variable should be false for Linux and true for Windows. 
+                This is needed to properly handle file paths. The production server 
+                on Heroku should have this set to false.
+            </P>
 <pre class="code">
 PORT=4567
 MONGODB_URI="mongodb+srv://user:password@examplebase.compd.mongodb.net/examplebase?retryWrites=true&w=majority"
 SECRET="somesecret"
 PRODUCTION="false"
+WINDOWS="false"
 NOREPLY="e@mail.com"
 CLIENTID="dendfsmdbgn345h46thdtut"
 CLIENTSECRET="9edbv9e8hb98ehbsio9u8bhoe8"
