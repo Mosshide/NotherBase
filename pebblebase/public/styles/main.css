@@ -18,7 +18,7 @@
     --hoverColor: rgb(49, 49, 49);
     --hoverTextColor: rgb(216, 171, 112);
     --shadowColor: rgba(7, 7, 7, 0.616);
-    --textColor: rgb(39, 28, 14);
+    --textColor: rgb(231, 231, 231);
     --textColorBright: rgb(105, 87, 63);
     --woodColor: rgb(133, 96, 62);
     --darkWoodColor: rgb(70, 50, 32);
@@ -150,14 +150,15 @@ main {
     top: 0;
     left: 0;
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     justify-content: space-evenly;
     align-content: flex-start;
     align-items: flex-end;
+    flex-direction: column;
     overflow: auto;
     overflow-x: hidden;
     z-index: 1;
-    background: rgb(223, 222, 222);
+    background: rgb(39, 39, 39);
     box-shadow: none;
     border-radius: 0;
 }
@@ -586,11 +587,55 @@ ul.selector>li.disabled {
 }
 
 section.customization {
-    background: rgb(194, 168, 136);
+    background: url('/img/porous-mono-speckles.webp'), rgb(117, 101, 91);
+    background-blend-mode: multiply;
+    width: auto;
+    align-self: flex-start;
+    background-size: 150%;
 }
 
 section.more-info {
-    background: rgb(228, 163, 184);
+    background: url('/img/porous-mono-speckles.webp'), rgb(228, 163, 184);
+    background-blend-mode: multiply;
+    width: auto;
+}
+
+.top-shell {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 99;
+}
+
+main>.bottom-shell {
+    background: url('/img/trans-noise.webp');
+}
+
+.bottom-shell {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.gems {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    backdrop-filter: blur(.5px);
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-evenly;
+    align-content: flex-start;
+    align-items: flex-end;
+    flex-direction: column;
 }
 
 @media screen and (max-width: 1000px) {
