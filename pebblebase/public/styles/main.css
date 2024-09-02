@@ -158,7 +158,8 @@ main {
     overflow: auto;
     overflow-x: hidden;
     z-index: 1;
-    background: rgb(39, 39, 39);
+    background: url('/img/trans-noise.webp'), rgb(39, 39, 39);
+    background-blend-mode: multiply;
     box-shadow: none;
     border-radius: 0;
 }
@@ -166,7 +167,7 @@ main {
 nav {
     display: flex;
     width: 100%;
-    height: 80px;
+    padding: 20px;
     align-items: center;
 }
 
@@ -219,6 +220,7 @@ footer {
     border: none;
     top: 0;
     left: 1vw;
+    display: none;
 }
 
 footer .view-toggle {
@@ -229,6 +231,7 @@ footer .view-toggle {
     height: 40px;
     background: var(--bgColor);
     border-radius: 0 0 0 5px;
+    display: none;
 }
 
 footer .view-toggle:hover {
@@ -586,56 +589,42 @@ ul.selector>li.disabled {
     width: 50%;
 }
 
+section.hook {
+    max-width: 800px;
+    align-self: center;
+}
+
 section.customization {
-    background: url('/img/porous-mono-speckles.webp'), rgb(117, 101, 91);
+    background: url('/img/trans-noise.webp'), rgb(117, 101, 91);
     background-blend-mode: multiply;
     width: auto;
     align-self: flex-start;
-    background-size: 150%;
+    background-size: 50%;
+    border-radius: 75px;
 }
 
 section.more-info {
-    background: url('/img/porous-mono-speckles.webp'), rgb(228, 163, 184);
+    background: url('/img/trans-noise.webp'), rgb(228, 163, 184);
     background-blend-mode: multiply;
     width: auto;
+    min-width: 25%;
+    background-size: 55%;
+    border-radius: 75px;
 }
 
-.top-shell {
+section>.plug {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 99;
+    top: calc(50% - 50px);
+    right: -90px;
+    width: 100px;
+    height: 100px;
+    z-index: -1;
+    background: silver;
+    border-radius: 2px;
 }
 
-main>.bottom-shell {
-    background: url('/img/trans-noise.webp');
-}
-
-.bottom-shell {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-}
-
-.gems {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 10;
-    backdrop-filter: blur(.5px);
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: space-evenly;
-    align-content: flex-start;
-    align-items: flex-end;
-    flex-direction: column;
+.more-info>.plug {
+    left: -90px;
 }
 
 @media screen and (max-width: 1000px) {
