@@ -2,29 +2,38 @@
     <a href="/">
         <h1 class="title">Pebble Wireless</h1>
     </a>
-    <h2>Wireless HDMI</h2>
+    <h2>Wireless Audio and Video</h2>
 </nav>
 
 <section class="hook">
     <img src="" alt="">
+    <h4>Tired of cable clutter?</h4>
     <p>
-        Tired of cable clutter? Pebble Wireless is a wireless HDMI solution that allows you to stream your computer's 
-        display to your TV or monitor without any cables. It's like a wireless mouse and keyboard, but for your display.
+        Pebble Wireless is a wireless audio and video connection that allows you to stream your device's 
+        display to your TV or monitor without any cables.
     </p>
+    <p id="extra">It's like a wireless mouse and keyboard, but for your display.</p>
 </section>
 
-<section class="customization">
+<section class="customization pebble">
     <img src="" alt="">
+    <h4>Form</h4>
     <p>
-        Pebble Wireless will have a unique case that looks like a pebble
+        Pebble Wireless connectors will be designed like unique pebbles.
     </p>
     <div class="plug"></div>
 </section>
 
-<section class="more-info">
+<section class="connection">
+    <img src="/img/wifi.webp" alt="" class="down-wifi">
+    <img src="/img/wifi.webp" alt="" class="up-wifi">
+</section>
+
+<section class="more-info pebble">
     <img src="" alt="">
+    <h4>Function</h4>
     <p>        
-        &lt; 10ms delay at 1080p.
+        Less than 10ms delay at 1080p.
     </p>
     <div class="plug"></div>
 </section>
@@ -36,22 +45,23 @@
         <button id="not-really">Give Feedback</button>
     </div>
     <div class="if-yes invisible">
-        <h3>Please enter your email address below to be added to the waitlist.</h3>
+        <button class="back">&lt;Back</button>
+        <h3>Thank you for your interest!</h3>
+        <p>Please enter your email address below to be added to the waitlist.</p>
         <input type="email" placeholder="email">
-        <button>Submit</button>
+        <button class="submit">Submit</button>
     </div>
     <div class="if-not-really invisible">
+        <button class="back">&lt;Back</button>
         <h3>Thank you for sharing with us.</h3>
-        <h3>What would make The Pebble worth buying to you?</h3>
+        <p>What would make The Pebble worth buying to you?</p>
         <textarea></textarea>
-        <button>Submit</button>
+        <button class="submit">Submit</button>
     </div>
     <p class="alert"></p>
 </section>
 
 <div class="top-shell"></div>
-
-
 
 <script>
     // when the yes button is clicked, show the yes div
@@ -75,7 +85,7 @@
     // get the email and do the server script in base
     // sending the email to the waitlist
     // and edit the alert's text to say that the email was submitted
-    $(".if-yes button").click(() => {
+    $(".if-yes button.submit").click(() => {
         let email = $(".if-yes input").val();
         $(".if-yes").addClass("invisible");
         base.do("add-to-waitlist", { route: "/the-front/scripts", email: email }).then((res) => {
@@ -92,7 +102,7 @@
     // get the textarea and do the server script in base
     // sending the textarea to the feedback
     // and edit the alert's text to say that the feedback was submitted
-    $(".if-not-really button").click(() => {
+    $(".if-not-really button.submit").click(() => {
         let feedback = $(".if-not-really textarea").val();
         $(".if-not-really").addClass("invisible");
         base.do("add-feedback", { route: "/the-front/scripts", feedback: feedback }).then((res) => {
@@ -103,5 +113,26 @@
                 $(".if-not-really").removeClass("invisible");
             }
         });
+    });
+
+    // when a back button is clicked, show the unanswered div
+    $(".back").click(() => {
+        $(".unanswered").removeClass("invisible");
+        $(".if-yes").addClass("invisible");
+        $(".if-not-really").addClass("invisible");
+    });
+
+    //when a pebble section is hovered over, start the animations on the wifi imgs
+    let stopping = false;
+    $(".pebble").hover(() => {
+        stopping = false;
+        setTimeout( () => {
+            if (!stopping) $(".down-wifi").addClass("transmitting");
+        }, 700);
+        $(".up-wifi").addClass("transmitting");     
+    }, () => {
+        stopping = true;
+        $(".down-wifi").removeClass("transmitting");
+        $(".up-wifi").removeClass("transmitting"); 
     });
 </script>
