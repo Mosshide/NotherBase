@@ -16,10 +16,10 @@
     --selectionColor: rgb(58, 58, 58);
     --selectedTextColor: rgb(248, 192, 100);
     --hoverColor: rgb(49, 49, 49);
-    --hoverTextColor: rgb(216, 171, 112);
+    --hoverTextColor: rgb(255, 255, 255);
     --shadowColor: rgba(7, 7, 7, 0.616);
-    --textColor: rgb(39, 28, 14);
-    --textColorBright: rgb(105, 87, 63);
+    --textColor: rgb(231, 231, 231);
+    --textColorBright: rgb(255, 255, 255);
     --woodColor: rgb(133, 96, 62);
     --darkWoodColor: rgb(70, 50, 32);
     --ceilingBG: rgba(202, 202, 202, 0.034);
@@ -38,7 +38,7 @@
     --h1Size: 32px;
     --h2Size: 22px;
     --h3Size: 18px;
-    --h4Size: 18px;
+    --h4Size: 26px;
     --h5Size: 16px;
     --pSize: 16px;
     --tinyText: 14px;
@@ -150,14 +150,16 @@ main {
     top: 0;
     left: 0;
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     justify-content: space-evenly;
     align-content: flex-start;
     align-items: flex-end;
+    flex-direction: column;
     overflow: auto;
     overflow-x: hidden;
     z-index: 1;
-    background: rgb(223, 222, 222);
+    background: url('/img/trans-noise.webp'), rgb(66, 66, 66);
+    background-blend-mode: multiply;
     box-shadow: none;
     border-radius: 0;
 }
@@ -165,15 +167,14 @@ main {
 nav {
     display: flex;
     width: 100%;
-    height: 80px;
+    padding: 20px;
     align-items: center;
 }
 
 nav h1 {
-    width: 50%;
+    width: 100%;
     margin: 0;
     padding: 0;
-    padding-left: 64px;
     height: auto;
     text-align: left;
 }
@@ -190,6 +191,7 @@ nav h2 {
 nav a {
     width: 50%;
     padding: 0;
+    padding-left: 64px;
     margin: 0;
     border: none;
     text-decoration: none;
@@ -218,6 +220,7 @@ footer {
     border: none;
     top: 0;
     left: 1vw;
+    display: none;
 }
 
 footer .view-toggle {
@@ -228,6 +231,7 @@ footer .view-toggle {
     height: 40px;
     background: var(--bgColor);
     border-radius: 0 0 0 5px;
+    display: none;
 }
 
 footer .view-toggle:hover {
@@ -585,12 +589,178 @@ ul.selector>li.disabled {
     width: 50%;
 }
 
+section.hook {
+    width: 100%;
+    align-self: center;
+    background: url('/img/lr1.jpg');
+    border-radius: 0;
+    margin: 0;
+    min-height: 80vh;
+    background-position: center;
+    background-size: cover;
+}
+
+section.hook h4 {
+    position: absolute;
+    left: 30%;
+    top: 32%;
+    width: 40%;
+    border: none;
+    text-align: left;
+}
+
+section.hook p {
+    position: absolute;
+    left: 30%;
+    top: calc(32% + 40px);
+    width: 40%;
+}
+
+section.hook p#extra {
+    position: absolute;
+    left: 30%;
+    top: calc(32% + 110px);
+    width: 40%;
+}
+
+section.pebble {
+    box-shadow: 3px 3px 5px 1px var(--shadowColor);
+}
+
+section.pebble h4 {
+    border: none;
+    color: rgb(8, 8, 8);
+}
+
+section.pebble p {
+    padding: var(--thickPadding);
+    margin-bottom: 15px;
+    text-align: center;
+    color: rgb(8, 8, 8);
+}
+
 section.customization {
-    background: rgb(194, 168, 136);
+    background: url('/img/trans-noise-blur.webp'), rgb(206, 171, 182);
+    background-blend-mode: multiply;
+    width: auto;
+    align-self: flex-start;
+    background-size: 50%;
+    border-radius: 75px;
+    min-width: 45%;
+    align-content: center;
 }
 
 section.more-info {
-    background: rgb(228, 163, 184);
+    background: url('/img/trans-noise-blur.webp'), rgb(201, 187, 179);
+    background-blend-mode: multiply;
+    width: auto;
+    min-width: 45%;
+    background-size: 55%;
+    border-radius: 75px;
+    align-content: center;
+}
+
+section>.plug {
+    position: absolute;
+    top: calc(50% - 50px);
+    right: -90px;
+    width: 100px;
+    height: 100px;
+    z-index: -1;
+    background: silver;
+    border-radius: 2px;
+    box-shadow: 3px 3px 5px 1px var(--shadowColor);
+}
+
+.more-info>.plug {
+    left: -90px;
+}
+
+section.action {
+    align-content: center;
+    margin: 50px 0;
+    width: 100%;
+}
+
+section.action button.submit {
+    width: 100px;
+    max-width: 100%;
+    padding: 20px;
+    margin: 20px;
+}
+
+section.action h3 {
+    padding-top: var(--thickPadding);
+}
+
+section.action p {
+    padding: var(--padding);
+}
+
+section.action input {
+    margin: var(--thickMargin);
+}
+
+section.connection {
+    width: 100%;
+    min-height: 150px;
+    padding: 0;
+    margin: 0;
+}
+
+section.connection img {
+    height: 100%;
+    aspect-ratio: 1/1;
+    opacity: 70%;
+}
+
+img.down-wifi {
+    transform: rotate(180deg);
+}
+
+.unanswered {
+    display: flex;
+    flex-direction: column;
+    max-width: 100%;
+}
+
+.unanswered button {
+    width: 400px;
+    max-width: 100%;
+}
+
+.transmitting {
+    animation: 1s transmitData;
+}
+
+@keyframes transmitData {
+    from {
+        opacity: 70%;
+    }
+
+    15% {
+        opacity: 100%;
+    }
+
+    30% {
+        opacity: 70%;
+    }
+  
+    45% {
+        opacity: 100%;
+    }
+
+    60% {
+        opacity: 70%;
+    }
+  
+    75% {
+        opacity: 100%;
+    }
+  
+    to {
+        opacity: 70%;
+    }
 }
 
 @media screen and (max-width: 1000px) {
@@ -605,11 +775,73 @@ section.more-info {
     .float-board {
         display: none;
     }
+
+    section.hook {
+        background-size: 200%;
+        min-height: 80vh;
+    }
+
+    section.hook h4 {
+        left: 10%;
+        top: 35%;
+        width: 80%;
+    }
+
+    section.hook p {
+        left: 10%;
+        top: calc(35% + 40px);
+        width: 80%;
+    }
+
+    section.hook p#extra {
+        left: 10%;
+        top: calc(35% + 110px);
+        width: 80%;
+    }
+    
+    nav {
+        height: 50px;
+        padding: 0;
+    }
+
+    nav a {
+        padding-left: 10px;
+    }
+
+    nav h2 {
+        padding-right: 10px;
+        font-size: var(--tinyText);
+    }
 }
 
 @media screen and (max-width: 570px) {
     footer .view-toggle {
         display: none;
+    }
+
+    section.hook p#extra {
+        display: none;
+    }
+
+    section.customization {
+        margin-left: 0;
+    }
+
+    section.more-info {
+        margin-right: 0;
+    }
+
+    section.pebble {
+        padding: var(--padding);
+        min-height: 250px;
+    }
+
+    nav {
+        min-height: 50px;
+    }
+
+    nav h1 {
+        font-size: 20px;
     }
 }
 
