@@ -5,6 +5,13 @@
     <h2>Wireless Audio and Video</h2>
 </nav>
 
+<div class="floating-nav">
+    <a href="/">
+        <h1 class="title">Pebble Wireless</h1>
+    </a>
+    <h2>Wireless Audio and Video</h2>
+</div>
+
 <section class="hook">
     <img src="" alt="">
     <h4>Tired of cable clutter?</h4>
@@ -45,14 +52,14 @@
         <button id="not-really">Give Feedback</button>
     </div>
     <div class="if-yes invisible">
-        <button class="back">&lt;Back</button>
+        <button class="back">&lt; Back</button>
         <h3>Thank you for your interest!</h3>
-        <p>Please enter your email address below to be added to the waitlist.</p>
-        <input type="email" placeholder="email">
+        <p>Please enter your email address below to be added to the waitlist:</p>
+        <input type="email" placeholder="email@address.com">
         <button class="submit">Submit</button>
     </div>
     <div class="if-not-really invisible">
-        <button class="back">&lt;Back</button>
+        <button class="back">&lt; Back</button>
         <h3>Thank you for sharing with us.</h3>
         <p>What would make The Pebble worth buying to you?</p>
         <textarea></textarea>
@@ -60,8 +67,6 @@
     </div>
     <p class="alert"></p>
 </section>
-
-<div class="top-shell"></div>
 
 <script>
     // when the yes button is clicked, show the yes div
@@ -106,7 +111,6 @@
         let feedback = $(".if-not-really textarea").val();
         $(".if-not-really").addClass("invisible");
         base.do("add-feedback", { route: "/the-front/scripts", feedback: feedback }).then((res) => {
-            console.log(res);
             if (res.status == "success") $(".alert").text("Feedback submitted. Thank you!");
             else {
                 $(".alert").text("There was an error submitting your feedback. Please try again later.");
@@ -134,5 +138,11 @@
         stopping = true;
         $(".down-wifi").removeClass("transmitting");
         $(".up-wifi").removeClass("transmitting"); 
+    });
+
+    // when the user scrolls 3/4 the way through the hook section, add the down class to the floating nav
+    $("main").scroll(() => {
+        if ($("main").scrollTop() > parseInt($("nav").height()) + parseInt($(".hook").height()) * 0.85) $(".floating-nav").addClass("down");
+        else $(".floating-nav").removeClass("down");
     });
 </script>

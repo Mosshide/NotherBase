@@ -37,10 +37,10 @@
     /* font */
     --h1Size: 32px;
     --h2Size: 22px;
-    --h3Size: 18px;
+    --h3Size: 20px;
     --h4Size: 26px;
     --h5Size: 16px;
-    --pSize: 16px;
+    --pSize: 18px;
     --tinyText: 14px;
     --inputHeight: 42px;
     /* boxes */
@@ -153,7 +153,7 @@ main {
     flex-wrap: nowrap;
     justify-content: space-evenly;
     align-content: flex-start;
-    align-items: flex-end;
+    align-items: center;
     flex-direction: column;
     overflow: auto;
     overflow-x: hidden;
@@ -164,14 +164,14 @@ main {
     border-radius: 0;
 }
 
-nav {
+nav, .floating-nav {
     display: flex;
     width: 100%;
     padding: 20px;
     align-items: center;
 }
 
-nav h1 {
+nav h1, .floating-nav h1 {
     width: 100%;
     margin: 0;
     padding: 0;
@@ -179,7 +179,7 @@ nav h1 {
     text-align: left;
 }
 
-nav h2 {
+nav h2, .floating-nav h2 {
     width: 50%;
     margin: 0;
     padding: 0;
@@ -188,7 +188,7 @@ nav h2 {
     padding-right: 64px;
 }
 
-nav a {
+nav a, .floating-nav a {
     width: 50%;
     padding: 0;
     padding-left: 64px;
@@ -198,9 +198,25 @@ nav a {
     background: none;
 }
 
-nav a:hover {
+nav a:hover, .floating-nav a:hover {
     cursor: pointer;
     border: none;
+}
+
+.floating-nav {
+    position: fixed;
+    height: 75px;
+    top: -75px;
+    left: 0;
+    transition: top 0.15s;
+    z-index: 111;
+    background: url('/img/trans-noise.webp'), rgb(66, 66, 66);
+    background-blend-mode: multiply;
+    border-radius: 0;
+}
+
+.floating-nav.down {
+    top: 0;
 }
 
 footer {
@@ -270,7 +286,6 @@ section {
     align-items: flex-end;
     justify-content: space-around;
     align-content: flex-end;
-    min-height: 30px;
     position: relative;
     padding: 150px 50px;
     border-radius: 25px;
@@ -592,7 +607,7 @@ ul.selector>li.disabled {
 section.hook {
     width: 100%;
     align-self: center;
-    background: url('/img/lr1.jpg');
+    background: url('/img/lr_trans.webp');
     border-radius: 0;
     margin: 0;
     min-height: 80vh;
@@ -603,7 +618,7 @@ section.hook {
 section.hook h4 {
     position: absolute;
     left: 30%;
-    top: 32%;
+    top: 35%;
     width: 40%;
     border: none;
     text-align: left;
@@ -612,19 +627,20 @@ section.hook h4 {
 section.hook p {
     position: absolute;
     left: 30%;
-    top: calc(32% + 40px);
+    top: calc(35% + 55px);
     width: 40%;
 }
 
 section.hook p#extra {
     position: absolute;
     left: 30%;
-    top: calc(32% + 110px);
+    top: calc(35% + 120px);
     width: 40%;
 }
 
 section.pebble {
     box-shadow: 3px 3px 5px 1px var(--shadowColor);
+    padding: 100px 50px;
 }
 
 section.pebble h4 {
@@ -658,6 +674,7 @@ section.more-info {
     background-size: 55%;
     border-radius: 75px;
     align-content: center;
+    align-self: flex-end;
 }
 
 section>.plug {
@@ -685,12 +702,19 @@ section.action {
 section.action button.submit {
     width: 100px;
     max-width: 100%;
-    padding: 20px;
+    padding: 10px 20px;
     margin: 20px;
+}
+
+section.action h2 {
+    padding-top: var(--thickPadding);
+    margin-top: 30px;
+    text-align: center;
 }
 
 section.action h3 {
     padding-top: var(--thickPadding);
+    margin-top: 30px;
 }
 
 section.action p {
@@ -699,6 +723,7 @@ section.action p {
 
 section.action input {
     margin: var(--thickMargin);
+    margin: 20px 0;
 }
 
 section.connection {
@@ -718,19 +743,35 @@ img.down-wifi {
     transform: rotate(180deg);
 }
 
-.unanswered {
-    display: flex;
-    flex-direction: column;
-    max-width: 100%;
-}
-
 .unanswered button {
     width: 400px;
     max-width: 100%;
+    padding: 20px;
 }
 
 .transmitting {
     animation: 1s transmitData;
+}
+
+.unanswered, .if-yes, .if-not-really {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 50%;
+    max-width: 100%;
+}
+
+button.back {
+    max-width: auto;
+    align-self: start;
+}
+
+.alert {
+    text-align: center;
+}
+
+.meta {
+    min-height: 70vh !important;
 }
 
 @keyframes transmitData {
@@ -763,6 +804,7 @@ img.down-wifi {
     }
 }
 
+/* show only when the screen is narrow enough */
 @media screen and (max-width: 1000px) {
     .float-elements {
         display: none;
@@ -799,21 +841,22 @@ img.down-wifi {
         width: 80%;
     }
     
-    nav {
+    nav, .floating-nav {
         height: 50px;
         padding: 0;
     }
 
-    nav a {
+    nav a, .floating-nav a {
         padding-left: 10px;
     }
 
-    nav h2 {
+    nav h2, .floating-nav h2 {
         padding-right: 10px;
         font-size: var(--tinyText);
     }
 }
 
+/* show only when the screen is narrow enough */
 @media screen and (max-width: 570px) {
     footer .view-toggle {
         display: none;
@@ -836,15 +879,21 @@ img.down-wifi {
         min-height: 250px;
     }
 
-    nav {
+    nav, .floating-nav {
         min-height: 50px;
     }
 
-    nav h1 {
+    nav h1, .floating-nav h1 {
         font-size: 20px;
+    }
+
+    section.action {
+        padding: 10px;
+        margin-top: 20px;
     }
 }
 
+/* show only when the screen is wide enough */
 @media screen and (min-width: 570px) {
     main.full-view {
         flex-direction: column;
