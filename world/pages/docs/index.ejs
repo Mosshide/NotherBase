@@ -596,6 +596,14 @@ export default async (req, user) => {
     await spirit.commit(req.body.newData);
 }
 </pre>
+
+                <h6>Preprocessing Server Scripts</h6>
+                <p>
+                    Want to run a script automatically before the server renders a page? Create the _preprocess 
+                    directory in the directory of the page that will be rendered. All scripts in this
+                    _preprocess directory will be run before the page is rendered. Their results will be
+                    available in the preprocess object provided by ejs context.
+                </p>
             </details>
 
             <details>

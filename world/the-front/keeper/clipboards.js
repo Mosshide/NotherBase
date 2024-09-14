@@ -1,21 +1,26 @@
 let $clipboard = $(".clipboard");
+let $loginUser = $("#login-user");
+let $loginPass = $("#login-pass");
 let $loginButton = $("#login-button");
 let $loginInfo = $("#login-info");
-let $resetInfo = $("#reset-info");
-let $setInfo = $("#set-info");
+let $registerUser = $("#register-user");
+let $registerPass = $("#register-pass");
+let $registerConfirmation = $("#register-confirmation");
 let $registerButton = $("#register-button");
 let $registerInfo = $("#register-info");
-let $resetForm = $("#reset-form");
 let $setForm = $("#set-form");
 let $loginForm = $("#login-form");
+let $changeOldPassword = $("#change-old-password");
+let $changePassword = $("#change-password");
+let $changeConfirmation = $("#change-confirmation");
 let $changeButton = $("#change-button");
-let $resetButton = $("#reset-button");
 let $setButton = $("#set-button");
+let $setInfo = $("#set-info");
 let $returnButtons = $(".return-button");
 
 //try to login
 $loginButton.on("click", async (e) => {
-    let response = await base.attemptLogin($("#login-email").val(), $("#login-pass").val());
+    let response = await base.attemptLogin($loginUser.val(), $loginPass.val());
 
     if (response.status === "success") {
         Dialogue.addGlobalFlag("logged-in");
@@ -29,75 +34,43 @@ $loginButton.on("click", async (e) => {
 
 //try to register an account
 $registerButton.on("click", async function () {
-    let response = await base.attemptRegister(
-        $("#register-email").val(),
-        $("#register-user").val(),
-        $("#register-pass").val()
-    );
+    if ($registerPass.val() == $registerConfirmation.val()) {
+        let response = await base.attemptRegister(
+            $registerUser.val(),
+            $registerPass.val()
+        );
 
-    if (response.status === "success") {
-        $registerInfo.text("You hear a nod from deep within the shack. Your new account has been registered.");
+        if (response.status === "success") {
+            $registerInfo.text("You hear a nod from deep within the shack. Your new account has been registered.");
+        }
+        else {
+            $registerInfo.text(response.message);
+        }
     }
     else {
-        $registerInfo.text(response.message);
-    }
-});
-
-$changeButton.on("click", function () {
-    goToReset("");
-});
-
-$resetButton.on("click", async function () {
-    let response = await base.resetPassword($("#reset-email").val());
-
-    if (response.status === "success") {
-        goToSet("");
-    }
-    else {
-        goToReset(response.message);
+        $registerInfo.text("The passwords must match.");
     }
 });
 
 $setButton.on("click", async function () {
-    let response = await base.changePassword(
-        $("#change-token").val(),
-        $("#change-email").val(),
-        $("#change-password").val(),
-        $("#change-confirmation").val()
-    );
+    if ($changePassword.val() == $changeConfirmation.val()) {
+        let response = await base.changePassword(
+            $changeOldPassword.val(),
+            $changePassword.val(),
+            $changeConfirmation.val()
+        );
 
-    if (response.status === "success") {
-        goToLogin("Password changed successfully.");
+        if (response.status === "success") {
+            $setInfo.text("Password changed successfully.");
+        }
+        else {
+            $setInfo.text("Change Error: " + response.message);
+        }
     }
     else {
-        goToReset("Change Error: " + response.message);
+        $setInfo.text("The passwords must match.");
     }
 });
-
-$returnButtons.on("click", function () {
-    goToLogin("");
-});
-
-let goToLogin = function goToLogin(info) {
-    $loginInfo.text(info);
-    $resetForm.addClass("invisible");
-    $setForm.addClass("invisible");
-    $loginForm.removeClass("invisible");
-}
-
-let goToReset = function goToReset(info) {
-    $resetInfo.text(info);
-    $setForm.addClass("invisible");
-    $loginForm.addClass("invisible");
-    $resetForm.removeClass("invisible");
-}
-
-let goToSet = function goToSet(info) {
-    $setInfo.text(info);
-    $resetForm.addClass("invisible");
-    $loginForm.addClass("invisible");
-    $setForm.removeClass("invisible");
-}
 
 let clickClose = function clickClose(e) {
     e.stopPropagation();
