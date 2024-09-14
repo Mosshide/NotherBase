@@ -134,3 +134,16 @@
     clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 35% 0, 35% 15%, 50% 15%, 50% 35%, 35% 35%, 35% 50%, 15% 50%, 15% 35%, 0 35%);
     user-select: none;
 }
+
+#lawn {
+    margin-top: 300px;
+    margin-bottom: -20px;
+}
+
+.grass.leaf {
+    border-radius: 0;
+}
+
+h2, h3 {
+    text-align: center;
+}

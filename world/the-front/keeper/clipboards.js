@@ -17,6 +17,7 @@ let $changeButton = $("#change-button");
 let $setButton = $("#set-button");
 let $setInfo = $("#set-info");
 let $returnButtons = $(".return-button");
+let $dataInfo = $("#data-info");
 
 //try to login
 $loginButton.on("click", async (e) => {
@@ -105,3 +106,28 @@ $clipboard.on("click", function clickClipboard(e) {
 
 //put down a clipboard
 $(".close").on("click", clickClose);
+
+let downloadData = async () => {
+    $dataInfo.text("Downloading data...");
+    let res = await base.downloadData();
+    $dataInfo.text(res.message);
+}
+
+let deleteData = async () => {
+    $dataInfo.text("Deleting data...");
+    let res = await base.deleteData($('#data-password').val());
+    $dataInfo.text(res.message);
+}
+
+let importData = async () => {
+    $dataInfo.text("Importing data...");
+    let pass = $('#data-password').val();         
+    let file = $('#fileInput')[0].files[0];
+    if (file) {
+        let res = await base.importData(pass, file);
+        $dataInfo.text(res.message);
+    }
+    else {
+        $dataInfo.text("No file selected.");
+    }
+}

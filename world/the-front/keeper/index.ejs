@@ -40,15 +40,28 @@
         <div class="clipboard on-counter for-register">
             <button class="close">X</button>
             <div class="application">
-                <div class="auth-form" id="register-form">
-                    <h5>NotherBase</h5>
-                    <h6>Register a New Account</h6>
-                    <input type="text" name="username" placeholder="username" id="register-user">
-                    <input type="password" name="password" placeholder="password" id="register-pass">
-                    <input type="password" name="confirmation" placeholder="password again" id="register-confirmation">
-                    <button id="register-button">Register</button>
-                    <p id="register-info"></p>
-                </div>
+                <% if (user) { %>
+                    <div class="auth-form" id="data-form">
+                        <h5>NotherBase</h5>
+                        <h6>Manage Your Data</h6>
+                        <input type="password" id="data-password" placeholder="password">
+                        <button onclick="downloadData()">Download Data</button>
+                        <button onclick="deleteData()">Delete Data</button>
+                        <button onclick="importData()">Import Data</button>
+                        <input type="file" id="fileInput">                        
+                        <p id="data-info"></p>
+                    </div>
+                <% } else { %>
+                    <div class="auth-form" id="register-form">
+                        <h5>NotherBase</h5>
+                        <h6>Register a New Account</h6>
+                        <input type="text" name="username" placeholder="username" id="register-user">
+                        <input type="password" name="password" placeholder="password" id="register-pass">
+                        <input type="password" name="confirmation" placeholder="password again" id="register-confirmation">
+                        <button id="register-button">Register</button>
+                        <p id="register-info"></p>
+                    </div>
+                <% } %>
             </div>
             <div class="clamp"></div>
             <div class="scribbles" id="register-scribbles">Register<br><br>If you can read this you're a nerd.</div>
@@ -74,6 +87,6 @@
     const weather = new WeatherSystem("random");
     <%- include("./clipboards.js"); %>
     <%- include("./keeper.js"); %>
-
-    base.do("migrate", { route: "/the-front/keeper" });
 </script>
+
+
