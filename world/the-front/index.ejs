@@ -17,8 +17,10 @@
     <div class="about invisible">
         <h4>About NotherBase</h4>
         <p>
-            Welcome to NotherBase! This base is an online world
-            with a variety of web apps, games, widgets and secrets to discover.
+            Welcome to NotherBase! This base is a website dedicated to
+            Jesus Christ and the Holy Bible. Keep your life organized,
+            read the Bible and chat with other users; all while being
+            transformed by the renewing of your mind through His Word.
         </p>
         <p>
             Visit the shack nearby to submit an application for
@@ -30,7 +32,7 @@
 
 <div class="ground" id="lawn"></div>
 
-<div class="line">
+<!-- <div class="line">
     <h4>Apply Here To Exist:</h4>
     <ul>
         <li>
@@ -75,7 +77,7 @@
     </div>
 </div>
 
-<div class="dialogue" id="unkiel"></div>
+<div class="dialogue" id="unkiel"></div> -->
 
 <hr>
 
@@ -116,34 +118,34 @@
         );
     });
 
-    let lastAngle = 0;
-    let $pac = $("#pac");
-    let $pac2 = $("#pac2");
-    let $pac3 = $("#pac3");
-    let $pac4 = $("#pac4");
+    // let lastAngle = 0;
+    // let $pac = $("#pac");
+    // let $pac2 = $("#pac2");
+    // let $pac3 = $("#pac3");
+    // let $pac4 = $("#pac4");
 
-    let rotate = function rotate(e) {
-        lastAngle += 90;
-        $pac.css("transform", `rotate(${lastAngle}deg)`);
-        $pac2.css("transform", `rotate(${lastAngle + 90}deg)`);
-        $pac3.css("transform", `rotate(${lastAngle + 180}deg)`);
-        $pac4.css("transform", `rotate(${lastAngle + 270}deg)`);
-    }
+    // let rotate = function rotate(e) {
+    //     lastAngle += 90;
+    //     $pac.css("transform", `rotate(${lastAngle}deg)`);
+    //     $pac2.css("transform", `rotate(${lastAngle + 90}deg)`);
+    //     $pac3.css("transform", `rotate(${lastAngle + 180}deg)`);
+    //     $pac4.css("transform", `rotate(${lastAngle + 270}deg)`);
+    // }
 
-    $("#pac").click(rotate);
-    $("#pac2").click(rotate);
-    $("#pac3").click(rotate);
-    $("#pac4").click(rotate);
+    // $("#pac").click(rotate);
+    // $("#pac2").click(rotate);
+    // $("#pac3").click(rotate);
+    // $("#pac4").click(rotate);
 
 
-    let unkielTree = function () {
-        return [
-            Dialogue.textSlide("Woah..."),
-            Dialogue.textSlide("I exist now."),
-            Dialogue.textSlide("Crazy.")
-        ];
-    };
-    let unkielDialogue = new Dialogue("unkiel", 3500, unkielTree, "/img/npcs/unkiel.png");
+    // let unkielTree = function () {
+    //     return [
+    //         Dialogue.textSlide("Woah..."),
+    //         Dialogue.textSlide("I exist now."),
+    //         Dialogue.textSlide("Crazy.")
+    //     ];
+    // };
+    // let unkielDialogue = new Dialogue("unkiel", 3500, unkielTree, "/img/npcs/unkiel.png");
 
     const lawn = new Lawn();
 </script>

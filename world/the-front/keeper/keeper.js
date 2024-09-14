@@ -60,16 +60,7 @@ let keeper = new Dialogue("keeper", 2000, function () {
 
         return [
             Dialogue.textSlide("Registering an account allows NotherBase to indentify you."),
-            Dialogue.textSlide("This way, NotherBase can provide features like game saves synced across all your devices.")
-        ]
-    }
-    else if (this.checkFlag("why-email")) {
-        this.removeFlag("why-email");
-        this.removeFlag("about-account");
-
-        return [
-            Dialogue.textSlide("Your email is needed in for account recovery."),
-            Dialogue.textSlide("My boss said he didn't want everyone calling him when they forget their passwords.")
+            Dialogue.textSlide("This way, NotherBase can save your info to the cloud, making it accessible anywhere you have internet.")
         ]
     }
     else if (this.checkFlag("what-info")) {
@@ -86,7 +77,6 @@ let keeper = new Dialogue("keeper", 2000, function () {
         return [
             Dialogue.buttonSlide([
                 Dialogue.button("Why is an account needed?", "why-account"),
-                Dialogue.button("Why is my email address needed?", "why-email"),
                 Dialogue.button("What information is saved about me?", "what-info")
             ])
         ]
