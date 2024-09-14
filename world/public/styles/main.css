@@ -453,28 +453,6 @@ a.subtle:hover {
 }
 /*  */
 
-.sign {
-    width: var(--fillFromMargin);
-    min-height: 10vw;
-    padding: var(--padding);
-    border-radius: var(--borderRadius);
-    border: var(--thickBorder);
-    margin: var(--margin);
-    background: url("/img/signs/wooden-board.jpg");
-    background-size: cover;
-    background-position: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    align-content: center;
-}
-
-.sign * {
-    color: var(--darkWoodColor);
-    background: none;
-}
-
 .form {
     display: flex;
     flex-wrap: wrap;
