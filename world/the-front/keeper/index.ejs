@@ -11,35 +11,26 @@
         <div class="clipboard on-counter for-login">
             <button class="close">X</button>
             <div class="application">
-                <div class="auth-form" id="login-form">
-                    <h5>NotherBase</h5>
-                    <h6>Login to Your Account</h6>
-                    <input type="email" name="email" placeholder="e@mail.com" id="login-email">
-                    <input type="password" name="password" placeholder="password" id="login-pass">
-                    <button id="login-button">Login</button>
-                    <button class="subtle" id="change-button">Change Your Password</button>
-                    <p id="login-info"></p>
-                </div>
-                <div class="auth-form invisible" id="reset-form">
-                    <h5>NotherBase</h5>
-                    <h6>Reset Your Password</h6>
-                    <input type="email" name="email" placeholder="e@mail.com" id="reset-email">
-                    <button id="reset-button">Send Reset Code to Your Email</button>
-                    <button class="subtle return-button">Return to Login</button>
-                    <p id="reset-info"></p>
-                </div>
-                <div class="auth-form invisible" id="set-form">
-                    <h5>NotherBase</h5>
-                    <h6>Change Your Password</h6>
-                    <p>Reset code sent to your email.</p>
-                    <input type="email" name="email" placeholder="e@mail.com" id="change-email">
-                    <input type="number" name="token" placeholder="0000" id="change-token">
-                    <input type="password" name="password" placeholder="new password" id="change-password">
-                    <input type="password" name="confirmation" placeholder="new password again" id="change-confirmation">
-                    <button id="set-button">Set Password</button>
-                    <button class="subtle return-button">Return to Login</button>
-                    <p id="set-info"></p>
-                </div>
+                <% if (user) { %>
+                    <div class="auth-form" id="set-form">
+                        <h5>NotherBase</h5>
+                        <h6>Change Your Password</h6>
+                        <input type="password" name="old-password" placeholder="old password" id="change-old-password">
+                        <input type="password" name="password" placeholder="new password" id="change-password">
+                        <input type="password" name="confirmation" placeholder="new password again" id="change-confirmation">
+                        <button id="set-button">Set Password</button>
+                        <p id="set-info"></p>
+                    </div>
+                <% } else { %>
+                    <div class="auth-form" id="login-form">
+                        <h5>NotherBase</h5>
+                        <h6>Login to Your Account</h6>
+                        <input type="test" name="username" placeholder="username" id="login-user">
+                        <input type="password" name="password" placeholder="password" id="login-pass">
+                        <button id="login-button">Login</button>
+                        <p id="login-info"></p>
+                    </div>
+                <% } %>
             </div>
             <div ></div>
             <div class="clamp"></div>
@@ -52,7 +43,6 @@
                 <div class="auth-form" id="register-form">
                     <h5>NotherBase</h5>
                     <h6>Register a New Account</h6>
-                    <input type="email" name="email" placeholder="e@mail.com" id="register-email">
                     <input type="text" name="username" placeholder="username" id="register-user">
                     <input type="password" name="password" placeholder="password" id="register-pass">
                     <input type="password" name="confirmation" placeholder="password again" id="register-confirmation">
