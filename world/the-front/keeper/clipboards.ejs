@@ -52,6 +52,22 @@
                 <input type="file" id="fileInput">                        
                 <button onclick="importData()">Import Data</button>
                 <p id="data-info"></p>
+                <button onclick="toSessions()">Manage Sessions</button>
+            </div>
+            <div class="auth-form invisible" id="manage-sessions">
+                <h5>NotherBase</h5>
+                <h6>Manage Your Sessions</h6>
+                <ul class="active-sessions">
+                    <%  let keys = Object.keys(user.memory.data.sessions);
+                        for (let key of keys) { %>
+                        <li>
+                            <%= key %>: <%= (new Date(user.memory.data.sessions[key])).toLocaleString() %>
+                            <button onclick='destroySession("<%= key %>")'>X</button>
+                        </li>
+                    <% } %>
+                </ul>
+                <p id="session-info"></p>
+                <button onclick="toData()">Manage Data</button>
             </div>
         <% } else { %>
             <div class="auth-form" id="register-form">
@@ -88,14 +104,15 @@
     let $changeButton = $("#change-button");
     let $setButton = $("#set-button");
     let $setInfo = $("#set-info");
-    let $toEmail = $("#to-email");
     let $manageEmail = $("#manage-email");
     let $emailPassword = $("#email-password");
     let $changeEmail = $("#change-email");
     let $emailInfo = $("#email-info");
-    let $toPass = $(".to-pass");
     let $returnButtons = $(".return-button");
     let $dataInfo = $("#data-info");
+    let $dataForm = $("#data-form");
+    let $manageSessions = $("#manage-sessions");
+    let $sessionInfo = $("#session-info");
 
     //try to login
     $loginButton.on("click", async (e) => {
@@ -225,5 +242,20 @@
     let changeEmail = async () => {
         let res = await base.changeEmail($emailPassword.val(), $changeEmail.val());
         $emailInfo.text(res.message);
+    }
+
+    let toSessions = function () {
+        $dataForm.addClass("invisible");
+        $manageSessions.removeClass("invisible");
+    }
+
+    let toData = function () {
+        $manageSessions.addClass("invisible");
+        $dataForm.removeClass("invisible");
+    }
+
+    let destroySession = async (sessionID) => {
+        let res = await base.do("destroySession", { sessionID: sessionID });
+        $sessionInfo.text(res.data);
     }
 </script>
