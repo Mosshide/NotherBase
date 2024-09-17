@@ -151,9 +151,9 @@
         }
     });
 
-    let clickClose = function clickClose(e) {
-        e.stopPropagation();
-        let $currentClipboard = $(e.currentTarget).parent();
+    let clickClose = () => {
+        event.stopPropagation();
+        let $currentClipboard = $(event.currentTarget).parent();
 
         if (!$currentClipboard.hasClass("on-counter")) {
             $currentClipboard.addClass("on-counter");
