@@ -161,3 +161,19 @@ input[type="file"] {
     padding: 1px;
     text-align: center;
 }
+
+#manage-sessions ul {
+    overflow: auto;
+    padding: 0;
+    height: 70%;
+}
+
+#manage-sessions li {
+    padding: 5px;
+    overflow: auto;
+    position: relative;
+}
+
+#manage-sessions li button {
+    
+}
