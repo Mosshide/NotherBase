@@ -84,6 +84,14 @@
     </p>
 </section>
 
+<section class="impact">
+    <img src="/img/volunteer/impact.png" alt="">
+    <p class="verse">
+        <i>Don’t look out only for your own interests, but take an interest in others, too.</i>
+        Philippians 2:4 NLT
+    </p>
+</section>
+
 <section class="grey">
     <h3>Volunteer Opportunities</h3>
     
@@ -116,8 +124,19 @@
     <p>Or print and mail completed application to PO Box 152 Chehalis, WA 98532</p>
 </section>
 
-
 <script src="/js/themeApplicator.js"></script>
 <script>
     const themeApplicator = new ThemeApplicator();
+
+    let appeared = false;
+    let footerTop = $(".impact").offset().top;
+    let offset = window.innerWidth < 400 ? 400 : 200;
+    $(window).scroll(function(){
+        if (!appeared) {
+            if ($(window).scrollTop() > footerTop - offset) {   
+                $(".verse").addClass("fade-in");
+                appeared = true;
+            }
+        }
+    });
 </script>
