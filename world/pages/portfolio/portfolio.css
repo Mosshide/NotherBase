@@ -48,6 +48,7 @@ footer {
     max-height: initial;
     height: auto;
     max-width: 800px;
+    display: flex;
 }
 
 header {
