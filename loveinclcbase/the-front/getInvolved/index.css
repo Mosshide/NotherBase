@@ -1,3 +1,76 @@
 .cross-bg * {
     background: rgb(41, 80, 138) !important;
 }
+
+section.impact {
+    aspect-ratio: 16/9;
+    max-height: 100vh;
+}
+
+section.impact img {
+    position: absolute;
+    left: 0;
+    top: 0;
+    aspect-ratio: 16/9;
+    height: 100%;
+    object-fit: cover;
+}
+
+section.impact .verse {
+    position: absolute;
+    top: 30%;
+    left: 15%;
+    width: 45%;
+    border-radius: 5px;
+    color: rgb(245, 193, 179);
+    font-size: 26px;
+    opacity: 0;
+}
+
+.fade-in {
+    animation: fade-in 1s forwards;
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* styles for screens under 1000px wide */
+@media only screen and (max-width: 1000px) {
+    section.impact {
+        aspect-ratio: 9/9;
+        overflow: auto;
+    }
+
+    section.impact .verse {
+        top: 30%;
+        left: 27%;
+        width: 70%;
+        font-size: 20px;
+    }
+
+    section.impact .ref {
+        bottom: 35%;
+        right: 3%;
+    }
+
+    section.impact img {
+        left: 0;
+        width: auto;
+    }
+}
+
+/* styles for screens under 400px wide */
+@media only screen and (max-width: 400px) {
+    section.impact .verse {
+        top: 27%;
+        left: 27%;
+        width: 73%;
+        font-size: 16px;
+    }
+}
