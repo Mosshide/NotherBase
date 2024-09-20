@@ -182,7 +182,7 @@ nav .buttons {
 }
 
 section {
-    padding: 10px calc((100% - var(--maxMainWidth)) / 2);
+    padding: 40px 10px;
     border: none;
     border-radius: 0;
     margin: 0;
@@ -259,6 +259,9 @@ section>img {
     cursor: pointer;
 }
 
+textarea.message {
+    min-height: 40%;
+}
 
 @media only screen and (max-width: 900px) {
     .portrait {

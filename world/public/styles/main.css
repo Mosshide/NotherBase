@@ -325,7 +325,7 @@ li {
 }
 
 textarea {
-    padding: var(--padding);
+    padding: var(--thickPadding);
     width: var(--fillFromMargin);
     background-color: var(--tint);
     border-radius: 0;

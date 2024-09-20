@@ -128,7 +128,7 @@
                 </a>
 
                 <p>
-                    Love INC of Lewis County is a non-profit organization that helps people in need.
+                    Love INC is a non-profit organization that helps people in need.
                     Love INC focuses on the local impact of the love of Jesus Christ, as it serves
                     in locations all over the United States and around the world.
                 </p>
@@ -741,21 +741,29 @@
 
             send = () => {
                 this.startLoading();
+                let from = this.$from.val();
+                let message = this.$message.val();
 
-                base.do("send-message", {
-                    route: "/pages/portfolio",
-                    from: this.$from.val(),
-                    message: this.$message.val()
-                }).then((res) => {
-                    if (res.status === "success") {
-                        this.$from.val("");
-                        this.$message.val("");
-                        this.setInfo("Message sent successfully!");
-                    }
-                    else this.setInfo("Error: Message not sent! Please try again later.");
-
+                if (!from || !message) {
+                    this.setInfo("Error: Please fill out both fields.");
                     this.endLoading();
-                });
+                }
+                else {
+                    base.do("send-message", {
+                        route: "/pages/portfolio",
+                        from: from,
+                        message: message
+                    }).then((res) => {
+                        if (res.status === "success") {
+                            this.$from.val("");
+                            this.$message.val("");
+                            this.setInfo("Message sent successfully!");
+                        }
+                        else this.setInfo("Error: Message not sent! Please try again later.");
+    
+                        this.endLoading();
+                    });
+                }
             }
         }
 
