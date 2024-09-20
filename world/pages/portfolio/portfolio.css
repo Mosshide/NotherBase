@@ -19,6 +19,7 @@
 
 * {
     font-family: 'Chakra Petch', sans-serif;
+    box-sizing: border-box;
 }
 
 body {
@@ -47,8 +48,28 @@ footer {
     position: initial;
     max-height: initial;
     height: auto;
-    max-width: 800px;
+    width: 100%;
     display: flex;
+    padding: 30px 10px;
+    background: #434343;
+    flex-direction: column;
+    align-items: flex-start;
+    border-radius: 0;
+    max-width: initial;
+}
+
+footer a {
+    border: none;
+    margin: 5px;
+    border-bottom: var(--textColor) 1px solid;
+}
+
+footer a:hover {
+    color: var(--focusColor);
+    cursor: pointer;
+    border: none;
+    margin: 5px;
+    border-bottom: var(--focusColor) 1px solid;
 }
 
 header {
@@ -196,7 +217,6 @@ section>img {
 
 #notherbase-fs {
     background-color: var(--extreme-dark);
-    padding: 10px;
     width: 90%;
     flex-direction: row-reverse;
 }
@@ -208,6 +228,37 @@ section>img {
 .chat-box {
     margin: 20px;
 }
+
+#loveinclc {
+    background-color: rgb(255, 255, 255);
+}
+
+#loveinclc p {
+    color: var(--altTextColor);
+}
+
+#loveinclc a {
+    border-bottom: rgb(36, 81, 148) 1px solid;
+    color: rgb(36, 81, 148);
+}
+
+#loveinclc a * {
+    border-bottom: rgb(36, 81, 148) 1px solid;
+    color: rgb(36, 81, 148);
+}
+
+#loveinclc a:hover {
+    color: rgb(64, 130, 228);
+    border-bottom: rgb(64, 130, 228) 1px solid;
+    cursor: pointer;
+}
+
+#loveinclc a:hover * {
+    color: rgb(64, 130, 228);
+    border-bottom: rgb(64, 130, 228) 1px solid;
+    cursor: pointer;
+}
+
 
 @media only screen and (max-width: 900px) {
     .portrait {
