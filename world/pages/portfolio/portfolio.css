@@ -182,11 +182,14 @@ nav .buttons {
 }
 
 section {
+    flex-direction: column;
     padding: 40px 10px;
     border: none;
     border-radius: 0;
     margin: 0;
     width: 100%;
+    align-items: center;
+    align-content: center;
 }
 
 section>img {
@@ -287,11 +290,6 @@ textarea.message {
         top: calc(65% + 105px);
         height: 45px;
     } */
-
-    section {
-        flex-wrap: wrap;
-        padding: 40px 10px;
-    }
 
     .text, section iframe {
         width: 100%;
