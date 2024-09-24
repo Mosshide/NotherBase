@@ -28,7 +28,12 @@ section.impact .verse {
 }
 
 .fade-in {
-    animation: fade-in 1s forwards;
+    animation: fade-in 2s forwards;
+}
+
+#request {
+    margin-top: 50px;
+    margin-bottom: 0;
 }
 
 @keyframes fade-in {
