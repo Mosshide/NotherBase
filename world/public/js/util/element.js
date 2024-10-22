@@ -211,7 +211,7 @@ class Text extends Element {
     render = () => {
         this.$div = super.render();
 
-        if (this.value != null) this.$div.append(this.value);
+        if (this.value != null) this.$div.append(this.value.replace(/(?:\r\n|\r|\n)/g, '<br />'));
         else this.$div.append(this.settings.placeholder);
 
         return this.$div;
@@ -220,7 +220,6 @@ class Text extends Element {
     setValue = (value) => {
         if (value) {
             this.value = value.toString();
-            this.value = this.value.replace(/(?:\r\n|\r|\n)/g, '<br />');
         }
         this.render();
     }
@@ -456,7 +455,6 @@ class CheckBox extends Element {
         return this.value;
     }
 }
-
 
 // a class called Container that can be used to contain other Elements
 class Container extends Element {
