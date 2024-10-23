@@ -248,7 +248,7 @@ class ViewBox extends Element {
             if (this.fields.settings.type == "date-time") {
                 toGo[toGo.length - 1] = new Date(toGo).getTime();
             }
-            else if (this.fields.settings.type == "date") {
+            else if (this.fields.settings.type == "date") {                
                 let date = toGo[toGo.length - 1].split("-");
                 toGo[toGo.length - 1] = new Date(date[0], date[1] - 1, date[2]).getTime();
             }
@@ -368,21 +368,7 @@ class Browser extends Element {
         this.buttons = this.addChild(new Buttons({ id: "browser-ui" }));
         this.buttons.addButton(new Button("edit", (e, self) => { this.edit(); }, { placeholder: "Edit" }));
         this.buttons.addButton(new Button("save", (e, self) => { this.save(); }, { placeholder: "Save" }));
-        // save if ctrl s is pressed
-        $(document).on("keydown", (e) => {
-            if (e.ctrlKey && e.key === "s") {
-                e.preventDefault();
-                this.save();
-            }
-        });
         this.buttons.addButton(new Button("cancel", (e, self) => { this.cancel(); }, { placeholder: "Cancel" }));
-        // cancel if esc is pressed
-        $(document).on("keydown", (e) => {
-            if (e.key === "Escape") {
-                e.preventDefault();
-                this.cancel();
-            }
-        });
         this.buttons.addButton(new Button("delete", (e, self) => { this.attemptDelete(); }, { placeholder: "Delete" }));
         this.buttons.addButton(new Button("close", (e, self) => { this.close(); this.serving.state = "search"; }, { placeholder: "Close" }));
         this.buttons.addButton(new Button("undo", (e, self) => { this.undo(); }, { placeholder: "Undo" }));
@@ -531,21 +517,7 @@ class TreeBrowser extends Browser {
         
         this.buttons.enableButton("delete", (e, self) => { this.attemptDelete(); });
         this.buttons.enableButton("save", (e, self) => { this.save(); });
-        // save if ctrl s is pressed
-        $(document).on("keydown", (e) => {
-            if (e.ctrlKey && e.key === "s") {
-                e.preventDefault();
-                this.save();
-            }
-        });
         this.buttons.enableButton("cancel", (e, self) => { this.read(this.serving, false); });
-        // cancel if esc is pressed
-        $(document).on("keydown", (e) => {
-            if (e.key === "Escape") {
-                e.preventDefault();
-                this.cancel();
-            }
-        });
         this.buttons.enableButton("edit", (e, self) => { this.edit(); });
         this.buttons.addButton(new Button("up", (e, self) => {
             this.up();
@@ -837,7 +809,6 @@ class TreeBrowser extends Browser {
         this.buttons.showButton("paste");
         let name =  this.serving.clipboard.data.name ||  this.serving.clipboard.data.username ||  this.serving.clipboard.data.title || 
             this.serving.clipboard.data.header ||  this.serving.clipboard.data.whenSearched ||  this.serving.clipboard.data.note ||  this.serving.clipboard.data.text;
-        console.log(this.serving.clipboard);
         
         if (name.length > 10) name = name.slice(0, 8) + "...";
         this.buttons.buttons.paste.setValue("Paste " + name);
