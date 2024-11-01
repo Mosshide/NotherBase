@@ -7,6 +7,20 @@
     align-content: flex-start;
 }
 
+.meta>h4 {
+    border-bottom: var(--fourth-color) 1px solid;
+}
+
+.meta .button {
+    margin: 3px;
+}
+
+.meta>.buttons {
+    display: flex;
+    margin: 0;
+    flex-wrap: wrap;
+}
+
 .browser {
     width: 100%;
     height: auto;
@@ -14,7 +28,7 @@
     flex-wrap: wrap;
     opacity: 1;
     transition: all 0.3s ease-in-out;
-    background: var(--mediumBgColorGradient);
+    background: var(--fourth-color);
     position: relative;
 }
 
@@ -51,7 +65,7 @@
 
 .browser .edit {
     width: 100%;
-    background: var(--mediumBgColorGradient);
+    background: var(--fourth-color);
     display: flex;
     flex-wrap: wrap;
     align-content: center;
@@ -103,7 +117,7 @@
 .browser .read {
     width: 100%;
     overflow: auto;
-    background: var(--mediumBgColorGradient);
+    background: var(--fourth-color);
     display: flex;
     flex-wrap: wrap;
     align-content: center;

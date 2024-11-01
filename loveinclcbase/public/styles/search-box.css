@@ -41,7 +41,7 @@
 .search-box .filters {
     width: 100%;
     max-height: 50vh;
-    background: var(--bgColor);
+    background: var(--fourth-color);
     margin: 0;
     display: flex;
     flex-wrap: wrap;
@@ -67,6 +67,7 @@
 .search-box .filters div h4 {
     border: none;
     width: auto;
+    color: white;
 }
 
 .search-box .filters div input {
@@ -84,11 +85,13 @@
 
 .search-box .selector>li.disabled {
     cursor: initial;
-    background: var(--bgColor);
+    background: var(--fourth-color);
 }
 
 .search-box .buttons {
     border: none;
     background: none;
     top: calc(-1 * var(--tabMargin));
+    display: flex;
+    
 }
