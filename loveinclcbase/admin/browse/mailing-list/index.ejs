@@ -1,0 +1,87 @@
+<style>
+    <%- include("./index.css"); %>
+</style>
+
+<% if (user && user.memory.data.authLevels.includes("LINCLCAD")) { %>
+<div class="meta" id="mailing-list"></div>
+<% } else { %>
+<p>Administrator authority required.</p>
+<% } %>
+
+<script src="/js/util/element.js"></script>
+<script src="/js/util/buttons.js"></script>
+<script src="/js/util/search-box.js"></script>
+<script src="/js/util/browser.js"></script>
+
+<script>
+    <% if (user && user.memory.data.authLevels.includes("LINCLCAD")) { %>
+    let metaMailingList = new MetaBrowser({ id: "mailing-list", header: "Mailing List" });
+    metaMailingList.render();
+    metaMailingList.addService("loveinclc-mailing-list", {
+        fields: new NBField({
+            name: "entry",
+            label: "Entry: ",
+            placeholder: "Nobody"
+        }, [
+            new NBField({
+                name: "name",
+                label: "Name: ",
+                placeholder: "no name",
+                type: "string"
+            }),
+            new NBField({
+                name: "street",
+                label: "Street: ",
+                placeholder: "no street",
+                type: "string"
+            }),
+            new NBField({
+                name: "city",
+                label: "City: ",
+                placeholder: "no city",
+                type: "string"
+            }),
+            new NBField({
+                name: "state",
+                label: "State: ",
+                placeholder: "no state",
+                type: "string"
+            }),
+            new NBField({
+                name: "zip",
+                label: "Zip: ",
+                placeholder: "no zip",
+                type: "string"
+            }),
+            new NBField({
+                name: "email",
+                label: "E-mail: ",
+                placeholder: "no e-mail",
+                type: "string"
+            }),
+            new NBField({
+                name: "notes",
+                label: "Notes: ",
+                placeholder: "",
+                type: "long-string"
+            }),
+            new NBField({
+                name: "checked",
+                label: "Checked: ",
+                placeholder: false,
+                type: "boolean"
+            })
+        ]),
+        editable: true,
+        multiple: true,
+        toLoad: async () => {
+            let res = await base.loadAll("loveinclc-mailing-list", "global");
+            console.log(res);
+            return res;
+        },
+        toSave: async (item, deleting) => {
+            return await base.do("save-mailing-list", { item, deleting });
+        }
+    });
+    <% } %>
+</script>
