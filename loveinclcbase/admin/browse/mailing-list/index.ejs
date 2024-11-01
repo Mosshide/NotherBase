@@ -15,7 +15,7 @@
 
 <script>
     <% if (user && user.memory.data.authLevels.includes("LINCLCAD")) { %>
-    let metaMailingList = new MetaBrowser({ id: "mailing-list", header: "Mailing List" });
+    let metaMailingList = new MetaBrowser({ id: "mailing-list", header: "Love INC of Lewis County Mailing List" });
     metaMailingList.render();
     metaMailingList.addService("loveinclc-mailing-list", {
         fields: new NBField({
@@ -76,12 +76,50 @@
         multiple: true,
         toLoad: async () => {
             let res = await base.loadAll("loveinclc-mailing-list", "global");
-            console.log(res);
             return res;
         },
         toSave: async (item, deleting) => {
             return await base.do("save-mailing-list", { item, deleting });
         }
     });
+    metaMailingList.buttons.addButton(new Button("compile", () => {
+        let data = "";
+        for (let entry of metaMailingList.serving.data) {
+            data += entry.email + ", ";
+        }
+        let blob = new Blob([data], { type: "application/json" });
+        let url = URL.createObjectURL(blob);
+        let a = document.createElement("a");
+        a.href = url;
+        a.download = "data.json";
+        document.body.appendChild(a);
+        a.click();
+        URL.revokeObjectURL(url);
+        a.remove();
+    }, {
+        placeholder: "Download Compiled Emails"
+    }));
+    // add a button that unchecks all entries
+    metaMailingList.buttons.addButton(new Button("uncheck", () => {
+        base.do("uncheck-mailing-list", {}).then((res) => {
+            if (res.status == "success") {
+                metaMailingList.load();
+                console.log(res.data);
+            }
+        });
+    }, {
+        placeholder: "Uncheck All"
+    }));
+    // add a button that checks all entries
+    metaMailingList.buttons.addButton(new Button("check", () => {
+        base.do("check-mailing-list", {}).then((res) => {
+            if (res.status == "success") {
+                metaMailingList.load();
+                console.log(res.data);
+            }
+        });
+    }, {
+        placeholder: "Check All"
+    }));
     <% } %>
 </script>

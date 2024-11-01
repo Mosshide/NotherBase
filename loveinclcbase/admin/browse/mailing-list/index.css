@@ -5,3 +5,14 @@ footer {
 footer p {
     color: aliceblue;
 }
+
+body {
+    background: url('/img/bg/2roses.webp');
+    background-size: contain;
+}
+
+main {
+    margin-top: 50px;
+    max-width: calc(100% - 2vw);
+    border-radius: 5px;
+}

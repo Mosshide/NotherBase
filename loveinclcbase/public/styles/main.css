@@ -10,7 +10,7 @@
     --border-radius: 10px;
     --button-scale: scale(1.01);
     --third-color: #f0f0f0;
-    --fourth-color: #002647; 
+    --fourth-color: #003e74; 
     --fifth-color: #e36820;
     --fifth-color-hover: #f37228;
 
@@ -292,6 +292,14 @@ main>h2 {
     height: min-content;
 }
 
+input {
+    width: 100%;
+    height: 60px;
+    margin: 10px 0;
+    padding: 10px;
+    font-size: 20px;
+}
+
 /* national bar */
 div.national {
     width: 100%;
@@ -526,7 +534,7 @@ ul.selector>li {
 
 ul.selector>li:hover {
     cursor: pointer;
-    background: var(--hoverColor);
+    background: var(--fourth-color);
     color: var(--hoverTextColor);
 }
 
@@ -540,7 +548,7 @@ ul.selector>p {
 }
 
 ul.selector>li.disabled {
-    background: var(--bgColor);
+    background: var(--fourth-color);
     color: var(--textColor);
     border: var(--standardBorder);
     cursor: default;
@@ -784,7 +792,7 @@ a.external.inverted {
 }
 
 footer {
-    position: sticky;
+    position: absolute;
     display: none;
     justify-content: center;
     align-content: center;
@@ -792,13 +800,13 @@ footer {
     height: 40px;
     width: 90vw;
     max-width: 800px;
-    background-color: var(--veryDarkBgColor);
+    background-color: var(--fourth-color);
     border-radius: 0px 0px 5px 5px;
     box-shadow: var(--boxShadow);
     padding: 0;
     padding-left: 1vw;
     border: none;
-    bottom: 0;
+    top: 0;
     left: 1vw;
 }
 
@@ -1187,10 +1195,10 @@ a.link-button {
         border-left: none;
     }
 
-    .buttons {
+    /* .buttons {
         align-items: flex-start;
         min-height: 150px;
-        gap: 20px;
+        gap: 5px;
     }
 
     .buttons a {
@@ -1200,7 +1208,7 @@ a.link-button {
 
     .buttons a#volunteer p {
         bottom: -80px;
-    }
+    } */
 
     div.national ul {
         display: none;
