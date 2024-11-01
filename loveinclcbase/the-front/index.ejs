@@ -101,5 +101,8 @@
 
 <script src="/js/themeApplicator.js"></script>
 <script>
-    const themeApplicator = new ThemeApplicator();
+    const themeApplicator = new ThemeApplicator({
+        signUpAfterHero: true,
+        enableExperimental: <%= query.preview ? true: false %>
+    });
 </script>

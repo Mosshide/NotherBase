@@ -21,6 +21,19 @@
         }
     </style>
     <main>
+        <div class="game">
+            <h1>Garden of Eden Game</h1>
+            <div class="before-fall">
+                <h2>It Was Good</h2>
+                <div class="trees">
+                    <div class="fruit" id="apple">
+                        <h3>Apple</h3>
+                        <p>Amount: 0</p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="ground"></div>
     </main>
     <footer></footer>
@@ -30,7 +43,7 @@
     <script src="/js/plants/part.js"></script>
     <script src="/js/plants/flower-bed.js"></script>
     <script>
-        const greenSeed = {
+        let greenSeed = {
             stem: {
                 imgs: [ "/img/textures/substance.png" ],
                 spawns: [
@@ -135,7 +148,7 @@
             }
         };
         
-        const yellowSeed = {
+        let yellowSeed = {
             stem: {
                 imgs: [ "/img/textures/substance.png" ],
                 spawns: [
@@ -240,7 +253,21 @@
             }
         };
         
-        const flowerBed = new FlowerBed([greenSeed, yellowSeed], 30);
+        let flowerBed = new FlowerBed([greenSeed, yellowSeed], 30);
+
+        class EdenGame {
+            constructor() {
+                this.seeds = 0;
+            }
+
+            plant() {
+            }
+
+            harvest() {
+            }
+        }
+
+        let edenGame = new EdenGame();
     </script>
 </body>
 </html>
