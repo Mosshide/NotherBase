@@ -3,6 +3,8 @@ class ThemeApplicator {
     constructor(settings) {
         this.settings = {
             description: "Love INC of Lewis County is mobilizing the church to transform lives.",
+            signUpAfterHero: false,
+            enableExperimental: false,
             ...settings
         };
 
@@ -73,6 +75,29 @@ class ThemeApplicator {
         this.$footer.append($("<p>(360) 748-8611</p>")); 
         this.$footer.append($(`<a href="/tac" target="_blank">Terms and Conditions</a>`));  
         this.$footer.append($(`<a href="/privacy" target="_blank">Privacy Policy</a>`));
+
+        if (this.settings.enableExperimental) {
+            // add the mailing list sign up
+            this.$mailingList = $(`<section class="mailing-list"></section>`);
+            this.$mailingList.append($(`<h3>Sign up for our Newsletter</h3>`));
+            this.$mailingList.append($(`<p>Stay up to date with the latest from Love INC of Lewis County.</p>`));
+            this.$signupForm = $(`<div class="sign-up"></div>`).appendTo(this.$mailingList);
+            this.$nameLabel = $(`<label for="mailing-name">Name:</label>`).appendTo(this.$signupForm);
+            this.$mailingName = $(`<input type="text" id="mailing-name" placeholder="Your Name">`).appendTo(this.$nameLabel);
+            this.$streetLabel = $(`<label for="mailing-street">Street:</label>`).appendTo(this.$signupForm);
+            this.$mailingStreet = $(`<input type="text" id="mailing-street" placeholder="123 Avenue St">`).appendTo(this.$streetLabel);
+            this.$cityLabel = $(`<label for="mailing-city">City:</label>`).appendTo(this.$signupForm);
+            this.$mailingCity = $(`<input type="text" id="mailing-city" placeholder="Town City">`).appendTo(this.$cityLabel);
+            this.$stateLabel = $(`<label for="mailing-state">State:</label>`).appendTo(this.$signupForm);
+            this.$mailingState = $(`<input type="text" id="mailing-state" placeholder="WA">`).appendTo(this.$stateLabel);
+            this.$zipLabel = $(`<label for="mailing-zip">Zip:</label>`).appendTo(this.$signupForm);
+            this.$mailingZip = $(`<input type="text" id="mailing-zip" placeholder="98765">`).appendTo(this.$zipLabel);
+            this.$emailLabel = $(`<label for="mailing-email">Email:</label>`).appendTo(this.$signupForm);
+            this.$mailingEmail = $(`<input type="email" id="mailing-email" placeholder="your@email.com">`).appendTo(this.$emailLabel);
+            this.$signupForm.append($(`<button class="external">Sign Up</button>`));
+            if (this.settings.signUpAfterHero) this.$mailingList.insertAfter($(".hero"));
+            else this.$mailingList.insertBefore(this.$footer);
+        }
     }
 
     enableNavMobile() {
