@@ -8,6 +8,9 @@ class ThemeApplicator {
             ...settings
         };
 
+        this.signUpCooldown = 30000;
+        this.lastSignUp = 0;
+
         this.path = window.location.pathname.split('/');
         this.path = this.path[this.path.length - 1];
 
@@ -82,7 +85,8 @@ class ThemeApplicator {
             this.$mailingList.append($(`<h3>Sign up for our Newsletter</h3>`));
             this.$mailingList.append($(`<p>Stay up to date with the latest from Love INC of Lewis County.</p>`));
             this.$signupForm = $(`<div class="sign-up"></div>`).appendTo(this.$mailingList);
-            this.$nameLabel = $(`<label for="mailing-name">Name:</label>`).appendTo(this.$signupForm);
+            this.$signupForm.append($(`<p>Fields marked with * are required to be filled.</p>`));
+            this.$nameLabel = $(`<label for="mailing-name">*Name:</label>`).appendTo(this.$signupForm);
             this.$mailingName = $(`<input type="text" id="mailing-name" placeholder="Your Name">`).appendTo(this.$nameLabel);
             this.$streetLabel = $(`<label for="mailing-street">Street:</label>`).appendTo(this.$signupForm);
             this.$mailingStreet = $(`<input type="text" id="mailing-street" placeholder="123 Avenue St">`).appendTo(this.$streetLabel);
@@ -92,9 +96,11 @@ class ThemeApplicator {
             this.$mailingState = $(`<input type="text" id="mailing-state" placeholder="WA">`).appendTo(this.$stateLabel);
             this.$zipLabel = $(`<label for="mailing-zip">Zip:</label>`).appendTo(this.$signupForm);
             this.$mailingZip = $(`<input type="text" id="mailing-zip" placeholder="98765">`).appendTo(this.$zipLabel);
-            this.$emailLabel = $(`<label for="mailing-email">Email:</label>`).appendTo(this.$signupForm);
+            this.$emailLabel = $(`<label for="mailing-email">*Email:</label>`).appendTo(this.$signupForm);
             this.$mailingEmail = $(`<input type="email" id="mailing-email" placeholder="your@email.com">`).appendTo(this.$emailLabel);
-            this.$signupForm.append($(`<button class="external">Sign Up</button>`));
+            this.$mailingAlert = $(`<p class="invisible alert">Please fill out required fields.</p>`).appendTo(this.$signupForm);
+            this.$signupButton = $(`<button class="external">Sign Up</button>`).appendTo(this.$signupForm);
+            this.$signupButton.click(() => this.signUpForMailingList());
             if (this.settings.signUpAfterHero) this.$mailingList.insertAfter($(".hero"));
             else this.$mailingList.insertBefore(this.$footer);
         }
@@ -108,5 +114,43 @@ class ThemeApplicator {
     disableNavMobile() {
         this.$nav.removeClass("mobile-full");
         this.$main.removeClass("nav-open");
+    }
+
+    signUpForMailingList() {
+        if (this.lastSignUp + this.signUpCooldown < Date.now()) {
+            let name = this.$mailingName.val();
+            let street = this.$mailingStreet.val();
+            let city = this.$mailingCity.val();
+            let state = this.$mailingState.val();
+            let zip = this.$mailingZip.val();
+            let email = this.$mailingEmail.val();
+            if (name == "" || email == "") {
+                this.$mailingAlert.removeClass("invisible");
+                return;
+            }
+
+            base.do("add-to-mailing-list", {
+                name: name,
+                street: street,
+                city: city,
+                state: state,
+                zip: zip,
+                email: email,
+                route: "/the-front"
+            }).then((res) => {
+                this.$mailingAlert.removeClass("invisible");
+                if (res.status == "success") {
+                    this.$mailingAlert.text(`Thank you for signing up!`);
+                } else {
+                    this.$mailingAlert.text(`There was an error signing up. Please try again later.`);
+                }
+            });
+            
+            this.lastSignUp = Date.now();
+        }
+        else {
+            this.$mailingAlert.removeClass("invisible");
+            this.$mailingAlert.text(`Please wait before submitting another form.`);
+        }
     }
 }
