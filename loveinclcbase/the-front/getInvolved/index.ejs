@@ -126,7 +126,9 @@
 
 <script src="/js/themeApplicator.js"></script>
 <script>
-    const themeApplicator = new ThemeApplicator();
+    const themeApplicator = new ThemeApplicator({
+        enableExperimental: <%= query.preview ? true: false %>
+    });
 
     // let appeared = false;
     // let footerTop = $(".impact").offset().top;

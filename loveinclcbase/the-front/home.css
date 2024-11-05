@@ -5,6 +5,7 @@
 
 .hero * {
     color: var(--second-color);
+    text-shadow: 1px 1px 1px var(--shadow-color);
 }
 
 .hero h2 {
@@ -51,6 +52,7 @@ section.news .card-list {
 
 .Christ-centered * {
     color: var(--second-color);
+    text-shadow: 1px 1px 1px var(--shadow-color);
 }
 
 .souper {
