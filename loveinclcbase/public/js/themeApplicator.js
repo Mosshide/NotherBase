@@ -35,20 +35,20 @@ class ThemeApplicator {
         // add the nav
         this.$nav = $(`<nav></nav>`).prependTo(this.$body);
         // add the logo
-        this.$nav.append($(`<a class="nav-header" href="/"><img src="/img/banner.webp" alt="Love INC of Lewis County"></a>`));
+        this.$nav.append($(`<a class="nav-header" href="/"><img src="/img/ui/banner_small.webp" alt="Love INC of Lewis County"></a>`));
         // add the nav items
         this.$navItems = $(`<ul></ul>`).appendTo(this.$nav);
-        if (this.path == "the-front") this.$navItems.append($(`<a class="selected" href="/the-front"><p>Home</p></a>`));
-        else this.$navItems.append($(`<a href="/the-front"><p>Home</p></a>`));
-        if (this.path == "getInvolved") this.$navItems.append($(`<a class="selected" href="/getInvolved"><p>Get Involved</p></a>`));
-        else this.$navItems.append($(`<a href="/getInvolved"><p>Get Involved</p></a>`));
-        if (this.path == "resources") this.$navItems.append($(`<a class="selected" href="/resources"><p>Resources</p></a>`));
-        else this.$navItems.append($(`<a href="/resources"><p>Resources</p></a>`));
-        if (this.path == "contact") this.$navItems.append($(`<a class="selected" href="/contact"><p>Contact Us</p></a>`));
-        else this.$navItems.append($(`<a href="/contact"><p>Contact Us</p></a>`));
-        if (this.path == "about") this.$navItems.append($(`<a class="selected" href="/about"><p>About Us</p></a>`));
-        else this.$navItems.append($(`<a href="/about"><p>About Us</p></a>`));
-        this.$navItems.append($(`<a id="donate" href="https://loveinclewiscounty.maxgiving.com/"><p>Donate</p></a>`));
+        if (this.path == "the-front") this.$navItems.append($(`<li><a class="selected" href="/the-front">Home</a></li>`));
+        else this.$navItems.append($(`<li><a href="/the-front">Home</a></li>`));
+        if (this.path == "getInvolved") this.$navItems.append($(`<li><a class="selected" href="/getInvolved">Get Involved</a></li>`));
+        else this.$navItems.append($(`<li><a href="/getInvolved">Get Involved</a></li>`));
+        if (this.path == "resources") this.$navItems.append($(`<li><a class="selected" href="/resources">Resources</a></li>`));
+        else this.$navItems.append($(`<li><a href="/resources">Resources</a></li>`));
+        if (this.path == "contact") this.$navItems.append($(`<li><a class="selected" href="/contact">Contact Us</a></li>`));
+        else this.$navItems.append($(`<li><a href="/contact">Contact Us</a></li>`));
+        if (this.path == "about") this.$navItems.append($(`<li><a class="selected" href="/about">About Us</a></li>`));
+        else this.$navItems.append($(`<li><a href="/about">About Us</a></li>`));
+        this.$navItems.append($(`<li><a class="external" id="donate" href="https://loveinclewiscounty.maxgiving.com/">Donate</a></li>`));
         // add the close button for mobile
         this.$closeNav = $(`<button id="close-nav"><i class="fa-solid fa-xmark"></i></button>`).appendTo(this.$nav);
         this.$closeNav.click(() => this.disableNavMobile());
@@ -61,12 +61,8 @@ class ThemeApplicator {
         this.$nationalLogoItems.append($(`<img src="/img/logo-icon-transparent-mono-mini.png" alt="Love INC Logo">`));
         // add the Love INC National link
         this.$nationalLogoItems.append($(`<p>AN AFFILIATE OF <a href="https://loveinc.org" target="_blank">LOVE IN THE NAME OF CHRIST NATIONAL</a></p>`));
-        // add the Love INC National items
-        this.$nationalItems = $(`<ul></ul>`).appendTo(this.$national);
-        // add the WHAT IS LOVE INC link
-        //this.$nationalItems.append($(`<a href="/about" target="_blank">WHAT IS LOVE INC</a>`));
         // add the START A LOVE INC NEAR YOU link
-        this.$nationalItems.append($(`<a href="https://loveinc.org/start-a-love-inc" target="_blank">START A LOVE INC NEAR YOU</a>`));
+        this.$national.append($(`<a id="start" href="https://loveinc.org/start-a-love-inc" target="_blank">START A LOVE INC NEAR YOU</a>`));
 
         // add the footer
         this.$footer = $(`<div class="footer"></div>`).appendTo("body");
@@ -82,9 +78,9 @@ class ThemeApplicator {
         if (this.settings.enableExperimental) {
             // add the mailing list sign up
             this.$mailingList = $(`<section class="mailing-list"></section>`);
-            this.$mailingList.append($(`<h3>Sign up for our Newsletter</h3>`));
-            this.$mailingList.append($(`<p>Stay up to date with the latest from Love INC of Lewis County.</p>`));
             this.$signupForm = $(`<div class="sign-up"></div>`).appendTo(this.$mailingList);
+            this.$signupForm.append($(`<h3>Sign up for our Newsletter</h3>`));
+            this.$signupForm.append($(`<p>Stay up to date with the latest from Love INC of Lewis County.</p>`));
             this.$signupForm.append($(`<p>Fields marked with * are required to be filled.</p>`));
             this.$nameLabel = $(`<label for="mailing-name">*Name:</label>`).appendTo(this.$signupForm);
             this.$mailingName = $(`<input type="text" id="mailing-name" placeholder="Your Name">`).appendTo(this.$nameLabel);
