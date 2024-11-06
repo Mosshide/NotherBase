@@ -592,6 +592,12 @@ hr.for-space {
 
 .raised {
     z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    align-content: center;
 }
 
 .bottom-bumper {
@@ -650,6 +656,7 @@ hr.for-space {
 .card-list {
     display: flex;
     align-content: center;
+    flex-direction: row;
     padding: 20px 50px;
     padding-left: calc((100% - var(--max-main-width)) / 4);
     flex-wrap: nowrap;
