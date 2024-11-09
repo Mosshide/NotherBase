@@ -43,7 +43,7 @@ class Element {
             this.$div = $(`<${this.type}></${this.type}>`);
             this.initModifiers();
         }
-
+        
         this.$div.empty();
         if (this.settings.header) this.$div.append(`<h4>${this.settings.header}</h4>`);
 
