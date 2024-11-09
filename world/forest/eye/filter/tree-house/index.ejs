@@ -59,30 +59,30 @@
     const projector = new Projector("tree", <%= user.memory.data.authLevels.includes("Creator") %> ? "save-tree-projector" : null);
 
     const chat = new ChatBox("<%= user.memory.data.username %>", "tree-house");
-    const hiddenChat = new ChatBox("<%= user.memory.data.username %>", "cards-against-Bible");
+    // const hiddenChat = new ChatBox("<%= user.memory.data.username %>", "cards-against-Bible");
 
     <%- include("./dominoes/dominoes.js"); %> 
     <%- //include("./cards-against-Bible.js"); %> 
 
-    const submitPrompt = () => {
-        let prompt = $("input#prompt").val();
-        if (prompt) {
-            base.do("submit-prompt", { text: prompt }).then((res) => {
-                $("#prompt-alert").text("Prompt submitted.");
-            });
-        } else {
-            $("#prompt-alert").text("Please enter a prompt.");
-        }
-    };
+    // const submitPrompt = () => {
+    //     let prompt = $("input#prompt").val();
+    //     if (prompt) {
+    //         base.do("submit-prompt", { text: prompt }).then((res) => {
+    //             $("#prompt-alert").text("Prompt submitted.");
+    //         });
+    //     } else {
+    //         $("#prompt-alert").text("Please enter a prompt.");
+    //     }
+    // };
 
-    const submitAnswer = () => {
-        let answer = $("input#answer").val();
-        if (answer) {
-            base.do("submit-answer", { text: answer }).then((res) => {
-                $("#answer-alert").text("Answer submitted.");
-            });
-        } else {
-            $("#answer-alert").text("Please enter an answer.");
-        }
-    };
+    // const submitAnswer = () => {
+    //     let answer = $("input#answer").val();
+    //     if (answer) {
+    //         base.do("submit-answer", { text: answer }).then((res) => {
+    //             $("#answer-alert").text("Answer submitted.");
+    //         });
+    //     } else {
+    //         $("#answer-alert").text("Please enter an answer.");
+    //     }
+    // };
 </script>

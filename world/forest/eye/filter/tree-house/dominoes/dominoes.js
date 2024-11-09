@@ -1,21 +1,15 @@
 // bones are 0-6
-class Bone extends Element {
-    constructor(values) {
-        super("div", {
-            defaultClasses: "bone"
+class Bone extends Button {
+    constructor(values = [1, 1], which = 0) {
+        super(`bone-${which}`, null, {
+            defaultClasses: "bone",
+            placeholder: `${values[0]} | ${values[1]}`,
         });
         this.location = "yard";
         this.positon = [0, 0];
         this.rotation = 0;
         this.faceUp = false;
-        this.touching = [ null, null, null, null ];
         this.values = values;
-        $(".bone-yard").append(`<div class="bone in-yard" id="${values[0]}-${values[1]}"></div>`);
-        this.$div = $(".bone-yard").children().last();
-        this.width = parseInt(this.$div.css("width"), 10);
-        this.height = parseInt(this.$div.css("height"), 10);
-
-        this.enable(this.click);
     }
 
     flipUp() {
@@ -39,14 +33,6 @@ class Bone extends Element {
         this.$div.addClass("highlighted");
     }
 
-    unOption() {
-        this.$div.removeClass("option");
-    }
-
-    option() {
-        this.$div.addClass("option");
-    }
-
     hold() {
         this.$div.addClass("held");
     }
@@ -63,51 +49,6 @@ class Bone extends Element {
         this.$div.css("top", 100 + (position[0] * this.height));
         this.$div.css("left", 100 + (position[0] * this.width));
         //this.$div.css("transform", `rotation(${rotation}deg)`);
-    }
-
-    fits(bone) {
-        let compatible = false;
-
-        for (let i = 0; i < this.values.length; i++) {
-            for (let j = 0; j < bone.values.length; j++) {
-                if (this.values[i] === bone.values[j] && 
-                !bone.touching[2 * i + j] &&
-                !this.touching[2 * i + j] ) {
-                    compatible = true;
-                }
-            }
-        }
-
-        return compatible;
-    }
-
-    attach(bone) {
-        let offset = [0, 0];
-        
-        //east
-        if (this.touching[0] == null) {
-            offset = [-1, 0];
-            this.touching[0] = bone;
-        }
-        //west
-        else if (this.touching[1] == null) {
-            offset = [1, 0];
-            this.touching[1] = bone;
-        }
-        //north
-        else if (this.touching[2] == null) {
-            offset = [0, 1];
-            this.touching[2] = bone;
-        }
-        //south
-        else if (this.touching[3] == null) {
-            offset = [0, -1];
-            this.touching[3] = bone;
-        }
-
-        let position = [this.positon[0] + offset[0], this.positon[1] + offset[1]];
-
-        bone.moveTo(position, 0);
     }
 
     click = (e) => {
@@ -162,7 +103,6 @@ class Board extends Element {
         super("div", {
             defaultClasses: "board"
         });
-        this.yard = this.addChild(new Yard());
         
         this.bonesOnBoard = [];
         this.ends = [];
@@ -270,41 +210,43 @@ class DominoGame extends Container {
         });
         this.players = null;
 
+        this.yard = this.addChild(new Yard());
         this.hands = [this.addChild(new Hand(this, "player-1")), this.addChild(new Hand(this, "player-2"))];
         this.board = this.addChild(new Board(this));
+        this.resetButton = this.addChild(new Button("reset", this.reset, { placeholder: "Reset" }));
+        this.joinButton = this.addChild(new Button("join", this.joinGame, { placeholder: "Join" }));
+        this.leaveButton = this.addChild(new Button("leave", this.leaveGame, { placeholder: "Leave" }));
     }
 
     startRound() {
-        console.log("Starting Round");
-
-        this.turn = -1;
-        while (this.turn === -1) {
-            // reset the board and hands
-            this.removeChild(this.board);
-            this.board = this.addChild(new Board(this));
-            
-            // draw 7 bones for each player
-            let max = -1;
-            for (let i = 0; i < 7; i++) {
-                for (let j = 0; j < this.players.length; j++) {
-                    let bone = this.board.yard.getBone();
-                    let check = this.players[j].hand.draw(bone);
-
-                    // check for biggest double
-                    if (check[0] === check[1]) {
-                        if (check[0] > max) {
-                            max = check[0];
-                            this.turn = j;
-                        }
-                    }
-                }
+        // reset the board and hands
+        this.removeChild(this.board);
+        this.board = this.addChild(new Board(this));
+        
+        // draw 7 bones for each player
+        let max = -1;
+        for (let i = 0; i < 7; i++) {
+            for (let j = 0; j < this.players.length; j++) {
+                let bone = this.board.yard.getBone();
+                let check = this.players[j].hand.draw(bone);
             }
-
-            if (this.turn === -1) console.log("No doubles found in players' hands. Restarting");
-            else console.log(`Player ${this.turn} has biggest double: [${max}, ${max}]`);
         }
+    }
 
-        this.startTurn(true);
+    update() {
+        console.log("Updating game");
+    }
+
+    reset() {
+        console.log("Resetting game");
+    }
+
+    joinGame() {
+        console.log("Joining game");
+    }
+
+    leaveGame() {
+        console.log("Leaving game");
     }
 }
 
