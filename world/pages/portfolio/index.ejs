@@ -670,6 +670,8 @@
     <script src="/js/base.js"></script>
     <script>
         const base = new Base();
+        base.toggleView = () => { $("main").removeClass("full-view"); };
+        base.toggleView();
 
         $(window).scroll(function() {
             if (window.scrollY > (3 / 4) * parseInt($("header").css("height"))) {
