@@ -19,17 +19,14 @@
     </style>
 
     <main>
-        <div class="eden-game">
-            <h1>Garden of Eden Game</h1>
-
-            <h2>It Was Good</h2>
-        </div>
+        <div class="eden-game"></div>
     </main>
 
     <footer></footer>
 
     <script src="/js/entity.js"></script>
     <script src="/js/util/element.js"></script>
+    <script src="/js/util/buttons.js"></script>
     <script>
         class Garden extends Element {
             constructor() {
@@ -37,6 +34,83 @@
                     defaultClasses: "garden",
                     header: "Garden"
                 });
+
+                this.apple = this.addChild(new Button("apple", () => {
+                    edenGame.buyTree("apple");
+                }, {
+                    defaultClasses: "tree",
+                    placeholder: "Plant Apple Tree"
+                }));
+                this.banana = this.addChild(new Button("banana", () => {
+                    edenGame.buyTree("banana");
+                }, {
+                    defaultClasses: "tree",
+                    placeholder: "Plant Banana Tree"
+                }));
+                this.cherry = this.addChild(new Button("cherry", () => {
+                    edenGame.buyTree("cherry");
+                }, {
+                    defaultClasses: "tree",
+                    placeholder: "Plant Cherry Tree"
+                }));
+                this.fig = this.addChild(new Button("fig", () => {
+                    edenGame.buyTree("fig");
+                }, {
+                    defaultClasses: "tree",
+                    placeholder: "Plant Fig Tree"
+                }));
+                this.mango = this.addChild(new Button("mango", () => {
+                    edenGame.buyTree("mango");
+                }, {
+                    defaultClasses: "tree",
+                    placeholder: "Plant Mango Tree"
+                }));
+                this.peach = this.addChild(new Button("peach", () => {
+                    edenGame.buyTree("peach");
+                }, {
+                    defaultClasses: "tree",
+                    placeholder: "Plant Peach Tree"
+                }));
+                this.pear = this.addChild(new Button("pear", () => {
+                    edenGame.buyTree("pear");
+                }, {
+                    defaultClasses: "tree",
+                    placeholder: "Plant Pear Tree"
+                }));
+                this.pomegranate = this.addChild(new Button("pomegranate", () => {
+                    edenGame.buyTree("pomegranate");
+                }, {
+                    defaultClasses: "tree",
+                    placeholder: "Plant Pomegranate Tree"
+                }));
+                this.avocado = this.addChild(new Button("avocado", () => {
+                    edenGame.buyTree("avocado");
+                }, {
+                    defaultClasses: "tree",
+                    placeholder: "Plant Avocado Tree"
+                }));
+                this.plum = this.addChild(new Button("plum", () => {
+                    edenGame.buyTree("plum");
+                }, {
+                    defaultClasses: "tree",
+                    placeholder: "Plant Plum Tree"
+                }));
+                this.orange = this.addChild(new Button("orange", () => {
+                    edenGame.buyTree("orange");
+                }, {
+                    defaultClasses: "tree",
+                    placeholder: "Plant Orange Tree"
+                }));
+                this.olive = this.addChild(new Button("olive", () => {
+                    edenGame.buyTree("olive");
+                }, {
+                    defaultClasses: "tree",
+                    placeholder: "Plant Olive Tree"
+                }));
+            }
+
+            plantTree(tree, amount, cost) {
+                this[tree].setValue(`Plant Apple Tree - ${amount} planted, costs ${cost}`);
             }
         }
 
@@ -50,11 +124,20 @@
         }
 
         class Inventory extends Element {
-            constructor() {
+            constructor(seeds) {
                 super("div", {
                     defaultClasses: "inventory",
                     header: "Inventory"
                 });
+
+                this.seeds = this.addChild(new Text("h3", {
+                    defaultClasses: "seeds",
+                    placeholder: `Seeds: ${seeds}`
+                }));
+            }
+
+            setSeeds(seeds) {
+                this.seeds.setValue(`Seeds: ${seeds}`);
             }
         }
 
@@ -62,12 +145,97 @@
             constructor() {
                 super({
                     defaultClasses: "eden-game",
-                    header: "Garden of Eden Game"
+                    header: "Garden of Eden Game - It Was Good"
                 });
-                this.seeds = 0;
+
+                this.seeds = 5;
+
+                this.trees = {
+                    apple: {
+                        cost: 1,
+                        amount: 0
+                    },
+                    banana: {
+                        cost: 20,
+                        amount: 0
+                    },
+                    cherry: {
+                        cost: 300,
+                        amount: 0
+                    },
+                    fig: {
+                        cost: 4000,
+                        amount: 0
+                    },
+                    mango: {
+                        cost: 50000,
+                        amount: 0
+                    },
+                    peach: {
+                        cost: 600000,
+                        amount: 0
+                    },
+                    pear: {
+                        cost: 7000000,
+                        amount: 0
+                    },
+                    pomegranate: {
+                        cost: 80000000,
+                        amount: 0
+                    },
+                    avocado: {
+                        cost: 900000000,
+                        amount: 0
+                    },
+                    plum: {
+                        cost: 10000000000,
+                        amount: 0
+                    },
+                    orange: {
+                        cost: 110000000000,
+                        amount: 0
+                    },
+                    olive: {
+                        cost: 1200000000000,
+                        amount: 0
+                    },
+                }
+
                 this.garden = this.addChild(new Garden());
                 this.store = this.addChild(new Store());
-                this.inventory = this.addChild(new Inventory());
+                this.inventory = this.addChild(new Inventory(this.seeds));
+
+                // harvest seeds every 1 seconds
+                setInterval(() => {
+                    this.harvestSeeds();
+                }, 1000);
+            }
+
+            buyTree(tree) {
+                if (this.seeds >= Math.floor(this.trees[tree].cost)) {
+                    this.trees[tree].amount++;
+                    this.seeds -= Math.floor(this.trees[tree].cost);
+                    this.trees[tree].cost = this.trees[tree].cost + Math.floor(this.trees[tree].cost * 1.14);
+                    this.garden.plantTree(tree, this.trees[tree].amount, Math.floor(this.trees[tree].cost));
+                    this.inventory.setSeeds(this.seeds);
+                }
+            }
+
+            harvestSeeds() {
+                this.seeds += this.trees.apple.amount;
+                this.seeds += this.trees.banana.amount * 5;
+                this.seeds += this.trees.cherry.amount * 49;
+                this.seeds += this.trees.fig.amount * 343;
+                this.seeds += this.trees.mango.amount * 2401;
+                this.seeds += this.trees.peach.amount * 16807;
+                this.seeds += this.trees.pear.amount * 117649;
+                this.seeds += this.trees.pomegranate.amount * 823543;
+                this.seeds += this.trees.avocado.amount * 5764801;
+                this.seeds += this.trees.plum.amount * 40353607;
+                this.seeds += this.trees.orange.amount * 282475249;
+                this.seeds += this.trees.olive.amount * 1977326743;
+
+                this.inventory.setSeeds(this.seeds);
             }
         }
 
