@@ -1,80 +1,54 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>IT Requests</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<style>
+    <%- include("./it.css"); %>
+</style>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Roboto+Condensed:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="/styles/main.css">
-</head>
+<h1>IT Request Tracker</h1>
 
-<body>
-    <style>
-        <%- include("./it.css"); %>
-    </style>
+<div class="login form">
+    <label>
+        Organization Email: <input type="text" id="email">
+    </label>
+    <label>
+        Password: <input type="password" id="password">
+        <input type="checkbox" id="unhide" onclick="tracker.toggleShowPassword()"> Show Password
+    </label>
+    <button onclick="tracker.attemptLogin()">Login</button>
+</div>
 
-    <main>
-        <h1>IT Request Tracker</h1>
+<div class="submit form invisible">
+    <h3>Submit a Request for <%= user ? user.memory.data.username : "none" %></h3>
+    <label>
+        Title of Request:<input type="text" placeholder="title" id="title">
+    </label>
+    <label id="desc-label">
+        Description:
+        <textarea id="description" cols="30" rows="10" placeholder="description"></textarea>
+    </label>
+    <button id="submit" onclick="tracker.submitTicket()">Submit</button>
+    <button id="to-history" onclick="tracker.goToHistoryForm()">Request History</button>
+</div>
 
-        <div class="login form">
-            <label>
-                Organization Email: <input type="text" id="email">
-            </label>
-            <label>
-                Password: <input type="password" id="password">
-                <input type="checkbox" id="unhide" onclick="tracker.toggleShowPassword()"> Show Password
-            </label>
-            <button onclick="tracker.attemptLogin()">Login</button>
-        </div>
-        
-        <div class="submit form invisible">
-            <h3>Submit a Request for <%= user ? user.memory.data.username : "none" %></h3>
-            <label>
-                Title of Request:<input type="text" placeholder="title" id="title">
-            </label>
-            <label id="desc-label">
-                Description:
-                <textarea id="description" cols="30" rows="10" placeholder="description"></textarea>
-            </label>
-            <button id="submit" onclick="tracker.submitTicket()">Submit</button>
-            <button id="to-history" onclick="tracker.goToHistoryForm()">Request History</button>
-        </div>
+<div class="history form invisible">
+    <h3>Request Ticket History for <%= user ? user.memory.data.username : "none" %></h3>
+    <label>
+        Start Date:
+        <input type="date" id="start-date">
+    </label>
+    <label>
+        End Date:
+        <input type="date" id="end-date">
+    </label>
+    <button id="request-history" onclick="tracker.viewHistory()">View Ticket History</button>
+    <button id="to-submit" onclick="tracker.goToSubmitForm()">Return</button>
+</div>
 
-        <div class="history form invisible">
-            <h3>Request Ticket History for <%= user ? user.memory.data.username : "none" %></h3>
-            <label>
-                Start Date:
-                <input type="date" id="start-date">
-            </label>
-            <label>
-                End Date:
-                <input type="date" id="end-date">
-            </label>
-            <button id="request-history" onclick="tracker.viewHistory()">View Ticket History</button>
-            <button id="to-submit" onclick="tracker.goToSubmitForm()">Return</button>
-        </div>
+<ul class="tickets invisible">
+    <button id="close" onclick="tracker.closeHistory()">&#60;</button>
+</ul>
 
-        <ul class="tickets invisible">
-            <button id="close" onclick="tracker.closeHistory()">&#60;</button>
-        </ul>
-    </main>
+<p id="alert"></p>
 
-    <footer>
-        <button class="logout invisible" onclick="tracker.logout()">Logout</button>
-        <p id="alert"></p>
-        <a href="/portfolio">Wyatt Lee Sushinsky</a>
-    </footer>
-</body>
-
-<script src="/js/base.js"></script>
 <script>
-    const base = new Base();
-
     class Tracker {
         constructor() {
             this.state = "login";
@@ -161,7 +135,7 @@
                     title: this.$title.val(),
                     description: this.$description.val()
                 },
-                route: "/pages/it"
+                route: "/the-front/it"
             });
 
             if (response.status === "success") {
@@ -179,7 +153,7 @@
                 let response = await base.do("view-history", {
                     dateStart: this.$dateStart[0].value,
                     dateEnd: this.$dateEnd[0].value,
-                    route: "/pages/it"
+                    route: "/the-front/it"
                 });
 
                 if (response.status === "success") {
@@ -240,4 +214,3 @@
 
     let tracker = new Tracker();
 </script>
-</html>

@@ -45,6 +45,10 @@ h3 {
 }
 
 footer {
+    display: none;
+}
+
+div.footer {
     position: initial;
     max-height: initial;
     height: auto;
@@ -58,13 +62,15 @@ footer {
     max-width: initial;
 }
 
-footer a {
+div.footer a {
     border: none;
     margin: 5px;
     border-bottom: var(--textColor) 1px solid;
+    padding: 5px;
+    background: none;
 }
 
-footer a:hover {
+div.footer a:hover {
     color: var(--focusColor);
     cursor: pointer;
     border: none;

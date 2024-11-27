@@ -69,6 +69,7 @@ section {
     height: 100%;
     overflow: auto;
     position: relative;
+    background: var(--secondaryColor);
 }
 
 nav {

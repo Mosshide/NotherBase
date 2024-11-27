@@ -1,50 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Wyatt Sushinsky</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<% if (user && user.memory.data.authLevels.includes("ITAD")) { %>
+    <input type="text" id="filter">
+    <button onclick="load()">Load</button>
+    <div class="meta"></div>
+<% } else { %>
+    <div class="login form">
+        <label>
+            Organization Email: <input type="text" id="email">
+        </label>
+        <label>
+            Password: <input type="password" id="password">
+            <input type="checkbox" id="unhide" onclick="tracker.toggleShowPassword()"> Show Password
+        </label>
+        <button onclick="tracker.attemptLogin()">Login</button>
+    </div>
+<% } %>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Roboto+Condensed:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="/styles/main.css">
-</head>
+<button class="logout invisible" onclick="tracker.logout()">Logout</button>
+<p id="alert"></p>
 
-<main>
-    <% if (user && user.memory.data.authLevels.includes("ITAD")) { %>
-        <input type="text" id="filter">
-        <button onclick="load()">Load</button>
-        <div class="meta"></div>
-    <% } else { %>
-        <div class="login form">
-            <label>
-                Organization Email: <input type="text" id="email">
-            </label>
-            <label>
-                Password: <input type="password" id="password">
-                <input type="checkbox" id="unhide" onclick="tracker.toggleShowPassword()"> Show Password
-            </label>
-            <button onclick="tracker.attemptLogin()">Login</button>
-        </div>
-    <% } %>
-
-    <button class="logout invisible" onclick="tracker.logout()">Logout</button>
-    <p id="alert"></p>
-
-</main>
-<footer></footer>
-
-<script src="/js/base.js"></script>
 <script src="/js/util/element.js"></script>
 <script src="/js/util/buttons.js"></script>
 <script src="/js/util/search-box.js"></script>
 <script src="/js/util/browser.js"></script>
 <script>
-    const base = new Base();
-
     <% if (user && user.memory.data.authLevels.includes("ITAD")) { %>
         const metaBrowser = new MetaBrowser({ header: "it admin" });
 
@@ -106,12 +84,12 @@
                 toLoad: async () => {
                     let res = await base.do("load-it", {
                         which: filter,
-                        route: "/pages/it-admin"
+                        route: "/the-front/it-admin"
                     });
                     return res.data;
                 },
                 toSave: async (item, deleting) => {
-                    return await base.do("save-it", { item, deleting, route: "/pages/it-admin", which: filter });
+                    return await base.do("save-it", { item, deleting, route: "/the-front/it-admin", which: filter });
                 }
             });
         }
@@ -165,4 +143,3 @@
 
     let tracker = new Tracker();
 </script>
-</html>

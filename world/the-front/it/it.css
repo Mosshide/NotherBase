@@ -24,7 +24,7 @@ main {
     box-shadow: none;
     width: 100%;
     max-width: 900px;
-    position: initial;
+    position: relative;
     padding: var(--padding);
     z-index: 0;
     border-radius: 5px 5px 0 0;
@@ -33,40 +33,7 @@ main {
 }
 
 footer {
-    color: var(--footerTextColor);
-    justify-content: flex-end;
-    flex-wrap: wrap;
-    position: initial;
-    box-shadow: none;
-    width: 100%;
-    max-width: 900px;
-    padding: var(--padding);
-    background: rgba(255, 255, 255, 0.259);
-    z-index: 1;
-    backdrop-filter: blur(5px);
-    display: flex;
-    justify-content: space-between;
-}
-
-footer p, footer a, footer a:hover {
-    color: var(--footerTextColor);
-    font-size: small;
-    width: auto;
-    height: auto;
-    background: none;
-    padding: 0;
-    border-radius: 0;
-}
-
-footer button, footer button:hover {
-    border-radius: 2px;
-    border: none;
-}
-
-footer a, footer a:hover {
-    height: auto;
-    border: none;
-    border-bottom: 1px solid var(--footerTextColor);
+    background: var(--bgColor);
 }
 
 .form {
@@ -159,4 +126,9 @@ footer a, footer a:hover {
 
 .browser, .read, .edit {
     background: white !important;
+}
+
+#alert {
+    width: 100%;
+    text-align: center;
 }
