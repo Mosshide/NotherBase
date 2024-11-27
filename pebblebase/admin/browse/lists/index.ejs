@@ -1,48 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pebble Wireless Admin</title>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="/styles/main.css">
-</head>
-<body>
-    <main>
-        <% if (user && user.memory.data.authLevels.includes("TPAD")) { %>
-            <h1 class="title" id="aj">The Pebble Admin Page</h1>
 
-            <div class="meta" id="waitlist"></div>
+    <% if (user && user.memory.data.authLevels.includes("TPAD")) { %>
+        <h1 class="title" id="aj">The Pebble Admin Page</h1>
+
+        <div class="meta" id="waitlist"></div>
+
+        <div class="meta" id="feedback"></div>
+    <% } else { %>
+        <div class="login form">
+            <label>
+                Username: <input type="text" id="username">
+            </label>
+            <label>
+                Password: <input type="password" id="password">
+                <input type="checkbox" id="unhide" onclick="tracker.toggleShowPassword()"> Show Password
+            </label>
+            <button onclick="tracker.attemptLogin()">Login</button>
+        </div>
+    <% } %>
+
+    <button class="logout invisible" onclick="tracker.logout()">Logout</button>
+    <p id="alert"></p>
     
-            <div class="meta" id="feedback"></div>
-        <% } else { %>
-            <div class="login form">
-                <label>
-                    Username: <input type="text" id="username">
-                </label>
-                <label>
-                    Password: <input type="password" id="password">
-                    <input type="checkbox" id="unhide" onclick="tracker.toggleShowPassword()"> Show Password
-                </label>
-                <button onclick="tracker.attemptLogin()">Login</button>
-            </div>
-        <% } %>
-    
-        <button class="logout invisible" onclick="tracker.logout()">Logout</button>
-        <p id="alert"></p>
-       
 
-        <p class="alert"></p>
-    </main>
+    <p class="alert"></p>
 
-    <script src="/js/base.js"></script>
     <script src="/js/util/element.js"></script>
     <script src="/js/util/buttons.js"></script>
     <script src="/js/util/search-box.js"></script>
     <script src="/js/util/browser.js"></script>
     <script>
-        let base = new Base();
-
         <% if (user && user.memory.data.authLevels.includes("TPAD")) { %>
             const metaWaitlist = new MetaBrowser({ id: "waitlist", header: "Waitlist" });
             metaWaitlist.render();
@@ -79,7 +65,7 @@
                     return res;
                 },
                 toSave: async (item, deleting) => {
-                    return await base.do("save-waitlist", { item, deleting, route: "/pages/admin/scripts"});
+                    return await base.do("save-waitlist", { item, deleting});
                 }
             });
 
@@ -124,7 +110,7 @@
                     return res;
                 },
                 toSave: async (item, deleting) => {
-                    return await base.do("save-feedback", { item, deleting, route: "/pages/admin/scripts"});
+                    return await base.do("save-feedback", { item, deleting});
                 }
             });
             
