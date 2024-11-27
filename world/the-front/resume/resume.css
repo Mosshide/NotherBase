@@ -1,0 +1,130 @@
+:root {
+	--text: rgb(61, 61, 61);
+	--gray: rgb(98, 98, 98);
+}
+
+* {
+	font-family : Georgia;
+	color: var(--text);
+}
+
+h1 {
+	color: white;
+	background-color : var(--text);
+	border-top-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+	width: 65%;
+	padding: var(--padding);
+	padding-left: 30px;
+	font-size : 40px;
+	margin-top: 25px;
+	margin-bottom: 25px;
+	text-align: left;
+	font-weight: bold;
+}
+
+h2 {
+	color: white;
+	background-color : var(--text);
+	border-radius: 10px;
+	width: auto;
+	padding: 5px;
+	padding-left: 10px;
+	margin: 20px 30px;
+	font-weight: bold;
+}
+
+h3 {
+	color: black;
+	background: none;
+	border: none;
+	display : inline;
+	margin-left : 5%;
+	margin-right : 2%;
+}
+
+h4 {
+	color: black;
+	background: none;
+	border: none;
+	display : inline;
+	padding-right: 10px;
+}
+
+h5 {
+	color : var(--text);
+	margin-left : 5%;
+	display : inline;
+	font-size : 15px;
+}
+
+p {
+	margin-left : 5%;
+	margin-right : 10%;
+	color: black;
+	width: initial;
+}
+
+body {
+	background : white;
+	color: black;
+}
+
+main {
+	left: 10px;
+	top: 10px;
+	border: 2px solid var(--text);
+	/* to print: */
+	/* max-width: 100%; */
+	/* to screen: */
+	max-width: 900px;
+	height: auto;
+	background : white;
+	overflow: initial;
+	border-radius: 0;
+	box-shadow: none;
+	justify-content: flex-start;
+	display: initial;
+}
+
+footer {
+	display: none;
+}
+
+ul {
+	padding: none;
+	padding-left : 5%;
+	list-style: initial;
+	list-style-position: inside;
+	columns : 2;
+	border: none;
+}
+
+li {
+	border: none;
+	padding: var(--padding);
+}
+
+span {
+	float: right;
+	margin-right: 20px;
+}
+
+a {
+	color : var(--text);
+	background: none;
+	border: none;
+	padding: initial;
+}
+
+a:hover {
+	color : var(--gray);
+	background: none;
+	border: none;
+}
+
+.updated {
+	margin: 5px;
+	margin-top: 40px;
+	text-align: right;
+}
