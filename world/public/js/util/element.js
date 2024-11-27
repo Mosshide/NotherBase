@@ -472,20 +472,22 @@ class Container extends Element {
             this.initModifiers();
         }
         
-        if (this.$div) this.$div.empty();
+        if (this.$div) {
+            this.$div.empty();
 
-        if (this.settings.header) this.$div.append(`<h4>${this.settings.header}</h4>`);
+            if (this.settings.header) this.$div.append(`<h4>${this.settings.header}</h4>`);
 
-        // render the children
-        this.children.forEach((child) => {
-            child.render().appendTo(this.$div);
-        });
+            // render the children
+            this.children.forEach((child) => {
+                child.render().appendTo(this.$div);
+            });
 
-        if (this.settings.hidden) this.hide();
-        else this.show();
+            if (this.settings.hidden) this.hide();
+            else this.show();
 
-        if (this.settings.onClick) this.enable();
+            if (this.settings.onClick) this.enable();
 
-        return this.$div;
+            return this.$div;
+        }
     }
 }
