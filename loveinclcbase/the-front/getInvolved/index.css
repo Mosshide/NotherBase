@@ -36,6 +36,14 @@ section.impact .verse {
     margin-bottom: 0;
 }
 
+.hiring img {
+    max-width: 1000px;
+}
+
+.hiring a {
+    margin-top: 40px;
+}
+
 @keyframes fade-in {
     0% {
         opacity: 0;
