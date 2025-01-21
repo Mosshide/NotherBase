@@ -1,0 +1,121 @@
+<% if (user?.memory && user.memory.data.authLevels.includes("SHIRTSAD")) { %>
+    <div class="meta"></div>
+    <script>
+        const metaOrders = new MetaBrowser({
+            header: "Orders"
+        });
+        metaTower.render();
+        metaTower.addService("shirt-orders", {
+            fields: new NBField({
+                name: "order",
+                label: "Order: ",
+                placeholder: "No order"
+            }, [
+                new NBField({
+                    name: "name",
+                    label: "Name: ",
+                    placeholder: "Name",
+                    type: "string"
+                }),
+                new NBField({
+                    name: "short",
+                    label: "Short Description: ",
+                    placeholder: "No Description",
+                    type: "string"
+                }),
+                new NBField({
+                    name: "long",
+                    label: "Long Description: ",
+                    placeholder: "No Description",
+                    type: "string"
+                })
+            ]),
+            label: "Orders",
+            editable: true,
+            multiple: true,
+            toLoad: async () => {
+                let res = await base.loadAll("shirt-orders", "global");
+                return res;
+            },
+            toSave: async (item, deleting) => {
+                return await base.do("save-order", { item, deleting });
+            }
+        });
+    </script>
+<% } %>
+
+<div class="gallery">
+    <section class="design">
+        <div class="color">
+            <h4>Title</h4>
+            <img src="" alt="">
+            <div class="add">
+                <button>Add to Cart</button>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+<!-- <div class="login-cover">
+    <a class="header-link" href="/">
+        <img src="/img/logo.png">
+        <h1>NotherBase</h1>
+    </a>
+    <div class="form">
+        <h3>Login to Your Account</h3>
+        <label>
+            <h4>Your Name:</h4>
+            <input type="text" placeholder="Username" id="username">
+        </label>
+        <label>
+            <h4>Your Password:</h4>
+            <input type="password" placeholder="password" id="pass">
+        </label>
+        <button id="login" onclick="coverLogin()">Login</button>
+        <a href="https://www.notherbase.com/the-front/keeper">Reset Password</a>
+    </div>
+    <p class="info"></p>
+
+    <script>
+        let $username = $(".login-cover #username");
+        let $pass = $(".login-cover #pass");
+        let $form = $(".login-cover .form");
+        let $info = $(".login-cover .info");
+
+        const coverLogin = async () => {
+            let username = $username.val();
+            $username.val("");
+            let pass = $pass.val();
+            $pass.val("");
+
+            $form.addClass("invisible");
+            $info.text("Attempting to login...");
+
+            let response = await base.attemptLogin(username, pass);
+
+            $info.text(response.message);
+
+            if (response.status === "success") location.reload();
+            else {
+                $form.removeClass("invisible");
+                $username.focus();
+                $username.val(username);
+            }
+        };
+
+        $username.keypress(function (e) {
+            if (e.which == 13) {
+                coverLogin();
+                e.stopPropagation();
+            }
+        });
+
+        $pass.keypress(function (e) {
+            if (e.which == 13) {
+                coverLogin();
+                e.stopPropagation();
+            }
+        });
+    </script>
+</div> -->
