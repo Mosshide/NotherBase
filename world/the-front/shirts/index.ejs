@@ -1,11 +1,21 @@
+<style>
+    <%- include("./index.css") %>
+</style>
+
+<h1>Nother Shirts</h1>
+
 <% if (user?.memory && user.memory.data.authLevels.includes("SHIRTSAD")) { %>
     <div class="meta"></div>
+    <script src="/js/util/element.js"></script>
+    <script src="/js/util/buttons.js"></script>
+    <script src="/js/util/search-box.js"></script>
+    <script src="/js/util/browser.js"></script>
     <script>
         const metaOrders = new MetaBrowser({
             header: "Orders"
         });
-        metaTower.render();
-        metaTower.addService("shirt-orders", {
+        metaOrders.render();
+        metaOrders.addService("shirt-orders", {
             fields: new NBField({
                 name: "order",
                 label: "Order: ",
@@ -44,17 +54,42 @@
     </script>
 <% } %>
 
-<div class="gallery">
-    <section class="design">
-        <div class="color">
-            <h4>Title</h4>
-            <img src="" alt="">
-            <div class="add">
-                <button>Add to Cart</button>
-            </div>
-        </div>
-    </section>
-</div>
+<h2>Inventory</h2>
+<section class="inventory">
+    <div class="design">
+        <img src="/img/shirts/antique_sapphire.jpg">
+        <img src="/img/shirts/heart.png" class="heart">
+        <img src="/img/shirts/verses/written on heart front.png" class="verse">
+    </div>
+    <select id="verse">
+        <option value="front">Heb 8:10b</option>
+    </select>
+    <select id="color">
+        <option value="white">White</option>
+        <option value="gray">Gray</option>
+        <option value="red">Red</option>
+        <option value="blue">Blue</option>
+    </select>
+    <select id="size">
+        <option value="s">S</option>
+        <option value="m">M</option>
+        <option value="l">L</option>
+        <option value="xl">XL</option>
+        <option value="2xl">2XL</option>
+        <option value="3xl">3XL</option>
+    </select>
+    <div class="amount">
+        <input type="number" placeholder="0">/<div class="stock">0</div>
+    </div>
+    <button class="add">Add to Cart</button>
+</section>
+
+<h2>Cart</h2>
+<section class="cart">
+    <div class="items"></div>
+    <div class="info"></div>
+    <button>Checkout</button>
+</section>
 
 
 <!-- <div class="login-cover">
