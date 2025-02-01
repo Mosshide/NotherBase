@@ -744,7 +744,6 @@ hr.for-space {
     margin-top: 0;
 }
 
-
 .card h5 {
     background: var(--main-color);
     color: var(--second-color);
@@ -1087,6 +1086,16 @@ a.link-button {
 
 .info.full {
     width: 100%;
+}
+
+section.ad {
+    padding: 0;
+    background: rgb(156,206,207);
+}
+
+section.ad img {
+    max-width: var(--max-main-width);
+    height: auto;
 }
 
 /* styles for screens under 1000px wide */
