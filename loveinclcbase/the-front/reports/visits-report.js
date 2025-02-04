@@ -70,10 +70,10 @@ export default async (req, user) => {
                 <h4>These numbers are estimates and are not exact.</h4> <br>
                 <h3>Last Month:</h3>
                 Total Visitors: ${lastMonthCount} <br>
-                Average Total Time per Visitor: ${lastMonthCount > 0 ? (lastMonthTime / 1000) / lastMonthCount : 0} seconds <br> <br>
+                Average Total Time per Visitor: ${(lastMonthCount > 0 ? (lastMonthTime / 1000) / lastMonthCount : 0).toPrecision(2)} seconds <br> <br>
                 <h3>This Month So Far:</h3>
                 Total Visitors: ${thisMonthCount} <br>
-                Average Total Time per Visitor: ${thisMonthCount > 0 ? (thisMonthTime / 1000) / thisMonthCount : 0} seconds <br>
+                Average Total Time per Visitor: ${(thisMonthCount > 0 ? (thisMonthTime / 1000) / thisMonthCount : 0).toPrecision(2)} seconds <br>
                 <br>
                 <br>
                 <br>
