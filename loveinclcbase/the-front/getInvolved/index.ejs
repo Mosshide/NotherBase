@@ -137,6 +137,13 @@
         enableExperimental: <%= query.preview ? true: false %>
     });
 
+    base.do("tally", { route: "/the-front/scripts" });
+    setTimeout(() => {
+        setInterval(() => {
+            base.do("tally-extra", { route: "/the-front/scripts" });
+        }, 30000);
+    }, 3000);
+
     // let appeared = false;
     // let footerTop = $(".impact").offset().top;
     // let offset = window.innerWidth < 400 ? 400 : 200;

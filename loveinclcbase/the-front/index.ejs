@@ -19,8 +19,8 @@
     </div>
 </section>
 
-<section class="ad">
-    <img src="/img/ad/35candles.jpg" alt="Help Us Light the Candles">
+<section class="anniversary">
+    <img src="/img/anniversary/35candles.jpg" alt="Help Us Light the Candles">
 </section>
 
 <section class="row Christ-centered">
@@ -105,4 +105,11 @@
         signUpAfterHero: true,
         enableExperimental: <%= query.preview ? true: false %>
     });
+
+    base.do("tally", { route: "/the-front/scripts" });
+    setTimeout(() => {
+        setInterval(() => {
+            base.do("tally-extra", { route: "/the-front/scripts" });
+        }, 30000);
+    }, 3000);
 </script>

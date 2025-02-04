@@ -122,4 +122,10 @@
         placeholder: "Check All"
     }));
     <% } %>
+
+    base.do("tally", {
+        route: "/the-front/scripts"
+    }).then((res) => {
+        console.log(res);
+    });
 </script>

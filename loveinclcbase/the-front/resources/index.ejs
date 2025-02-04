@@ -224,6 +224,13 @@
 <script>
     const themeApplicator = new ThemeApplicator();
 
+    base.do("tally", { route: "/the-front/scripts" });
+    setTimeout(() => {
+        setInterval(() => {
+            base.do("tally-extra", { route: "/the-front/scripts" });
+        }, 30000);
+    }, 3000);
+
     const toggleDomesticViolence = () => {
         let $headerText = $(".card.domestic-violence.header p");
         let $cards = $(".card.domestic-violence:not(.header)");
