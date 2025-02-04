@@ -1088,12 +1088,12 @@ a.link-button {
     width: 100%;
 }
 
-section.ad {
+section.anniversary {
     padding: 0;
     background: rgb(156,206,207);
 }
 
-section.ad img {
+section.anniversary img {
     max-width: var(--max-main-width);
     height: auto;
 }

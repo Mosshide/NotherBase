@@ -50,6 +50,13 @@
 <script>
     const themeApplicator = new ThemeApplicator();
 
+    base.do("tally", { route: "/the-front/scripts" });
+    setTimeout(() => {
+        setInterval(() => {
+            base.do("tally-extra", { route: "/the-front/scripts" });
+        }, 30000);
+    }, 3000);
+
     const submitMessage = async function() {
         let $button = $("button.submit");
         $button.attr("disabled", true);
