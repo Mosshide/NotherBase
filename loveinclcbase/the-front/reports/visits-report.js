@@ -68,7 +68,7 @@ export default async (req, user) => {
                 <br>
                 <br>
                 <p>This is an automated message. Please do not reply.</p>
-            `);
+            `, "Love INC of Lewis County");
         
             req.session.visitsReportLast = Date.now();
             return "Email sent.";
