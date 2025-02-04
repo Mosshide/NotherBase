@@ -19,36 +19,47 @@ export default async (req, user) => {
             if (!spirit.memory.data.tally) spirit.memory.data.tally = {};
             else {
                 for (let key in spirit.memory.data.tally) {
-                    if (!spirit.memory.data.tally[key].lastMonth) delete spirit.memory.data.tally[key];
-                    else {
-                        let relevant = false;
-                        // if the session is from this month, add the time to this month's total
-                        if (spirit.memory.data.tally[key].month === month && spirit.memory.data.tally[key].year === year) {
-                            thisMonthCount++;
-                            thisMonthTime += spirit.memory.data.tally[key].time;
-                            relevant = true;
-                        }
-                        if (spirit.memory.data.tally[key].lastMonth.month === month && spirit.memory.data.tally[key].lastMonth.year === year) {
-                            thisMonthCount++;
-                            thisMonthTime += spirit.memory.data.tally[key].lastMonth.time;
-                            relevant = true;
-                        }
-                        // if the session is from last month, add the time to last month's total
-                        if ((spirit.memory.data.tally[key].month === month - 1 && spirit.memory.data.tally[key].year === year) ||
-                            (spirit.memory.data.tally[key].month === 11 && spirit.memory.data.tally[key].year === year - 1 && month === 0)) {
-                            lastMonthCount++;
-                            lastMonthTime += spirit.memory.data.tally[key].time;
-                            relevant = true;
-                        }
-                        if ((spirit.memory.data.tally[key].lastMonth.month === month - 1 && spirit.memory.data.tally[key].lastMonth.year === year) ||
-                            (spirit.memory.data.tally[key].lastMonth.month === 11 && spirit.memory.data.tally[key].lastMonth.year === year - 1 && month === 0)) {
-                            lastMonthCount++;
-                            lastMonthTime += spirit.memory.data.tally[key].lastMonth.time;
-                            relevant = true;
-                        }
-    
-                        if (!relevant) delete spirit.memory.data.tally[key];
+                    // normalize the data
+                    spirit.memory.data.tally[key] = {
+                        month: date.getUTCMonth(),
+                        year: date.getUTCFullYear(),
+                        time: 30000,
+                        lastAdd: 0,
+                        lastMonth: {
+                            month: null,
+                            year: null,
+                            time: null
+                        },
+                        ...spirit.memory.data.tally[key]
+                    };
+
+                    let relevant = false;
+                    // if the session is from this month, add the time to this month's total
+                    if (spirit.memory.data.tally[key].month === month && spirit.memory.data.tally[key].year === year) {
+                        thisMonthCount++;
+                        thisMonthTime += spirit.memory.data.tally[key].time;
+                        relevant = true;
                     }
+                    if (spirit.memory.data.tally[key].lastMonth.month === month && spirit.memory.data.tally[key].lastMonth.year === year) {
+                        thisMonthCount++;
+                        thisMonthTime += spirit.memory.data.tally[key].lastMonth.time;
+                        relevant = true;
+                    }
+                    // if the session is from last month, add the time to last month's total
+                    if ((spirit.memory.data.tally[key].month === month - 1 && spirit.memory.data.tally[key].year === year) ||
+                        (spirit.memory.data.tally[key].month === 11 && spirit.memory.data.tally[key].year === year - 1 && month === 0)) {
+                        lastMonthCount++;
+                        lastMonthTime += spirit.memory.data.tally[key].time;
+                        relevant = true;
+                    }
+                    if ((spirit.memory.data.tally[key].lastMonth.month === month - 1 && spirit.memory.data.tally[key].lastMonth.year === year) ||
+                        (spirit.memory.data.tally[key].lastMonth.month === 11 && spirit.memory.data.tally[key].lastMonth.year === year - 1 && month === 0)) {
+                        lastMonthCount++;
+                        lastMonthTime += spirit.memory.data.tally[key].lastMonth.time;
+                        relevant = true;
+                    }
+
+                    if (!relevant) delete spirit.memory.data.tally[key];
                 }
             }
     

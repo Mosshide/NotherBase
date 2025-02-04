@@ -11,6 +11,7 @@ export default async (req, user) => {
             month: date.getUTCMonth(),
             year: date.getUTCFullYear(),
             time: 3000,
+            lastAdd: 0,
             lastMonth: {
                 month: null,
                 year: null,
