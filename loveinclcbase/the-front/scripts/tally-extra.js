@@ -11,6 +11,7 @@ export default async (req, user) => {
             month: date.getUTCMonth(),
             year: date.getUTCFullYear(),
             time: 30000,
+            lastAdd: 0,
             lastMonth: {
                 month: null,
                 year: null,
@@ -19,7 +20,10 @@ export default async (req, user) => {
         };
         else {
             if (spirit.memory.data.tally[req.session.id].month === date.getUTCMonth() && spirit.memory.data.tally[req.session.id].year === date.getUTCFullYear()) {
-                spirit.memory.data.tally[req.session.id].time += 30000;
+                if (Date.now() - spirit.memory.data.tally[req.session.id].lastAdd > 30000) {
+                    spirit.memory.data.tally[req.session.id].time += 30000;
+                    spirit.memory.data.tally[req.session.id].lastAdd = spirit.memory.data.tally[req.session.id].lastAdd + 30000;
+                }
             }
             else {
                 spirit.memory.data.tally[req.session.id].lastMonth = {
@@ -34,5 +38,7 @@ export default async (req, user) => {
         }
 
         await spirit.commit();
+
+        return spirit.memory.data.tally[req.session.id].time;
     }
 }
