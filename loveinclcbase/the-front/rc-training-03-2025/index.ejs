@@ -1,0 +1,49 @@
+<style>
+    <%- include('index.css') %>
+</style>
+
+<section class="training">
+    <img src="/img/souper/2025/training.jpg" alt="" srcset=""  id="training">
+    <div class="registration info">
+        <h3>Register for the Redemptive Compassion Training Session here:</h3>
+        <label>
+            Your Name:
+            <input type="text" class="name" placeholder="First and Last">
+        </label>
+        <label>
+            Bringing others with you? If so, how many:
+            <input type="number" class="extras" placeholder="0">
+        </label>
+        <button class="external">Register</button>
+        <p class="info"></p>
+    </div>
+</section>
+
+<script src="/js/themeApplicator.js"></script>
+<script>
+    const themeApplicator = new ThemeApplicator({});
+
+    base.do("tally", { route: "/the-front/scripts" });
+    setTimeout(() => {
+        setInterval(() => {
+            base.do("tally-extra", { route: "/the-front/scripts" });
+        }, 30000);
+    }, 3000);
+
+    let $register = $(".training .registration button");
+    $register.click(() => {
+        let name = $(".training .registration .name").val();
+        let extras = $(".training .registration .extras").val();
+        let $info = $(".training .registration .info");
+
+        if (name) {
+            base.do("register-rc-training", { name, extras, route: "/the-front/rc-training-03-2025" }).then((res) => {
+                if (res.status == "success") $info.text(res.data);
+                else $info.text("Server Error. Please try again later.");
+            });
+        }
+        else {
+            $info.text("Please enter your name.");
+        }
+    });
+</script>
