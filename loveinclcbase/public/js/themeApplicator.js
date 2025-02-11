@@ -3,7 +3,7 @@ class ThemeApplicator {
     constructor(settings) {
         this.settings = {
             description: "Love INC of Lewis County is mobilizing the church to transform lives.",
-            signUpAfterHero: false,
+            signUpAfter: null,
             enableExperimental: false,
             ...settings
         };
@@ -96,7 +96,7 @@ class ThemeApplicator {
         this.$mailingAlert = $(`<p class="invisible alert">Please fill out required fields.</p>`).appendTo(this.$signupForm);
         this.$signupButton = $(`<button class="external">Sign Up</button>`).appendTo(this.$signupForm);
         this.$signupButton.click(() => this.signUpForMailingList());
-        if (this.settings.signUpAfterHero) this.$mailingList.insertAfter($(".hero"));
+        if (this.settings.signUpAfter) this.$mailingList.insertAfter($(this.settings.signUpAfter));
         else this.$mailingList.insertBefore(this.$footer);
     }
 

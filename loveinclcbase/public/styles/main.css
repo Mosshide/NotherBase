@@ -88,6 +88,10 @@
 }
 
 /* elements */
+html {
+    scroll-behavior: smooth;
+}
+
 main {
     width: 100%;
     min-height: 100px;
@@ -170,6 +174,7 @@ section {
     position: relative;
     overflow-y: auto;
     overflow-x: hidden;
+    /* z-index: 0; */
 }
 
 section p {
@@ -253,7 +258,7 @@ h6 {
 
 p {
     width: 100%;
-    font-size: 20px;
+    font-size: var(--pSize);
     margin: 5px 0;
     padding: 5px;
 }
@@ -1098,6 +1103,35 @@ section.anniversary img {
     height: auto;
 }
 
+section.has-also {
+    overflow: visible;
+}
+
+a.also {
+    position: absolute;
+    left: 37.5%;
+    bottom: -4vh;
+    width: 25%;
+    height: 8vh;
+    background: var(--second-color);
+    border-radius: var(--border-radius);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    color: var(--main-color);
+    box-shadow: var(--shadow);
+    text-shadow: var(--text-shadow);
+    font-size: var(--h2Size);
+    text-decoration: none;
+}
+
+a.also:hover {
+    box-shadow: 1px 5px 14px 1px rgb(169, 169, 169);
+    transition: all 0.1s;
+    transform: scale(1.01);
+}
+
 /* styles for screens under 1000px wide */
 @media only screen and (max-width: 1000px) {
     main {
@@ -1329,5 +1363,10 @@ section.anniversary img {
 
     .mailing-list .sign-up {
         margin: 0 20px;
+    }
+
+    a.also {
+        width: 60%;
+        left: 20%;
     }
 }

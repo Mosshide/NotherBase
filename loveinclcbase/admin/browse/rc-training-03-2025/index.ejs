@@ -1,0 +1,63 @@
+<style>
+    <%- include("./index.css"); %>
+</style>
+
+<% if (user && user.memory.data.authLevels.includes("LINCLCAD")) { %>
+<div class="meta" id="list"></div>
+<% } else { %>
+<p>Administrator authority required.</p>
+<% } %>
+
+<script src="/js/util/element.js"></script>
+<script src="/js/util/buttons.js"></script>
+<script src="/js/util/search-box.js"></script>
+<script src="/js/util/browser.js"></script>
+
+<script>
+    <% if (user && user.memory.data.authLevels.includes("LINCLCAD")) { %>
+    let metaMailingList = new MetaBrowser({ id: "list", header: "Redemptive Compassion Training Session Registration List" });
+    metaMailingList.render();
+    metaMailingList.addService("rc-training-0325", {
+        fields: new NBField({
+            name: "entry",
+            label: "Entry: ",
+            placeholder: "Nobody"
+        }, [
+            new NBField({
+                name: "name",
+                label: "Name: ",
+                placeholder: "no name",
+                type: "string"
+            }),
+            new NBField({
+                name: "extras",
+                label: "Extras: ",
+                placeholder: 0,
+                type: "number"
+            }),
+            new NBField({
+                name: "checked",
+                label: "Checked: ",
+                placeholder: false,
+                type: "boolean"
+            })
+        ]),
+        editable: true,
+        multiple: true,
+        toLoad: async () => {
+            let res = await base.loadAll("rc-training-0325", "global");
+            console.log(res);
+            let totalGuests = 0;
+            res.forEach(item => {
+                totalGuests += parseInt(item.memory.data.extras) + 1;
+            });
+            $("h4").text(`Redemptive Compassion Training Session Registration List - Total Guests: ${totalGuests}`);
+            
+            return res;
+        },
+        toSave: async (item, deleting) => {
+            return await base.do("save-list", { item, deleting });
+        }
+    });
+    <% } %>
+</script>
