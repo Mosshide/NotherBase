@@ -56,9 +56,54 @@ section.news .card-list {
 }
 
 .souper {
-    background: url('/img/souper-poster.jpg') !important;
-    background-size: cover !important;
     position: relative;
+    background: rgb(17,37,88);
+}
+
+.souper img {
+    width: 100%;
+    max-width: var(--max-main-width);
+    height: auto;
+}
+
+.souper .supper {
+    position: absolute;
+    top: 50%;
+    right: 0;
+}
+
+.info {
+    width: 100%;
+    max-width: var(--max-main-width);
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    color: rgb(235,236,239);
+    margin-top: 35px;
+}
+
+.training img {
+    width: 100%;
+    max-width: var(--max-main-width);
+    border-radius: 25px;
+    box-shadow: 0 0 25px 5px rgb(66,112,197);
+}
+
+.training .info {
+    color: rgb(15,38,89);
+}
+
+.training .info label {
+    width: 90%;
+    margin: 3px;
+    font-size: var(--pSize);
+}
+
+.training .info input[type="number"] {
+    width: 20vw;
 }
 
 .donate-heart {
