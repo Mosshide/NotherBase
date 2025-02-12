@@ -80,10 +80,6 @@ export default async (req, user) => {
                 <p>This is an automated message. Please do not reply.</p>
             `, "Love INC of Lewis County");
 
-            // track emails sent
-            if (!spirit.memory.data.emails) spirit.memory.data.emails = 0;
-            spirit.memory.data.emails++;
-
             await spirit.commit();
             
             req.session.visitsReportLast = Date.now();
