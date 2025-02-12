@@ -58,11 +58,13 @@ section.news .card-list {
 .souper {
     position: relative;
     background: rgb(17,37,88);
+    width: 50%;
+    justify-content: space-around;
 }
 
 .souper img {
     width: 100%;
-    max-width: var(--max-main-width);
+    /* max-width: var(--max-main-width); */
     height: auto;
 }
 
@@ -83,6 +85,14 @@ section.news .card-list {
     align-items: center;
     color: rgb(235,236,239);
     margin-top: 35px;
+}
+
+.souper .also {
+    display: none;
+}
+
+section.training {
+    width: 50%;
 }
 
 .training img {
@@ -143,5 +153,17 @@ section iframe.side.right {
         background: url('/img/office/chehalis_sky_web_medium.webp');
         background-size: cover;
         background-position: center;
+    }
+
+    section.souper {
+        width: 100%;
+    }
+
+    .souper .also {
+        display: flex;
+    }
+    
+    section.training {
+        width: 100%;
     }
 }
