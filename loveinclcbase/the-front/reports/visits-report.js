@@ -78,6 +78,7 @@ export default async (req, user) => {
                 <br>
                 <br>
                 <br>
+                <p>Visitors counts and time apent are estimated by tracking cookies and will result in some overcount.</p>
                 <p>This is an automated message. Please do not reply.</p>
             `, "Love INC of Lewis County");
         
