@@ -74,6 +74,9 @@ class ThemeApplicator {
         this.$footer.append($("<p>(360) 748-8611</p>")); 
         this.$footer.append($(`<a href="/tac" target="_blank">Terms and Conditions</a>`));  
         this.$footer.append($(`<a href="/privacy" target="_blank">Privacy Policy</a>`));
+        // add the social media links
+        this.$footer.append($(`<a class="social fb" href="https://www.facebook.com/profile.php?id=61557044633935" target="_blank"><i class="fa-brands fa-facebook"></i></a>`));
+        this.$footer.append($(`<a class="social insta" href="https://www.instagram.com/loveinc_lc" target="_blank"><i class="fa-brands fa-instagram"></i></a>`));
 
         // add the mailing list sign up
         this.$mailingList = $(`<section class="mailing-list"></section>`);
