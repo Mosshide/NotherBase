@@ -5,16 +5,12 @@
 <link rel="stylesheet" href="/styles/browser.css">
 <link rel="stylesheet" href="/styles/billboard.css">
 
-<section class="porch">
-    <input type="text" class="mailbox">
-</section>
-
 <div class="hud">
+    <div class="bible-viewer"></div>
     <div class="date">
         <p class="day"></p>
         <p class="full-date"></p>
     </div>
-    <div class="bible-viewer"></div>
 </div>
 
 <div class="meta"></div>
@@ -64,27 +60,27 @@
 <script src="/js/bible-viewer.js"></script>
 <script src="/js/entity.js"></script>
 <script>
-    const weather = new WeatherSystem();
+    // const weather = new WeatherSystem();
 
-    const $mailbox = $(".mailbox");
-    let mailboxCD = 1000;
-    let lastMailboxUpdate = 0;
+    // const $mailbox = $(".mailbox");
+    // let mailboxCD = 1000;
+    // let lastMailboxUpdate = 0;
 
-    base.loadAll("house-mailbox").then((res) => {
-        if (typeof res[0]?.memory?.data == "string") $mailbox.val(res[0].memory.data);
-    });
+    // base.loadAll("house-mailbox").then((res) => {
+    //     if (typeof res[0]?.memory?.data == "string") $mailbox.val(res[0].memory.data);
+    // });
 
-    $mailbox.on("input", (e) => { 
-        lastMailboxUpdate = Date.now();
+    // $mailbox.on("input", (e) => { 
+    //     lastMailboxUpdate = Date.now();
 
-        setTimeout(() => {
-            let now = Date.now();
-            if (now - lastMailboxUpdate > mailboxCD) {
-                console.log("set-mailbox", e.currentTarget.value);
-                base.do("set-mailbox", { item: e.currentTarget.value });
-            }
-        }, mailboxCD);
-    });
+    //     setTimeout(() => {
+    //         let now = Date.now();
+    //         if (now - lastMailboxUpdate > mailboxCD) {
+    //             console.log("set-mailbox", e.currentTarget.value);
+    //             base.do("set-mailbox", { item: e.currentTarget.value });
+    //         }
+    //     }, mailboxCD);
+    // });
 
     //date
     //const weekday = ["Sun", "Mon"," Tue", "Wed", "Thu", "Fri", "Sat"];

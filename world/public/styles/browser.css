@@ -5,6 +5,7 @@
     position: relative;
     min-height: 200px;
     align-content: flex-start;
+    backdrop-filter: blur(5px);
 }
 
 .browser {
@@ -14,7 +15,6 @@
     flex-wrap: wrap;
     opacity: 1;
     transition: all 0.3s ease-in-out;
-    background: var(--mediumBgColorGradient);
     position: relative;
 }
 
@@ -51,7 +51,6 @@
 
 .browser .edit {
     width: 100%;
-    background: var(--mediumBgColorGradient);
     display: flex;
     flex-wrap: wrap;
     align-content: center;
@@ -103,7 +102,6 @@
 .browser .read {
     width: 100%;
     overflow: auto;
-    background: var(--mediumBgColorGradient);
     display: flex;
     flex-wrap: wrap;
     align-content: center;
@@ -115,7 +113,6 @@
 .browser .read p, .browser .edit p {
     background: none;
     width: 100%;
-    background: var(--tint);
     border-radius: 4px;
     margin-bottom: 0;
 }
@@ -237,7 +234,6 @@
     top: 0;
     width: 100%;
     height: 100%;
-    background: var(--bgColor);
     overflow: auto;
     padding: 50px 20px;
 }

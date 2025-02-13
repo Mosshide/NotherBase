@@ -1,8 +1,9 @@
 :root {
 }
 
-body {
+html {
     background: url("/img/forest/bgs/cave_lit.jpg");
+    background-attachment: fixed;
 }
 
 .nono-spirit {
