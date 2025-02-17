@@ -2,7 +2,7 @@
     /* colors */
     --tint: rgba(255, 203, 118, 0.123);
     --bgColor: rgb(250, 250, 250);
-    --bgColorGradient: linear-gradient(170deg, rgb(224, 224, 224) 0%, rgb(255, 255, 255) 100%);
+    --bgColorGradient: linear-gradient(170deg, rgb(235, 235, 235) 0%, rgb(246, 245, 245) 100%);
     --bgCanvas: rgb(185, 185, 185);
     --bgCanvasGradient: linear-gradient(170deg, rgb(224, 224, 224) 0%, rgb(212, 212, 212) 100%);
     --darkBgColor: rgba(248, 239, 216, 0.557);
@@ -310,6 +310,9 @@ select {
     border-left: var(--thickBorder);
     background: var(--bgColorGradient);
     backdrop-filter: blur(5px);
+    cursor: pointer;
+    padding: var(--thickPadding);
+    height: var(--inputHeight);
 }
 
 select:focus {
