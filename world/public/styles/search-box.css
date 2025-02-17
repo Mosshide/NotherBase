@@ -32,7 +32,6 @@
     margin: 0;
     align-content: flex-start;
     border: none;
-    padding: 0;
     background: none;
     display: flex;
     flex-direction: column-reverse;
@@ -41,12 +40,11 @@
 .search-box .filters {
     width: 100%;
     max-height: 50vh;
-    background: var(--bgColor);
     margin: 0;
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
-    border-bottom: 1px dashed var(--textColor);
+    justify-content: flex-start;
+    border-bottom: var(--standardBorder);
     padding: var(--padding);
     overflow: hidden;
     transition: max-height 0.3s ease-out;
@@ -62,6 +60,7 @@
     display: flex;
     flex-wrap: nowrap;
     margin: 5px;
+    align-items: center;
 }
 
 .search-box .filters div h4 {
@@ -74,8 +73,16 @@
     margin: 0;
 }
 
+.search-box .filters div input[type="checkbox"] {
+    width: 30px;
+}
+
+.search-box .filters div.checkbox {
+    width: 150px;
+    justify-content: space-evenly;
+}
+
 .search-box .selector>li {
-    border: none;
     padding: var(--padding);
     height: auto;
     flex-wrap: wrap;
@@ -84,7 +91,7 @@
 
 .search-box .selector>li.disabled {
     cursor: initial;
-    background: var(--bgColor);
+    background: none;
 }
 
 .search-box .buttons {

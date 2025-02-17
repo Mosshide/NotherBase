@@ -198,11 +198,13 @@ class Dialogue {
     beat = () => {
         this.$heart.animate({
             height: "10%",
-            opacity: 0
+            opacity: 0,
+            borderRadius: "3px"
         }, 3*this.beatCooldown/4, () => {
             this.$heart.animate({
                 height: "100%",
-                opacity: 100
+                opacity: 100,
+                borderRadius: 0
             }, this.beatCooldown/4);
         });
 

@@ -54,40 +54,65 @@
     </script>
 <% } %>
 
-<h2>Inventory</h2>
-<section class="inventory">
-    <div class="design">
-        <img src="/img/shirts/antique_sapphire.jpg">
+<section class="inventory hud">
+    <div class="left design">
+        <img src="/img/shirts/antique_sapphire.jpg" class="shirt">
         <img src="/img/shirts/heart.png" class="heart">
         <img src="/img/shirts/verses/written on heart front.png" class="verse">
     </div>
-    <select id="verse">
-        <option value="front">Heb 8:10b</option>
-    </select>
-    <select id="color">
-        <option value="white">White</option>
-        <option value="gray">Gray</option>
-        <option value="red">Red</option>
-        <option value="blue">Blue</option>
-    </select>
-    <select id="size">
-        <option value="s">S</option>
-        <option value="m">M</option>
-        <option value="l">L</option>
-        <option value="xl">XL</option>
-        <option value="2xl">2XL</option>
-        <option value="3xl">3XL</option>
-    </select>
-    <div class="amount">
-        <input type="number" placeholder="0">/<div class="stock">0</div>
+    <div class="right">
+        <h2>Inventory</h2>
+        <select id="verse">
+            <option value="front">Heb 8:10b</option>
+        </select>
+        <select id="color">
+            <option value="white">White</option>
+            <option value="gray">Gray</option>
+            <option value="red">Red</option>
+            <option value="blue">Blue</option>
+        </select>
+        <select id="size">
+            <option value="s">S</option>
+            <option value="m">M</option>
+            <option value="l">L</option>
+            <option value="xl">XL</option>
+            <option value="2xl">2XL</option>
+            <option value="3xl">3XL</option>
+        </select>
+        <div class="amount">
+            <input type="number" placeholder="0">/<div class="stock">0</div>
+        </div>
+        <button class="add">Add to Cart</button>
     </div>
-    <button class="add">Add to Cart</button>
 </section>
 
 <h2>Cart</h2>
-<section class="cart">
-    <div class="items"></div>
-    <div class="info"></div>
+<section class="cart"></section>
+
+<h2>Your Info</h2>
+<section class="info">
+    <label>
+        Your Name: <input type="text" placeholder="Name" id="name">
+    </label>
+    <label>
+        Your Address:
+        <input type="text" placeholder="Address" id="address">
+    </label>
+    <label>
+        Your Email:
+        <input type="text" placeholder="Email" id="email">
+    </label>
+    <label>
+        Payment Method:
+        <select id="payment">
+            <option value="cash">Cash</option>
+            <option value="card">Card</option>
+        </select>
+    </label>
+    <label>
+        Order Notes:
+        <textarea id="notes" placeholder="Notes"></textarea>
+    </label>
     <button>Checkout</button>
 </section>
 

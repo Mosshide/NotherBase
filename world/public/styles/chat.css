@@ -9,7 +9,7 @@
 .chat-log {
     width: 100%;
     height: calc(100% - 2 * var(--inputHeight));
-    background-color: rgba(0, 0, 0, 0.534);
+    background-color: var(--bgColor);
     overflow: auto;
     padding: 5px;
     flex-grow: 1;
@@ -19,7 +19,6 @@
     width: 5em;
     outline: none;
     background-color: var(--bgColor);
-    border: var(--standardBorder);
     color: var(--textColor);
     text-align: center;
     padding: 0;
@@ -28,7 +27,6 @@
 }
 
 .chat-send:hover {
-    border: 1px solid var(--textColorBright);
     color: var(--textColorBright);
     cursor: pointer;
 }

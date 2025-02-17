@@ -873,6 +873,7 @@ div.footer {
     display: flex;
     flex-wrap: wrap;
     overflow: hidden;
+    position: relative;
 }
 
 div.footer p {
@@ -903,6 +904,33 @@ div.footer a {
 
 div.footer * {
     text-shadow: var(--text-shadow);
+}
+
+div.footer .social {
+    position: absolute;
+    right: 5px;
+    top: 25px;
+    width: 50px;
+    height: 50px;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+}
+
+div.footer .social:hover {
+    color: var(--fifth-color);
+    transition: all 0.1s;
+    transform: scale(1.01);
+}
+
+div.footer .insta {
+    top: 80px;
+}
+
+div.footer i {
+    font-size: 40px;
 }
 
 .selected {

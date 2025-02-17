@@ -2,35 +2,36 @@
 <style>
     <%- include("./styles/the-front.css"); %>
     <%- include("./index.css"); %>
-    <%- include("./styles/borders.css"); %>
 </style>
 
-<div class="logo">N</div>
-
-<div class="sign">
-    <div class="default">
-        <h1>NotherBase</h1>
-        <h2>Est '21</h2>
-        <h3>By Nother</h3>
-        <button onclick="$('.sign .default').addClass('invisible'); $('.sign .about').removeClass('invisible');">About</button>
-    </div>
-    <div class="about invisible">
-        <h4>About NotherBase</h4>
-        <p>
-            Welcome to NotherBase! This base is a website dedicated to
-            Jesus Christ and the Holy Bible. Keep your life organized,
-            read the Bible and chat with other users; all while being
-            transformed by the renewing of your mind through His Word.
-        </p>
-        <p>
-            Visit the shack nearby to submit an application for
-            an account. 
-        </p>
-        <button onclick="$('.sign .about').addClass('invisible'); $('.sign .default').removeClass('invisible');">Back</button>
+<div class="hud">
+    <div class="left logo">N</div>
+    
+    <div class="right sign">
+        <div class="default">
+            <h1>NotherBase</h1>
+            <h2>Est '21</h2>
+            <h3>By Nother</h3>
+            <button onclick="$('.sign .default').addClass('invisible'); $('.sign .about').removeClass('invisible');">About</button>
+        </div>
+        <div class="about invisible">
+            <h4>About NotherBase</h4>
+            <p>
+                Welcome to NotherBase! This base is a website dedicated to
+                Jesus Christ and the Holy Bible. Keep your life organized,
+                read the Bible and chat with other users; all while being
+                transformed by the renewing of your mind through His Word.
+            </p>
+            <p>
+                Visit the shack nearby to submit an application for
+                an account. 
+            </p>
+            <button onclick="$('.sign .about').addClass('invisible'); $('.sign .default').removeClass('invisible');">Back</button>
+        </div>
     </div>
 </div>
 
-<div class="ground" id="lawn"></div>
+
 
 <!-- <div class="line">
     <h4>Apply Here To Exist:</h4>
@@ -90,6 +91,8 @@
 <a class="to gate" href="/the-front/gate">
     Approach the Gate
 </a>
+
+<div class="ground" id="lawn"></div>
 
 <script src="/js/dialogue.js"></script>
 <script src="/js/chat-box.js"></script>

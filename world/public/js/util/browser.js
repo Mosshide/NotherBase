@@ -205,7 +205,7 @@ class ViewBox extends Element {
                     case "date":
                         child = new Text("p", { defaultClasses: `date ${this.fields.settings.name}`, hidden: this.fields.settings.hidden  });
                         if (item) child.setValue((new Date(item)).toLocaleDateString());
-                        else child.setValue(null);
+                        else child.setValue(this.fields.settings.placeholder);
                         break;
                     case "time":
                         child = new Text("p", { defaultClasses: `time ${this.fields.settings.name}`, hidden: this.fields.settings.hidden  });
@@ -429,7 +429,7 @@ class Browser extends Element {
         this.cancelDelete();
 
         if (this.box) this.box.close();
-        this.box = this.addChild(new ViewBox());
+        this.box = this.addChild(new ViewBox({ label: this.serving.fields.label }));
         this.box.setValue(this.serving.data[this.serving.selected], this.serving.fields, false);
 
         this.buttons.showButton("close");
