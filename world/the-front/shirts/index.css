@@ -17,33 +17,35 @@ select {
 }
 
 .design {
-    width: 100%;
+    width: 300px;
     aspect-ratio: 1 / 1;
     background-color: rgb(227, 221, 209);
     position: relative;
+    overflow: hidden;
 }
 
-.design img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}
-
-.design .heart {
+.design img.shirt {
+    width: 150%;
+    height: auto;
     position: absolute;
-    top: 25%;
-    right: 29%;
-    width: 27%;
-    height: 27%;
-    aspect-ratio: 1 / 1;
+    top: -5%;
+    left: -25%;
 }
 
-.design .verse {
+.design img.heart {
     position: absolute;
-    top: 22%;
-    left: 40%;
-    width: 35%;
-    height: 35%;
+    top: 30%;
+    right: 13%;
+    width: 40%;
+    height: auto;
+}
+
+.design img.verse {
+    position: absolute;
+    top: 30%;
+    right: 13%;
+    width: 40%;
+    height: auto;
     display: flex;
     flex-wrap: wrap;
     align-content: center;

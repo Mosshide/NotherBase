@@ -4,7 +4,7 @@
     --bgColor: rgb(250, 250, 250);
     --bgColorGradient: linear-gradient(170deg, rgb(224, 224, 224) 0%, rgb(255, 255, 255) 100%);
     --bgCanvas: rgb(185, 185, 185);
-    --bgCanvasGradient: linear-gradient(170deg, rgb(224, 224, 224) 0%, rgb(177, 177, 177) 100%);
+    --bgCanvasGradient: linear-gradient(170deg, rgb(224, 224, 224) 0%, rgb(212, 212, 212) 100%);
     --darkBgColor: rgba(248, 239, 216, 0.557);
     --darkBgColorGradient: linear-gradient(170deg, rgba(27,27,27,1) 0%, rgba(5,5,5,1) 100%);
     --veryDarkBgColorTransparent: rgba(15, 15, 15, 0.404);
@@ -12,7 +12,7 @@
     --hoverColor: rgb(228, 228, 228);
     --hoverGradient: linear-gradient(170deg, rgb(228, 228, 228) 0%, rgb(255, 255, 255) 100%);
     --hoverTextColor: rgb(101, 101, 101);
-    --selectedTextColor: rgb(255, 228, 147);
+    --selectedTextColor: rgb(56, 56, 56);
     --shadowColor: rgba(192, 192, 192, 0.571);
     --brightShadowColor: rgba(215, 212, 212, 0.82);
     --textColor: rgb(36, 36, 36);
@@ -456,7 +456,7 @@ a.subtle:hover {
     margin: var(--margin);
 }
 
-.info {
+p.info {
     color: var(--selectedTextColor);
     text-align: center;
 }
