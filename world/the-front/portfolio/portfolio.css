@@ -20,24 +20,29 @@
 * {
     font-family: 'Chakra Petch', sans-serif;
     box-sizing: border-box;
+    text-shadow: none;
+}
+
+html {
+    height: 100vh;
 }
 
 body {
     background-color: var(--bgColor);
     width: 100%;
-    min-height: 100vh;
-    height: auto;
+    height: 100%;
+    padding: 0;
 }
 
 main {
-    position: initial;
-    max-height: initial;
-    height: auto;
+    position: relative;
+    height: 100%;
     width: 100%;
     max-width: 100%;
     margin: 0;
     border-radius: 0;
     border: none;
+    padding: 0;
 }
 
 h3 {

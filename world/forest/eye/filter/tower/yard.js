@@ -1,6 +1,6 @@
 class Yard extends Ground {
     constructor(maxWeeds = 25, maxTrees = 5) {
-        super($(".ground"), 50);
+        super($(".ground"), 1000);
         this.maxWeeds = maxWeeds;
         this.maxTrees = maxTrees;
 

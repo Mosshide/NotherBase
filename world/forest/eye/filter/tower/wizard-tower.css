@@ -1,13 +1,3 @@
-:root {
-    --bgColor: rgb(37, 37, 37);
-    --bgColorBright: rgb(66, 66, 66);
-    --shadowColor: rgb(26, 26, 26);
-    --textColor: rgb(185, 135, 69);
-    --textColorBright: rgb(221, 181, 130);
-    --standardBorder: 1px solid var(--textColor);
-    --standardRadius: 5px;
-}
-
 .tower {
     width: 100%;
     position: relative;

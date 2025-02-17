@@ -1,25 +1,28 @@
 :root {
     /* colors */
     --tint: rgba(255, 203, 118, 0.123);
-    --bgColor: rgba(255, 255, 255, 0.08);
-    --bgColorGradient: linear-gradient(170deg, rgba(37,37,37,1) 0%, rgba(15,15,15,1) 100%);
+    --bgColor: rgb(250, 250, 250);
+    --bgColorGradient: linear-gradient(170deg, rgb(224, 224, 224) 0%, rgb(255, 255, 255) 100%);
     --bgCanvas: rgb(185, 185, 185);
-    --bgCanvasGradient: linear-gradient(170deg, rgb(224, 224, 224) 0%, rgb(209, 209, 209) 100%);
+    --bgCanvasGradient: linear-gradient(170deg, rgb(224, 224, 224) 0%, rgb(177, 177, 177) 100%);
     --darkBgColor: rgba(248, 239, 216, 0.557);
     --darkBgColorGradient: linear-gradient(170deg, rgba(27,27,27,1) 0%, rgba(5,5,5,1) 100%);
     --veryDarkBgColorTransparent: rgba(15, 15, 15, 0.404);
     --veryDarkBgColor: rgb(206, 171, 120);
-    --hoverColor: rgb(255, 250, 237);
+    --hoverColor: rgb(228, 228, 228);
+    --hoverGradient: linear-gradient(170deg, rgb(228, 228, 228) 0%, rgb(255, 255, 255) 100%);
+    --hoverTextColor: rgb(101, 101, 101);
     --selectedTextColor: rgb(255, 228, 147);
-    --shadowColor: rgba(209, 187, 101, 0.482);
-    --brightShadowColor: rgba(255, 243, 185, 0.655);
-    --textColor: rgb(167, 143, 89);
-    --textColorBright: rgb(231, 203, 167);
+    --shadowColor: rgba(192, 192, 192, 0.571);
+    --brightShadowColor: rgba(215, 212, 212, 0.82);
+    --textColor: rgb(36, 36, 36);
+    --textColorBright: rgb(101, 101, 101);
     /* borders */
     --standardBorder: 1px solid var(--shadowColor);
-    --thickBorder: 5px solid var(--shadowColor);
+    --thickBorder: 3px groove var(--shadowColor);
     --brightBorder: 1px solid var(--brightShadowColor);
-    --darkBorder: 2px solid var(--veryDarkBgColorTransparent);
+    --brightThickBorder: 3px double var(--brightShadowColor);
+    --darkBorder: 1px solid var(--textColor);
     --borderRadius: 3px;
     /* font */
     --h1Size: 32px;
@@ -38,8 +41,8 @@
     --thickMargin: 20px;
     --tabMargin: 50px;
     --mainWidth: 97vw;
-    --maxMainWidth: 500px;
-    --boxShadow: 5px 5px 5px 1px var(--shadowColor);
+    --maxMainWidth: 900px;
+    --boxShadow: 2px 1px 2px 1px var(--shadowColor);
     --goHeight: 100px;
 }
 
@@ -63,12 +66,12 @@
 * {
     box-sizing: border-box;
     color: var(--textColor);
-    text-shadow: 1px 1px 2px var(--shadowColor);
+    /* text-shadow: 1px 1px 2px var(--shadowColor); */
     font-size: var(--pSize);
     margin: 0;
     font-family: 'Roboto', sans-serif;
     font-weight: lighter;
-    border-radius: var(--borderRadius);
+    /* border-radius: var(--borderRadius); */
 }
 
 .alt * {
@@ -108,12 +111,13 @@ html {
     height: 100%;
     background: var(--bgCanvas);
     background: var(--bgCanvasGradient);
-    background: url("/img/textures/glass-sea/5.jpeg");
+    /* background: url("/img/textures/glass-sea/5.jpeg"); */
     background-attachment: fixed;
 }
 
 body {
     background: none;
+    min-height: 100%;
     height: auto;
     display: flex;
     justify-content: flex-start;
@@ -127,8 +131,11 @@ body {
 main {
     width: var(--mainWidth);
     max-width: var(--maxMainWidth);
+    min-height: 300px;
     box-shadow: var(--boxShadow);
     padding: 0;
+    padding-top: var(--thickPadding);
+    padding-bottom: var(--thickPadding);
     border-radius: 5px;
     display: flex;
     flex-wrap: wrap;
@@ -137,7 +144,7 @@ main {
     align-items: flex-end;
     background-color: var(--bgColor);
     z-index: 0;
-    backdrop-filter: blur(10px);
+    /* backdrop-filter: blur(10px); */
 }
 
 footer {
@@ -159,31 +166,10 @@ footer {
     left: 0;
 }
 
-footer .view-toggle {
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: 40px;
-    height: 40px;
-    background: var(--bgColor);
-    border-radius: 0 0 0 5px;
-}
-
-footer .view-toggle:hover {
-    background: var(--hoverColor);
-}
-
 footer button {
     margin: 0;
     height: 100%;
-    border-radius: 5px 0 5px 5px;
-    border: none;
-    border-left: var(--standardBorder);
-}
-
-footer button:hover {
-    border: none;
-    border-left: 1px solid var(--hoverTextColor);
+    /* border-radius: 0; */
 }
 
 footer a {
@@ -274,7 +260,7 @@ h6 {
 
 hr {
     border: none;
-    border: 5px solid var(--shadowColor);
+    border: 2px solid var(--shadowColor);
     margin-top: var(--thickMargin);
     margin-bottom: var(--thickMargin);
     width: 100%;
@@ -306,13 +292,30 @@ li {
 textarea {
     padding: var(--thickPadding);
     width: 100%;
-    border-radius: 0;
-    border: var(--standardBorder);
+    border: none;
+    border-left: var(--thickBorder);
     margin: var(--margin);
+    background: var(--bgColorGradient);
+    backdrop-filter: blur(5px);
+}
+
+textarea:focus {
+    outline: none;
+    border: none;
+    border-left: var(--brightThickBorder);
 }
 
 select {
-    border: var(--standardBorder);
+    border: none;
+    border-left: var(--thickBorder);
+    background: var(--bgColorGradient);
+    backdrop-filter: blur(5px);
+}
+
+select:focus {
+    outline: none;
+    border: none;
+    border-left: var(--brightThickBorder);
 }
 
 label {
@@ -327,23 +330,29 @@ label {
 input {
     padding: var(--thickPadding);
     width: 100%;
-    background: none;
-    border-radius: var(--borderRadius);
-    border: var(--standardBorder);
+    background: var(--bgColorGradient);
+    border: none;
+    border-left: var(--thickBorder);
     height: var(--inputHeight);
     margin: var(--margin);
     font-size: clamp(var(--littleP), var(--pSize), var(--littleP) * 2);
+    backdrop-filter: blur(5px);
+}
+
+input:focus {
+    outline: none;
+    border: none;
+    border-left: var(--brightThickBorder);
 }
 
 input[type=checkbox] {
     width: 20%;
     height: 30px;
     margin: var(--margin);
-    background: none;
+    backdrop-filter: blur(5px);
 }
 
 input[type=submit] {
-    background: none;
     padding: var(--thickPadding);
     border-radius: var(--borderRadius);
     border: var(--standardBorder);
@@ -352,46 +361,51 @@ input[type=submit] {
     text-align: center;
     margin: var(--margin);
     font-size: clamp(var(--littleP), var(--pSize), var(--littleP) * 2);
+    backdrop-filter: blur(5px);
 }
 
 button {
-    background: none;
-    padding: var(--padding);
-    border-radius: var(--borderRadius);
-    border: var(--standardBorder);
+    background: var(--bgColorGradient);
+    padding: var(--mediumPadding);
+    border: none;
+    border-left: var(--thickBorder);
     color: var(--textColor);
     text-decoration: none;
     text-align: center;
     margin: var(--margin);
     font-size: clamp(var(--littleP), var(--pSize), var(--littleP) * 2);
+    backdrop-filter: blur(5px);
 }
 
 button:hover {
-    border: var(--brightBorder);
+    border: none;
+    border-left: var(--brightThickBorder);
     color: var(--textColorBright);
     cursor: pointer;
-    background: none;
+    background: var(--hoverColor);
+    backdrop-filter: blur(5px);
 }
 
 input[type=submit]:hover {
     border: var(--brightBorder);
     color: var(--textColorBright);
     cursor: pointer;
-    background: none;
+    background: var(--bgColor);
+    backdrop-filter: blur(5px);
 }
 
 /* links */
 a {
-    background: none;
+    background: var(--bgColorGradient);
     padding: var(--thickPadding);
-    border-radius: var(--borderRadius);
-    border: var(--standardBorder);
+    border: none;
+    border-right: var(--thickBorder);
     color: var(--textColor);
     text-decoration: none;
     text-align: center;
     margin: var(--margin);
     font-size: clamp(var(--littleP), var(--pSize), var(--littleP) * 2);
-    /* backdrop-filter: blur(5px); */
+    backdrop-filter: blur(5px);
 }
 
 a i.space {
@@ -399,9 +413,12 @@ a i.space {
 }
 
 a:hover {
-    border: var(--brightBorder);
+    border: none;
+    border-right: var(--brightThickBorder);
     color: var(--textColorBright);
     cursor: pointer;
+    background: var(--hoverColor);
+    backdrop-filter: blur(5px);
 }
 
 a:hover * {
@@ -487,7 +504,6 @@ a.subtle:hover {
     display: flex;
     justify-content: flex-end;
     align-items: flex-end;
-    padding: var(--padding);
     margin: var(--margin);
     overflow: hidden;
 }
@@ -507,18 +523,21 @@ ul.selector>li {
     overflow: hidden;
     font-size: clamp(var(--littleP), var(--pSize), var(--littleP) * 2);
     border: none;
-    border-bottom: var(--standardBorder);
+    border-left: var(--thickBorder);
     min-height: 40px;
-    border-radius: 5px;
     margin-top: var(--margin);
     display: flex;
     align-items: center;
+    background: var(--bgColorGradient);
+    backdrop-filter: blur(5px);
 }
 
 ul.selector>li:hover {
     cursor: pointer;
     background: var(--hoverColor);
     color: var(--hoverTextColor);
+    backdrop-filter: blur(5px);
+    border-left: var(--brightThickBorder);
 }
 
 ul.selector>li.selected {
@@ -528,7 +547,7 @@ ul.selector>li.selected {
 
 ul.selector>li.disabled {
     color: var(--textColor);
-    border: var(--standardBorder);
+    border: none;
     cursor: default;
 }
 
@@ -618,14 +637,12 @@ iframe {
 .dialogue {
     width: 100%;
     max-width: var(--maxMainWidth);
-    border-radius: var(--borderRadius);
     display: flex;
     justify-content: center;
     align-items: flex-end;
     flex-wrap: wrap;
-    margin: var(--margin);
-    border: var(--standardBorder);
     height: 300px;
+    background-color: var(--bgColor);
 }
 
 .dialogue>h4 {
@@ -634,12 +651,13 @@ iframe {
     display: flex;
     align-items: center;
     justify-content: flex-start;
+    padding: 0;
 }
 
 .dialogue .portrait {
-    width: 25%;
+    aspect-ratio: 3 / 2;
+    width: auto;
     height: 100%;
-    border-radius: 2px;
     object-fit: cover;
 }
 
@@ -648,7 +666,7 @@ iframe {
     height: 100%;
     background-color: var(--textColor);
     border-radius: var(--borderRadius);
-    margin: 0 5px;
+    margin: 0;
 }
 
 .dialogue>h4 p {
@@ -662,7 +680,6 @@ iframe {
     flex-wrap: wrap;
     justify-content: space-around;
     align-items: center;
-    border-radius: var(--borderRadius);
     background-color: var(--bgColor);
 }
 
@@ -753,6 +770,18 @@ iframe {
     width: 100%;
     height: var(--tabMargin);
     left: 0;
+}
+
+.hud {
+    display: flex;
+    min-height: 150px;
+    width: 100%;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.hud>.left, .hud>.right {
+    max-width: 70%;
 }
 
 @media screen and (max-width: 1000px) {

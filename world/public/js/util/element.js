@@ -427,6 +427,7 @@ class CheckBox extends Element {
     // renders the element
     render = () => {
         this.$div = super.render();
+        this.$div.addClass("checkbox");
 
         // create the element
         this.$input = $(`<input type="checkbox">`).appendTo(this.$div);

@@ -42,7 +42,7 @@ class PlantPart extends Entity {
         this.moveTo(this.behaviors[this.part].spawns[spawn].position.minX + Math.random() * (this.behaviors[this.part].spawns[spawn].position.maxX - this.behaviors[this.part].spawns[spawn].position.minX),
                     this.behaviors[this.part].spawns[spawn].position.minY + Math.random() * (this.behaviors[this.part].spawns[spawn].position.maxY - this.behaviors[this.part].spawns[spawn].position.minY));
         this.setImage(this.behaviors[this.part].imgs[0]);
-        this.css("transition", `all .5s linear`);
+        this.css("transition", `all 1s linear`);
     }
 
     onUpdate = (interval) => {
