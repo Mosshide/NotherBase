@@ -1,38 +1,28 @@
 :root {
     /* colors */
-    --clickable: linear-gradient(90deg, rgba(255,255,255,0.015) 0%, rgba(255,255,255,0.03) 50%, rgba(255,255,255,0.015) 100%);
-    --tint: rgba(0, 0, 0, 0.123);
-    --bgColor: rgb(37, 37, 37);
-    --bgColorGradient: linear-gradient(170deg, rgba(37,37,37,1) 0%, rgba(15,15,15,1) 100%);
-    --bgCanvas: rgb(233, 229, 224);
-    --bgCanvasGradient: linear-gradient(170deg, rgb(233, 229, 224) 0%, rgb(51, 47, 41) 100%);
-    --bgColorTransparent: rgba(37, 37, 37, 0.76);
-    --mediumBgColorGradient: linear-gradient(170deg, rgba(37, 37, 37,1) 0%, rgba(27,27,27,1) 100%);
-    --darkBgColor: rgb(27, 27, 27);
+    --tint: rgba(255, 203, 118, 0.123);
+    --bgColor: rgb(250, 250, 250);
+    --bgColorGradient: linear-gradient(170deg, rgb(235, 235, 235) 0%, rgb(246, 245, 245) 100%);
+    --bgCanvas: rgb(185, 185, 185);
+    --bgCanvasGradient: linear-gradient(170deg, rgb(224, 224, 224) 0%, rgb(212, 212, 212) 100%);
+    --darkBgColor: rgba(248, 239, 216, 0.557);
     --darkBgColorGradient: linear-gradient(170deg, rgba(27,27,27,1) 0%, rgba(5,5,5,1) 100%);
     --veryDarkBgColorTransparent: rgba(15, 15, 15, 0.404);
-    --veryDarkBgColor: rgb(15, 15, 15);
-    --lightBgColor: rgb(57, 57, 57);
-    --selectionColor: rgb(58, 58, 58);
-    --selectedTextColor: rgb(248, 192, 100);
-    --hoverColor: rgb(49, 49, 49);
-    --hoverTextColor: rgb(216, 171, 112);
-    --shadowColor: rgba(7, 7, 7, 0.616);
-    --textColor: rgb(185, 135, 69);
-    --textColorBright: rgb(221, 181, 130);
-    --woodColor: rgb(133, 96, 62);
-    --darkWoodColor: rgb(70, 50, 32);
-    --ceilingBG: rgba(202, 202, 202, 0.034);
-    --sideWallBG: rgba(151, 145, 138, 0.041);
-    --backWallBG: rgba(151, 145, 138, 0.128);
-    --foundationBG: rgba(29, 17, 5, 0.10);
-    --glassBG: rgba(255, 255, 255, 0.048);
-    --glassBGHover: rgba(255, 255, 255, 0.103);
+    --veryDarkBgColor: rgb(206, 171, 120);
+    --hoverColor: rgb(228, 228, 228);
+    --hoverGradient: linear-gradient(170deg, rgb(228, 228, 228) 0%, rgb(255, 255, 255) 100%);
+    --hoverTextColor: rgb(101, 101, 101);
+    --selectedTextColor: rgb(56, 56, 56);
+    --shadowColor: rgba(192, 192, 192, 0.571);
+    --brightShadowColor: rgba(215, 212, 212, 0.82);
+    --textColor: rgb(36, 36, 36);
+    --textColorBright: rgb(101, 101, 101);
     /* borders */
-    --standardBorder: 1px solid var(--textColor);
-    --thickBorder: 5px solid var(--textColor);
-    --brightBorder: 1px solid var(--textColorBright);
-    --darkBorder: 2px solid var(--veryDarkBgColorTransparent);
+    --standardBorder: 1px solid var(--shadowColor);
+    --thickBorder: 3px groove var(--shadowColor);
+    --brightBorder: 1px solid var(--brightShadowColor);
+    --brightThickBorder: 3px double var(--brightShadowColor);
+    --darkBorder: 1px solid var(--textColor);
     --borderRadius: 3px;
     /* font */
     --h1Size: 32px;
@@ -40,8 +30,8 @@
     --h3Size: 18px;
     --h4Size: 18px;
     --h5Size: 16px;
-    --pSize: 14px;
-    --tinyText: 14px;
+    --pSize: 15px;
+    --tinyText: 15px;
     --inputHeight: 42px;
     /* boxes */
     --padding: 5px;
@@ -51,18 +41,9 @@
     --thickMargin: 20px;
     --tabMargin: 50px;
     --mainWidth: 97vw;
-    --maxMainWidth: 500px;
-    --fillFromMargin: calc(100% - (2 * var(--margin)));
-    --fillFromThickMargin: calc(100% - (2 * var(--thickMargin)));
-    --fillHalfFromMargin: calc(50% - (2 * var(--margin)));
-    --fillHalfFromThickMargin: calc(50% - (2 * var(--thickMargin)));
-    --fillThirdFromMargin: calc((1 / 3) * 100% - (2 * var(--margin)));
-    --fillThirdFromThickMargin: calc((1 / 3) * 50% - (2 * var(--thickMargin)));
-    --fillQuarterFromMargin: calc(25% - (2 * var(--margin)));
-    --fillQuarterFromThickMargin: calc(25% - (2 * var(--thickMargin)));
-    --boxShadow: 5px 0px 5px 1px var(--shadowColor);
+    --maxMainWidth: 900px;
+    --boxShadow: 2px 1px 2px 1px var(--shadowColor);
     --goHeight: 100px;
-    --returnHeight: 10vh;
 }
 
 ::-webkit-scrollbar {
@@ -71,7 +52,7 @@
 }
 
 ::-webkit-scrollbar-track {
-    background: var(--lightBgColor);
+    background: none;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -85,11 +66,12 @@
 * {
     box-sizing: border-box;
     color: var(--textColor);
+    /* text-shadow: 1px 1px 2px var(--shadowColor); */
     font-size: var(--pSize);
     margin: 0;
     font-family: 'Roboto', sans-serif;
     font-weight: lighter;
-    border-radius: var(--borderRadius);
+    /* border-radius: var(--borderRadius); */
 }
 
 .alt * {
@@ -127,85 +109,67 @@ button.disabled:hover {
 
 html {
     height: 100%;
+    background: var(--bgCanvas);
+    background: var(--bgCanvasGradient);
+    /* background: url("/img/textures/glass-sea/5.jpeg"); */
+    background-attachment: fixed;
 }
 
 body {
-    background: var(--bgCanvas);
-    background: var(--bgCanvasGradient);
-    height: 100%;
+    background: none;
+    min-height: 100%;
+    height: auto;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     align-content: center;
     flex-direction: column;
-    position: relative;
+    padding: var(--padding);
+    padding: 60px;
 }
 
 main {
-    position: absolute;
     width: var(--mainWidth);
     max-width: var(--maxMainWidth);
-    height: calc(100% - 50px);
+    min-height: 300px;
     box-shadow: var(--boxShadow);
     padding: 0;
+    padding-top: var(--thickPadding);
+    padding-bottom: var(--thickPadding);
     border-radius: 5px;
-    top: 44px;
-    left: 1vw;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
     align-content: flex-start;
     align-items: flex-end;
     background-color: var(--bgColor);
-    overflow: auto;
-    overflow-x: hidden;
-    z-index: 1;
+    z-index: 0;
+    /* backdrop-filter: blur(10px); */
 }
 
 footer {
-    position: absolute;
+    position: fixed;
     display: flex;
     justify-content: center;
     align-content: center;
     align-items: center;
     height: 40px;
-    width: var(--mainWidth);
-    max-width: var(--maxMainWidth);
-    background-color: var(--veryDarkBgColor);
+    width: 100%;
+    background-color: var(--bgColor);
+    backdrop-filter: blur(15px);
     border-radius: 0px 0px 5px 5px;
     box-shadow: var(--boxShadow);
     padding: 0;
     padding-left: 1vw;
     border: none;
     top: 0;
-    left: 1vw;
-}
-
-footer .view-toggle {
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: 40px;
-    height: 40px;
-    background: var(--bgColor);
-    border-radius: 0 0 0 5px;
-}
-
-footer .view-toggle:hover {
-    background: var(--hoverColor);
+    left: 0;
 }
 
 footer button {
     margin: 0;
     height: 100%;
-    border-radius: 5px 0 5px 5px;
-    border: none;
-    border-left: var(--standardBorder);
-}
-
-footer button:hover {
-    border: none;
-    border-left: 1px solid var(--hoverTextColor);
+    /* border-radius: 0; */
 }
 
 footer a {
@@ -217,10 +181,10 @@ footer a {
 }
 
 section {
-    width: var(--fillFromMargin);
+    width: 100%;
     margin: var(--margin);
-    background: var(--darkBgColor);
-    border: var(--darkBorder);
+    background: none;
+    border: none;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
@@ -240,7 +204,7 @@ article {
 }
 
 .code {
-    width: var(--fillFromMargin);
+    width: 100%;
     padding: 20px;
     background: rgb(18, 18, 18);
     border-radius: 2px;
@@ -296,11 +260,12 @@ h6 {
 
 hr {
     border: none;
-    border: 10px solid var(--textColor);
+    border: 2px solid var(--shadowColor);
     margin-top: var(--thickMargin);
     margin-bottom: var(--thickMargin);
     width: 100%;
-    border-radius: 2px;
+    border-radius: 0;
+    /* box-shadow: var(--boxShadow); */
 }
 
 p {
@@ -313,7 +278,7 @@ p {
 
 ul {
     border: var(--standardBorder);
-    width: var(--fillFromMargin);
+    width: 100%;
     list-style: none;
     margin: var(--margin);
     padding: var(--padding);
@@ -326,21 +291,39 @@ li {
 
 textarea {
     padding: var(--thickPadding);
-    width: var(--fillFromMargin);
-    background-color: var(--tint);
-    border-radius: 0;
-    border: var(--standardBorder);
+    width: 100%;
+    border: none;
+    border-left: var(--thickBorder);
     margin: var(--margin);
+    background: var(--bgColorGradient);
+    backdrop-filter: blur(5px);
+}
+
+textarea:focus {
+    outline: none;
+    border: none;
+    border-left: var(--brightThickBorder);
 }
 
 select {
-    background: var(--tint);
-    border: var(--standardBorder);
+    border: none;
+    border-left: var(--thickBorder);
+    background: var(--bgColorGradient);
+    backdrop-filter: blur(5px);
+    cursor: pointer;
+    padding: var(--thickPadding);
+    height: var(--inputHeight);
+}
+
+select:focus {
+    outline: none;
+    border: none;
+    border-left: var(--brightThickBorder);
 }
 
 label {
     padding: var(--padding);
-    width: var(--fillFromMargin);
+    width: 100%;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -349,24 +332,30 @@ label {
 
 input {
     padding: var(--thickPadding);
-    width: var(--fillFromMargin);
-    background-color: var(--tint);
-    border-radius: 0;
-    border: var(--standardBorder);
+    width: 100%;
+    background: var(--bgColorGradient);
+    border: none;
+    border-left: var(--thickBorder);
     height: var(--inputHeight);
     margin: var(--margin);
     font-size: clamp(var(--littleP), var(--pSize), var(--littleP) * 2);
+    backdrop-filter: blur(5px);
+}
+
+input:focus {
+    outline: none;
+    border: none;
+    border-left: var(--brightThickBorder);
 }
 
 input[type=checkbox] {
     width: 20%;
     height: 30px;
     margin: var(--margin);
-    background-color: var(--tint);
+    backdrop-filter: blur(5px);
 }
 
 input[type=submit] {
-    background-color: var(--bgColor);
     padding: var(--thickPadding);
     border-radius: var(--borderRadius);
     border: var(--standardBorder);
@@ -375,45 +364,51 @@ input[type=submit] {
     text-align: center;
     margin: var(--margin);
     font-size: clamp(var(--littleP), var(--pSize), var(--littleP) * 2);
+    backdrop-filter: blur(5px);
 }
 
 button {
-    background: var(--glassBG);
-    padding: var(--padding);
-    border-radius: var(--borderRadius);
-    border: var(--standardBorder);
+    background: var(--bgColorGradient);
+    padding: var(--mediumPadding);
+    border: none;
+    border-left: var(--thickBorder);
     color: var(--textColor);
     text-decoration: none;
     text-align: center;
     margin: var(--margin);
     font-size: clamp(var(--littleP), var(--pSize), var(--littleP) * 2);
+    backdrop-filter: blur(5px);
 }
 
 button:hover {
-    border: var(--brightBorder);
+    border: none;
+    border-left: var(--brightThickBorder);
     color: var(--textColorBright);
     cursor: pointer;
-    background: var(--glassBGHover);
+    background: var(--hoverColor);
+    backdrop-filter: blur(5px);
 }
 
 input[type=submit]:hover {
     border: var(--brightBorder);
     color: var(--textColorBright);
     cursor: pointer;
-    background: var(--hoverColor);
+    background: var(--bgColor);
+    backdrop-filter: blur(5px);
 }
 
 /* links */
 a {
-    background-color: var(--bgColor);
+    background: var(--bgColorGradient);
     padding: var(--thickPadding);
-    border-radius: var(--borderRadius);
-    border: var(--standardBorder);
+    border: none;
+    border-right: var(--thickBorder);
     color: var(--textColor);
     text-decoration: none;
     text-align: center;
     margin: var(--margin);
     font-size: clamp(var(--littleP), var(--pSize), var(--littleP) * 2);
+    backdrop-filter: blur(5px);
 }
 
 a i.space {
@@ -421,9 +416,12 @@ a i.space {
 }
 
 a:hover {
-    border: var(--brightBorder);
+    border: none;
+    border-right: var(--brightThickBorder);
     color: var(--textColorBright);
     cursor: pointer;
+    background: var(--hoverColor);
+    backdrop-filter: blur(5px);
 }
 
 a:hover * {
@@ -461,7 +459,7 @@ a.subtle:hover {
     margin: var(--margin);
 }
 
-.info {
+p.info {
     color: var(--selectedTextColor);
     text-align: center;
 }
@@ -484,7 +482,7 @@ a.subtle:hover {
 }
 
 .go {
-    width: var(--fillHalfFromMargin);
+    width: 100%;
     height: var(--goHeight);
     display: flex;
     justify-content: flex-end;
@@ -494,7 +492,7 @@ a.subtle:hover {
 }
 
 .to {
-    width: var(--fillFromMargin);
+    width: 100%;
     height: var(--goHeight);
     display: flex;
     justify-content: flex-end;
@@ -504,18 +502,17 @@ a.subtle:hover {
 }
 
 .return {
-    width: var(--fillFromMargin);
-    height: var(--returnHeight);
+    width: 100%;
+    height: var(--goHeight);
     display: flex;
     justify-content: flex-end;
     align-items: flex-end;
-    padding: var(--padding);
     margin: var(--margin);
     overflow: hidden;
 }
 
 .do {
-    width: var(--fillThirdFromMargin);
+    width: 33%;
     height: var(--goHeight);
     display: flex;
     justify-content: flex-end;
@@ -525,23 +522,25 @@ a.subtle:hover {
 }
 
 ul.selector>li {
-    width: var(--fillFromMargin);
+    width: 100%;
     overflow: hidden;
     font-size: clamp(var(--littleP), var(--pSize), var(--littleP) * 2);
     border: none;
-    border-bottom: var(--standardBorder);
+    border-left: var(--thickBorder);
     min-height: 40px;
-    background: var(--clickable);
-    border-radius: 5px;
-    margin: var(--margin);
+    margin-top: var(--margin);
     display: flex;
     align-items: center;
+    background: var(--bgColorGradient);
+    backdrop-filter: blur(5px);
 }
 
 ul.selector>li:hover {
     cursor: pointer;
     background: var(--hoverColor);
     color: var(--hoverTextColor);
+    backdrop-filter: blur(5px);
+    border-left: var(--brightThickBorder);
 }
 
 ul.selector>li.selected {
@@ -549,14 +548,9 @@ ul.selector>li.selected {
     color: var(--selectedTextColor);
 }
 
-ul.selector>p {
-    color: rgb(78, 78, 78);
-}
-
 ul.selector>li.disabled {
-    background: var(--bgColor);
     color: var(--textColor);
-    border: var(--standardBorder);
+    border: none;
     cursor: default;
 }
 
@@ -644,16 +638,14 @@ iframe {
 }
 
 .dialogue {
-    width: var(--fillFromMargin);
+    width: 100%;
     max-width: var(--maxMainWidth);
-    border-radius: var(--borderRadius);
     display: flex;
     justify-content: center;
     align-items: flex-end;
     flex-wrap: wrap;
-    margin: var(--margin);
-    border: var(--standardBorder);
     height: 300px;
+    background-color: var(--bgColor);
 }
 
 .dialogue>h4 {
@@ -662,12 +654,13 @@ iframe {
     display: flex;
     align-items: center;
     justify-content: flex-start;
+    padding: 0;
 }
 
 .dialogue .portrait {
-    width: 25%;
+    aspect-ratio: 3 / 2;
+    width: auto;
     height: 100%;
-    border-radius: 2px;
     object-fit: cover;
 }
 
@@ -676,7 +669,7 @@ iframe {
     height: 100%;
     background-color: var(--textColor);
     border-radius: var(--borderRadius);
-    margin: 0 5px;
+    margin: 0;
 }
 
 .dialogue>h4 p {
@@ -690,7 +683,6 @@ iframe {
     flex-wrap: wrap;
     justify-content: space-around;
     align-items: center;
-    border-radius: var(--borderRadius);
     background-color: var(--bgColor);
 }
 
@@ -703,7 +695,7 @@ iframe {
 }
 
 .merchant {
-    width: var(--fillFromMargin);
+    width: 100%;
     border: var(--standardBorder);
     min-height: 100px;
     background-color: rgb(49, 49, 49);
@@ -726,7 +718,7 @@ iframe {
 }
 
 .memo {
-    width: var(--fillFromMargin);
+    width: 100%;
     margin: var(--margin);
     display: flex;
     flex-wrap: wrap;
@@ -749,7 +741,7 @@ iframe {
 .basic {
     border: var(--standardBorder);
     background: var(--darkBgColor);
-    width: var(--fillFromMargin);
+    width: 100%;
     min-height: 10vh;
     display: flex;
     align-items: center;
@@ -781,6 +773,18 @@ iframe {
     width: 100%;
     height: var(--tabMargin);
     left: 0;
+}
+
+.hud {
+    display: flex;
+    min-height: 150px;
+    width: 100%;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.hud>.left, .hud>.right {
+    max-width: 70%;
 }
 
 @media screen and (max-width: 1000px) {

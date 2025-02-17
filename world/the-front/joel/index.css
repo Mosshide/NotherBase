@@ -2,7 +2,7 @@
     --textColor: rgb(0, 0, 0);
     --primaryColor: rgb(244, 244, 244);
     --secondaryColor: white;
-    --tertiaryColor: rgb(186, 139, 45);
+    --tertiaryColor: rgb(255, 215, 134);
     --positiveColor: green;
     --negativeColor: red;
     --alertColor: yellow;
@@ -93,15 +93,6 @@ nav button.selected {
     border: none;
 }
 
-footer {
-    background: var(--tertiaryColor);
-    width: 100%;
-    height: 25px;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
 
 .sort {
     display: flex;

@@ -1,39 +1,25 @@
 :root {
     --shadow: rgb(71, 71, 71);
-    --textColor: rgb(49, 49, 49);
+    --textColor: rgb(206, 206, 206);
     --woodColor: rgb(170, 117, 68);
     --metalColor: rgb(104, 101, 100);
     --brickColor: rgb(139, 67, 38);
     --gravelColor: rgb(160, 158, 154);
     --grassColor: rgb(50, 93, 61);
-    --voidColor: rgb(41, 0, 41);
-    --darkVoidColor: rgb(24, 0, 24);
+    --bgColor: rgb(41, 0, 41);
+    --bgColorGradient: rgb(41, 0, 41);
+    --bgCanvas: rgb(24, 0, 24);
+    --bgCanvasGradient: rgb(24, 0, 24);
 }
 
 * {
-    box-sizing: border-box;
     font-family: 'Chela One', cursive;
-    color: var(--brickColor);
-}
-
-body {
-    background: var(--voidColor);
 }
 
 main {
-    background: var(--darkVoidColor);
-    
-}
-
-h1 {
-    width: 100%;
+    align-content: center;
 }
 
 a {
-    background: var(--darkVoidColor);
     font-size: 50px;
-}
-
-a:hover {
-    border: 1px solid var(--voidColor);
 }

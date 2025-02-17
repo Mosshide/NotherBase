@@ -63,8 +63,6 @@ export default async (req, user) => {
                 }
             }
     
-            await spirit.commit();
-    
             await req.db.SendMail.send(req.body.email, `Love INC of Lewis County Visits Report`, `
                 <h1>Love INC of Lewis County Website Visits</h1>
                 <h4>These numbers are estimates and are not exact.</h4> <br>
@@ -78,9 +76,12 @@ export default async (req, user) => {
                 <br>
                 <br>
                 <br>
+                <p>Visitors counts and time apent are estimated by tracking cookies and will result in some overcount.</p>
                 <p>This is an automated message. Please do not reply.</p>
             `, "Love INC of Lewis County");
-        
+
+            await spirit.commit();
+            
             req.session.visitsReportLast = Date.now();
             return "Email sent.";
         }

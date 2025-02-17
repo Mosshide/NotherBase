@@ -324,16 +324,16 @@ class Agenda extends SearchBox {
 }
 
 const metaBrowser = new MetaBrowser({
-    header: "Agenda",
+    header: null,
     useSearchBox: Agenda
 });
 metaBrowser.render();
 metaBrowser.addService("schedule", {
     fields: new NBField({
-    name: "task",
-    label: "Task: ",
-    placeholder: "No task"
-}, [
+        name: "task",
+        label: "Task: ",
+        placeholder: "No task"
+    }, [
     new NBField({
         name: "name",
         placeholder: "Name",
@@ -341,11 +341,13 @@ metaBrowser.addService("schedule", {
     }),
     new NBField({
         name: "date",
-        placeholder: Date.now(),
+        label: "On ",
+        placeholder: "ASAP",
         type: "date"
     }),
     new NBField({
         name: "timeHours",
+        label: "At ",
         placeholder: "",
         options: [
             "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", 
@@ -369,7 +371,7 @@ metaBrowser.addService("schedule", {
     }),
     new NBField({
         name: "frequency",
-        label: "Repeats: ",
+        label: "Repeating ",
         placeholder: "Once",
         options: [
             "Once",
@@ -382,7 +384,6 @@ metaBrowser.addService("schedule", {
     }),
     new NBField({
         name: "description",
-        label: "Description: ",
         placeholder: "Description",
         type: "long-string"
     })
