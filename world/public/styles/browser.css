@@ -236,6 +236,7 @@
     height: 100%;
     overflow: auto;
     padding: 50px 20px;
+    background: var(--bgColor);
 }
 
 .browser .popup #close {
