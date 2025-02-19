@@ -144,7 +144,6 @@ main {
     align-items: flex-end;
     background-color: var(--bgColor);
     z-index: 0;
-    /* backdrop-filter: blur(10px); */
 }
 
 footer {
@@ -156,7 +155,6 @@ footer {
     height: 40px;
     width: 100%;
     background-color: var(--bgColor);
-    backdrop-filter: blur(15px);
     border-radius: 0px 0px 5px 5px;
     box-shadow: var(--boxShadow);
     padding: 0;
@@ -293,32 +291,29 @@ textarea {
     padding: var(--thickPadding);
     width: 100%;
     border: none;
-    border-left: var(--thickBorder);
+    border-radius: var(--borderRadius);
     margin: var(--margin);
     background: var(--bgColorGradient);
-    backdrop-filter: blur(5px);
 }
 
 textarea:focus {
     outline: none;
     border: none;
-    border-left: var(--brightThickBorder);
 }
 
 select {
     border: none;
-    border-left: var(--thickBorder);
+    border-radius: var(--borderRadius);
     background: var(--bgColorGradient);
-    backdrop-filter: blur(5px);
     cursor: pointer;
-    padding: var(--thickPadding);
+    padding: var(--padding);
     height: var(--inputHeight);
+    margin: var(--margin);
 }
 
 select:focus {
     outline: none;
     border: none;
-    border-left: var(--brightThickBorder);
 }
 
 label {
@@ -335,24 +330,21 @@ input {
     width: 100%;
     background: var(--bgColorGradient);
     border: none;
-    border-left: var(--thickBorder);
+    border-radius: var(--borderRadius);
     height: var(--inputHeight);
     margin: var(--margin);
     font-size: clamp(var(--littleP), var(--pSize), var(--littleP) * 2);
-    backdrop-filter: blur(5px);
 }
 
 input:focus {
     outline: none;
     border: none;
-    border-left: var(--brightThickBorder);
 }
 
 input[type=checkbox] {
     width: 20%;
     height: 30px;
     margin: var(--margin);
-    backdrop-filter: blur(5px);
 }
 
 input[type=submit] {
@@ -364,29 +356,25 @@ input[type=submit] {
     text-align: center;
     margin: var(--margin);
     font-size: clamp(var(--littleP), var(--pSize), var(--littleP) * 2);
-    backdrop-filter: blur(5px);
 }
 
 button {
     background: var(--bgColorGradient);
     padding: var(--mediumPadding);
     border: none;
-    border-left: var(--thickBorder);
+    border-radius: var(--borderRadius);
     color: var(--textColor);
     text-decoration: none;
     text-align: center;
     margin: var(--margin);
     font-size: clamp(var(--littleP), var(--pSize), var(--littleP) * 2);
-    backdrop-filter: blur(5px);
 }
 
 button:hover {
     border: none;
-    border-left: var(--brightThickBorder);
     color: var(--textColorBright);
     cursor: pointer;
     background: var(--hoverColor);
-    backdrop-filter: blur(5px);
 }
 
 input[type=submit]:hover {
@@ -394,7 +382,6 @@ input[type=submit]:hover {
     color: var(--textColorBright);
     cursor: pointer;
     background: var(--bgColor);
-    backdrop-filter: blur(5px);
 }
 
 /* links */
@@ -402,13 +389,12 @@ a {
     background: var(--bgColorGradient);
     padding: var(--thickPadding);
     border: none;
-    border-right: var(--thickBorder);
+    border-radius: var(--borderRadius);
     color: var(--textColor);
     text-decoration: none;
     text-align: center;
     margin: var(--margin);
     font-size: clamp(var(--littleP), var(--pSize), var(--littleP) * 2);
-    backdrop-filter: blur(5px);
 }
 
 a i.space {
@@ -417,11 +403,9 @@ a i.space {
 
 a:hover {
     border: none;
-    border-right: var(--brightThickBorder);
     color: var(--textColorBright);
     cursor: pointer;
     background: var(--hoverColor);
-    backdrop-filter: blur(5px);
 }
 
 a:hover * {
@@ -526,21 +510,18 @@ ul.selector>li {
     overflow: hidden;
     font-size: clamp(var(--littleP), var(--pSize), var(--littleP) * 2);
     border: none;
-    border-left: var(--thickBorder);
     min-height: 40px;
     margin-top: var(--margin);
     display: flex;
     align-items: center;
     background: var(--bgColorGradient);
-    backdrop-filter: blur(5px);
+    border-radius: var(--borderRadius);
 }
 
 ul.selector>li:hover {
     cursor: pointer;
     background: var(--hoverColor);
     color: var(--hoverTextColor);
-    backdrop-filter: blur(5px);
-    border-left: var(--brightThickBorder);
 }
 
 ul.selector>li.selected {
