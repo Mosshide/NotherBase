@@ -81,7 +81,7 @@ class SearchBox extends Element {
         
         if (typeof item === "string") label = item;
         else label = item?.name || item?.username || item?.title || 
-                item?.header || item?.whenSearched || item?.note || item?.text;
+                item?.header || item?.whenSearched || item?.note || item?.text || item?.design;
         if (!label) label = "Unnamed Item";
 
         if (typeof label !== "string") label = String(label);

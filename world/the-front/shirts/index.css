@@ -2,10 +2,6 @@
     width: 100%;
 }
 
-.items {
-    width: 100%;
-}
-
 .info {
     width: 100%;
 }
@@ -14,48 +10,22 @@ select {
     width: 100%;
 }
 
-.design {
-    width: 300px;
-    aspect-ratio: 1 / 1;
-    background-color: rgb(227, 221, 209);
-    position: relative;
-    overflow: hidden;
-}
-
-.design img.shirt {
-    width: 150%;
-    height: auto;
-    position: absolute;
-    top: -5%;
-    left: -25%;
-}
-
-.design img.heart {
-    position: absolute;
-    top: 30%;
-    right: 13%;
-    width: 40%;
+.hud img.design {
+    width: 100%;
+    max-width: 200px;
     height: auto;
 }
 
-.design img.verse {
-    position: absolute;
-    top: 30%;
-    right: 13%;
-    width: 40%;
-    height: auto;
-    display: flex;
-    flex-wrap: wrap;
-    align-content: center;
-}
-
-.verse p {
-    text-align: center;
-    padding: 0;
-}
-
-.amount {
+.cart .item {
     width: 100%;
     display: flex;
+    justify-content: space-between;
     align-items: center;
+    padding: 10px;
+    border-bottom: var(--standardBorder);
+}
+
+.cart .item img {
+    max-width: 100px;
+    height: auto;
 }
