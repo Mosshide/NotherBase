@@ -8,6 +8,7 @@ class Element {
             defaultCSS: {},
             id: null,
             src: null,
+            alt: null,
             placeholder: "",
             hidden: false,
             onClick: null,
@@ -82,6 +83,10 @@ class Element {
             else this.$div.removeAttr("id");
             // add the src
             if (this.settings.src) this.$div.attr("src", this.settings.src);
+            else this.$div.removeAttr("src");
+            // add the alt
+            if (this.settings.alt) this.$div.attr("alt", this.settings.alt);
+            else this.$div.removeAttr("alt");
         }
     }
 
@@ -413,6 +418,11 @@ class Select extends Element {
         });
 
         this.$div.removeClass("disabled");
+    }
+
+    setOptions = (options) => {
+        this.settings.options = options;
+        this.render();
     }
 }
 
