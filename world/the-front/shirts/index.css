@@ -29,3 +29,12 @@ select {
     max-width: 100px;
     height: auto;
 }
+
+.cart .object.cart {
+    background: rgb(228, 228, 226);
+    margin-bottom: 10px;
+}
+
+.nested.price, .nested.color, .nested.size, .nested.amount, .nested.stock {
+    width: 25% !important;
+}
