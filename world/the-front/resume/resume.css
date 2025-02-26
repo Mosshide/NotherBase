@@ -5,7 +5,6 @@
 
 * {
 	font-family : Georgia;
-	color: var(--text);
 }
 
 h1 {
@@ -52,7 +51,6 @@ h4 {
 }
 
 h5 {
-	color : var(--text);
 	margin-left : 5%;
 	display : inline;
 	font-size : 15px;
@@ -113,7 +111,6 @@ span {
 }
 
 a {
-	color : var(--text);
 	background: none;
 	border: none;
 	padding: initial;

@@ -322,7 +322,6 @@ label {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    margin: var(--margin);
 }
 
 input {

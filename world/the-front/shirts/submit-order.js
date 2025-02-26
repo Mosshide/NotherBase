@@ -2,11 +2,13 @@ export default async (req, user) => {
     let spirit = await req.db.Spirit.create("shirt-orders", {}, null);
     await spirit.commit({
         name: req.body.name,
-        address: req.body.address,
+        location: req.body.location,
         email: req.body.email,
-        paymentMethod: req.body.paymentMethod,
+        payment: req.body.payment,
         notes: req.body.notes,
-        cart: req.body.cart
+        cart: req.body.cart,
+        updates: req.body.updates,
+        status: "pending"
     });
     return { newID: spirit.memory._id, message: `created` };
 }

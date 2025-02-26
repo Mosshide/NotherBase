@@ -14,15 +14,17 @@
 
 <h2>Your Info</h2>
 <section class="info">
+    <p>Fields marked with * are required to be filled out.</p>
     <label>
-        Name of Recipient: <input type="text" placeholder="Name" id="name">
+        Name*: 
+        <input type="text" placeholder="Name" id="name">
     </label>
     <label>
-        Location for Delivery:
+        Location for Delivery*:
         <input type="text" placeholder="Location or address" id="location">
     </label>
     <label>
-        Email of Recipient:
+        Email*:
         <input type="text" placeholder="Email" id="email">
     </label>
     <label>
@@ -153,25 +155,23 @@
         // a method called "loadItems" to load the inventory items
         loadItems(items) {
             this.items = items;
-            let designs = [];
-            let colors = [];
-            let sizes = [];
+            let designs = {};
             items.forEach(item => {
-                if (!designs.includes(item.memory.data.design)) {
-                    designs.push(item.memory.data.design);
+                if (!designs[item.memory.data.design]) {
+                    designs[item.memory.data.design] = [];
                 }
-                if (!colors.includes(item.memory.data.color)) {
-                    colors.push(item.memory.data.color);
-                }
-                if (!sizes.includes(item.memory.data.size)) {
-                    sizes.push(item.memory.data.size);
-                }
+                if (!designs[item.memory.data.design].includes(item.memory.data.color)) designs[item.memory.data.design].push(item.memory.data.color);
             });
-            this.design.setOptions(designs);
-            this.color.setOptions(colors);
-            this.size.setOptions(sizes);
+            this.design.setOptions(Object.keys(designs));
+            this.color.setOptions(designs[items[0].memory.data.design]);
+            this.size.setOptions(["S", "M", "L", "XL", "XXL", "3XL"]);
+            this.shirtImg.settings.src = this.items[0].memory.data.imageFront;
+            this.shirtImg.initModifiers();
 
             this.design.enable(() => {
+                this.color.setOptions(designs[this.design.getValue()]);
+                this.shirtImg.settings.src = this.items.find(item => item.memory.data.design === this.design.getValue() && item.memory.data.color === this.color.getValue()).memory.data.imageFront;
+                this.shirtImg.initModifiers();
                 let shirt = this.items.find(item => item.memory.data.design === this.design.getValue() && item.memory.data.color === this.color.getValue() && item.memory.data.size === this.size.getValue());
                 if (shirt) {
                     this.stock.setValue(`${shirt.memory.data.stock > 0 ? "In Stock!" : "Out of Stock!"}`);
@@ -244,7 +244,7 @@
                 name: $("#name").val(),
                 location: $("#location").val(),
                 email: $("#email").val(),
-                payment: $("#payment").val(),
+                payment: $("#payment").find(`option:selected`).text(),
                 notes: $("#notes").val(),
                 cart: toGoCart
             });
@@ -264,9 +264,24 @@
         cart.render(".cart");
         inventory.loadItems(res);
         inventory.render(".inventory");
-    
         
         <% if (user?.memory && user.memory.data.authLevels.includes("SHIRTSAD")) { %>
+            class InventorySearch extends SearchBox {
+                constructor(settings = {}) {
+                    super({
+                        defaultClasses: "search-box inventory-list",
+                        ...settings
+                    });
+                }
+
+                extractLabel = (item) => {
+                    let label = "No Design - No Color - No Size - 0";
+                    label = `${item?.design} - ${item?.color} - ${item?.size} - ${item?.stock}`;
+
+                    return label;
+                }
+            }
+
             const metaOrders = new MetaBrowser({
                 header: "Orders",
                 id: "orders"
@@ -369,6 +384,7 @@
     
             const metaInventory = new MetaBrowser({
                 header: "Inventory",
+                useSearchBox: InventorySearch,
                 id: "inventory"
             });
             metaInventory.render();
@@ -396,18 +412,7 @@
                         placeholder: "No Description",
                         type: "string"
                     }),
-                    new NBField({
-                        name: "stock",
-                        label: "Stock: ",
-                        placeholder: "0",
-                        type: "number"
-                    }),
-                    new NBField({
-                        name: "price",
-                        label: "Price: ",
-                        placeholder: "0",
-                        type: "number"
-                    }),
+                    
                     new NBField({
                         name: "color",
                         label: "Color: ",
@@ -419,6 +424,18 @@
                         label: "Size: ",
                         placeholder: "No size",
                         type: "string"
+                    }),
+                    new NBField({
+                        name: "price",
+                        label: "Price: ",
+                        placeholder: "0",
+                        type: "number"
+                    }),
+                    new NBField({
+                        name: "stock",
+                        label: "Stock: ",
+                        placeholder: "0",
+                        type: "number"
                     }),
                     new NBField({
                         name: "verse",

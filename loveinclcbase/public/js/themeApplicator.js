@@ -137,7 +137,7 @@ class ThemeApplicator {
             }).then((res) => {
                 this.$mailingAlert.removeClass("invisible");
                 if (res.status == "success") {
-                    this.$mailingAlert.text(`Thank you for signing up!`);
+                    this.$mailingAlert.text(res.data);
                 } else {
                     this.$mailingAlert.text(`There was an error signing up. Please try again later.`);
                 }

@@ -1,7 +1,7 @@
 export default async function submitApplication(req, user) {
     // require a cooldown between applications of 1 minute
     if (!req.session.lastRCTrainingApplication) req.session.lastRCTrainingApplication = 0;
-    if (Date.now() - req.session.lastRCTrainingApplication < 60 * 1000) return "You have already registered for this event.";
+    if (Date.now() - req.session.lastRCTrainingApplication < 60 * 1000) return "Please wait before trying to register for this event again.";
     else {
         let newTicket = {
             dateCreated: Date.now(),
