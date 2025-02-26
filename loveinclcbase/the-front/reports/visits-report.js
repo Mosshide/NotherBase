@@ -2,7 +2,8 @@ export default async (req, user) => {
     if (!req.session.visitsReportLast) req.session.visitsReportLast = 0;
 
     if (Date.now() - req.session.visitsReportLast < 60000) return "Please wait before sending another email.";
-    else {
+
+    if (req.body.email && typeof req.body.email === "string" && req.body.email.includes("@")) {
         let spirit = await req.db.Spirit.recallOne("stats", null);
         if (spirit) {        
             // iterate through all the sessions in the tally data and total the time and count for this month and last month
@@ -86,4 +87,6 @@ export default async (req, user) => {
             return "Email sent.";
         }
     }
+    
+    return "Please provide a valid email address.";
 }
