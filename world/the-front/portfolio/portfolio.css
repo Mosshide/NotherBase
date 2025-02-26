@@ -15,6 +15,8 @@
     --blue: #00487C;
     --game-size: 500px;
     --maxMainWidth: 1000px;
+    --h2Size: 30px;
+    --h3Size: 25px;
 }
 
 * {
@@ -49,6 +51,24 @@ h3 {
     text-align: center;
 }
 
+button {
+    background: var(--very-dark);
+    color: var(--textColor);
+}
+
+button:hover {
+    background: var(--dark);
+    color: var(--focusColor);
+}
+
+a:hover {
+    color: var(--focusColor);
+}
+
+a:hover * {
+    color: var(--focusColor);
+}
+
 footer {
     display: none;
 }
@@ -70,7 +90,6 @@ div.footer {
 div.footer a {
     border: none;
     margin: 5px;
-    border-bottom: var(--textColor) 1px solid;
     padding: 5px;
     background: none;
 }
@@ -80,7 +99,6 @@ div.footer a:hover {
     cursor: pointer;
     border: none;
     margin: 5px;
-    border-bottom: var(--focusColor) 1px solid;
 }
 
 header {
@@ -145,6 +163,15 @@ header h3 {
     font-size: var(--h5Size);
 }
 
+a.subtle {
+    border: none;
+}
+
+a.subtle:hover {
+    border: none;
+    cursor: pointer;
+}
+
 header a.subtle {
     padding: 5px;
     margin: 1px;
@@ -168,7 +195,6 @@ nav {
     top: 0;
     transition: all .2s ease;
     z-index: 99;
-    border-bottom: 1px solid var(--bgColorLight);
 }
 
 nav h1 {
@@ -190,6 +216,38 @@ nav .buttons {
     display: flex;
     gap: var(--padding);
     width: initial;
+}
+
+nav a {
+    color: var(--bgColor);
+    background: var(--focusColor);
+    border-radius: 5px;
+}
+
+nav a * {
+    color: var(--bgColor);
+}
+
+nav a:hover {
+    color: var(--focusColor);
+    background: var(--bgColor);
+    border-radius: 3px !important;
+}
+
+nav a:hover * {
+    color: var(--focusColor);
+}
+
+nav button {
+    background: var(--bgColor) !important;
+    color: var(--focusColor);
+    border: none;
+}
+
+nav button:hover {
+    background: var(--focusColor) !important;
+    color: var(--bgColor) !important;
+    border: var(--standardBorder);
 }
 
 section {
@@ -239,6 +297,14 @@ section>img {
     background-color: var(--focusColor);
 }
 
+#tamago-watch a:hover {
+    color: var(--dark);
+}
+
+#tamago-watch a:hover * {
+    color: var(--dark);
+}
+
 .chat-box {
     margin: 20px;
 }
@@ -252,29 +318,30 @@ section>img {
 }
 
 #loveinclc a {
-    border-bottom: rgb(36, 81, 148) 1px solid;
     color: rgb(36, 81, 148);
 }
 
 #loveinclc a * {
-    border-bottom: rgb(36, 81, 148) 1px solid;
     color: rgb(36, 81, 148);
 }
 
 #loveinclc a:hover {
     color: rgb(64, 130, 228);
-    border-bottom: rgb(64, 130, 228) 1px solid;
     cursor: pointer;
 }
 
 #loveinclc a:hover * {
     color: rgb(64, 130, 228);
-    border-bottom: rgb(64, 130, 228) 1px solid;
     cursor: pointer;
 }
 
 textarea.message {
     min-height: 40%;
+}
+
+.form input, .form textarea {
+    background: var(--dark);
+    color: var(--textColor);
 }
 
 @media only screen and (max-width: 900px) {
