@@ -25,7 +25,7 @@ export default async (req, user) => {
             Order ID: ${spirit.memory._id} <br><br>
             <p>Thank you for ordering from Nother Shirts! Please keep an eye on the page linked below for updates on your order:</p> <br>
             <a href="https://notherbase.com/shirts?o=${spirit.memory._id}">https://notherbase.com/shirts?o=${spirit.memory._id}</a> <br><br>
-            <p>Thank you for supporting Nother Shirts!</p>
+            <p>Thank you for supporting us!</p>
             <p>This is an automated message. Please do not reply to this email. If you have any questions, please message us using the link above.</p>
         `);
 
