@@ -31,10 +31,59 @@ select {
 }
 
 .cart .object.cart {
-    background: rgb(228, 228, 226);
+    background: var(--hoverColor);
     margin-bottom: 10px;
+    position: relative;
+    height: 160px;
+}
+
+.browser h4 {
+    width: auto;
+}
+
+.nested.name, .nested.location, .nested.email, .nested.payment, .nested.paid, .nested.delivered {
+    flex-wrap: nowrap;
+}
+
+.nested.imageFront {
+    height: 100%;
+    width: 25% !important;
+    position: absolute;
+    left: 0;
+    top: 0;
+    overflow: hidden;
 }
 
 .nested.price, .nested.color, .nested.size, .nested.amount, .nested.stock {
-    width: 25% !important;
+    width: 18.75% !important;
+    flex-wrap: nowrap;
+    padding-left: var(--padding) !important;
+}
+
+.nested.color {
+    margin-left: 25% !important;
+}
+
+.object.cart .nested p {
+    width: auto;
+}
+
+.nested.design {
+    width: 70% !important;
+    flex-wrap: nowrap;
+    padding-left: var(--padding) !important;
+    margin-left: 25% !important;
+}
+
+.object.messages {
+    flex-wrap: nowrap;
+    background: var(--hoverColor);
+}
+
+.messages .nested h4 {
+    display: none;
+}
+
+.messages .nested p, .messages .nested.date, .messages .nested.message, .messages .nested.from {
+    width: auto;
 }

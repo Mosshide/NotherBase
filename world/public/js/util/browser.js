@@ -185,9 +185,11 @@ class ViewBox extends Element {
                 switch (this.fields.settings.type) {
                     case "image":
                         child = new Element("img", { defaultClasses: `image ${this.fields.settings.name}`, hidden: this.fields.settings.hidden });
-                        if (item) child.settings.attributes["src"] = item;
-                        else child.settings.attributes["src"] = this.fields.settings.placeholder;
+                        if (item) child.settings.src = item;
+                        else child.settings.src = this.fields.settings.placeholder;
                         child.setValue(item);
+                        console.log(child);
+                        
                         break;
                     case "number":
                         child = new Text("p", { defaultClasses: `number ${this.fields.settings.name}`, hidden: this.fields.settings.hidden  });

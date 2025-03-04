@@ -14,7 +14,7 @@ export default async (req, user) => {
             payment: req.body.payment,
             notes: req.body.notes,
             cart: req.body.cart,
-            messages: [{ date: Date.now(), message: "Order created! Thank you!" }],
+            messages: [{ date: Date.now(), message: "Order created! Thank you!", from: "Nother Shirts" }],
             paid: false,
             delivered: false,
             notherNotes: ""
