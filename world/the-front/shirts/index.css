@@ -16,6 +16,10 @@ select {
     height: auto;
 }
 
+.nested.cart {
+    height: auto;
+}
+
 .cart .item {
     width: 100%;
     display: flex;
@@ -34,7 +38,7 @@ select {
     background: var(--hoverColor);
     margin-bottom: 10px;
     position: relative;
-    height: 160px;
+    height: auto;
 }
 
 .browser h4 {
@@ -45,7 +49,7 @@ select {
     flex-wrap: nowrap;
 }
 
-.nested.imageFront {
+.order .read.nested.imageFront {
     height: 100%;
     width: 25% !important;
     position: absolute;
@@ -60,7 +64,7 @@ select {
     padding-left: var(--padding) !important;
 }
 
-.nested.color {
+.order .nested.color {
     margin-left: 25% !important;
 }
 
@@ -68,7 +72,7 @@ select {
     width: auto;
 }
 
-.nested.design {
+.order .nested.design {
     width: 70% !important;
     flex-wrap: nowrap;
     padding-left: var(--padding) !important;
@@ -86,4 +90,18 @@ select {
 
 .messages .nested p, .messages .nested.date, .messages .nested.message, .messages .nested.from {
     width: auto;
+}
+
+/* for screens under 1000 px */
+@media screen and (max-width: 1000px) {
+    .nested.price, .nested.color, .nested.size, .nested.amount, .nested.stock, .order .nested.design, .order .nested.color {
+        width: 100% !important;
+        margin-left: 0 !important;
+    }
+
+    .nested.imageFront {
+        position: relative !important;
+        width: 100% !important;
+        height: 125px;
+    }
 }
