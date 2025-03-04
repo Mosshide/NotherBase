@@ -22,7 +22,7 @@ export default async function (req, user) {
     else if (query.chapter !== null) {
         return req.globals.nkjvBible.books[query.book].chapters[query.chapter];
     }
-    else {
+    else if (query.book !== null) {
         return req.globals.nkjvBible.books[query.book];
     }
 }

@@ -120,6 +120,12 @@
                         multiple: true
                     }, [
                         new NBField({
+                            name: "imageFront",
+                            // label: "Front Image: ",
+                            placeholder: "No image",
+                            type: "image"
+                        }),
+                        new NBField({
                             name: "design",
                             label: "Design: ",
                             placeholder: "No Design",
@@ -142,6 +148,12 @@
                             label: "Amount: ",
                             placeholder: "0",
                             type: "number"
+                        }),
+                        new NBField({
+                            name: "price",
+                            label: "Price Each: ",
+                            placeholder: "0",
+                            type: "number"
                         })
                     ]),
                     new NBField({
@@ -152,17 +164,24 @@
                         readOnly: true
                     }, [
                         new NBField({
-                            name: "message",
-                            label: "Message: ",
-                            placeholder: "No Message",
-                            type: "string",
-                            readOnly: true
-                        }),
-                        new NBField({
                             name: "date",
                             label: "Date: ",
                             placeholder: "No Date",
                             type: "date-time",
+                            readOnly: true
+                        }),
+                        new NBField({
+                            name: "from",
+                            label: "From: ",
+                            placeholder: "No Origin",
+                            type: "string",
+                            readOnly: true
+                        }),
+                        new NBField({
+                            name: "message",
+                            label: "Message: ",
+                            placeholder: "No Message",
+                            type: "string",
                             readOnly: true
                         })
                     ]),
@@ -190,6 +209,8 @@
                             item.design = shirt.memory.data.design;
                             item.color = shirt.memory.data.color;
                             item.size = shirt.memory.data.size;
+                            item.imageFront = shirt.memory.data.imageFront;
+                            item.price = shirt.memory.data.price;
                         }
                     });
                     else res.memory.data.cart = [{ design: "No Design", color: "No Color", size: "No Size", amount: 0 }];
@@ -443,6 +464,12 @@
                             multiple: true
                         }, [
                             new NBField({
+                                name: "imageFront",
+                                // label: "Front Image: ",
+                                placeholder: "/img/shirts/antique_sapphire.jpg",
+                                type: "image"
+                            }),
+                            new NBField({
                                 name: "design",
                                 label: "Design: ",
                                 placeholder: "No Design",
@@ -465,6 +492,12 @@
                                 label: "Amount: ",
                                 placeholder: "0",
                                 type: "number"
+                            }),
+                            new NBField({
+                                name: "price",
+                                label: "Price Each: ",
+                                placeholder: "0",
+                                type: "number"
                             })
                         ]),
                         new NBField({
@@ -475,17 +508,24 @@
                             readOnly: true
                         }, [
                             new NBField({
-                                name: "message",
-                                label: "Message: ",
-                                placeholder: "No Message",
-                                type: "string",
-                                readOnly: true
-                            }),
-                            new NBField({
                                 name: "date",
                                 label: "Date: ",
                                 placeholder: "No Date",
                                 type: "date-time",
+                                readOnly: true
+                            }),
+                            new NBField({
+                                name: "from",
+                                label: "From: ",
+                                placeholder: "No Origin",
+                                type: "string",
+                                readOnly: true
+                            }),
+                            new NBField({
+                                name: "message",
+                                label: "Message: ",
+                                placeholder: "No Message",
+                                type: "string",
                                 readOnly: true
                             })
                         ]),
@@ -522,6 +562,8 @@
                                     item.design = shirt.memory.data.design;
                                     item.color = shirt.memory.data.color;
                                     item.size = shirt.memory.data.size;
+                                    item.imageFront = shirt.memory.data.imageFront;
+                                    item.price = shirt.memory.data.price;
                                 }
                             });
                             else order.memory.data.cart = [{ design: "No Design", color: "No Color", size: "No Size", amount: 0 }];
