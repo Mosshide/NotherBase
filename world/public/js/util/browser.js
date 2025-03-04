@@ -54,7 +54,7 @@ class ViewBox extends Element {
             if (item !== null) item = [item];
             else item = [];
         }
-        if (item.length == 0 && !this.fields.settings.lockLength) item.push(null);
+        if (this.editing && item.length == 0) item.push(null);
         for (let i = 0; i < item.length; i++) {
             this.createChild(item[i], i);
         } 
@@ -120,29 +120,33 @@ class ViewBox extends Element {
                         child.setValue(item);
                         break;
                     case "date-time":
-                        if (item) item = new Date(item);
-        
                         child = new Input("datetime-local", {
                             defaultClasses: `${this.fields.settings.name}`,
                             placeholder: this.fields.settings.placeholder, 
                             hidden: this.fields.settings.hidden 
                         });
-                        child.setValue(item);
+
+                        if (item) {
+                            item = new Date(item);
+                            child.setValue(item);
+                        }
+
                         break;
                     case "date":
-                        if (item) {
-                            let d = new Date(item);
-                            let day = ("0" + d.getDate()).slice(-2);
-                            let month = ("0" + (d.getMonth() + 1)).slice(-2);
-                            item = `${d.getFullYear()}-${month}-${day}`;
-                        }
-            
                         child = new Input("date", {
                             defaultClasses: `${this.fields.settings.name}`,
                             placeholder: this.fields.settings.placeholder, 
                             hidden: this.fields.settings.hidden 
                         });
-                        child.setValue(item);
+
+                        if (item) {
+                            let d = new Date(item);
+                            let day = ("0" + d.getDate()).slice(-2);
+                            let month = ("0" + (d.getMonth() + 1)).slice(-2);
+                            item = `${d.getFullYear()}-${month}-${day}`;
+                            child.setValue(item);
+                        }
+                        
                         break;
                     case "time":
                         if (item) {
@@ -177,7 +181,7 @@ class ViewBox extends Element {
                         break;
                 }
             }
-            else {
+            else {                
                 switch (this.fields.settings.type) {
                     case "image":
                         child = new Element("img", { defaultClasses: `image ${this.fields.settings.name}`, hidden: this.fields.settings.hidden });
@@ -200,7 +204,8 @@ class ViewBox extends Element {
                         break;
                     case "date-time":
                         child = new Text("p", { defaultClasses: `date-time ${this.fields.settings.name}`, hidden: this.fields.settings.hidden  });
-                        child.setValue((new Date(item)).toLocaleString());
+                        if (item) child.setValue((new Date(item)).toLocaleString());
+                        else child.setValue(this.fields.settings.placeholder);
                         break;
                     case "date":
                         child = new Text("p", { defaultClasses: `date ${this.fields.settings.name}`, hidden: this.fields.settings.hidden  });
@@ -365,6 +370,7 @@ class Browser extends Element {
         this.box = null;
         this.usingBackup = -1;
         
+        if (serving.showID) this.shownID = this.addChild(new Text("p", { defaultClasses: "id", placeholder: "ID: none" }));
         this.buttons = this.addChild(new Buttons({ id: "browser-ui" }));
         this.buttons.addButton(new Button("edit", (e, self) => { this.edit(); }, { placeholder: "Edit" }));
         this.buttons.addButton(new Button("save", (e, self) => { this.save(); }, { placeholder: "Save" }));
@@ -427,12 +433,13 @@ class Browser extends Element {
         this.usingBackup = -1;
 
         this.cancelDelete();
-
+        
+        if (serving.showID) this.shownID.setValue(`ID: ${this.serving.data[this.serving.selected]._id}`);
         if (this.box) this.box.close();
         this.box = this.addChild(new ViewBox({ label: this.serving.fields.label }));
         this.box.setValue(this.serving.data[this.serving.selected], this.serving.fields, false);
 
-        this.buttons.showButton("close");
+        if (serving.multiple) this.buttons.showButton("close");
         this.buttons.hideButton("save");
         this.buttons.hideButton("cancel");
         this.buttons.hideButton("undo");
@@ -454,7 +461,7 @@ class Browser extends Element {
         this.box.setValue(itemOverride ? itemOverride : null, this.serving.fields, true);
 
         this.buttons.hideButton("edit");
-        this.buttons.showButton("close");
+        this.buttons.hideButton("close");
         this.buttons.showButton("save");
         this.buttons.showButton("cancel");
         this.buttons.hideButton("delete");
@@ -609,13 +616,14 @@ class TreeBrowser extends Browser {
 
         this.cancelDelete();
 
+        if (serving.showID) this.shownID.setValue(`ID: ${this.serving.data[this.serving.selected]._id}`);
         if (this.box) this.box.close();
         this.box = this.addChild(new ViewBox());
 
         let item = this.getItemNode();
         this.box.setValue(item.data, this.serving.fields, false);
 
-        this.buttons.showButton("close");
+        if (serving.multiple) this.buttons.showButton("close");
         this.buttons.showButton("view");
         if (this.serving.itemLocation.length > 1) this.buttons.showButton("up");
         else this.buttons.hideButton("up");
@@ -1036,6 +1044,8 @@ class MetaBrowser extends Container {
             loadedData: [],
             fields: new NBField(),
             editable: true,
+            multiple: false,
+            showID: false,
             max: -1,
             enableBackups: true,
             toLoad: null, //async () => { return null; },
@@ -1064,7 +1074,10 @@ class MetaBrowser extends Container {
             if (!Array.isArray(serving.loadedData)) serving.loadedData = [serving.loadedData];
             serving.data = [];
             for (let i = 0; i < serving.loadedData.length; i++) {
-                serving.data.push(structuredClone(serving.loadedData[i].memory.data));
+                serving.data.push({
+                    ...structuredClone(serving.loadedData[i].memory.data),
+                    _id: serving.loadedData[i].memory._id
+                });
             }
             if (select) this.selectService(service);
         });
@@ -1135,5 +1148,20 @@ class MetaBrowser extends Container {
             this.browser.read(this.serving);
             element.addChild(this.browser);
         }      
+        else if (this.serving.state == "search") {
+            if (!this.serving.multiple) {
+                if (this.browser) {
+                    this.browser.close();
+                }
+                this.serving.selected = 0;
+                this.serving.state = "read";
+                let element = this.searchBox.list.children[0];
+                element.disable();
+                this.disabledElement = element;
+                this.makeBrowser();
+                this.browser.read(this.serving);
+                element.addChild(this.browser);
+            }
+        }
     }  
 }
