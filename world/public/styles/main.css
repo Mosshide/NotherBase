@@ -767,6 +767,7 @@ iframe {
     max-width: 70%;
 }
 
+/* for screens smaller than 1000px */
 @media screen and (max-width: 1000px) {
     .float-elements {
         display: none;
@@ -779,14 +780,25 @@ iframe {
     .float-board {
         display: none;
     }
+
+    .hud {
+        flex-wrap: wrap;
+    }
+    
+    .hud>.left, .hud>.right {
+        max-width: 100%;
+        /* width: 100%; */
+    }
 }
 
+/* for screens smaller than 570px */
 @media screen and (max-width: 570px) {
     footer .view-toggle {
         display: none;
     }
 }
 
+/* for screens larger than 570px */
 @media screen and (min-width: 570px) {
     main.full-view {
         flex-direction: column;

@@ -1059,9 +1059,9 @@ class MetaBrowser extends Container {
 
         let keys = Object.keys(this.services);
         if (keys.length < 2) {
-            this.load(service);
             this.buttons.hideButton(this.selectedService);
             this.searchBox.setItems([], null);
+            this.load(service);
         }
         else this.load(service, false);
     }
