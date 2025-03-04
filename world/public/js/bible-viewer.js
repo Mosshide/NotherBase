@@ -7,13 +7,15 @@ class BibleViewer extends Container {
             initialBook: "Genesis",
             initialChapter: 1,
             initialVerse: null,
+            initialVerseEnd: null,
             ...settings
         });
         
         this.location = {
             book: "Genesis",
             chapter: 0,
-            verse: null
+            verse: null,
+            verseEnd: null
         };
         this.newLocation = {
             ...this.location
@@ -336,12 +338,13 @@ class BibleViewer extends Container {
         this.openTo({
             book: this.settings.initialBook,
             chapter: this.settings.initialChapter != null ? this.settings.initialChapter - 1 : null,
-            verse: this.settings.initialVerse != null ? this.settings.initialVerse - 1 : null
+            verse: this.settings.initialVerse != null ? this.settings.initialVerse - 1 : null,
+            verseEnd: this.settings.initialVerseEnd != null ? this.settings.initialVerseEnd - 1 : null
         });
 
         this.settings.defaultClasses = "bible-viewer";
         this.$div = super.render(`.bible-viewer${this.settings.id ? `#${this.settings.id}` : ""}`);
-
+        
         return this.$div;
     }
 
@@ -398,13 +401,12 @@ class BibleViewer extends Container {
             ...outLocation,
             route: "/global"
         });
-
-        let text = `${this.location.book} ${this.location.chapter + 1}${this.location.verse ? `:${this.location.verse + 1}` : ""} <br />`;
-        if (res.data.verses) {
-            for (let i = 0; i < res.data.verses.length; i++) {
-                text += `${i + 1}: `;
-                text += res.data.verses[i].text;
-                text += '<br /><br />';
+        
+        let text = `${this.location.book} ${this.location.chapter + 1}${this.location.verse != null ? `:${this.location.verse + 1}` : ""}${this.location.verseEnd != null ? `-${this.location.verseEnd}` : ""}<br />`;
+        if (Array.isArray(res.data)) {
+            for (let i = 0; i < res.data.length; i++) {
+                text += res.data[i].text;
+                text += '  ';
             }
         }
         else text += res.data.text;
@@ -415,6 +417,6 @@ class BibleViewer extends Container {
         this.newLocation.chapter = this.location.chapter;
         this.chapterSelect.setValue((this.location.chapter + 1).toString());
 
-        this.$div.find("h4").text(`${this.location.book} ${this.location.chapter + 1}${this.location.verse ? `:${this.location.verse + 1}` : ""}`);
+        this.$div.find("h4").text(`${this.location.book} ${this.location.chapter + 1}${this.location.verse != null ? `:${this.location.verse + 1}` : ""}${this.location.verseEnd != null ? `-${this.location.verseEnd}` : ""}`);
     }
 }

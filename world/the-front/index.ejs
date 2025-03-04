@@ -1,6 +1,4 @@
-<link rel="stylesheet" href="/styles/stream.css">
 <style>
-    <%- include("./styles/the-front.css"); %>
     <%- include("./index.css"); %>
 </style>
 
@@ -31,54 +29,13 @@
     </div>
 </div>
 
+<hr>
 
+<div class="bible-viewer" id="a"></div>
 
-<!-- <div class="line">
-    <h4>Apply Here To Exist:</h4>
-    <ul>
-        <li>
-            <img src="/img/npcs/humphrey.png">
-            <p>Humphrey</p>
-        </li>
-        <li>
-            <img src="/img/npcs/sleepe.png">
-            <p>Sleepe</p>
-        </li>
-        <li>
-            <img src="/img/npcs/crictic.png">
-            <p>Crictic</p>
-        </li>
-        <li>
-            <img src="/img/npcs/steve.png">
-            <p>Steve</p>
-        </li>
-        <li>
-            <img src="/img/npcs/vetcul.png">
-            <p>Vetcul</p>
-        </li>
-    </ul>
-    <h5>This Line For NPCs Only!</h5>
-</div>
+<div class="bible-viewer" id="another"></div>
 
-<div class="toys">
-    <div class="toy">
-        <img src="/img/misc/pac.png" id="pac" draggable="false">
-    </div>
-    
-    <div class="toy">
-        <img src="/img/misc/pac.png" id="pac2" draggable="false">
-    </div>
-    
-    <div class="toy">
-        <img src="/img/misc/pac.png" id="pac3" draggable="false">
-    </div>
-    
-    <div class="toy">
-        <img src="/img/misc/pac.png" id="pac4" draggable="false">
-    </div>
-</div>
-
-<div class="dialogue" id="unkiel"></div> -->
+<div class="bible-viewer" id="last"></div>
 
 <hr>
 
@@ -88,67 +45,152 @@
     Approach the Shack
 </a>
 
-<a class="to gate" href="/the-front/gate">
-    Approach the Gate
+<a class="to gate" href="/the-front/around">
+    Try to go Around
 </a>
 
-<div class="ground" id="lawn"></div>
+<a class="to nother-base" href="/forest/eye/filter/house">
+    Enter NotherBase
+</a>
 
-<script src="/js/dialogue.js"></script>
-<script src="/js/chat-box.js"></script>
-<script src="/js/util/weather.js"></script>
-<script src="/js/entity.js"></script>
-<script src="/js/plants/part.js"></script>
-<script src="/js/plants/lawn.js"></script>
+<script src="/js/util/element.js"></script>
+<script src="/js/util/buttons.js"></script>
+<script src="/js/bible-viewer.js"></script>
 <script>
-    // const weather = new WeatherSystem("random");
-
     let color = 0;
     let brightness = 15;
 
     $(".logo").on("click", function () {
-        color += 2;
-        if (color > 255) color = 0;
+        // color += 2;
+        // if (color > 255) color = 0;
 
-        brightness += 2;
-        if (brightness > 255) brightness = 255;
+        // brightness += 2;
+        // if (brightness > 255) brightness = 255;
 
-        $("footer").css("background-color", `rgb(
-                ${brightness * (color) / 255}, 
-                ${brightness * (color % 2) / 255}, 
-                ${brightness * (255 - color) / 255}
-            )`
-        );
+        // $("footer").css("background-color", `rgb(
+        //         ${brightness * (color) / 255}, 
+        //         ${brightness * (color % 2) / 255}, 
+        //         ${brightness * (255 - color) / 255}
+        //     )`
+        // );
     });
 
-    // let lastAngle = 0;
-    // let $pac = $("#pac");
-    // let $pac2 = $("#pac2");
-    // let $pac3 = $("#pac3");
-    // let $pac4 = $("#pac4");
+    const gospelExcerpts = [
+        {
+            book: "Matthew",
+            chapter: 24,
+            verse: 14
+        },
+        {
+            book: "Mark",
+            chapter: 16,
+            verse: 15
+        },
+        {
+            book: "Psalm",
+            chapter: 96,
+            verse: 3
+        },
+        {
+            book: "Psalm",
+            chapter: 132,
+            verse: 13,
+            verseEnd: 14
+        },
+        {
+            book: "1 Corinthians",
+            chapter: 2,
+            verse: 6,
+            verseEnd: 8
+        },
+        {
+            book: "Colossians",
+            chapter: 2,
+            verse: 13,
+            verseEnd: 14
+        }
+    ];
 
-    // let rotate = function rotate(e) {
-    //     lastAngle += 90;
-    //     $pac.css("transform", `rotate(${lastAngle}deg)`);
-    //     $pac2.css("transform", `rotate(${lastAngle + 90}deg)`);
-    //     $pac3.css("transform", `rotate(${lastAngle + 180}deg)`);
-    //     $pac4.css("transform", `rotate(${lastAngle + 270}deg)`);
-    // }
+    const loveExcerpts = [
+        {
+            book: "John",
+            chapter: 3,
+            verse: 16
+        },
+        {
+            book: "John",
+            chapter: 15,
+            verse: 12
+        },
+        {
+            book: "Galatians",
+            chapter: 5,
+            verse: 13
+        },
+        {
+            book: "Matthew",
+            chapter: 6,
+            verse: 25
+        }
+    ];
 
-    // $("#pac").click(rotate);
-    // $("#pac2").click(rotate);
-    // $("#pac3").click(rotate);
-    // $("#pac4").click(rotate);
+    const doctrineExcerpts = [
+        {
+            book: "Hebrews",
+            chapter: 13,
+            verse: 16
+        },
+        {
+            book: "Matthew",
+            chapter: 5,
+            verse: 16
+        },
+        {
+            book: "Ephesians",
+            chapter: 2,
+            verse: 10
+        },
+        {
+            book: "Hebrews",
+            chapter: 10,
+            verse: 24,
+            verseEnd: 25
+        }
+    ];
 
+    let gospelIndex = Math.floor(Math.random() * gospelExcerpts.length);
+    const aBibleViewer = new BibleViewer({
+        header: "",
+        showUI: false,
+        initialBook: gospelExcerpts[gospelIndex].book,
+        initialChapter: gospelExcerpts[gospelIndex].chapter,
+        initialVerse: gospelExcerpts[gospelIndex].verse,
+        initialVerseEnd: gospelExcerpts[gospelIndex].verseEnd,
+        id: "a"
+    });
+    aBibleViewer.render();
 
-    // let unkielTree = function () {
-    //     return [
-    //         Dialogue.textSlide("Woah..."),
-    //         Dialogue.textSlide("I exist now."),
-    //         Dialogue.textSlide("Crazy.")
-    //     ];
-    // };
-    // let unkielDialogue = new Dialogue("unkiel", 3500, unkielTree, "/img/npcs/unkiel.png");
+    let loveIndex = Math.floor(Math.random() * loveExcerpts.length);
+    const anotherBibleViewer = new BibleViewer({
+        header: "",
+        showUI: false,
+        initialBook: loveExcerpts[loveIndex].book,
+        initialChapter: loveExcerpts[loveIndex].chapter,
+        initialVerse: loveExcerpts[loveIndex].verse,
+        initialVerseEnd: loveExcerpts[loveIndex].verseEnd,
+        id: "another"
+    });
+    anotherBibleViewer.render();
 
-    const lawn = new Lawn();
+    let doctrineIndex = Math.floor(Math.random() * doctrineExcerpts.length);
+    const lastBibleViewer = new BibleViewer({
+        header: "",
+        showUI: false,
+        initialBook: doctrineExcerpts[doctrineIndex].book,
+        initialChapter: doctrineExcerpts[doctrineIndex].chapter,
+        initialVerse: doctrineExcerpts[doctrineIndex].verse,
+        initialVerseEnd: doctrineExcerpts[doctrineIndex].verseEnd,
+        id: "last"
+    });
+    lastBibleViewer.render();
 </script>

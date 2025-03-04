@@ -1,6 +1,6 @@
 class FlowerBed extends Ground {
-    constructor(flowerSeed = [], maxFlowers = 10) {
-        super($(".ground"));
+    constructor(flowerSeed = [], maxFlowers = 10, id = "") {
+        super($(`.ground${id ? `#${id}` : ""}`));
         this.maxFlowers = maxFlowers;
         this.flowerSeed = flowerSeed;
     }
