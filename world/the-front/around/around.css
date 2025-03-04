@@ -61,7 +61,7 @@
 
 .grass {
     width: 100%;
-    background-color: rgb(38, 73, 53);
+    background-color: rgb(137, 184, 158);
     aspect-ratio: 1 / 1;
     position: relative;
 }
@@ -75,7 +75,7 @@
 
 .path {
     width: 100%;
-    border: 25px solid rgb(83, 68, 35);
+    border: 5px solid rgb(73, 67, 54);
     margin: 0;
 }
 
@@ -91,4 +91,24 @@
 
 .topLeaf, .rightLeaf, .bottomLeaf, .leftLeaf {
     border-radius: 50% 50% 0 0;
+}
+
+#left-area {
+    position: absolute;
+    left: 1%;
+    top: 1%;
+    width: 33%;
+    height: 98%;
+    background: none;
+    margin: 0;
+}
+
+#right-area {
+    position: absolute;
+    right: 1%;
+    top: 64%;
+    width: 60%;
+    height: 36%;
+    background: none;
+    margin: 0;
 }

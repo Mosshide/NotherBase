@@ -14,7 +14,7 @@
     background: var(--gateColor);
     margin: 30px;
     color: white;
-    font-size: 15vh;
+    font-size: 150px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -42,7 +42,7 @@
 
 .sign .default, .sign .about {
     width: 100%;
-    height: 100%;
+    height: auto;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -153,4 +153,10 @@ h2, h3 {
 
 .hud>.right {
     width: 60%;
+}
+
+.bible-viewer {
+    height: auto;
+    width: 100%;
+    padding: var(--thickPadding);
 }

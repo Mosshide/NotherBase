@@ -1,6 +1,5 @@
 <link rel="stylesheet" href="/styles/pond.css">
 <style>
-    <%- include("../styles/the-front.css"); %>
     <%- include("./around.css"); %>
 </style>
 
@@ -44,39 +43,29 @@
         <div class="bar"></div>
         <div class="bar"></div>
     </div>
-    <div class="grass ground"></div>
+    <div class="grass ground" id="under-fence"></div>
 </div>
 
 <hr class="path">
 
-<div class="chat-box" id="the-front-park-bench"></div>
-
 <div class="grass">
+    <div class="ground" id="left-area"></div>
     <div class="pond"></div>
+    <div class="ground" id="right-area"></div>
 </div>
-
 
 <hr>
 
-<a class="return" href="/the-front/gate">
+<a class="return" href="/">
     Return to the Gate
 </a>
 
 <script src="/js/entity.js"></script>
 <script src="/js/chat-box.js"></script>
 <script src="/js/pond.js"></script>
-<script src="/js/util/weather.js"></script>
 <script src="/js/plants/part.js"></script>
 <script src="/js/plants/flower-bed.js"></script>
 <script>
-    // const weather = new WeatherSystem("random");
-    
-    <% if (user) { %>
-        let chat = new ChatBox("<%= user.memory.data.username %>", "the-front-park-bench");
-    <% } else { %>
-        let chat = new ChatBox("An Unknown Person", "the-front-park-bench");
-    <% } %>
-
     const pond = new Pond(5);
 
     const sunflowerSeed = {
@@ -183,5 +172,7 @@
             recursionMax: 2
         }
     };
-    const flowerBed = new FlowerBed([sunflowerSeed]);
+    const flowerBed = new FlowerBed([sunflowerSeed], 5, "under-fence");
+    const flowerBed2 = new FlowerBed([sunflowerSeed], 5, "left-area");
+    const flowerBed3 = new FlowerBed([sunflowerSeed], 5, "right-area");
 </script>
