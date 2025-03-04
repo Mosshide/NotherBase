@@ -218,7 +218,7 @@
                 if (!amount || amount < 1) {
                     alert("Please enter a valid amount to add to cart.");
                 }
-                else if (inventory.reduceStock(id, amount)) {
+                else {
                     this.items[id] = this.items[id] ? this.items[id] + amount : amount;
                     if (this.renderItems[id]) {
                         this.renderItems[id].content.setValue(`${shirt.memory.data.design} - ${shirt.memory.data.color} - ${shirt.memory.data.size} - ${this.items[id]}`);
@@ -238,9 +238,6 @@
                         }));
                         this.renderItems[id].removeButton = this.renderItems[id].addChild(new Button("remove", () => { this.removeItem(id); }, { placeholder: "Remove" }));
                     }
-                }
-                else {
-                    alert("Not enough stock! Reduce the amount to add to cart.");
                 }
             }
 
@@ -329,58 +326,7 @@
                         this.color.setOptions(designs[this.design.getValue()]);
                         this.shirtImg.settings.src = this.items.find(item => item.memory.data.design === this.design.getValue() && item.memory.data.color === this.color.getValue()).memory.data.imageFront;
                         this.shirtImg.initModifiers();
-                        // let shirt = this.items.find(item => item.memory.data.design === this.design.getValue() && item.memory.data.color === this.color.getValue() && item.memory.data.size === this.size.getValue());
-                        // if (shirt) {
-                        //     this.stock.setValue(`${shirt.memory.data.stock > 0 ? "In Stock!" : "Out of Stock!"}`);
-                        // }
-                        // else {
-                        //     this.stock.setValue("Out of Stock!");
-                        // }
                     });
-                    this.color.enable(() => {
-                        // let shirt = this.items.find(item => item.memory.data.design === this.design.getValue() && item.memory.data.color === this.color.getValue() && item.memory.data.size === this.size.getValue());
-                        // if (shirt) {
-                        //     this.stock.setValue(`${shirt.memory.data.stock > 0 ? "In Stock!" : "Out of Stock!"}`);
-                        // }
-                        // else {
-                        //     this.stock.setValue("Out of Stock!");
-                        // }
-                    });
-                    this.size.enable(() => {
-                        // let shirt = this.items.find(item => item.memory.data.design === this.design.getValue() && item.memory.data.color === this.color.getValue() && item.memory.data.size === this.size.getValue());
-                        // if (shirt) {
-                        //     this.stock.setValue(`${shirt.memory.data.stock > 0 ? "In Stock!" : "Out of Stock!"}`);
-                        // }
-                        // else {
-                        //     this.stock.setValue("Out of Stock!");
-                        // }
-                    });
-    
-                    // let shirt = this.items[0];
-                    // if (shirt) {
-                    //     this.stock.setValue(`${shirt.memory.data.stock > 0 ? "In Stock!" : "Out of Stock!"}`);
-                    // }
-                    // else {
-                    //     this.stock.setValue("Out of Stock!");
-                    // }
-                }
-            }
-        
-            reduceStock(id, amount) {
-                let shirt = this.items.find(item => item.memory._id === id);
-                if (shirt) {
-                    shirt.memory.data.stock -= amount;
-                    this.stock.setValue(`${shirt.memory.data.stock > 0 ? "In Stock!" : "Out of Stock!"}`);
-                    return true;
-                }
-
-                return false;
-            }
-
-            increaseStock(id, amount) {
-                let shirt = this.items.find(item => item.id === id);
-                if (shirt) {
-                    shirt.memory.data.stock += amount;
                 }
             }
         }
