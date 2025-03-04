@@ -4,293 +4,83 @@
 
 <h1>Nother Shirts</h1>
 
-<div class="meta" id="orders"></div>
-<div class="meta" id="inventory"></div>
+<% if (query.o) { %>
+    <h5>Your Order ID: <%= query.o %></h5>
+    <p>Thank you for your order! Bookmark this page or save your order ID. Return to this page for updates on your order.</p>
+    <div class="meta" id="order"></div>
+    <a href="/shirts">Return to Shirt Ordering</a>
+<% } else { %>
+    <div class="meta" id="orders"></div>
+    <div class="meta" id="inventory"></div>
+    
+    <section class="inventory hud"></section>
+    
+    <h2>Cart</h2>
+    <section class="cart"></section>
+    
+    <h2>Your Info</h2>
+    <section class="info">
+        <p>Fields marked with * are required to be filled out.</p>
+        <label>
+            Name*: 
+            <input type="text" placeholder="Name" id="name">
+        </label>
+        <label>
+            Location for Delivery*:
+            <input type="text" placeholder="Location or address" id="location">
+        </label>
+        <label>
+            Email:
+            <input type="text" placeholder="Email" id="email">
+        </label>
+        <label>
+            Payment Method:
+            <select id="payment">
+                <option value="cash">Cash</option>
+                <option value="card">Card</option>
+            </select>
+        </label>
+        <label>
+            Order Notes:
+            <textarea id="notes" placeholder="Notes"></textarea>
+        </label>
+        <button id="submit">Submit Order</button>
+        <p class="alert"></p>
+    </section>
 
-<section class="inventory hud"></section>
-
-<h2>Cart</h2>
-<section class="cart"></section>
-
-<h2>Your Info</h2>
-<section class="info">
-    <p>Fields marked with * are required to be filled out.</p>
-    <label>
-        Name*: 
-        <input type="text" placeholder="Name" id="name">
-    </label>
-    <label>
-        Location for Delivery*:
-        <input type="text" placeholder="Location or address" id="location">
-    </label>
-    <label>
-        Email*:
-        <input type="text" placeholder="Email" id="email">
-    </label>
-    <label>
-        Payment Method:
-        <select id="payment">
-            <option value="cash">Cash</option>
-            <option value="card">Card</option>
-        </select>
-    </label>
-    <label>
-        Order Notes:
-        <textarea id="notes" placeholder="Notes"></textarea>
-    </label>
-    <button id="submit">Submit Order</button>
-</section>
+    <h2>Look Up Order</h2>
+    <section class="lookup">
+        <label>
+            Order ID:
+            <input type="text" placeholder="Order ID" id="orderID">
+        </label>
+        <button id="lookup">Look Up Order</button>
+    </section>
+<% } %>
 
 <script src="/js/util/element.js"></script>
 <script src="/js/util/buttons.js"></script>
 <script src="/js/util/search-box.js"></script>
 <script src="/js/util/browser.js"></script>
 <script>
-    // a class called "cart" to store the cart items that extends the container class
-    class Cart extends Container {
-        constructor() {
-            super({
-                defaultClasses: "cart"
+    <% if (query.o) { %>
+        const orderID = "<%= query.o %>";
+        const inventory = {
+            items: []
+        };
+
+        base.loadAll("shirt-inventory", "global").then((res) => {
+            inventory.items = res;
+
+            const metaOrder = new MetaBrowser({
+                header: "Your Order",
+                id: "order"
             });
-            this.items = {};
-            this.renderItems = {};
-        }
-
-        // a method called "addItem" to add an item to the cart
-        addItem(shirt, amount) {
-            let id = shirt.memory._id;
-            if (!amount || amount < 1) {
-                alert("Please enter a valid amount to add to cart.");
-            }
-            else if (inventory.reduceStock(id, amount)) {
-                this.items[id] = this.items[id] ? this.items[id] + amount : amount;
-                if (this.renderItems[id]) {
-                    this.renderItems[id].content.setValue(`${shirt.memory.data.design} - ${shirt.memory.data.color} - ${shirt.memory.data.size} - ${this.items[id]}`);
-                    this.renderItems[id].image.src = shirt.memory.data.imageFront;
-                    this.renderItems[id].image.initModifiers();
-                }
-                else {
-                    this.renderItems[id] = this.addChild(new Element("div", {
-                        defaultClasses: "item"
-                    }));
-                    this.renderItems[id].image = this.renderItems[id].addChild(new Element("img", {
-                        src: shirt.memory.data.imageFront,
-                        defaultClasses: "shirt"
-                    }));
-                    this.renderItems[id].content = this.renderItems[id].addChild(new Text("p", {
-                        placeholder: `${shirt.memory.data.design} - ${shirt.memory.data.color} - ${shirt.memory.data.size} - ${amount}`
-                    }));
-                    this.renderItems[id].removeButton = this.renderItems[id].addChild(new Button("remove", () => { this.removeItem(id); }, { placeholder: "Remove" }));
-                }
-            }
-            else {
-                alert("Not enough stock! Reduce the amount to add to cart.");
-            }
-        }
-
-        // a method called "removeItem" to remove an item from the cart
-        removeItem(id) {
-            inventory.increaseStock(id, this.items[id]);
-            delete this.items[id];
-            this.renderItems[id].close();
-        }
-    }
-    let cart = new Cart();
-
-    // a class called "Inventory" to store the inventory items that extends the container class
-    class Inventory extends Container {
-        constructor() {
-            super({
-                defaultClasses: "inventory hud"
-            });
-            this.items = [];
-
-            this.shirtImg = this.addChild(new Element("img", {
-                src: "/img/shirts/antique_sapphire.jpg",
-                defaultClasses: "left design shirt"
-            }));            
-            this.righthud = this.addChild(new Element("div", {
-                defaultClasses: "right"
-            }));
-            this.header = this.righthud.addChild(new Text("h2", {
-                value: "Inventory"
-            }));
-            this.design = this.righthud.addChild(new Select({
-                id: "design",
-                options: [
-                    "Loading..."
-                ]
-            }));
-            this.color = this.righthud.addChild(new Select({
-                id: "color",
-                options: [
-                    "Loading..."
-                ]
-            }));
-            this.size = this.righthud.addChild(new Select({
-                id: "size",
-                options: [
-                    "Loading..."
-                ]
-            }));
-            this.amount = this.righthud.addChild(new Input("number", {
-                placeholder: "0",
-                header: "Amount: "
-            }));
-            this.stock = this.righthud.addChild(new Text("p", {
-                defaultClasses: "stock",
-                placeholder: "Out of Stock!"
-            }));
-            this.add = this.righthud.addChild(new Button("add", () => {              
-                let shirt = this.items.find(item => item.memory.data.design === this.design.getValue() && item.memory.data.color === this.color.getValue() && item.memory.data.size === this.size.getValue());
-                if (shirt) {
-                    cart.addItem(shirt, parseInt(this.amount.getValue()));
-                }
-                else {
-                    alert("Shirt not found in inventory!");
-                }
-            },{ placeholder: "Add to Cart" }));
-        }
-
-        // a method called "loadItems" to load the inventory items
-        loadItems(items) {
-            this.items = items;
-            let designs = {};
-            items.forEach(item => {
-                if (!designs[item.memory.data.design]) {
-                    designs[item.memory.data.design] = [];
-                }
-                if (!designs[item.memory.data.design].includes(item.memory.data.color)) designs[item.memory.data.design].push(item.memory.data.color);
-            });
-            this.design.setOptions(Object.keys(designs));
-            this.color.setOptions(designs[items[0].memory.data.design]);
-            this.size.setOptions(["S", "M", "L", "XL", "XXL", "3XL"]);
-            this.shirtImg.settings.src = this.items[0].memory.data.imageFront;
-            this.shirtImg.initModifiers();
-
-            this.design.enable(() => {
-                this.color.setOptions(designs[this.design.getValue()]);
-                this.shirtImg.settings.src = this.items.find(item => item.memory.data.design === this.design.getValue() && item.memory.data.color === this.color.getValue()).memory.data.imageFront;
-                this.shirtImg.initModifiers();
-                let shirt = this.items.find(item => item.memory.data.design === this.design.getValue() && item.memory.data.color === this.color.getValue() && item.memory.data.size === this.size.getValue());
-                if (shirt) {
-                    this.stock.setValue(`${shirt.memory.data.stock > 0 ? "In Stock!" : "Out of Stock!"}`);
-                }
-                else {
-                    this.stock.setValue("Out of Stock!");
-                }
-            });
-            this.color.enable(() => {
-                let shirt = this.items.find(item => item.memory.data.design === this.design.getValue() && item.memory.data.color === this.color.getValue() && item.memory.data.size === this.size.getValue());
-                if (shirt) {
-                    this.stock.setValue(`${shirt.memory.data.stock > 0 ? "In Stock!" : "Out of Stock!"}`);
-                }
-                else {
-                    this.stock.setValue("Out of Stock!");
-                }
-            });
-            this.size.enable(() => {
-                let shirt = this.items.find(item => item.memory.data.design === this.design.getValue() && item.memory.data.color === this.color.getValue() && item.memory.data.size === this.size.getValue());
-                if (shirt) {
-                    this.stock.setValue(`${shirt.memory.data.stock > 0 ? "In Stock!" : "Out of Stock!"}`);
-                }
-                else {
-                    this.stock.setValue("Out of Stock!");
-                }
-            });
-
-            let shirt = this.items[0];
-            if (shirt) {
-                this.stock.setValue(`${shirt.memory.data.stock > 0 ? "In Stock!" : "Out of Stock!"}`);
-            }
-            else {
-                this.stock.setValue("Out of Stock!");
-            }
-        }
-    
-        reduceStock(id, amount) {
-            let shirt = this.items.find(item => item.memory._id === id);
-            if (shirt) {
-                shirt.memory.data.stock -= amount;
-                this.stock.setValue(`${shirt.memory.data.stock > 0 ? "In Stock!" : "Out of Stock!"}`);
-                return true;
-            }
-
-            return false;
-        }
-
-        increaseStock(id, amount) {
-            let shirt = this.items.find(item => item.id === id);
-            if (shirt) {
-                shirt.memory.data.stock += amount;
-            }
-        }
-    }
-    let inventory = new Inventory();
-
-    // Using Jquery, use base to load all "shirt-inventory"
-    base.loadAll("shirt-inventory", "global").then((res) => {
-        // Using Jquery, do the base script "submit-order" when the submit order button is clicked
-        $("#submit").click(async () => {
-            let toGoCart = [];
-            for (let id in cart.items) {
-                toGoCart.push({
-                    id,
-                    amount: cart.items[id]
-                });
-            }
-            let res = await base.do("submit-order", { 
-                route: "/the-front/shirts",
-                name: $("#name").val(),
-                location: $("#location").val(),
-                email: $("#email").val(),
-                payment: $("#payment").find(`option:selected`).text(),
-                notes: $("#notes").val(),
-                cart: toGoCart
-            });
-            
-            if (res.status == "success") {
-                $(".cart").empty();
-                $("#name").val("");
-                $("#location").val("");
-                $("#email").val("");
-                $("#notes").val("");
-                alert("Order Submitted! Please check your email for confirmation.");
-            } else {
-                alert("Order Failed due to an error! Please try again later");
-            }
-        });
-
-        cart.render(".cart");
-        inventory.loadItems(res);
-        inventory.render(".inventory");
-        
-        <% if (user?.memory && user.memory.data.authLevels.includes("SHIRTSAD")) { %>
-            class InventorySearch extends SearchBox {
-                constructor(settings = {}) {
-                    super({
-                        defaultClasses: "search-box inventory-list",
-                        ...settings
-                    });
-                }
-
-                extractLabel = (item) => {
-                    let label = "No Design - No Color - No Size - 0";
-                    label = `${item?.design} - ${item?.color} - ${item?.size} - ${item?.stock}`;
-
-                    return label;
-                }
-            }
-
-            const metaOrders = new MetaBrowser({
-                header: "Orders",
-                id: "orders"
-            });
-            metaOrders.render();
-            metaOrders.addService("shirt-orders", {
+            metaOrder.render();
+            metaOrder.addService("shirt-orders", {
                 fields: new NBField({
                     name: "order",
-                    label: "Order: ",
+                    label: "",
                     placeholder: "No order"
                 }, [
                     new NBField({
@@ -353,125 +143,535 @@
                             placeholder: "0",
                             type: "number"
                         })
-                    ])
+                    ]),
+                    new NBField({
+                        name: "messages",
+                        label: "Messages: ",
+                        placeholder: "No Messages",
+                        multiple: true,
+                        readOnly: true
+                    }, [
+                        new NBField({
+                            name: "message",
+                            label: "Message: ",
+                            placeholder: "No Message",
+                            type: "string",
+                            readOnly: true
+                        }),
+                        new NBField({
+                            name: "date",
+                            label: "Date: ",
+                            placeholder: "No Date",
+                            type: "date-time",
+                            readOnly: true
+                        })
+                    ]),
+                    new NBField({
+                        name: "paid",
+                        label: "Paid: ",
+                        placeholder: false,
+                        type: "boolean"
+                    }),
+                    new NBField({
+                        name: "delivered",
+                        label: "Delivered: ",
+                        placeholder: false,
+                        type: "boolean"
+                    })
                 ]),
                 label: "Orders",
-                editable: true,
-                multiple: true,
+                editable: false,
+                showID: true,
                 toLoad: async () => {
-                    let res = await base.loadAll("shirt-orders", "global");               
-                    // add shirt inventory info to orders by shirt id
-                    res.forEach(order => {
-                        if (Array.isArray(order.memory.data.cart)) order.memory.data.cart.forEach(item => {
-                            let shirt = inventory.items.find(shirt => shirt.memory._id === item.id);
-                            console.log(shirt);
-                            
-                            if (shirt) {
-                                item.design = shirt.memory.data.design;
-                                item.color = shirt.memory.data.color;
-                                item.size = shirt.memory.data.size;
-                            }
-                        });
-                        else order.memory.data.cart = [{ design: "No Design", color: "No Color", size: "No Size", amount: 0 }];
+                    let res = await base.load("shirt-orders", "global", null, orderID);               
+                    if (Array.isArray(res.memory.data.cart)) res.memory.data.cart.forEach(item => {
+                        let shirt = inventory.items.find(shirt => shirt.memory._id === item.id);                            
+                        if (shirt) {
+                            item.design = shirt.memory.data.design;
+                            item.color = shirt.memory.data.color;
+                            item.size = shirt.memory.data.size;
+                        }
                     });
+                    else res.memory.data.cart = [{ design: "No Design", color: "No Color", size: "No Size", amount: 0 }];
                     return res;
                 },
-                toSave: async (item, deleting) => {
-                    let res = await base.do("save-order", { item, deleting, route: "/the-front/shirts" });
-                    return res;
-                }
+                toSave: async (item, deleting) => { return null; }
             });
-    
-            const metaInventory = new MetaBrowser({
-                header: "Inventory",
-                useSearchBox: InventorySearch,
-                id: "inventory"
-            });
-            metaInventory.render();
-            metaInventory.addService("shirt-inventory", {
-                fields: new NBField({
-                    name: "order",
-                    label: "Order: ",
-                    placeholder: "No order"
-                }, [
-                    new NBField({
-                        name: "design",
-                        label: "Design: ",
-                        placeholder: "No Design",
-                        type: "string"
-                    }),
-                    new NBField({
-                        name: "short",
-                        label: "Short Description: ",
-                        placeholder: "No Description",
-                        type: "string"
-                    }),
-                    new NBField({
-                        name: "long",
-                        label: "Long Description: ",
-                        placeholder: "No Description",
-                        type: "string"
-                    }),
-                    
-                    new NBField({
-                        name: "color",
-                        label: "Color: ",
-                        placeholder: "No color",
-                        type: "string"
-                    }),
-                    new NBField({
-                        name: "size",
-                        label: "Size: ",
-                        placeholder: "No size",
-                        type: "string"
-                    }),
-                    new NBField({
-                        name: "price",
-                        label: "Price: ",
-                        placeholder: "0",
-                        type: "number"
-                    }),
-                    new NBField({
-                        name: "stock",
-                        label: "Stock: ",
-                        placeholder: "0",
-                        type: "number"
-                    }),
-                    new NBField({
-                        name: "verse",
-                        label: "Verse: ",
-                        placeholder: "No verse",
-                        type: "string"
-                    }),
-                    new NBField({
-                        name: "imageFront",
-                        label: "Front Image: ",
-                        placeholder: "No image URL",
-                        type: "string"
-                    }),
-                    new NBField({
-                        name: "imageBack",
-                        label: "Back Image: ",
-                        placeholder: "No image URL",
-                        type: "string"
-                    })                
-                ]),
-                label: "Inventory",
-                editable: true,
-                multiple: true,
-                toLoad: async () => {
-                    // let res = await base.loadAll("shirt-inventory", "global");
-                    return inventory.items;
-                    // return res;
-                },
-                toSave: async (item, deleting) => {
-                    let res = await base.do("save-inventory", { item, deleting, route: "/the-front/shirts" });
-                    return res;
-                }
-            });
-    <% } %>
+        });
         
-    });
+    <% } else { %>
+        const $orderAlert = $(".alert");
 
+        // a class called "cart" to store the cart items that extends the container class
+        class Cart extends Container {
+            constructor() {
+                super({
+                    defaultClasses: "cart"
+                });
+                this.items = {};
+                this.renderItems = {};
+            }
+
+            // a method called "addItem" to add an item to the cart
+            addItem(shirt, amount) {
+                let id = shirt.memory._id;
+                if (!amount || amount < 1) {
+                    alert("Please enter a valid amount to add to cart.");
+                }
+                else if (inventory.reduceStock(id, amount)) {
+                    this.items[id] = this.items[id] ? this.items[id] + amount : amount;
+                    if (this.renderItems[id]) {
+                        this.renderItems[id].content.setValue(`${shirt.memory.data.design} - ${shirt.memory.data.color} - ${shirt.memory.data.size} - ${this.items[id]}`);
+                        this.renderItems[id].image.src = shirt.memory.data.imageFront;
+                        this.renderItems[id].image.initModifiers();
+                    }
+                    else {
+                        this.renderItems[id] = this.addChild(new Element("div", {
+                            defaultClasses: "item"
+                        }));
+                        this.renderItems[id].image = this.renderItems[id].addChild(new Element("img", {
+                            src: shirt.memory.data.imageFront,
+                            defaultClasses: "shirt"
+                        }));
+                        this.renderItems[id].content = this.renderItems[id].addChild(new Text("p", {
+                            placeholder: `${shirt.memory.data.design} - ${shirt.memory.data.color} - ${shirt.memory.data.size} - ${amount}`
+                        }));
+                        this.renderItems[id].removeButton = this.renderItems[id].addChild(new Button("remove", () => { this.removeItem(id); }, { placeholder: "Remove" }));
+                    }
+                }
+                else {
+                    alert("Not enough stock! Reduce the amount to add to cart.");
+                }
+            }
+
+            // a method called "removeItem" to remove an item from the cart
+            removeItem(id) {
+                inventory.increaseStock(id, this.items[id]);
+                delete this.items[id];
+                this.renderItems[id].close();
+            }
+        }
+        const cart = new Cart();
+
+        // a class called "Inventory" to store the inventory items that extends the container class
+        class Inventory extends Container {
+            constructor() {
+                super({
+                    defaultClasses: "inventory hud"
+                });
+                this.items = [];
+
+                this.shirtImg = this.addChild(new Element("img", {
+                    src: "/img/shirts/antique_sapphire.jpg",
+                    defaultClasses: "left design shirt"
+                }));            
+                this.righthud = this.addChild(new Element("div", {
+                    defaultClasses: "right"
+                }));
+                this.header = this.righthud.addChild(new Text("h2", {
+                    value: "Inventory"
+                }));
+                this.design = this.righthud.addChild(new Select({
+                    id: "design",
+                    options: [
+                        "Loading..."
+                    ]
+                }));
+                this.color = this.righthud.addChild(new Select({
+                    id: "color",
+                    options: [
+                        "Loading..."
+                    ]
+                }));
+                this.size = this.righthud.addChild(new Select({
+                    id: "size",
+                    options: [
+                        "Loading..."
+                    ]
+                }));
+                this.amount = this.righthud.addChild(new Input("number", {
+                    placeholder: "0",
+                    header: "Amount: "
+                }));
+                // this.stock = this.righthud.addChild(new Text("p", {
+                //     defaultClasses: "stock",
+                //     placeholder: "Out of Stock!"
+                // }));
+                this.add = this.righthud.addChild(new Button("add", () => {              
+                    let shirt = this.items.find(item => item.memory.data.design === this.design.getValue() && item.memory.data.color === this.color.getValue() && item.memory.data.size === this.size.getValue());
+                    if (shirt) {
+                        cart.addItem(shirt, parseInt(this.amount.getValue()));
+                    }
+                    else {
+                        alert("Shirt not found in inventory!");
+                    }
+                },{ placeholder: "Add to Cart" }));
+            }
+
+            // a method called "loadItems" to load the inventory items
+            loadItems(items) {
+                this.items = items;
+                let designs = {};
+                if (items.length > 0) {
+                    items.forEach(item => {
+                        if (!designs[item.memory.data.design]) {
+                            designs[item.memory.data.design] = [];
+                        }
+                        if (!designs[item.memory.data.design].includes(item.memory.data.color)) designs[item.memory.data.design].push(item.memory.data.color);
+                    });
+                    this.design.setOptions(Object.keys(designs));
+                    this.color.setOptions(designs[items[0].memory.data.design]);
+                    this.size.setOptions(["S", "M", "L", "XL", "XXL", "3XL"]);
+                    this.shirtImg.settings.src = this.items[0].memory.data.imageFront;
+                    this.shirtImg.initModifiers();
+    
+                    this.design.enable(() => {
+                        this.color.setOptions(designs[this.design.getValue()]);
+                        this.shirtImg.settings.src = this.items.find(item => item.memory.data.design === this.design.getValue() && item.memory.data.color === this.color.getValue()).memory.data.imageFront;
+                        this.shirtImg.initModifiers();
+                        // let shirt = this.items.find(item => item.memory.data.design === this.design.getValue() && item.memory.data.color === this.color.getValue() && item.memory.data.size === this.size.getValue());
+                        // if (shirt) {
+                        //     this.stock.setValue(`${shirt.memory.data.stock > 0 ? "In Stock!" : "Out of Stock!"}`);
+                        // }
+                        // else {
+                        //     this.stock.setValue("Out of Stock!");
+                        // }
+                    });
+                    this.color.enable(() => {
+                        // let shirt = this.items.find(item => item.memory.data.design === this.design.getValue() && item.memory.data.color === this.color.getValue() && item.memory.data.size === this.size.getValue());
+                        // if (shirt) {
+                        //     this.stock.setValue(`${shirt.memory.data.stock > 0 ? "In Stock!" : "Out of Stock!"}`);
+                        // }
+                        // else {
+                        //     this.stock.setValue("Out of Stock!");
+                        // }
+                    });
+                    this.size.enable(() => {
+                        // let shirt = this.items.find(item => item.memory.data.design === this.design.getValue() && item.memory.data.color === this.color.getValue() && item.memory.data.size === this.size.getValue());
+                        // if (shirt) {
+                        //     this.stock.setValue(`${shirt.memory.data.stock > 0 ? "In Stock!" : "Out of Stock!"}`);
+                        // }
+                        // else {
+                        //     this.stock.setValue("Out of Stock!");
+                        // }
+                    });
+    
+                    // let shirt = this.items[0];
+                    // if (shirt) {
+                    //     this.stock.setValue(`${shirt.memory.data.stock > 0 ? "In Stock!" : "Out of Stock!"}`);
+                    // }
+                    // else {
+                    //     this.stock.setValue("Out of Stock!");
+                    // }
+                }
+            }
+        
+            reduceStock(id, amount) {
+                let shirt = this.items.find(item => item.memory._id === id);
+                if (shirt) {
+                    shirt.memory.data.stock -= amount;
+                    this.stock.setValue(`${shirt.memory.data.stock > 0 ? "In Stock!" : "Out of Stock!"}`);
+                    return true;
+                }
+
+                return false;
+            }
+
+            increaseStock(id, amount) {
+                let shirt = this.items.find(item => item.id === id);
+                if (shirt) {
+                    shirt.memory.data.stock += amount;
+                }
+            }
+        }
+        const inventory = new Inventory();
+
+        const submitOrder = async () => {
+            let toGoCart = [];
+
+            for (let id in cart.items) {
+                toGoCart.push({
+                    id,
+                    amount: cart.items[id]
+                });
+            }
+
+            let res = await base.do("submit-order", { 
+                route: "/the-front/shirts",
+                name: $("#name").val(),
+                location: $("#location").val(),
+                email: $("#email").val(),
+                payment: $("#payment").find(`option:selected`).text(),
+                notes: $("#notes").val(),
+                cart: toGoCart
+            });
+            
+            if (res.status == "success") {
+                if (res.data.newID) window.location.href = `/shirts?o=${res.data.newID}`;
+                else $orderAlert.text(res.data.message);
+            } else {
+                $orderAlert.text("Order Failed due to an error! Please try again later");
+            }
+        }
+
+        // Using Jquery, use base to load all "shirt-inventory"
+        base.loadAll("shirt-inventory", "global").then((res) => {
+            $("#submit").click(submitOrder);
+
+            cart.render(".cart");
+            inventory.loadItems(res);
+            inventory.render(".inventory");
+            
+            <% if (user?.memory && user.memory.data.authLevels.includes("SHIRTSAD")) { %>
+                class InventorySearch extends SearchBox {
+                    constructor(settings = {}) {
+                        super({
+                            defaultClasses: "search-box inventory-list",
+                            ...settings
+                        });
+                    }
+
+                    extractLabel = (item) => {
+                        let label = "No Design - No Color - No Size - 0";
+                        label = `${item?.design} - ${item?.color} - ${item?.size} - ${item?.stock}`;
+
+                        return label;
+                    }
+                }
+
+                const metaOrders = new MetaBrowser({
+                    header: "Orders",
+                    id: "orders"
+                });
+                metaOrders.render();
+                metaOrders.addService("shirt-orders", {
+                    fields: new NBField({
+                        name: "order",
+                        label: "Order: ",
+                        placeholder: "No order"
+                    }, [
+                        new NBField({
+                            name: "name",
+                            label: "Name: ",
+                            placeholder: "Name",
+                            type: "string"
+                        }),
+                        new NBField({
+                            name: "location",
+                            label: "Location: ",
+                            placeholder: "Location",
+                            type: "string"
+                        }),
+                        new NBField({
+                            name: "email",
+                            label: "Email: ",
+                            placeholder: "Email",
+                            type: "string"
+                        }),
+                        new NBField({
+                            name: "payment",
+                            label: "Payment: ",
+                            placeholder: "Payment",
+                            type: "string"
+                        }),
+                        new NBField({
+                            name: "notes",
+                            label: "Notes: ",
+                            placeholder: "Notes",
+                            type: "string"
+                        }),
+                        new NBField({
+                            name: "cart",
+                            label: "Cart: ",
+                            placeholder: "Cart",
+                            multiple: true
+                        }, [
+                            new NBField({
+                                name: "design",
+                                label: "Design: ",
+                                placeholder: "No Design",
+                                type: "string"
+                            }),
+                            new NBField({
+                                name: "color",
+                                label: "Color: ",
+                                placeholder: "No Color",
+                                type: "string"
+                            }),
+                            new NBField({
+                                name: "size",
+                                label: "Size: ",
+                                placeholder: "No Size",
+                                type: "string"
+                            }),
+                            new NBField({
+                                name: "amount",
+                                label: "Amount: ",
+                                placeholder: "0",
+                                type: "number"
+                            })
+                        ]),
+                        new NBField({
+                            name: "messages",
+                            label: "Messages: ",
+                            placeholder: "No Messages",
+                            multiple: true,
+                            readOnly: true
+                        }, [
+                            new NBField({
+                                name: "message",
+                                label: "Message: ",
+                                placeholder: "No Message",
+                                type: "string",
+                                readOnly: true
+                            }),
+                            new NBField({
+                                name: "date",
+                                label: "Date: ",
+                                placeholder: "No Date",
+                                type: "date-time",
+                                readOnly: true
+                            })
+                        ]),
+                        new NBField({
+                            name: "paid",
+                            label: "Paid: ",
+                            placeholder: false,
+                            type: "boolean"
+                        }),
+                        new NBField({
+                            name: "delivered",
+                            label: "Delivered: ",
+                            placeholder: false,
+                            type: "boolean"
+                        }),
+                        new NBField({
+                            name: "notherNotes",
+                            label: "Nother Notes: ",
+                            placeholder: "No notes",
+                            type: "long-string"
+                        })
+                    ]),
+                    label: "Orders",
+                    editable: true,
+                    multiple: true,
+                    showID: true,
+                    toLoad: async () => {
+                        let res = await base.loadAll("shirt-orders", "global");               
+                        // add shirt inventory info to orders by shirt id
+                        res.forEach(order => {
+                            if (Array.isArray(order.memory.data.cart)) order.memory.data.cart.forEach(item => {
+                                let shirt = inventory.items.find(shirt => shirt.memory._id === item.id);                            
+                                if (shirt) {
+                                    item.design = shirt.memory.data.design;
+                                    item.color = shirt.memory.data.color;
+                                    item.size = shirt.memory.data.size;
+                                }
+                            });
+                            else order.memory.data.cart = [{ design: "No Design", color: "No Color", size: "No Size", amount: 0 }];
+                        });
+                        return res;
+                    },
+                    toSave: async (item, deleting) => {
+                        let res = await base.do("save-order", { item, deleting, route: "/the-front/shirts" });
+                        return res;
+                    }
+                });
+        
+                const metaInventory = new MetaBrowser({
+                    header: "Inventory",
+                    useSearchBox: InventorySearch,
+                    id: "inventory"
+                });
+                metaInventory.render();
+                metaInventory.addService("shirt-inventory", {
+                    fields: new NBField({
+                        name: "order",
+                        label: "Order: ",
+                        placeholder: "No order"
+                    }, [
+                        new NBField({
+                            name: "design",
+                            label: "Design: ",
+                            placeholder: "No Design",
+                            type: "string"
+                        }),
+                        new NBField({
+                            name: "short",
+                            label: "Short Description: ",
+                            placeholder: "No Description",
+                            type: "string"
+                        }),
+                        new NBField({
+                            name: "long",
+                            label: "Long Description: ",
+                            placeholder: "No Description",
+                            type: "string"
+                        }),
+                        
+                        new NBField({
+                            name: "color",
+                            label: "Color: ",
+                            placeholder: "No color",
+                            type: "string"
+                        }),
+                        new NBField({
+                            name: "size",
+                            label: "Size: ",
+                            placeholder: "No size",
+                            type: "string"
+                        }),
+                        new NBField({
+                            name: "price",
+                            label: "Price: ",
+                            placeholder: "0",
+                            type: "number"
+                        }),
+                        new NBField({
+                            name: "stock",
+                            label: "Stock: ",
+                            placeholder: "0",
+                            type: "number"
+                        }),
+                        new NBField({
+                            name: "verse",
+                            label: "Verse: ",
+                            placeholder: "No verse",
+                            type: "string"
+                        }),
+                        new NBField({
+                            name: "imageFront",
+                            label: "Front Image: ",
+                            placeholder: "No image URL",
+                            type: "string"
+                        }),
+                        new NBField({
+                            name: "imageBack",
+                            label: "Back Image: ",
+                            placeholder: "No image URL",
+                            type: "string"
+                        })                
+                    ]),
+                    label: "Inventory",
+                    editable: true,
+                    multiple: true,
+                    toLoad: async () => {
+                        // let res = await base.loadAll("shirt-inventory", "global");
+                        return inventory.items;
+                        // return res;
+                    },
+                    toSave: async (item, deleting) => {
+                        let res = await base.do("save-inventory", { item, deleting, route: "/the-front/shirts" });
+                        return res;
+                    }
+                });
+            <% } %>
+        });
+    
+        // using jquery, when the lookup button is clicked, use redirect to go to the order page with the order id
+        $("#lookup").click(() => {
+            window.location.href = `/shirts?o=${$("#orderID").val()}`;
+        });
+    <% } %>
 
 </script>
