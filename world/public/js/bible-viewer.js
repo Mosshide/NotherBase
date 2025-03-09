@@ -402,14 +402,33 @@ class BibleViewer extends Container {
             route: "/global"
         });
         
-        let text = `${this.location.book} ${this.location.chapter + 1}${this.location.verse != null ? `:${this.location.verse + 1}` : ""}${this.location.verseEnd != null ? `-${this.location.verseEnd}` : ""}<br />`;
-        if (Array.isArray(res.data)) {
+        let text = `${this.location.book} ${this.location.chapter + 1}${this.location.verse != null ? `:${this.location.verse + 1}` : ""}${this.location.verseEnd != null ? `-${this.location.verseEnd}` : ""}<br /><br />`;
+        if (this.location.verseEnd != null) {
             for (let i = 0; i < res.data.length; i++) {
+                text += this.location.verse + i + 1;
+                text += '. ';
                 text += res.data[i].text;
                 text += '  ';
             }
         }
-        else text += res.data.text;
+        else if (this.location.verse != null) text += res.data.text;
+        else if (this.location.chapter != null) {
+            for (let i = 0; i < res.data.verses.length; i++) {
+                text += i + 1;
+                text += '. ';
+                text += res.data.verses[i].text;
+                text += '<br /><br />  ';
+            }
+        }
+        else for (let i = 0; i < res.data.chapters.length; i++) {
+            text += `Chapter ${i + 1}<br /><br />`;
+            for (let j = 0; j < res.data.chapters[i].verses.length; j++) {
+                text += j + 1;
+                text += '. ';
+                text += res.data.chapters[i].verses[j].text;
+                text += '<br /><br />  ';
+            }
+        }
 
         this.content.setValue(text);
         this.bookSelect.setValue(this.newLocation.book);
