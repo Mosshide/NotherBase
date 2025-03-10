@@ -43,6 +43,17 @@ section.supper {
     margin-top: 35px;
 }
 
+section.also {
+    background: rgb(255, 255, 255);
+    gap: 30px;
+}
+
+.also img {
+    width: 100%;
+    max-width: var(--max-main-width);
+    height: auto;
+}
+
 /* styles for screens under 1000px wide */
 @media only screen and (max-width: 1000px) {
     .half-box {

@@ -241,10 +241,6 @@
     order: 99;
 }
 
-.meta .search-box {
-    height: calc(100% - 50px);
-}
-
 .browser .popup {
     position: absolute;
     left: 0;
