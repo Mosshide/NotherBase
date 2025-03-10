@@ -321,7 +321,7 @@ class BibleViewer extends Container {
     render() {
         this.content = this.addChild(new Text("p", {
             defaultClasses: `bible-text ${this.settings.showUI ? "" : "no-ui"}`,
-            placeholder: "Pick a book and chapter to read."
+            placeholder: "Loading..."
         }));
 
         this.ui = this.addChild(new Element("div", {
