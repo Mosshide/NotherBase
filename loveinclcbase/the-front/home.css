@@ -74,6 +74,20 @@ section.news .card-list {
     right: 0;
 }
 
+.souper .buttons {
+    height: auto;
+    display: flex;
+    justify-content: center;
+}
+
+.buttons .more {
+    background: var(--main-color);
+}
+
+.buttons .more:hover {
+    background: var(--main-color-hover);
+}
+
 .info {
     width: 100%;
     max-width: var(--max-main-width);

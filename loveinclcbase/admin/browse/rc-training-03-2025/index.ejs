@@ -4,6 +4,7 @@
 
 <% if (user && user.memory.data.authLevels.includes("LINCLCAD")) { %>
 <div class="meta" id="list"></div>
+<button onclick="base.do('registrations-list');">Email Compiled List of Registrations</button>
 <% } else { %>
 <p>Administrator authority required.</p>
 <% } %>
