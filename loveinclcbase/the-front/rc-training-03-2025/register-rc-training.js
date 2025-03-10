@@ -12,6 +12,16 @@ export default async function submitApplication(req, user) {
         await req.db.Spirit.create("rc-training-0325", newTicket);
         req.session.lastRCTrainingApplication = Date.now();
 
+        //req.db.SendMail.send("wyattsushi@gmail.com", `New Registration for Redemptive Compassion Training Session 2025`, `
+        req.db.SendMail.send("exec.director@loveincoflewiscounty.org", `New Registration for Redemptive Compassion Training Session 2025`, `
+            <h1>New Registration for Redemptive Compassion Training Session 2025</h1>
+            <h3>Person Registered:</h3>
+            <p>${newTicket.name}</p> <br>
+            <h3>Extra Attendees:</h3>
+            <p>${newTicket.extras}</p> <br><br>
+            <p>This is an automated message. Please do not reply.</p>
+        `, "Love INC of Lewis County");
+
         return "Thank you for registering!";
     }
 }
