@@ -82,6 +82,17 @@
             return await base.do("save-mailing-list", { item, deleting });
         }
     });
+    // add a button that compiles all signups into an email
+    metaMailingList.buttons.addButton(new Button("email", () => {
+        base.do("signups-list", {}).then((res) => {
+            if (res.status == "success") {
+                console.log(res.data);
+            }
+        });
+    }, {
+        placeholder: "Email Compiled List"
+    }));
+    // add a button that compiles all emails into a downloadable file
     metaMailingList.buttons.addButton(new Button("compile", () => {
         let data = "";
         for (let entry of metaMailingList.serving.data) {
