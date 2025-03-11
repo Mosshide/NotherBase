@@ -481,7 +481,6 @@ nav a p {
 }
 
 .mailing-list p {
-    width: auto;
     text-align: center;
     padding: 10px 20px;
 }
@@ -570,6 +569,16 @@ ul.selector>li.disabled {
 
 /* globals */
 #alert {
+    width: 100%;
+    padding: 10px;
+    font-size: 20px;
+    color: rgb(32, 32, 46);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.alert {
     width: 100%;
     padding: 10px;
     font-size: 20px;
