@@ -52,7 +52,7 @@ export default async function submitApplication(req, user) {
             // render the data so it is readable in the email
             // the message will need to be rendered as HTML, with line breaks converted to <br> tags
             //req.db.SendMail.send("wyattsushi@gmail.com", `New Volunteer Application for Love INC of Lewis County`, `
-            req.db.SendMail.send("volunteers@loveincoflewiscounty.org", `New Volunteer Application for Love INC of Lewis County`, `
+            req.db.SendMail.send("exec.director@loveincoflewiscounty.org", `New Volunteer Application for Love INC of Lewis County`, `
                 <img src="https://www.loveincoflewiscounty.org/img/banner.jpg" alt="Love INC of Lewis County Logo" style="width: 90%; height: auto;">
                 <h1>New Volunteer Application for: ${newApplication.firstName + " " + newApplication.lastName}</h1> 
                 <p>Submitted On: ${new Date(newApplication.dateCreated).toLocaleDateString()}</p>
