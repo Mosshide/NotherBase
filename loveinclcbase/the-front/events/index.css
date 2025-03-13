@@ -1,0 +1,32 @@
+.learn-more {
+    width: 150px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--fifth-color);
+    color: white;
+    border-radius: var(--border-radius);
+    text-decoration: none;
+}
+
+.learn-more:hover {
+    background: var(--fifth-color-hover);
+    transition: all 0.1s;
+    transform: scale(1.01);
+}
+
+.event {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    max-width: var(--max-main-width);
+}
+
+.event img {
+    border-radius: var(--border-radius);
+    box-shadow: 0 0 10px 5px rgb(100, 130, 188);
+}
