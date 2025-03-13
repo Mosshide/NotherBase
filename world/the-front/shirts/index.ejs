@@ -354,7 +354,12 @@
     
                     this.design.enable(() => {
                         this.color.setOptions(this.designs[this.design.getValue()]);
-                        this.shirtImg.settings.src = this.items.find(item => item.memory.data.design === this.design.getValue() && item.memory.data.color === this.color.getValue()).memory.data.imageFront;
+                        this.shirtImg.settings.src = this.items.find(item => item.memory.data.design === this.design.getValue() && item.memory.data.color === this.color.getValue()).memory.data[this.showingFront ? "imageFront" : "imageBack"];
+                        this.shirtImg.initModifiers();
+                    });
+
+                    this.color.enable(() => {
+                        this.shirtImg.settings.src = this.items.find(item => item.memory.data.design === this.design.getValue() && item.memory.data.color === this.color.getValue()).memory.data[this.showingFront ? "imageFront" : "imageBack"];
                         this.shirtImg.initModifiers();
                     });
                 }
