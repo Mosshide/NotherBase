@@ -12,8 +12,18 @@ select {
 
 .hud img.design {
     width: 100%;
-    max-width: 200px;
-    height: auto;
+    height: 100%;
+    max-height: 300px;
+    object-fit: contain;
+}
+
+.hud .right {
+    max-width: 60% !important;
+    width: 100%;
+}
+
+.hud .left {
+    max-width: 40% !important;
 }
 
 .nested.cart {

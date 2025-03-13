@@ -241,6 +241,8 @@
                 }
                 else {
                     this.items[id] = this.items[id] ? this.items[id] + amount : amount;
+                    console.log(this.renderItems[id]);
+                    
                     if (this.renderItems[id]) {
                         this.renderItems[id].content.setValue(`${shirt.memory.data.design} - ${shirt.memory.data.color} - ${shirt.memory.data.size} - ${this.items[id]}`);
                         this.renderItems[id].image.src = shirt.memory.data.imageFront;
@@ -264,9 +266,9 @@
 
             // a method called "removeItem" to remove an item from the cart
             removeItem(id) {
-                inventory.increaseStock(id, this.items[id]);
                 delete this.items[id];
                 this.renderItems[id].close();
+                this.renderItems[id] = null;
             }
         }
         const cart = new Cart();
@@ -278,6 +280,7 @@
                     defaultClasses: "inventory hud"
                 });
                 this.items = [];
+                this.showingFront = true;
 
                 this.shirtImg = this.addChild(new Element("img", {
                     src: "/img/shirts/antique_sapphire.jpg",
@@ -315,6 +318,12 @@
                 //     defaultClasses: "stock",
                 //     placeholder: "Out of Stock!"
                 // }));
+                this.switch = this.righthud.addChild(new Button("switch", () => {
+                    this.showingFront = !this.showingFront;
+                    this.shirtImg.settings.src = this.items.find(item => item.memory.data.design === this.design.getValue() && item.memory.data.color === this.color.getValue()).memory.data[this.showingFront ? "imageFront" : "imageBack"];
+                    this.shirtImg.initModifiers();
+                    this.switch.setValue(this.showingFront ? "View Back" : "View Front");
+                }, { placeholder: "View Back" }));
                 this.add = this.righthud.addChild(new Button("add", () => {              
                     let shirt = this.items.find(item => item.memory.data.design === this.design.getValue() && item.memory.data.color === this.color.getValue() && item.memory.data.size === this.size.getValue());
                     if (shirt) {
@@ -329,22 +338,22 @@
             // a method called "loadItems" to load the inventory items
             loadItems(items) {
                 this.items = items;
-                let designs = {};
+                this.designs = {};
                 if (items.length > 0) {
                     items.forEach(item => {
-                        if (!designs[item.memory.data.design]) {
-                            designs[item.memory.data.design] = [];
+                        if (!this.designs[item.memory.data.design]) {
+                            this.designs[item.memory.data.design] = [];
                         }
-                        if (!designs[item.memory.data.design].includes(item.memory.data.color)) designs[item.memory.data.design].push(item.memory.data.color);
+                        if (!this.designs[item.memory.data.design].includes(item.memory.data.color)) this.designs[item.memory.data.design].push(item.memory.data.color);
                     });
-                    this.design.setOptions(Object.keys(designs));
-                    this.color.setOptions(designs[items[0].memory.data.design]);
+                    this.design.setOptions(Object.keys(this.designs));
+                    this.color.setOptions(this.designs[items[0].memory.data.design]);
                     this.size.setOptions(["S", "M", "L", "XL", "XXL", "3XL"]);
                     this.shirtImg.settings.src = this.items[0].memory.data.imageFront;
                     this.shirtImg.initModifiers();
     
                     this.design.enable(() => {
-                        this.color.setOptions(designs[this.design.getValue()]);
+                        this.color.setOptions(this.designs[this.design.getValue()]);
                         this.shirtImg.settings.src = this.items.find(item => item.memory.data.design === this.design.getValue() && item.memory.data.color === this.color.getValue()).memory.data.imageFront;
                         this.shirtImg.initModifiers();
                     });
