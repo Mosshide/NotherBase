@@ -390,7 +390,6 @@ nav ul {
 
 nav ul li {
     margin: 0;
-    padding: 0;
     display: flex;
     align-items: center;
     height: calc(100% - 10px);
@@ -402,7 +401,7 @@ nav ul li {
 nav ul a {
     border-radius: var(--border-radius) var(--border-radius) 0 0;
     margin: 0;
-    padding: 0;
+    padding: 5px;
     width: 100%;
     text-align: center;
 }
@@ -458,7 +457,7 @@ nav #donate p {
 } */
 
 nav a img {
-    width: 100%;
+    width: auto;
     height: 100%;
     object-fit: contain;
 }
@@ -1169,6 +1168,18 @@ a.also:hover {
     transform: scale(1.01);
 }
 
+
+/* styles for screens under 1500px wide */
+@media only screen and (max-width: 1500px) {
+    nav ul {
+        gap: 5px;
+    }
+
+    nav ul li {
+        width: auto;
+    }
+}
+
 /* styles for screens under 1000px wide */
 @media only screen and (max-width: 1000px) {
     main {
@@ -1255,15 +1266,22 @@ a.also:hover {
         width: 100%;
         height: auto;
         margin: 0;
-        margin-top: 10px;
+        margin-top: 50px;
         display: none;
     }
 
     nav ul li {
         width: 100%;
-        height: 10vh;
+        height: 7vh;
         margin-top: 5px;
         padding: 0;
+    }
+
+    nav li #donate {
+        border-radius: 0;
+        height: 100%;
+        margin: 0;
+        border-radius: 0 var(--border-radius) var(--border-radius) 0;
     }
 
     nav a {
@@ -1295,7 +1313,7 @@ a.also:hover {
         display: none;
         position: absolute;
         right: 10px;
-        top: calc(60vh + 150px);
+        top: 95px;
         font-family: sans-serif;
         width: 40px;
         height: 40px;

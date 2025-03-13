@@ -45,7 +45,7 @@ img.detail {
     width: 100%;
     max-width: var(--max-main-width);
     border-radius: 25px;
-    box-shadow: 0 0 25px 5px rgb(66,112,197);
+    box-shadow: 0 0 10px 5px rgb(100, 130, 188);
 }
 
 .training .info {

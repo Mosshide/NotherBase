@@ -1,0 +1,39 @@
+<style>
+    <%- include('./index.css') %>
+</style>
+
+<h2>Events</h2>
+
+<section>
+    <div class="raised">
+        <div class="event">
+            <img src="/img/souper/2025/souper.gif" alt="Super Souper Supper">
+            <a class="learn-more" href="/souper">Learn More</a>
+        </div>
+    
+        <hr class="for-space">
+    
+        <div class="event">
+            <img src="/img/souper/2025/training.jpg" alt="Training">
+            <a class="learn-more" href="/rc-training-03-2025">Learn More</a>
+        </div>
+    </div>
+
+    <div class="cross-bg">
+        <div class="stake">
+            <div class="bar"></div>
+        </div>
+    </div>
+</section>
+
+<script src="/js/themeApplicator.js"></script>
+<script>
+    const themeApplicator = new ThemeApplicator();
+
+    base.do("tally", { route: "/the-front/scripts" });
+    setTimeout(() => {
+        setInterval(() => {
+            base.do("tally-extra", { route: "/the-front/scripts" });
+        }, 30000);
+    }, 3000);
+</script>
