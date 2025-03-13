@@ -308,7 +308,8 @@ select {
     cursor: pointer;
     padding: var(--padding);
     height: var(--inputHeight);
-    margin: var(--margin);
+    margin-top: var(--margin);
+    margin-bottom: var(--margin);
 }
 
 select:focus {
