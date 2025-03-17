@@ -106,7 +106,6 @@ main {
     position: relative;
     justify-content: center;
     overflow: hidden;
-    min-height: 90vh;
     align-content: flex-start;
 }
 
@@ -1166,6 +1165,10 @@ a.also:hover {
     box-shadow: 1px 5px 14px 1px rgb(169, 169, 169);
     transition: all 0.1s;
     transform: scale(1.01);
+}
+
+section.fill-main {
+    min-height: 90vh;
 }
 
 
