@@ -8,6 +8,8 @@
     <h5>Your Order ID: <%= query.o %></h5>
     <p>Thank you for your order! Bookmark this page or save your order ID. Return to this page for updates on your order.</p>
     <div class="meta" id="order"></div>
+    <hr class="cart-divider">
+    <p class="cart-total">Subtotal: $0</p>
     <a href="/shirts">Return to Shirt Ordering</a>
 <% } else { %>
     <div class="meta" id="orders"></div>
@@ -16,7 +18,10 @@
     <section class="inventory hud"></section>
     
     <h2>Cart</h2>
-    <section class="cart"></section>
+    <section class="cart">
+    </section>
+    <hr class="cart-divider">
+    <p class="cart-total">Subtotal: $0</p>
     
     <h2>Your Info</h2>
     <section class="info">
@@ -68,6 +73,7 @@
         const inventory = {
             items: []
         };
+        let $total = $(".cart-total");
 
         base.loadAll("shirt-inventory", "global").then((res) => {
             inventory.items = res;
@@ -202,10 +208,12 @@
                 editable: false,
                 showID: true,
                 toLoad: async () => {
+                    let total = 0;
                     let res = await base.load("shirt-orders", "global", null, orderID);               
                     if (Array.isArray(res.memory.data.cart)) res.memory.data.cart.forEach(item => {
                         let shirt = inventory.items.find(shirt => shirt.memory._id === item.id);                            
                         if (shirt) {
+                            total += shirt.memory.data.price * item.amount;
                             item.design = shirt.memory.data.design;
                             item.color = shirt.memory.data.color;
                             item.size = shirt.memory.data.size;
@@ -214,6 +222,7 @@
                         }
                     });
                     else res.memory.data.cart = [{ design: "No Design", color: "No Color", size: "No Size", amount: 0 }];
+                    $total.text(`Subtotal: $${total}`);
                     return res;
                 },
                 toSave: async (item, deleting) => { return null; }
@@ -231,6 +240,8 @@
                 });
                 this.items = {};
                 this.renderItems = {};
+                this.total = 0;
+                this.$total = $(".cart-total");
             }
 
             // a method called "addItem" to add an item to the cart
@@ -241,8 +252,7 @@
                 }
                 else {
                     this.items[id] = this.items[id] ? this.items[id] + amount : amount;
-                    console.log(this.renderItems[id]);
-                    
+
                     if (this.renderItems[id]) {
                         this.renderItems[id].content.setValue(`${shirt.memory.data.design} - ${shirt.memory.data.color} - ${shirt.memory.data.size} - ${this.items[id]}`);
                         this.renderItems[id].image.src = shirt.memory.data.imageFront;
@@ -261,11 +271,16 @@
                         }));
                         this.renderItems[id].removeButton = this.renderItems[id].addChild(new Button("remove", () => { this.removeItem(id); }, { placeholder: "Remove" }));
                     }
+
+                    this.total += shirt.memory.data.price * amount;
+                    this.$total.text(`Subtotal: $${this.total}`);
                 }
             }
 
             // a method called "removeItem" to remove an item from the cart
             removeItem(id) {
+                this.total -= inventory.items.find(item => item.memory._id === id).memory.data.price * this.items[id];
+                this.$total.text(`Subtotal: $${this.total}`);
                 delete this.items[id];
                 this.renderItems[id].close();
                 this.renderItems[id] = null;
@@ -310,6 +325,10 @@
                         "Loading..."
                     ]
                 }));
+                this.price = this.righthud.addChild(new Text("p", {
+                    defaultClasses: "price",
+                    placeholder: "$0"
+                }));
                 this.amount = this.righthud.addChild(new Input("number", {
                     placeholder: "0",
                     header: "Amount: "
@@ -349,16 +368,19 @@
                     this.design.setOptions(Object.keys(this.designs));
                     this.color.setOptions(this.designs[items[0].memory.data.design]);
                     this.size.setOptions(["S", "M", "L", "XL", "XXL", "3XL"]);
+                    this.price.setValue(`$${items[0].memory.data.price}`);
                     this.shirtImg.settings.src = this.items[0].memory.data.imageFront;
                     this.shirtImg.initModifiers();
     
                     this.design.enable(() => {
                         this.color.setOptions(this.designs[this.design.getValue()]);
+                        this.price.setValue(`$${this.items.find(item => item.memory.data.design === this.design.getValue() && item.memory.data.color === this.color.getValue()).memory.data.price}`);
                         this.shirtImg.settings.src = this.items.find(item => item.memory.data.design === this.design.getValue() && item.memory.data.color === this.color.getValue()).memory.data[this.showingFront ? "imageFront" : "imageBack"];
                         this.shirtImg.initModifiers();
                     });
 
                     this.color.enable(() => {
+                        this.price.setValue(`$${this.items.find(item => item.memory.data.design === this.design.getValue() && item.memory.data.color === this.color.getValue()).memory.data.price}`);
                         this.shirtImg.settings.src = this.items.find(item => item.memory.data.design === this.design.getValue() && item.memory.data.color === this.color.getValue()).memory.data[this.showingFront ? "imageFront" : "imageBack"];
                         this.shirtImg.initModifiers();
                     });
