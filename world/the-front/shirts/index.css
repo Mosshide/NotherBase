@@ -51,6 +51,16 @@ select {
     height: auto;
 }
 
+.cart-divider {
+    width: 50%;
+}
+
+.cart-total {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 20px;
+}
+
 .browser h4 {
     width: auto;
 }
