@@ -613,10 +613,6 @@ hr.for-space {
     align-content: center;
 }
 
-.bottom-bumper {
-    margin-bottom: 40px !important;
-}
-
 .invisible {
     display: none !important;
 }
@@ -658,7 +654,7 @@ hr.for-space {
 .bottom-button {
     width: 90%;
     position: absolute;
-    bottom: -43px;
+    top: calc(100% - 3px);
     left: 5%;
     padding: 10px 20px !important;
     border-radius: 0 0 var(--border-radius) var(--border-radius) !important;
@@ -1398,11 +1394,6 @@ h3.ff {
 
     .card.big-bottom {
         margin-bottom: 35px;
-    }
-
-    a.bottom-button {
-        margin: 0;
-        bottom: -43px;
     }
 
     .long.card {
