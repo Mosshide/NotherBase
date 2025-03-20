@@ -514,7 +514,7 @@ nav a p {
     font-size: 20px;
 }
 
-.sign-up button {
+/* .sign-up button {
     width: 150px;
     margin: 10px calc(50% - 75px);
     background: var(--fifth-color);
@@ -525,7 +525,7 @@ nav a p {
     background: var(--fifth-color-hover);
     transition: all 0.1s;
     transform: scale(1.01);
-}
+} */
 
 /* selector */
 ul.selector>li {
@@ -573,6 +573,7 @@ ul.selector>li.disabled {
     display: flex;
     justify-content: center;
     align-items: center;
+    min-height: 45px;
 }
 
 .alert {
@@ -583,6 +584,7 @@ ul.selector>li.disabled {
     display: flex;
     justify-content: center;
     align-items: center;
+    min-height: 45px;
 }
 
 hr.for-space {
@@ -631,6 +633,7 @@ hr.for-space {
     flex-direction: row;
     flex-wrap: nowrap;
     padding: 0;
+    gap: 20px;
 }
 
 .perma-row {
@@ -655,7 +658,7 @@ hr.for-space {
 .bottom-button {
     width: 90%;
     position: absolute;
-    bottom: -45px;
+    bottom: -43px;
     left: 5%;
     padding: 10px 20px !important;
     border-radius: 0 0 var(--border-radius) var(--border-radius) !important;
@@ -671,12 +674,12 @@ hr.for-space {
     padding: 20px 50px;
     padding-left: calc((100% - var(--max-main-width)) / 4);
     flex-wrap: nowrap;
-    height: 600px;
+    height: auto;
     width: 100%;
     overflow-y: visible;
     overflow-x: auto;
     gap: 20px;
-    align-items: center;
+    align-items: stretch;
 }
 
 .card-grid {
@@ -785,25 +788,25 @@ main #nav-button {
     text-shadow: var(--text-shadow);
 }
 
-.external {
+a.external, button.external {
     text-decoration: none;
     background: var(--fifth-color);
     color: white;
     border: none;
     border-radius: var(--border-radius);
     padding: 20px 30px;
-    margin: 5px;
+    margin: 0;
     box-shadow: var(--boxShadow);
     text-shadow: var(--text-shadow);
 }
 
-.external:hover {
+a.external:hover, button.external:hover {
     background: var(--fifth-color-hover);
     transition: all 0.1s;
     transform: scale(1.01);
 }
 
-.external.inverted {
+a.external.inverted, button.external.inverted {
     background: none;
     box-shadow: none;
     color: var(--fifth-color);
@@ -1372,13 +1375,12 @@ h3.ff {
     }
 
     .card-list {
-        padding: 20px 5px;
-        flex-direction: column;
-        height: auto;
+        padding: 55px;
+        /* flex-direction: column;
         align-content: center;
-        flex-wrap: nowrap;
+        flex-wrap: nowrap; */
         gap: 25px;
-        align-items: center;
+        /* align-items: center; */
     }
     
     .reverse-card-list {
@@ -1389,7 +1391,8 @@ h3.ff {
     }
 
     .card {
-        max-width: 100%;
+        width: 85%;
+        min-width: 200px
     }
 
     .card.big-bottom {
@@ -1439,7 +1442,8 @@ h3.ff {
 
     /* temp */
     h3.ff {
-        margin: 30px;
+        margin: 30px 0;
+        width: 100%;
         padding: 30px 5px;
     }
 }

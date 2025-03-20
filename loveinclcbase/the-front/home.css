@@ -35,15 +35,18 @@
 section.news {
     background: var(--fourth-color);
     height: auto;
-    padding: 0;
+    padding: 0;  
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex-direction: row;
 }
 
 section.news .card-list {
-    padding-left: 20vw;
+    padding: 100px;
     display: flex;
     justify-content: flex-start;
     gap: 40px;
-    width: 100%;
+    width: auto;
 }
 
 .Christ-centered {
@@ -156,8 +159,10 @@ section iframe.side.right {
     }
 
     section.news .card-list {
-        padding-left: 0;
         gap: 25px;
+        height: auto;
+        padding: 55px;
+        padding-bottom: 75px;
     }
 }
 
