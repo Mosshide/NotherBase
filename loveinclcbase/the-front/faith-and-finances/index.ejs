@@ -94,8 +94,8 @@
                 <input type="date" class="waiver-date">
             </label>
         </div>
-        <button class="external">Register</button>
-        <p class="info"></p>
+        <button class="submit">Register</button>
+        <p class="alert"></p>
     </div>
 </section>
 
@@ -112,7 +112,7 @@
 
     let $register = $(".training .registration button");
     $register.click(() => {
-        let $info = $(".training .registration .info");
+        let $alert = $(".training .registration .alert");
         let registration = {
             name: $(".training .registration .name").val(),
             signature: $(".training .registration .signature").val(),
@@ -130,14 +130,14 @@
         if (registration.name && registration.signature && waiver.name && waiver.signature && waiver.date) {
             base.do("register-ff", { registration, waiver, route: "/the-front/faith-and-finances" }).then((res) => {
                 if (res.status == "success") {
-                    $info.text(res.data);
+                    $alert.text(res.data);
                     $(".training .registration input").val("");
                 }
-                else $info.text("Server Error. Please try again later.");
+                else $alert.text("Server Error. Please try again later.");
             });
         }
         else {
-            $info.text("Please fill out all required fields.");
+            $alert.text("Please fill out all required fields.");
         }
     });
 </script>

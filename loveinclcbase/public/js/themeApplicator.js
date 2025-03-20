@@ -98,8 +98,8 @@ class ThemeApplicator {
         this.$mailingZip = $(`<input type="text" id="mailing-zip" placeholder="98765">`).appendTo(this.$zipLabel);
         this.$emailLabel = $(`<label for="mailing-email">*Email:</label>`).appendTo(this.$signupForm);
         this.$mailingEmail = $(`<input type="email" id="mailing-email" placeholder="your@email.com">`).appendTo(this.$emailLabel);
-        this.$mailingAlert = $(`<p class="invisible alert">Please fill out required fields.</p>`).appendTo(this.$signupForm);
-        this.$signupButton = $(`<button class="external">Sign Up</button>`).appendTo(this.$signupForm);
+        this.$signupButton = $(`<button class="submit">Sign Up</button>`).appendTo(this.$signupForm);
+        this.$mailingAlert = $(`<p class="alert"></p>`).appendTo(this.$signupForm);
         this.$signupButton.click(() => this.signUpForMailingList());
         if (this.settings.signUpAfter) this.$mailingList.insertAfter($(this.settings.signUpAfter));
         else this.$mailingList.insertBefore(this.$footer);
@@ -126,7 +126,7 @@ class ThemeApplicator {
             let zip = this.$mailingZip.val();
             let email = this.$mailingEmail.val();
             if (name == "" || email == "") {
-                this.$mailingAlert.removeClass("invisible");
+                this.$mailingAlert.text(`Please fill out the required fields.`);
                 return;
             }
 
@@ -139,7 +139,6 @@ class ThemeApplicator {
                 email: email,
                 route: "/the-front"
             }).then((res) => {
-                this.$mailingAlert.removeClass("invisible");
                 if (res.status == "success") {
                     this.$mailingAlert.text(res.data);
                 } else {
@@ -150,7 +149,6 @@ class ThemeApplicator {
             this.lastSignUp = Date.now();
         }
         else {
-            this.$mailingAlert.removeClass("invisible");
             this.$mailingAlert.text(`Please wait before submitting another form.`);
         }
     }
