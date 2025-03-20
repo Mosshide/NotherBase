@@ -24,6 +24,10 @@
     gap: 10px;
     width: 100%;
     max-width: var(--max-main-width);
+    background: var(--second-color);
+    padding: 20px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
 }
 
 .event img {

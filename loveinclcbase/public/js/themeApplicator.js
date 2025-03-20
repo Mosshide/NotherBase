@@ -107,12 +107,14 @@ class ThemeApplicator {
 
     enableNavMobile() {
         this.$nav.addClass("mobile-full");
-        this.$main.addClass("nav-open");
+        this.$main.addClass("invisible");
+        this.$mailingList.addClass("invisible");
     }
 
     disableNavMobile() {
         this.$nav.removeClass("mobile-full");
-        this.$main.removeClass("nav-open");
+        this.$main.removeClass("invisible");
+        this.$mailingList.removeClass("invisible");
     }
 
     signUpForMailingList() {
