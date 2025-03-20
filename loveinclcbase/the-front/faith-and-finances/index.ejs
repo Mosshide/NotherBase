@@ -131,7 +131,6 @@
             base.do("register-ff", { registration, waiver, route: "/the-front/faith-and-finances" }).then((res) => {
                 if (res.status == "success") {
                     $alert.text(res.data);
-                    $(".training .registration input").val("");
                 }
                 else $alert.text("Server Error. Please try again later.");
             });
