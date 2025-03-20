@@ -3,7 +3,7 @@
 </style>
 
 <section class="training">
-    <h3 class="ff">Faith and Finances (12 Week Course)</h3>
+    <h3 class="ff">Faith and Finance (12 Week Course)</h3>
     <div class="details">
         <p>
             This course focuses on financial literacy for low-income or financially vulnerable adults.
@@ -30,7 +30,7 @@
         </ol>
     </div>
     <div class="registration info">
-        <h3>Register for the Faith and Finances Course:</h3>
+        <h3>Register for the Faith and Finance Course:</h3>
         <p>By signing this form, you agree to the schedule above and will participate as directed by the instructor.</p>
         <p>
             Fields marked with an asterisk (*) are required.
@@ -128,7 +128,7 @@
         };        
 
         if (registration.name && registration.signature && waiver.name && waiver.signature && waiver.date) {
-            base.do("register-ff", { registration, waiver, route: "/the-front/faith-and-finances" }).then((res) => {
+            base.do("register-ff", { registration, waiver, route: "/the-front/faith-and-finance" }).then((res) => {
                 if (res.status == "success") {
                     $alert.text(res.data);
                 }
