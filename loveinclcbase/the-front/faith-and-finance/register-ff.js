@@ -1,7 +1,7 @@
 export default async function submitApplication(req, user) {
     // require a cooldown between applications of 1 minute
     if (!req.session.lastFFRegistration) req.session.lastFFRegistration = 0;
-    if (Date.now() - req.session.lastFFRegistration < 60 * 1000) return "Please wait before trying to register for this course again.";
+    if (Date.now() - req.session.lastFFRegistration < 60 * 1000) return "You've already registered. Please wait before trying to register for this course again.";
     else {
         let newRegistration = {
             dateCreated: Date.now(),
