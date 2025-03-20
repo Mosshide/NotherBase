@@ -11,12 +11,20 @@ img.detail {
     width: 50%;
 }
 
-.details {
+.training .details {
     width: 100%;
     margin: 0;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
+    max-width: var(--max-main-width);
+}
+
+.details ol {
+    column-gap: calc(var(--padding) * 2 + 20px);
+    column-count: 2;
+    display: initial;
+    padding-left: 30px;
 }
 
 .half-box {
@@ -28,19 +36,6 @@ img.detail {
     justify-content: center;
 }
 
-.info {
-    width: 100%;
-    max-width: var(--max-main-width);
-    padding: 10px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-    color: rgb(235,236,239);
-    margin-top: 35px;
-}
-
 .training img {
     width: 100%;
     max-width: var(--max-main-width);
@@ -49,7 +44,15 @@ img.detail {
 }
 
 .training .info {
-    color: rgb(15,38,89);
+    width: 100%;
+    max-width: var(--max-main-width);
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 35px;
 }
 
 .training .info label {
@@ -62,6 +65,16 @@ img.detail {
     width: 20vw;
 }
 
+.waiver {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h3.ff {
+    margin-top: -30px;
+}
+
 /* styles for screens under 1000px wide */
 @media only screen and (max-width: 1000px) {
     .half-box {
@@ -70,5 +83,9 @@ img.detail {
 
     img.detail {
         width: 100%;
+    }
+
+    .details ol {
+        column-count: 1;
     }
 }

@@ -327,7 +327,7 @@
                 }));
                 this.price = this.righthud.addChild(new Text("p", {
                     defaultClasses: "price",
-                    placeholder: "$0"
+                    placeholder: "Price Each: $0"
                 }));
                 this.amount = this.righthud.addChild(new Input("number", {
                     placeholder: "0",
@@ -368,19 +368,19 @@
                     this.design.setOptions(Object.keys(this.designs));
                     this.color.setOptions(this.designs[items[0].memory.data.design]);
                     this.size.setOptions(["S", "M", "L", "XL", "XXL", "3XL"]);
-                    this.price.setValue(`$${items[0].memory.data.price}`);
+                    this.price.setValue(`Price Each: $${items[0].memory.data.price}`);
                     this.shirtImg.settings.src = this.items[0].memory.data.imageFront;
                     this.shirtImg.initModifiers();
     
                     this.design.enable(() => {
                         this.color.setOptions(this.designs[this.design.getValue()]);
-                        this.price.setValue(`$${this.items.find(item => item.memory.data.design === this.design.getValue() && item.memory.data.color === this.color.getValue()).memory.data.price}`);
+                        this.price.setValue(`Price Each: $${this.items.find(item => item.memory.data.design === this.design.getValue() && item.memory.data.color === this.color.getValue()).memory.data.price}`);
                         this.shirtImg.settings.src = this.items.find(item => item.memory.data.design === this.design.getValue() && item.memory.data.color === this.color.getValue()).memory.data[this.showingFront ? "imageFront" : "imageBack"];
                         this.shirtImg.initModifiers();
                     });
 
                     this.color.enable(() => {
-                        this.price.setValue(`$${this.items.find(item => item.memory.data.design === this.design.getValue() && item.memory.data.color === this.color.getValue()).memory.data.price}`);
+                        this.price.setValue(`Price Each: $${this.items.find(item => item.memory.data.design === this.design.getValue() && item.memory.data.color === this.color.getValue()).memory.data.price}`);
                         this.shirtImg.settings.src = this.items.find(item => item.memory.data.design === this.design.getValue() && item.memory.data.color === this.color.getValue()).memory.data[this.showingFront ? "imageFront" : "imageBack"];
                         this.shirtImg.initModifiers();
                     });

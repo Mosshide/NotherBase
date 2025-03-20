@@ -3,36 +3,45 @@
 </style>
 
 <section class="training">
+    <h3 class="ff">Faith and Finances (12 Week Course)</h3>
     <div class="details">
-        <h3>Faith and Finances (12 Week Course)</h3>
-        <p>This course focuses on financial literacy for low-income or financially vulnerable adults.
+        <p>
+            This course focuses on financial literacy for low-income or financially vulnerable adults.
             It also encourages learners to protect their assets and consider their net wealth.
         </p>
         <p>This training is open to everyone and is free of charge. We hope to see you there!</p>
         <p>When: Every Tuesday, starting March 25, 2025. The course runs for 12 weeks.</p>
-        <p>Where: Love INC</p>
+        <p>Where: First Christian Church in Centralia - 1215 West Main St. Centralia, WA 98531</p>
         <p>Time: 7:00pm - 8:30pm</p>
         <p>Topics include:</p>
-        <ul>
-            <li>1. Connecting Money and Relationships</li>
-            <li>2. Exploring Values and Attitudes</li>
-            <li>3. Overcoming Financial Challenges</li>
-            <li>4. Setting Savings Goals</li>
-            <li>5. Creating a Spending Plan</li>
-            <li>6. Living Simply</li>
-            <li>7. Giving Joyfully</li>
-            <li>8. Managing Debt</li>
-            <li>9. Taking Loans</li>
-            <li>10. Getting Banked</li>
-            <li>11. Preparing for Emergencies</li>
-            <li>12. Planning for Long-Term Change</li>
-        </ul>
+        <ol>
+            <li>Connecting Money and Relationships</li>
+            <li>Exploring Values and Attitudes</li>
+            <li>Overcoming Financial Challenges</li>
+            <li>Setting Savings Goals</li>
+            <li>Creating a Spending Plan</li>
+            <li>Living Simply</li>
+            <li>Giving Joyfully</li>
+            <li>Managing Debt</li>
+            <li>Taking Loans</li>
+            <li>Getting Banked</li>
+            <li>Preparing for Emergencies</li>
+            <li>Planning for Long-Term Change</li>
+        </ol>
     </div>
     <div class="registration info">
         <h3>Register for the Faith and Finances Course:</h3>
+        <p>By signing this form, you agree to the schedule above and will participate as directed by the instructor.</p>
+        <p>
+            Fields marked with an asterisk (*) are required.
+        </p>
         <label>
-            Name (Printed):
+            *Name (Printed):
             <input type="text" class="name" placeholder="First and Last">
+        </label>
+        <label>
+            *Name (Signature):
+            <input type="text" class="signature" placeholder="First and Last">
         </label>
         <label>
             Address:
@@ -50,36 +59,39 @@
             Phone Number:
             <input type="text" class="phone" placeholder="123-456-7890">
         </label>
-        <label>
-            Name (Signature):
-            <input type="text" class="signature" placeholder="First and Last">
-        </label>
         <div class="waiver">
             <h4>Participant Waiver</h4>
             <p>
-                The Faith and Finance class will use scripture references from the Bible in teaching this class.
-                In signing this form, you acknowledge that you agree to this information being shared regardless
-                of your personal religious or non-religious preferences.
+                Fields marked with an asterisk (*) are required.
             </p>
             <p>
-                Photographs of the class may be taken and used for promotional purposes. By signing this form, you
-                agree to have your photograph taken for these purposes.
+                The Faith and Finance class will open and close each session with a prayer.
+                Also, scripture references from the Bible will be used in teaching this class.
             </p>
             <p>
-                You will be provided with a Participant's Guide for Faith and Finance which is yours to keep, 
-                however, you will be required to bring this book with you for each class.
+                In signing this form, you acknowledge and agree to this information being
+                shared regardless of your personal religious or non-religious preferences.
+            </p>
+            <p>
+                Photographs of the class may be taken for promotional purposes. By signing
+                this form, you agree to have your photo taken for these purposes.
+            </p>
+            <p>
+                You will be provided with a Participants Guide for Faith and Finance which is
+                yours to keep however you will be required to bring this book with you for each
+                class.
             </p>
             <label>
-                Name (Printed):
+                *Name (Printed):
                 <input type="text" class="waiver-name" placeholder="First and Last">
             </label>
             <label>
-                Name (Signature):
+                *Name (Signature):
                 <input type="text" class="waiver-signature" placeholder="First and Last">
             </label>
             <label>
-                Date:
-                <input type="text" class="waiver-date" placeholder="MM/DD/YYYY">
+                *Date:
+                <input type="date" class="waiver-date">
             </label>
         </div>
         <button class="external">Register</button>
@@ -100,17 +112,32 @@
 
     let $register = $(".training .registration button");
     $register.click(() => {
-        let name = $(".training .registration .name").val();
         let $info = $(".training .registration .info");
+        let registration = {
+            name: $(".training .registration .name").val(),
+            signature: $(".training .registration .signature").val(),
+            address: $(".training .registration .address").val(),
+            city: $(".training .registration .city").val(),
+            state: $(".training .registration .state").val(),
+            phone: $(".training .registration .phone").val()
+        };
+        let waiver = {
+            name: $(".training .registration .waiver-name").val(),
+            signature: $(".training .registration .waiver-signature").val(),
+            date: $(".training .registration .waiver-date").val()
+        };        
 
-        if (name) {
-            base.do("register-ff", { name, extras, route: "/the-front/faith-and-finances" }).then((res) => {
-                if (res.status == "success") $info.text(res.data);
+        if (registration.name && registration.signature && waiver.name && waiver.signature && waiver.date) {
+            base.do("register-ff", { registration, waiver, route: "/the-front/faith-and-finances" }).then((res) => {
+                if (res.status == "success") {
+                    $info.text(res.data);
+                    $(".training .registration input").val("");
+                }
                 else $info.text("Server Error. Please try again later.");
             });
         }
         else {
-            $info.text("Please enter your name.");
+            $info.text("Please fill out all required fields.");
         }
     });
 </script>
