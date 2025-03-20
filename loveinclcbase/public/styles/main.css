@@ -1392,7 +1392,8 @@ h3.ff {
 
     .card {
         width: 85%;
-        min-width: 200px
+        min-width: 200px;
+        max-width: 400px;
     }
 
     .card.big-bottom {
