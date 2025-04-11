@@ -56,11 +56,11 @@
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--textColor);
+    background: rgb(134, 134, 134);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--textColorBright);
+    background: rgb(199, 199, 199);
 }
 
 * {
@@ -770,6 +770,14 @@ iframe {
 
 /* for screens smaller than 1000px */
 @media screen and (max-width: 1000px) {
+    body {
+        padding: 40px;
+    }
+
+    main {
+        padding-top: var(--padding);
+    }
+
     .float-elements {
         display: none;
     }

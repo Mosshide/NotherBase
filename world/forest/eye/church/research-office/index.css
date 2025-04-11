@@ -1,0 +1,11 @@
+.bible-viewer {
+    height: 80vh;
+}
+
+.bible-viewer h4 {
+    padding: 0;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
