@@ -34,3 +34,24 @@
     border-radius: var(--border-radius);
     box-shadow: 0 0 10px 5px rgb(100, 130, 188);
 }
+
+.panda img {
+    width: 400px;
+    max-width: 45%;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.panda p {
+    padding: 20px;
+    max-width: 600px;
+}
+
+.panda .row {
+    padding: 20px;
+}
+
+.panda h3 {
+    background: rgb(209, 44, 47);
+    text-shadow: black 1px 1px 1px;
+}
