@@ -384,6 +384,7 @@ nav ul {
     flex-direction: row;
     margin-right: 20px;
     padding: 0;
+    gap: 5px;
 }
 
 nav ul li {
@@ -392,7 +393,7 @@ nav ul li {
     align-items: center;
     height: calc(100% - 10px);
     margin-right: 5px;
-    width: 130px;
+    width: auto;
     margin-top: 10px;
 }
 
@@ -1216,17 +1217,17 @@ h3.ff {
 
 /* styles for screens under 1500px wide */
 @media only screen and (max-width: 1500px) {
-    nav ul {
+    /* nav ul {
         gap: 5px;
     }
 
     nav ul li {
         width: auto;
-    }
+    } */
 }
 
 /* styles for screens under 1000px wide */
-@media only screen and (max-width: 1000px) {
+@media only screen and (max-width: 1100px) {
     main {
         margin-top: 100px;
     }
