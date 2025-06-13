@@ -46,6 +46,8 @@ class ThemeApplicator {
         else this.$navItems.append($(`<li><a href="/resources">Resources</a></li>`));
         if (this.path == "events") this.$navItems.append($(`<li><a class="selected" href="/events">Events</a></li>`));
         else this.$navItems.append($(`<li><a href="/events">Events</a></li>`));
+        if (this.path == "partners") this.$navItems.append($(`<li><a class="selected" href="/partners">Church Partners</a></li>`));
+        else this.$navItems.append($(`<li><a href="/partners">Church Partners</a></li>`));
         if (this.path == "contact") this.$navItems.append($(`<li><a class="selected" href="/contact">Contact Us</a></li>`));
         else this.$navItems.append($(`<li><a href="/contact">Contact Us</a></li>`));
         if (this.path == "about") this.$navItems.append($(`<li><a class="selected" href="/about">About Us</a></li>`));
