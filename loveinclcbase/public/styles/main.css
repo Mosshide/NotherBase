@@ -384,6 +384,7 @@ nav ul {
     flex-direction: row;
     margin-right: 20px;
     padding: 0;
+    gap: 5px;
 }
 
 nav ul li {
@@ -392,7 +393,7 @@ nav ul li {
     align-items: center;
     height: calc(100% - 10px);
     margin-right: 5px;
-    width: 130px;
+    width: auto;
     margin-top: 10px;
 }
 
@@ -1166,6 +1167,35 @@ section.fill-main {
     min-height: 90vh;
 }
 
+section.showcase {
+    max-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    padding: 40px 0;
+}
+
+section.showcase h3 {
+    height: 100px;
+    width: auto;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.877);
+    border-radius: 25px;
+    z-index: 1;
+}
+
+section.showcase img {
+    max-height: calc(100vh - 120px);
+    max-width: 100%;
+    height: auto;
+    width: auto;
+    margin-top: -120px;
+    border-radius: 25px;
+}
+
 /* temp */
 h3.ff {
     font-family: "Ubuntu", sans-serif;
@@ -1187,17 +1217,17 @@ h3.ff {
 
 /* styles for screens under 1500px wide */
 @media only screen and (max-width: 1500px) {
-    nav ul {
+    /* nav ul {
         gap: 5px;
     }
 
     nav ul li {
         width: auto;
-    }
+    } */
 }
 
 /* styles for screens under 1000px wide */
-@media only screen and (max-width: 1000px) {
+@media only screen and (max-width: 1100px) {
     main {
         margin-top: 100px;
     }
@@ -1430,6 +1460,14 @@ h3.ff {
     a.also {
         width: 60%;
         left: 20%;
+    }
+
+    section.showcase h3 {
+        margin-top: 0;
+    }
+
+    section.showcase img {
+        margin-top: 0;
     }
 
     /* temp */
