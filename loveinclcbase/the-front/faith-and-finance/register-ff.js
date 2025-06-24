@@ -23,8 +23,8 @@ export default async function submitApplication(req, user) {
         req.db.Spirit.create("faith-and-finances-08-25", newRegistration);
 
         // req.db.SendMail.send("wyattsushi@gmail.com", `New Registration for Faith and Finance Course 2025`, `
-        req.db.SendMail.send("exec.director@loveincoflewiscounty.org", `New Registration for Faith and Finance Course August 2025`, `
-            <h1>New Registration for Faith and Finance Course August 2025</h1>
+        req.db.SendMail.send("exec.director@loveincoflewiscounty.org", `New Registration for Faith and Finance Course September 2025`, `
+            <h1>New Registration for Faith and Finance Course September 2025</h1>
             <h3>Registration Information:</h3>
             <p>Name: ${newRegistration.registration.name}</p>
             <p>Signature: ${newRegistration.registration.signature}</p>
