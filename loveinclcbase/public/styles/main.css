@@ -1138,12 +1138,27 @@ a.link-button {
     width: 100%;
 }
 
+.info>.row {
+    width: 90%;
+}
+
+.info>.row>p {
+    padding: 0;
+}
+
 .info label .row {
     justify-content: flex-start;
 }
 
-.info label .row .row {
+.info .row .row {
     max-width: 50%;
+    justify-content: flex-start;
+}
+
+.info .row .row label {
+    width: auto;
+    display: flex;
+    align-items: center;
 }
 
 section.anniversary {
@@ -1283,7 +1298,7 @@ h3.ff {
         width: 100%;
     }
 
-    .info label .row .row {
+    .info .row .row {
         max-width: 100%;
     }
 
