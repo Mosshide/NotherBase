@@ -62,6 +62,18 @@
             Phone Number:
             <input type="text" class="phone" placeholder="123-456-7890">
         </label>
+        <!-- if childcare is needed (radio) and the age of the children (text input) -->
+        <label>
+            <div class="row">
+                Do you need childcare?
+                <input type="radio" class="childcare-needed" name="childcare" value="yes"> Yes
+                <input type="radio" class="childcare-needed" name="childcare" value="no"> No
+            </div>
+        </label>
+        <label class="childcare-age">
+            If yes, please provide the ages of your children:
+            <input type="text" class="childcare-age-input" placeholder="Ages of children">
+        </label>
         <div class="waiver">
             <h4>Participant Form</h4>
             <p>
@@ -122,7 +134,9 @@
             address: $(".training .registration .address").val(),
             city: $(".training .registration .city").val(),
             state: $(".training .registration .state").val(),
-            phone: $(".training .registration .phone").val()
+            phone: $(".training .registration .phone").val(),
+            childcareNeeded: $(".training .registration input[name='childcare']:checked").val() === "yes",
+            childcareAges: $(".training .registration .childcare-age-input").val()
         };
         let waiver = {
             name: $(".training .registration .waiver-name").val(),

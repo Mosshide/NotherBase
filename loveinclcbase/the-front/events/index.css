@@ -55,3 +55,27 @@
     background: rgb(209, 44, 47);
     text-shadow: black 1px 1px 1px;
 }
+
+.burgerville img {
+    width: 100%;
+    height: auto;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.burgerville a {
+    width: 100%;
+    max-width: 300px;
+    text-align: center;
+    padding: var(--thickPadding);
+    background: var(--fifth-color);
+    color: white;
+    border-radius: var(--border-radius);
+    text-decoration: none;
+}
+
+.burgerville a:hover {
+    background: var(--fifth-color-hover);
+    transition: all 0.1s;
+    transform: scale(1.01);
+}
