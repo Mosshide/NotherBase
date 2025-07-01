@@ -307,6 +307,19 @@ input {
     font-size: 20px;
 }
 
+input[type="checkbox"] {
+    width: 4vh;
+    height: 4vh;
+    margin: 0;
+    margin-left: 10px;
+}
+
+input[type="radio"] {
+    width: 4vh;
+    height: 4vh;
+    margin: 0 10px;
+}
+
 /* national bar */
 div.national {
     width: 100%;
@@ -1123,6 +1136,10 @@ a.link-button {
 
 .info.full {
     width: 100%;
+}
+
+.info label .row {
+    justify-content: flex-start;
 }
 
 section.anniversary {
