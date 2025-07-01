@@ -63,15 +63,17 @@
             <input type="text" class="phone" placeholder="123-456-7890">
         </label>
         <!-- if childcare is needed (radio) and the age of the children (text input) -->
-        <label>
+        <div class="row">
+            <p>Do you need childcare?</p>
             <div class="row">
-                <p>Do you need childcare?</p>
-                <div class="row">
+                <label>
                     <input type="radio" class="childcare-needed" name="childcare" value="yes"> Yes
+                </label>
+                <label>
                     <input type="radio" class="childcare-needed" name="childcare" value="no"> No
-                </div>
+                </label>
             </div>
-        </label>
+        </div>
         <label class="childcare-age">
             If yes, please provide the ages of your children:
             <input type="text" class="childcare-age-input" placeholder="Ages of children">
