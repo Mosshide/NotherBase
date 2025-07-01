@@ -1142,6 +1142,10 @@ a.link-button {
     justify-content: flex-start;
 }
 
+.info label .row .row {
+    max-width: 50%;
+}
+
 section.anniversary {
     background: rgb(156,206,207);
 }
@@ -1277,6 +1281,10 @@ h3.ff {
 
     .info {
         width: 100%;
+    }
+
+    .info label .row .row {
+        max-width: 100%;
     }
 
     .side {
