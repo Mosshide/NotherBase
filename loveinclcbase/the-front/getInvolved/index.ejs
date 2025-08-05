@@ -12,6 +12,46 @@
     </p>
 </section>
 
+<div class="mentor row">
+    <img src="/img/volunteer/Ally-Mentor flyer.webp" alt="Ally Mentor flyer">
+    <div class="registration info">
+        <h3>Ally (Mentor) Training for Faith & Finance Classes Registration Form</h3>
+        <p>The Faith and Finance Program is a 12-week course.</p>
+        <p>By signing this form, you agree to attend the training date scheduled for Saturday, August 9
+            from 9am-3:30pm at the Love INC office located at 783 SW Pacific Ave. in Chehalis.
+            Lunch will be provided.</p>
+        <p>
+            Fields marked with an asterisk (*) are required.
+        </p>
+        <label>
+            *Name (Printed):
+            <input type="text" class="name" placeholder="First Middle Last">
+        </label>
+        <label>
+            *Name (Signature):
+            <input type="text" class="signature" placeholder="First Middle Last">
+        </label>
+        <label>
+            Address:
+            <input type="text" class="address" placeholder="123 Main St.">
+        </label>
+        <label>
+            City:
+            <input type="text" class="city" placeholder="City">
+        </label>
+        <label>
+            State:
+            <input type="text" class="state" placeholder="State">
+        </label>
+        <label>
+            Phone Number:
+            <input type="text" class="phone" placeholder="123-456-7890">
+        </label>
+        <button class="submit">Register</button>
+        <p class="alert"></p>
+    </div>
+</div>
+
 <section>
     <h3>Volunteer Opportunities</h3>
     
@@ -119,6 +159,31 @@
             base.do("tally-extra", { route: "/the-front/scripts" });
         }, 30000);
     }, 3000);
+
+    let $register = $(".mentor .registration button");
+    $register.click(() => {
+        let $alert = $(".mentor .registration .alert");
+        let registration = {
+            name: $(".mentor .registration .name").val(),
+            signature: $(".mentor .registration .signature").val(),
+            address: $(".mentor .registration .address").val(),
+            city: $(".mentor .registration .city").val(),
+            state: $(".mentor .registration .state").val(),
+            phone: $(".mentor .registration .phone").val()
+        };
+
+        if (registration.name && registration.signature) {
+            base.do("register-ff-ally", { registration, route: "/the-front/getInvolved" }).then((res) => {
+                if (res.status == "success") {
+                    $alert.text(res.data);
+                }
+                else $alert.text("Server Error. Please try again later.");
+            });
+        }
+        else {
+            $alert.text("Please fill out all required fields.");
+        }
+    });
 
     // let appeared = false;
     // let footerTop = $(".impact").offset().top;

@@ -1262,7 +1262,7 @@ h3.ff {
     } */
 }
 
-/* styles for screens under 1000px wide */
+/* styles for screens under 1100px wide */
 @media only screen and (max-width: 1100px) {
     main {
         margin-top: 100px;
