@@ -12,22 +12,15 @@ export default async function submitApplication(req, user) {
                 address: req.body.registration.address,
                 city: req.body.registration.city,
                 state: req.body.registration.state,
-                phone: req.body.registration.phone,
-                childcareNeeded: req.body.registration.childcareNeeded || false,
-                childcareAges: req.body.registration.childcareAges || ""
-            },
-            waiver: {
-                name: req.body.waiver.name,
-                signature: req.body.waiver.signature,
-                date: req.body.waiver.date
+                phone: req.body.registration.phone
             }
         }
 
-        req.db.Spirit.create("faith-and-finances-08-25", newRegistration);
+        req.db.Spirit.create("faith-and-finances-ally-09-25", newRegistration);
 
-        // req.db.SendMail.send("wyattsushi@gmail.com", `New Registration for Faith and Finance Course 2025`, `
-        req.db.SendMail.send("exec.director@loveincoflewiscounty.org", `New Registration for Faith and Finance Course September 2025`, `
-            <h1>New Registration for Faith and Finance Course September 2025</h1>
+        //req.db.SendMail.send("wyattsushi@gmail.com", `New Registration for Ally (Mentor) for Faith and Finance Course September 2025`, `
+        req.db.SendMail.send("exec.director@loveincoflewiscounty.org", `New Registration for Ally (Mentor) for Faith and Finance Course September 2025`, `
+            <h1>New Registration for Ally (Mentor) for Faith and Finance Course September 2025</h1>
             <h3>Registration Information:</h3>
             <p>Name: ${newRegistration.registration.name}</p>
             <p>Signature: ${newRegistration.registration.signature}</p>
@@ -35,19 +28,13 @@ export default async function submitApplication(req, user) {
             <p>City: ${newRegistration.registration.city || "N/A"}</p>
             <p>State: ${newRegistration.registration.state || "N/A"}</p>
             <p>Phone: ${newRegistration.registration.phone || "N/A"}</p>
-            <p>Childcare Needed: ${newRegistration.registration.childcareNeeded ? "Yes" : "No"}</p>
-            <p>Childcare Ages: ${newRegistration.registration.childcareAges || "N/A"}</p>
             <br>
-            <h3>Waiver Information:</h3>
-            <p>Name: ${newRegistration.waiver.name}</p>
-            <p>Signature: ${newRegistration.waiver.signature}</p>
-            <p>Date: ${newRegistration.waiver.date}</p>
             <br><br>
             <p>This is an automated message. Please do not reply.</p>
         `, "Love INC of Lewis County");
 
         req.session.lastFFRegistration = Date.now();
 
-        return "Thank you for registering for the Faith and Finance course! We will see you there!";
+        return "Thank you for registering as an Ally (Mentor) for the Faith and Finance course! We will see you Saturday!";
     }
 }
