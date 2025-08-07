@@ -1,0 +1,26 @@
+<h2>Donate</h2>
+
+<section>
+    <div class="info">
+        <h3>Under Construction</h3>
+        <h5>
+            We are improving our donation page and will have it up and running within two weeks. 
+        </h5>
+        <h5>Thank you for your patience!</h5>
+
+    </div>
+</section>
+
+<script src="/js/themeApplicator.js"></script>
+<script>
+    const themeApplicator = new ThemeApplicator({
+        enableExperimental: <%= query.preview ? true: false %>
+    });
+
+    base.do("tally", { route: "/the-front/scripts" });
+    setTimeout(() => {
+        setInterval(() => {
+            base.do("tally-extra", { route: "/the-front/scripts" });
+        }, 30000);
+    }, 3000);
+</script>
