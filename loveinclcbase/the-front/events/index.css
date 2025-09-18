@@ -56,14 +56,14 @@
     text-shadow: black 1px 1px 1px;
 }
 
-.burgerville img {
+.flyer img {
     width: 100%;
     height: auto;
     border-radius: 0;
     box-shadow: none;
 }
 
-.burgerville a {
+.flyer a {
     width: 100%;
     max-width: 300px;
     text-align: center;
@@ -74,7 +74,7 @@
     text-decoration: none;
 }
 
-.burgerville a:hover {
+.flyer a:hover {
     background: var(--fifth-color-hover);
     transition: all 0.1s;
     transform: scale(1.01);
