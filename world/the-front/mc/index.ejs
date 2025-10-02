@@ -43,9 +43,7 @@
     base.do("mc-status", {
         route: "/the-front/mc",
         scope
-    }).then((res) => {
-        console.log(res);
-        
+    }).then((res) => {        
         if (res.data.status === "online") {
             $("#status").text("Status: Online");
             $("#players").text(`Players: ${res.data.online}/${res.data.max}`);
