@@ -44,6 +44,8 @@
         route: "/the-front/mc",
         scope
     }).then((res) => {
+        console.log(res);
+        
         if (res.data.status === "online") {
             $("#status").text("Status: Online");
             $("#players").text(`Players: ${res.data.online}/${res.data.max}`);
