@@ -19,36 +19,28 @@
 </style>
 
 <h1>NotherBase Documentation</h1>
-<h2>notherbase-fs Version: 4.3.0</h2>
+<h2>notherbase-fs Version: 4.3.6</h2>
 
 <details>
     <summary><h3>General Web Development Setup</h3></summary>
 
-    <h4>Windows and Linux Web Development Setup</h4>
-    <a href="https://learn.microsoft.com/en-us/windows/dev-environment/javascript/nodejs-on-wsl">Install Node.js on Windows Subsystem for Linux (WSL2)</a>
+    <h4>Windows Web Development Setup</h4>
+    <a href="https://learn.microsoft.com/en-us/windows/dev-environment/javascript/nodejs-on-windows">Install Node.js on Windows</a>
     <p>
-        The link above is a Microsoft tutorial on installing WSL2 and Node.js. WSL2 is a 
-        virtualized Ubuntu environment that will run Node.js in the terminal, which gives us
-        a local development version of the NotherBase server. Follow the tutorial.
+        The link above is a Microsoft tutorial on installing Node.js, VS Code, and a 
+        few other tools you'll use. Terminal will run Node.js in the terminal, which gives us
+        a local development version of a NotherBase server. Follow the tutorial down to 
+        and including "Install Git."
     </p>
 
     <p>
         VS Code is a great code editor. One of the extensions that highlights EJS 
-        syntax is helpful.
+        syntax is helpful. I'm currently using "EJS Language Support" by DigitalBrainstem.
     </p>
 
+    <h5>In the Terminal:</h5>
     <p>
-        Windows Users: I recommend using Windows Terminal. If you use 
-        VS Code, make sure to get the WSL extension.
-    </p>
-
-    <p>
-        Linux Users: Go to the same link as the Windows folks and just ignore all the instructions
-        that are specifically for Windows users.
-    </p>
-
-    <p>
-        Nodemon is recommended to automatically restart your development server when your
+        Nodemon in your terminal is recommended to automatically restart your development server when your
         code changes.
     </p>
 <pre class="code">
@@ -56,6 +48,7 @@ npm i -g nodemon
 </pre>
 
     <h4>Create Your Own Base</h4>
+    <h5>In the Terminal:</h5>
     <p>
         By installing notherbase-fs to an npm package, one can setup 
         an Express.js server with automatic routes and a MongoDB connection.
@@ -76,6 +69,7 @@ npm init; npm pkg set type="module";
 npm i notherbase-fs
 </pre>
 
+    <h5>In VS Code:</h5>
     <p>
         Create a yourBase.js file and use the code below to import notherbase-fs, 
         grab local directories and initialize the server. This allows
@@ -98,6 +92,8 @@ const yourbasefs = new NotherBaseFS({ globals }, {
     }
 });
 </pre>
+
+    <h5>In File Explorer:</h5>
     <p>
         Edit your device's hosts file to locally route to your test server, using
         whatever domains you like. In Windows for example, the hosts file can be
@@ -115,6 +111,8 @@ localhost       	anotherbase.local
 localhost       	www.anotherbase.local
 ::1             	www.anotherbase.local
 </pre>
+
+    <h5>In VS Code:</h5>
     <p>
         Create a file named .env and provide the environment variables below.
         The PORT variable is needed for testing. Hosting platforms like Heroku
@@ -143,6 +141,7 @@ CLIENTREFRESH="1//etnkgnbgnboet8hao9fhbs9ioghru8veiu7"
 </pre>
 
     <h4>Running the Development Server</h4>
+    <h5>In the Terminal:</h5>
     <p>
         Start the server with node or nodemon(recommended).
     </p>
