@@ -1,8 +1,10 @@
 :root {
     --main-color: rgb(64, 130, 228);
+    --main-color-transparent: rgba(64, 130, 228, 0.219);
     --main-color-hover: rgb(74, 136, 230);
     --alternating-color: rgb(243, 248, 255);
     --second-color: #ffffff;
+    --second-color-transparent: rgba(255, 255, 255, 0.219);
     --second-color-hover: #e2e2e2;
     --shadow-color: rgba(0,0,0,0.55);
     --shadow: 1px 5px 14px 1px var(--shadow-color);
