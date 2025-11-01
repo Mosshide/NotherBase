@@ -28,6 +28,30 @@ class ThemeApplicator {
         // add the meta description to the head
         this.$head.append($(`<meta name="description" content="${this.settings.description}">`));
 
+        //// THANKSGIVING LANDING PAGE ////
+        // add the landing page for thanksgiving event
+        // <div class="landing">
+        //     <img src="/img/events/thanksgiving/Website Graphic.jpg" alt="" srcset="">
+        //     <button>Continue to Love INC of Lewis County</button>
+        // </div>
+        if (this.path == "") {
+            this.$main.css("display", "none"); // hide main content initially
+            this.$landing = $(`<div class="landing">
+                                    <img src="" alt="30 Days of thanks 2025">
+                                    <button>Continue to Love INC of Lewis County</button>
+                                </div>`).prependTo(this.$body);
+            $('.landing img').hide().fadeIn('slow');
+            $('.landing button').hide().delay(500).fadeIn('slow');
+            // Landing page button functionality using jQuery
+            $('.landing button').click(() => {
+                this.$main.css("display", "block"); // show main content
+                $('.landing').fadeOut('slow', function() {
+                    // Optionally, you can remove the landing div from the DOM after fading out
+                    $(this).remove();
+                });
+            });
+        }
+
         // add the nav button for mobile
         this.$navButton = $("<button id='nav-button'>Navigation<i class='fa-solid fa-bars'></i></button>").prependTo(this.$main);
         this.$navButton.click(() => this.enableNavMobile());
