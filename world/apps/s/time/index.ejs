@@ -6,8 +6,17 @@
 <link rel="stylesheet" href="/styles/billboard.css">
 
 <div class="hud">
+    <div class="nav">
+        <a class="home" href="/apps/s/home">
+            &lt; Home
+        </a>
+        <p>
+            &lt; Time
+        </p>
+    </div>
     <div class="left date">
         <p class="day"></p>
+        <p class="time"></p>
         <p class="full-date"></p>
     </div>
     <div class="right bible-viewer"></div>
@@ -15,15 +24,13 @@
 
 <div class="meta"></div>
 
-<hr>
-
-<a class="go" href="/forest/eye/filter/tree-house">
+<!-- <a class="go" href="/forest/eye/filter/tree-house">
     Climb up the nearby Tree House
-</a>
+</a> -->
 
-<hr class="forced">
+<!-- <hr class="forced"> -->
 
-<a class="to" href="/forest/eye/filter/cave">
+<!-- <a class="to" href="/forest/eye/filter/cave">
     Go to Cave
 </a>
 
@@ -45,11 +52,9 @@
     Return to the Church
 </a>
 
-<hr class="forced">
+<hr class="forced"> -->
 
-<a class="return" href="/">
-    Return to The Front
-</a>
+
 
 <script src="/js/util/date-ext.js"></script>
 <script src="/js/util/weather.js"></script>
@@ -89,6 +94,14 @@
     let dayName = weekday[date.getDay()];
     $(`.date .day`).text(dayName);
     $(`.date .full-date`).text(date.toLocaleDateString());
+
+    // update time every second, but don't display seconds
+    function updateTime() {
+        const date = new Date();
+        $(`.date .time`).text(date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+    }
+    updateTime();
+    setInterval(updateTime, 1000);
 
     const bibleViewer = new BibleViewer({
         header: "",
