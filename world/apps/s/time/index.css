@@ -92,7 +92,7 @@ main .hud .time {
         max-width: 100% !important;
     }
 
-    .date {
+    .hud .date {
         width: 75% !important;
         padding-left: 25% !important;
     }
