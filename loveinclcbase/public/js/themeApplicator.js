@@ -36,10 +36,16 @@ class ThemeApplicator {
         // </div>
         if (this.path == "") {
             this.$main.css("display", "none"); // hide main content initially
-            this.$landing = $(`<div class="landing">
-                                    <img src="" alt="30 Days of thanks 2025">
+            let currentMonth = new Date().toLocaleString('default', { month: 'long' });
+            
+            if (currentMonth == "November") this.$landing = $(`<div class="landing">
+                                    <img class="bg" src="/img/events/thanksgiving/Website Graphic.jpg" alt="30 Days of thanks 2025">
                                     <button>Continue to Love INC of Lewis County</button>
                                 </div>`).prependTo(this.$body);
+            else this.$landing = $(`<div class="landing">
+                                <img class="end" src="/img/events/thanksgiving/end.webp" alt="End of 30 Days">
+                                <button>Continue to Love INC of Lewis County</button>
+                            </div>`).prependTo(this.$body);
             $('.landing img').hide().fadeIn('slow');
             $('.landing button').hide().delay(500).fadeIn('slow');
             // Landing page button functionality using jQuery
