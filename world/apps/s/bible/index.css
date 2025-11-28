@@ -1,0 +1,37 @@
+.bible-viewer {
+    height: 60%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    padding-top: var(--thickPadding);
+    z-index: 98;
+    margin: 0;
+    background: linear-gradient(to bottom, var(--bgColor) 0%, var(--bgColor) 90%, rgba(255, 255, 255, 0) 100%);
+}
+
+.bible-viewer h4 {
+    padding: 0;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.meta {
+    padding-top: 56vh;
+}
+
+.meta .search-box {
+    padding: 0;
+}
+
+.meta>.buttons {
+    margin: 0;
+}
+
+/* for smaller screens */
+@media screen and (max-width: 570px) {
+    .meta {
+        padding-top: 54vh;
+    }
+}
