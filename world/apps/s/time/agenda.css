@@ -1,12 +1,5 @@
 .meta {
-    overflow: auto;
-    height: 100% !important;
-    overflow: auto;
     padding-top: 25vh;
-}
-
-.meta .search-box {
-    height: auto !important;
 }
 
 .browser .shared h4 {
