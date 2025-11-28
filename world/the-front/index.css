@@ -4,6 +4,16 @@
     --gateColorBright: rgb(187, 187, 187);
 }
 
+body {
+    height: auto;
+    padding-bottom: 25px;
+}
+
+main {
+    height: auto;
+    margin-bottom: 25px;
+}
+
 .logo {
     border-radius: 50%;
     box-shadow: 15px 15px 5px var(--shadowColor);

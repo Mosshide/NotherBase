@@ -24,6 +24,17 @@ main {
     align-items: flex-start;
 }
 
+main .hud {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 25vh;
+    background: linear-gradient(to bottom, var(--bgColor) 0%, var(--bgColor) 90%, rgba(255, 255, 255, 0) 100%);
+    z-index: 11;
+    min-height: 150px;
+}
+
 main .hud .bible-viewer {
     width: auto;
     max-width: 70%;
@@ -40,12 +51,18 @@ main .hud .date {
     align-items: center;
 }
 
+main .hud .time {
+    font-size: var(--h2Size);
+    font-weight: bold;
+    margin-top: 5px;
+    text-align: center;
+}
+
 .hud .date .day {
     font-size: var(--h2Size);
     padding: 0;
     width: auto;
     font-weight: bold;
-    margin-bottom: 10px;
 }
 
 .hud .date .full-date {
@@ -58,6 +75,7 @@ main .hud .date {
     margin: 0;
 }
 
+/* for larger screens */
 @media screen and (min-width: 570px) {
     main.full-view  .hud {
         width: 700px;
@@ -65,5 +83,19 @@ main .hud .date {
 
     main.full-view .porch {
         width: 700px;
+    }
+
+    
+}
+
+/* for smaller screens */
+@media screen and (max-width: 570px) {
+    .bible-viewer {
+        max-width: 100% !important;
+    }
+
+    .date {
+        width: 75% !important;
+        padding-left: 25% !important;
     }
 }

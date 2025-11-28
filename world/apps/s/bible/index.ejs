@@ -2,14 +2,18 @@
     <%- include("./index.css"); %>
 </style>
 
+<div class="nav">
+    <a class="home" href="/apps/s/home">
+        &lt; Home
+    </a>
+    <p>
+        &lt; Bible
+    </p>
+</div>
+
 <div class="bible-viewer"></div>
 <div class="meta" id="bible-research"></div>
 
-<hr>
-
-<a class="return" href="/forest/eye/church/library">
-    Return to the Library
-</a>
 
 <script src="/js/util/element.js"></script>
 <script src="/js/util/buttons.js"></script>
@@ -22,7 +26,7 @@
     bibleViewer.render();
 
     const metaResearch = new MetaBrowser({
-        header: "Bible Research",
+        header: "",
         id: "bible-research",
         useBrowser: TreeBrowser
     });

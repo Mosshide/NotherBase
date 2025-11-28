@@ -2,13 +2,16 @@
     <%- include("./index.css") %>
 </style>
 
+<div class="nav">
+    <a class="home" href="/apps/s/home">
+        &lt; Home
+    </a>
+    <p>
+        &lt; Notes
+    </p>
+</div>
+
 <div class="meta"></div>
-
-<hr>
-
-<a class="return" href="/forest/eye/library/lobby">
-    Return to the Lobby
-</a>
 
 <script src="/js/util/element.js"></script>
 <script src="/js/util/buttons.js"></script>
@@ -17,7 +20,7 @@
 <script src="/js/entity.js"></script>
 <script>
     const metaBrowser = new MetaBrowser({
-        header: "Your Notes"
+        header: ""
     });
     metaBrowser.addService("notes", {
         fields: new NBField({
