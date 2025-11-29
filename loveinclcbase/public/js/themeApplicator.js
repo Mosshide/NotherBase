@@ -35,7 +35,7 @@ class ThemeApplicator {
         //     <button>Continue to Love INC of Lewis County</button>
         // </div>
         if (this.path == "") {
-            this.$main.css("display", "none"); // hide main content initially
+            this.$main.addClass("invisible"); // hide main content initially
             let currentMonth = new Date().toLocaleString('default', { month: 'long' });
             
             if (currentMonth == "November") this.$landing = $(`<div class="landing">
@@ -46,11 +46,11 @@ class ThemeApplicator {
                                 <img class="end" src="/img/events/thanksgiving/end.webp" alt="End of 30 Days">
                                 <button>Continue to Love INC of Lewis County</button>
                             </div>`).prependTo(this.$body);
-            $('.landing img').hide().fadeIn('slow');
+            // $('.landing img').hide().fadeIn('slow');
             $('.landing button').hide().delay(500).fadeIn('slow');
             // Landing page button functionality using jQuery
             $('.landing button').click(() => {
-                this.$main.css("display", "block"); // show main content
+                this.$main.removeClass("invisible"); // show main content
                 $('.landing').fadeOut('slow', function() {
                     // Optionally, you can remove the landing div from the DOM after fading out
                     $(this).remove();
