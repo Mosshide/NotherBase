@@ -1357,8 +1357,8 @@ h3.ff {
 
     nav ul li {
         width: 100%;
-        height: 7vh;
-        margin-top: 5px;
+        height: 7svh;
+        margin-top: 0;
         padding: 0;
     }
 
