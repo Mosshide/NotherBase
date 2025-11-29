@@ -1385,7 +1385,7 @@ h3.ff {
     }
 
     nav.mobile-full {
-        height: calc(100% - 55px);
+        height: calc(100svh - 55px);
         position: absolute;
         overflow-y: auto;
     }
