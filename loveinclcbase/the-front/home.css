@@ -182,7 +182,7 @@ section iframe.side.right {
 .landing {
     width: 100%;
     height: fit-content;
-    min-height: 100vh;
+    min-height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
