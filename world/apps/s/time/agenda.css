@@ -1,5 +1,5 @@
-.meta {
-    padding-top: 25vh;
+.meta, .meta>.browser {
+    padding-top: 25vh !important;
 }
 
 .browser .shared h4 {

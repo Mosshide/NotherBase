@@ -41,13 +41,7 @@
             })
         ]),
         editable: true,
-        multiple: true,
-        toLoad: async () => {
-            return await base.loadAll("projects");
-        },
-        toSave: async (item, deleting) => {
-            return await base.do("save-project", { item, deleting });
-        }
+        multiple: true
     });
     metaBrowser.render();
 </script>

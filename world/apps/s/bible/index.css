@@ -17,7 +17,8 @@
     justify-content: center;
 }
 
-.meta {
+.meta, .meta>.browser {
+    margin-top: 0;
     padding-top: 56vh;
 }
 
@@ -29,9 +30,13 @@
     margin: 0;
 }
 
+.browser {
+    height: 100% !important;
+}
+
 /* for smaller screens */
 @media screen and (max-width: 570px) {
     .meta {
-        padding-top: 54vh;
+        padding-top: 56vh;
     }
 }
