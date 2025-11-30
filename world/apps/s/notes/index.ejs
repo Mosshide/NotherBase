@@ -43,13 +43,7 @@
         ]),
         label: "Notes",
         editable: true,
-        multiple: true,
-        toLoad: async () => {
-            return await base.loadAll("notes");
-        },
-        toSave: async (item, deleting) => {
-            return await base.do("save-note", { item, deleting });
-        }
+        multiple: true
     });
     metaBrowser.render();
 </script>

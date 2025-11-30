@@ -75,47 +75,6 @@ monthEnd.setMonth(monthEnd.getMonth() + 1);
 let yearEnd = new Date(nowDate.getTime());
 yearEnd.setFullYear(yearEnd.getFullYear() + 1);
 
-// an extension of the Filters class called AgendaFilters
-// this class has a few extra filters that are specific to the agenda
-class AgendaFilters extends Filters {
-    constructor(onFilterChange = null) {
-        super(onFilterChange, {
-            search: "",
-            showOld: false,
-            showMore: false
-        });
-
-        this.showOld = this.addChild(new CheckBox({
-            header: "Show Old",
-            onClick: (e, self) => { this.updateFilter(self.getValue(), "showOld"); }
-        }));
-
-        this.showYear = this.addChild(new CheckBox({
-            header: "Show Year",
-            onClick: (e, self) => { this.updateFilter(self.getValue(), "showYear"); }
-        }));
-
-        this.showMore = this.addChild(new CheckBox({
-            header: "Show More",
-            onClick: (e, self) => { this.updateFilter(self.getValue(), "showMore"); }
-        }));
-    }
-
-    setFilter = (filter) => {
-        if (filter) {
-            // update the filter
-            this.updateFilter(filter, null);
-            // update the search input value
-            this.$search.val(this.filter.search);
-            // update the showOld checkbox value
-            this.$showOld.prop("checked", this.filter.showOld);
-            // update the showYear checkbox value
-            this.$showYear.prop("checked", this.filter.showYear);
-            // update the showMore checkbox value
-            this.$showMore.prop("checked", this.filter.showMore);
-        }
-    }
-}
 
 // an extension of the SearchBox class called Agenda
 // this class has a few extra lists that are specific to the agenda
@@ -146,13 +105,11 @@ class Agenda extends SearchBox {
     constructor(settings = {}) {
         super({
             defaultClasses: "search-box agenda",
-            filters: null,
             ...settings
         });
 
-        this.addFilters(AgendaFilters, this.renderSearchResults);
-
         this.removeChild(this.list);
+        this.filters.onFilterChange = this.renderSearchResults;
 
         this.oldList = this.addChild(new Element("ul", {
             defaultClasses: "selector",
@@ -194,8 +151,8 @@ class Agenda extends SearchBox {
     // Override renderSearchResults method
     renderSearchResults = () => {
         this.clearLists();
-
-        this.filter = this.filters.getValue(null);
+        
+        this.filter = this.filters.filter;
 
         if (this.items.length < 1) {
             this.list.$div.append(`<p>No Items</p>`);
@@ -300,6 +257,14 @@ class Agenda extends SearchBox {
         }
     }
 
+    getliElementById = (id) => {
+        let lists = [this.oldList, this.todayList, this.todoList, this.weekList, this.monthList, this.yearList, this.moreList];
+        for (let l = 0; l < lists.length; l++) {
+            let element = lists[l].children.find((child) => child.settings.id == id);
+            if (element) return element;
+        }
+    }
+
     // clears all lists
     clearLists = () => {
         if (this.browser) {
@@ -325,86 +290,19 @@ class Agenda extends SearchBox {
 
 const metaBrowser = new MetaBrowser({
     header: null,
-    useSearchBox: Agenda
-});
-metaBrowser.render();
-metaBrowser.addService("schedule", {
-    fields: new NBField({
-        name: "task",
-        label: "Task: ",
-        placeholder: "No task"
-    }, [
-    new NBField({
-        name: "name",
-        placeholder: "Name",
-        type: "string"
-    }),
-    new NBField({
-        name: "date",
-        label: "On ",
-        placeholder: "ASAP",
-        type: "date"
-    }),
-    new NBField({
-        name: "timeHours",
-        label: "At ",
-        placeholder: "",
-        options: [
-            "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", 
-            "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"
-        ],
-        type: "options"
-    }),
-    new NBField({
-        name: "timeMinutes",
-        label: ":",
-        placeholder: "",
-        options: [
-            "00", "01", "02", "03", "04", "05", "06", "07", "08", "09",
-            "10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
-            "20", "21", "22", "23", "24", "25", "26", "27", "28", "29",
-            "30", "31", "32", "33", "34", "35", "36", "37", "38", "39",
-            "40", "41", "42", "43", "44", "45", "46", "47", "48", "49",
-            "50", "51", "52", "53", "54", "55", "56", "57", "58", "59"
-        ],
-        type: "options"
-    }),
-    new NBField({
-        name: "frequency",
-        label: "Repeating ",
-        placeholder: "Once",
-        options: [
-            "Once",
-            "Daily",
-            "Weekly",
-            "Monthly",
-            "Yearly"
-        ],
-        type: "options"
-    }),
-    new NBField({
-        name: "description",
-        placeholder: "Description",
-        type: "long-string"
-    })
-]),
-label: "Your Tasks",
-multiple: true,
-toLoad: async () => {
-    let res = await base.loadAll("schedule");
-
-    for (let i = 0; i < res.length; i++) {
-        if (res[i]) {     
-            Agenda.getWorkingDate(res[i].memory.data);
-        }
-    };
-    // sort the data first by if there is a date, then by date, then by time, then by name
-    res.sort((a, b) => {
-        a = a.memory.data;
-        b = b.memory.data;
+    useSearchBox: Agenda,
+    filtersDefaults: {
+        search: "",
+        showOld: false,
+        showYear: false,
+        showMore: false
+    },
+    dataSort: (a, b) => {
         if (!a && !b) return 0;
         if (a && !b) return -1;
         if (!a && b) return 1;
+        if (!a.workingDate) Agenda.getWorkingDate(a);
+        if (!b.workingDate) Agenda.getWorkingDate(b);
         if (a.workingDate && !b.workingDate) return -1;
         if (!a.workingDate && b.workingDate) return 1;
         if (a.workingDate && b.workingDate) {
@@ -430,10 +328,69 @@ toLoad: async () => {
         }
 
         return 0;
-    });
-
-    return res;
-},
-toSave: async (item, deleting) => {
-    return await base.do("save-task", { item, deleting });
-}});
+    }
+});
+metaBrowser.render();
+metaBrowser.addService("schedule", {
+    fields: new NBField({
+        name: "task",
+        label: "Task: ",
+        placeholder: "No task"
+    }, [
+        new NBField({
+            name: "name",
+            placeholder: "Name",
+            type: "string"
+        }),
+        new NBField({
+            name: "date",
+            label: "On ",
+            placeholder: "ASAP",
+            type: "date"
+        }),
+        new NBField({
+            name: "timeHours",
+            label: "At ",
+            placeholder: "",
+            options: [
+                "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", 
+                "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"
+            ],
+            type: "options"
+        }),
+        new NBField({
+            name: "timeMinutes",
+            label: ":",
+            placeholder: "",
+            options: [
+                "00", "01", "02", "03", "04", "05", "06", "07", "08", "09",
+                "10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
+                "20", "21", "22", "23", "24", "25", "26", "27", "28", "29",
+                "30", "31", "32", "33", "34", "35", "36", "37", "38", "39",
+                "40", "41", "42", "43", "44", "45", "46", "47", "48", "49",
+                "50", "51", "52", "53", "54", "55", "56", "57", "58", "59"
+            ],
+            type: "options"
+        }),
+        new NBField({
+            name: "frequency",
+            label: "Repeating ",
+            placeholder: "Once",
+            options: [
+                "Once",
+                "Daily",
+                "Weekly",
+                "Monthly",
+                "Yearly"
+            ],
+            type: "options"
+        }),
+        new NBField({
+            name: "description",
+            placeholder: "Description",
+            type: "long-string"
+        })
+    ]),
+    label: "Your Tasks",
+    multiple: true
+});
