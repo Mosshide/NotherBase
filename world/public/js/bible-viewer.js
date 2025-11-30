@@ -8,14 +8,15 @@ class BibleViewer extends Container {
             initialChapter: 1,
             initialVerse: null,
             initialVerseEnd: null,
+            bookmark: null,
             ...settings
         });
         
         this.location = {
-            book: "Genesis",
-            chapter: 0,
-            verse: null,
-            verseEnd: null
+            book: this.settings.initialBook,
+            chapter: this.settings.initialChapter != null ? this.settings.initialChapter - 1 : null,
+            verse: this.settings.initialVerse != null ? this.settings.initialVerse - 1 : null,
+            verseEnd: this.settings.initialVerseEnd != null ? this.settings.initialVerseEnd - 1 : null
         };
         this.newLocation = {
             ...this.location
@@ -318,7 +319,7 @@ class BibleViewer extends Container {
         this.bookSelect = null;
     }
 
-    render() {
+    async render() {
         this.content = this.addChild(new Text("p", {
             defaultClasses: `bible-text ${this.settings.showUI ? "" : "no-ui"}`,
             placeholder: "Loading..."
@@ -329,23 +330,28 @@ class BibleViewer extends Container {
             hidden: this.settings.showUI ? false : true
         }));
 
-        this.goButton = this.ui.addChild(new Button("go", () => { this.openTo(); }, { 
+        this.goButton = this.ui.addChild(new Button("go", async () => { 
+            this.location.verse = null;
+            this.location.verseEnd = null;
+            if (this.settings.bookmark) await base.save(`last-notherBible-location-${this.settings.bookmark}`, "local", this.location);
+            this.openTo();
+        }, { 
             placeholder: "Go"
         }));
 
         this.setBooks();
         this.setChapters();
-        base.load("last-notherBible-location", "local").then((location) => {
-            location = location.memory?.data || {};
-            
-            this.openTo({
-                book: location.book != null ? location.book : this.settings.initialBook,
-                chapter: location.chapter != null ? location.chapter : this.settings.initialChapter != null ? this.settings.initialChapter - 1 : null,
-                verse: location.verse != null ? location.verse : this.settings.initialVerse != null ? this.settings.initialVerse - 1 : null,
-                verseEnd: location.verseEnd != null ? location.verseEnd : this.settings.initialVerseEnd != null ? this.settings.initialVerseEnd - 1 : null
-            });
-        });
+        if (this.settings.bookmark) await base.load(`last-notherBible-location-${this.settings.bookmark}`, "local").then((location) => {
+            if (location.memory?.data) this.location = {...this.location, ...location.memory.data};
+        });      
 
+        this.openTo({
+            book: this.location.book,
+            chapter: this.location.chapter,
+            verse: this.location.verse,
+            verseEnd: this.location.verseEnd
+        });
+        
         this.settings.defaultClasses = "bible-viewer";
         this.$div = super.render(`.bible-viewer${this.settings.id ? `#${this.settings.id}` : ""}`);
         
@@ -401,12 +407,10 @@ class BibleViewer extends Container {
             book: (Object.keys(this.bibleInfo)).indexOf(this.location.book)
         }
 
-        await base.save("last-notherBible-location", "local", this.location);
-
         let res = await base.do("get-bible", {
             ...outLocation,
             route: "/global"
-        });
+        });        
         
         let text = `${this.location.book} ${this.location.chapter + 1}${this.location.verse != null ? `:${this.location.verse + 1}` : ""}${this.location.verseEnd != null ? `-${this.location.verseEnd}` : ""}<br /><br />`;
         if (this.location.verseEnd != null) {

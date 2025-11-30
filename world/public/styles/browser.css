@@ -125,7 +125,7 @@
 }
 
 .meta>.browser>.read, .meta>.browser>.edit {
-    height: calc(100% - 100px);
+    height: calc(100% - 80px);
 }
 
 .browser .read p, .browser .edit p {
@@ -136,13 +136,19 @@
 }
 
 .browser .buttons {
-    height: 50px;
+    height: 55px;
     width: 100%;
     padding: 0;
     margin: 0;
     align-items: center;
     align-content: flex-start;
     overflow: auto;
+    flex-direction: column;
+}
+
+.browser button {
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 .browser button.moveUp {
