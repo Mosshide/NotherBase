@@ -525,7 +525,10 @@ class Browser extends Element {
 
 class TreeBrowser extends Browser {
     constructor(serving, settings) {
-        super(serving, settings);
+        super(serving, {
+            defaultClasses: "tree browser",
+            ...settings
+        });
 
         this.usingBackup = -1;
         
