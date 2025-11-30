@@ -1007,12 +1007,8 @@ class MetaBrowser extends Container {
             res = await base.save(this.selectedService, "local", item, this.serving.loadedData[this.serving.selected]?.memory._id);
             if (this.serving.saveToCloud) base.save(`${this.selectedService}-notherLastSelected`, "local", { selected: this.serving.selected });
         }
-        
-        //     res = await this.serving.toSave({
-        //     data: item,
-        //     id: this.serving.loadedData[this.serving.selected]?.memory._id
-        // }, false);
-        if (res.data?.newID) this.serving.loadedData[this.serving.selected].memory._id = res.data.newID;
+    
+        if (res) this.serving.loadedData[this.serving.selected].memory._id = res;
     }
 
     edit = () => {
