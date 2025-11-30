@@ -1012,7 +1012,9 @@ class MetaBrowser extends Container {
         //     data: item,
         //     id: this.serving.loadedData[this.serving.selected]?.memory._id
         // }, false);
-        if (res.data?.newID) this.serving.loadedData[this.serving.selected].memory._id = res.data.newID;
+        console.log(res);
+        
+        if (res) this.serving.loadedData[this.serving.selected].memory._id = res;
     }
 
     edit = () => {
