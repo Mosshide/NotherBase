@@ -378,7 +378,12 @@ class Browser extends Element {
         this.buttons.addButton(new Button("save", (e, self) => { this.save(); }, { placeholder: "Save" }));
         this.buttons.addButton(new Button("cancel", (e, self) => { this.cancel(); }, { placeholder: "Cancel" }));
         this.buttons.addButton(new Button("delete", (e, self) => { this.attemptDelete(); }, { placeholder: "Delete" }));
-        this.buttons.addButton(new Button("close", (e, self) => { this.close(); this.serving.state = "search"; }, { placeholder: "Close" }));
+        this.buttons.addButton(new Button("close", (e, self) => { 
+            this.close(); 
+            this.serving.selected = -1;
+            this.serving.state = "read"; 
+            if (this.serving.saveToCloud) base.save(`${this.serving.name}-notherLastSelected`, "local", { selected: this.serving.selected });
+        }, { placeholder: "Close" }));
         this.buttons.addButton(new Button("undo", (e, self) => { this.undo(); }, { placeholder: "Undo" }));
         this.buttons.addButton(new Button("redo", (e, self) => { this.redo(); }, { placeholder: "Redo" }));
         this.buttons.hideButton();
@@ -920,6 +925,10 @@ class MetaBrowser extends Container {
             styles: "browser",
             defaultClasses: "meta",
             showFilters: true,
+            filtersDefaults: {
+                search: ""
+            },
+            dataSort: (a, b) => { return 0; },
             ...settings
         });
 
@@ -968,12 +977,13 @@ class MetaBrowser extends Container {
                             this.disabledElement.enable();
                             this.disabledElement.setValue(this.searchBox.extractLabel(this.serving.data[this.serving.selected]));
                         }
+                        this.searchBox.$div.removeClass("humble");
                     }
                     this.disabledElement = null;
                     this.browser = null;
-                    this.serving.state = "search";
                 }
             });
+            this.searchBox.$div.addClass("humble");
         }
     }
 
@@ -981,19 +991,24 @@ class MetaBrowser extends Container {
         this.serving.state = "read";
         this.serving.data[this.serving.selected] = item;
         if (!this.serving.loadedData[this.serving.selected]) {
-            this.serving.loadedData[this.serving.selected] = { memory: { data: {}, backups: [] } };
+            this.serving.loadedData[this.serving.selected] = { memory: { _id: "new", data: {}, backups: [] } };
         }
         this.serving.loadedData[this.serving.selected].memory.backups.unshift({
             _lastUpdate: Date.now(),
-            data: this.serving.loadedData[this.serving.selected].memory.data
+            data: item
         });
 
-        this.serving.loadedData[this.serving.selected].memory.data = item;
         let res = null;
-        if (this.serving.toSave) res = await this.serving.toSave({
-            data: item,
-            id: this.serving.loadedData[this.serving.selected]?.memory._id
-        }, false);
+        
+        if (this.serving.saveToCloud) {
+            res = await base.save(this.selectedService, "local", item, this.serving.loadedData[this.serving.selected]?.memory._id);
+            if (this.serving.saveToCloud) base.save(`${this.selectedService}-notherLastSelected`, "local", { selected: this.serving.selected });
+        }
+        
+        //     res = await this.serving.toSave({
+        //     data: item,
+        //     id: this.serving.loadedData[this.serving.selected]?.memory._id
+        // }, false);
         if (res.data?.newID) this.serving.loadedData[this.serving.selected].memory._id = res.data.newID;
     }
 
@@ -1007,11 +1022,16 @@ class MetaBrowser extends Container {
 
     delete = () => {
         this.serving.state = "delete";
-        if (this.serving.toSave) this.serving.toSave({ 
-            id: this.serving.loadedData[this.serving.selected].memory._id 
-        }, true);
+        if (this.serving.saveToCloud) {
+            base.delete(this.selectedService, "local", {}, this.serving.loadedData[this.serving.selected].memory._id);
+        }
+        // if (this.serving.toSave) this.serving.toSave({ 
+        //     id: this.serving.loadedData[this.serving.selected].memory._id 
+        // }, true);
         this.serving.data.splice(this.serving.selected, 1);
         this.serving.loadedData.splice(this.serving.selected, 1);
+        this.serving.selected = -1;
+        if (this.serving.saveToCloud) base.save(`${this.selectedService}-notherLastSelected`, "local", { selected: this.serving.selected });
         this.searchBox.renderSearchResults();
     }
 
@@ -1021,14 +1041,17 @@ class MetaBrowser extends Container {
                 if (this.browser) {
                     this.browser.close();
                 }
-                this.serving.selected = element.settings.id;
-                this.serving.state = "read";
+                this.serving.selected = parseInt(element.settings.id);
+                this.serving.state = "read";                
+                if (this.serving.saveToCloud) base.save(`${this.selectedService}-notherLastSelected`, "local", { selected: this.serving.selected });
                 element.disable();
                 this.disabledElement = element;
                 this.makeBrowser();
                 this.browser.read(this.serving);
-                element.addChild(this.browser);
-            }
+                // element.addChild(this.browser);
+                this.addChild(this.browser);
+            },
+            filtersDefaults: this.settings.filtersDefaults
         };
         if (!this.settings.showFilters) settings.filters = "none";
         this.searchBox = new this.settings.useSearchBox(settings);
@@ -1037,8 +1060,9 @@ class MetaBrowser extends Container {
 
     addService = (service, settings) => {
         this.services[service] = {
-            selected: 0,
-            state: "search",
+            name: service,
+            selected: -1,
+            state: "read",
             lastFilter: "",
             lastEdit: {},
             label: "Service",
@@ -1050,8 +1074,8 @@ class MetaBrowser extends Container {
             showID: false,
             max: -1,
             enableBackups: true,
-            toLoad: null, //async () => { return null; },
-            toSave: null, //async (items, which) => { },
+            loadFromCloud: true, 
+            saveToCloud: true, 
             ...settings
         };
 
@@ -1068,46 +1092,55 @@ class MetaBrowser extends Container {
         else this.load(service, false);
     }
 
-    load = (service = this.selectedService, select = true) => {
+    load = async (service = this.selectedService, select = true) => {
         let serving = this.services[service];
 
-        if (serving.toLoad) serving.toLoad().then((res) => {
-            serving.loadedData = res;
-            if (!Array.isArray(serving.loadedData)) serving.loadedData = [serving.loadedData];
-            serving.data = [];
-            for (let i = 0; i < serving.loadedData.length; i++) {
-                serving.data.push({
-                    ...structuredClone(serving.loadedData[i].memory.data),
-                    _id: serving.loadedData[i].memory._id
-                });
-            }
-            if (select) this.selectService(service);
+        if (serving.loadFromCloud) {
+            await base.loadAll(service, "local").then((res) => {                
+                serving.loadedData = res;
+                if (!Array.isArray(serving.loadedData)) serving.loadedData = [serving.loadedData];
+                serving.data = [];
+                for (let i = 0; i < serving.loadedData.length; i++) {
+                    serving.data.push({
+                        ...structuredClone(serving.loadedData[i].memory.data),
+                        _id: serving.loadedData[i].memory._id
+                    });
+                }
+                this.sortData(serving);
+                
+                if (select) this.selectService(service);
+            });
+        }
+    }
+
+    sortData = (serving) => {
+        if (Array.isArray(serving.data)) serving.data.sort(this.settings.dataSort);
+        if (Array.isArray(serving.loadedData)) serving.loadedData.sort((a, b) => {
+            a = a.memory.data;
+            b = b.memory.data;
+            return this.settings.dataSort(a, b);
         });
     }
 
-    sortData = (customSort = (a, b) => { return 0; }) => {
-        if (Array.isArray(this.serving.data)) this.serving.data.sort(customSort);
-        if (Array.isArray(this.serving.loadedData)) this.serving.loadedData.sort((a, b) => { 
-            a = a.memory.data;
-            b = b.memory.data;
-            return customSort(a, b);
-         });
-    }
-
-    selectService = (service) => {
+    selectService = async (service) => {
         if (this.serving) {
             if (this.serving.state == "edit" || this.serving.state == "new") {
                 this.serving.lastEdit = this.browser.box.getValue();
             }
-            if (this.searchBox) this.serving.lastFilter = this.searchBox.getFilters();
+            // if (this.searchBox) this.serving.lastFilter = this.searchBox.getFilters();
+        }
+        
+        if (this.browser) {
+            this.browser.close();
         }
 
         this.buttons.showButton(this.selectedService);
         this.selectedService = service;
         this.serving = this.services[this.selectedService];
         this.buttons.hideButton(this.selectedService);
-
-        this.searchBox.setItems(this.serving.data, this.serving.editable ? (e, element) => {
+        
+        await this.searchBox.setService(this.selectedService, false);
+        let firstOpen = await this.searchBox.setItems(this.serving.data, this.serving.editable ? (e, element) => {
             if (this.browser) {
                 this.browser.close();
             }
@@ -1119,51 +1152,45 @@ class MetaBrowser extends Container {
             this.makeBrowser();
             this.searchBox.browser = this.browser;
             this.browser.new(this.serving);
-            newElement.addChild(this.browser);
+            this.addChild(this.browser);
         } : null, this.serving.max);
-        this.searchBox.setFilters(this.serving.lastFilter);
+        
+
+        if (typeof firstOpen === "number" && firstOpen < this.serving.data.length) {
+            this.serving.selected = firstOpen;
+        }
         
         if (this.serving.state == "edit") {
-            let element = this.searchBox.list.children[this.serving.selected];
+            let element = this.searchBox.getliElementById(this.serving.selected);
             element.disable();
             this.disabledElement = element;
             this.makeBrowser();
             this.searchBox.browser = this.browser;
             this.browser.edit(this.serving, this.serving.lastEdit);
-            element.addChild(this.browser);
+            this.addChild(this.browser);
         }
         else if (this.serving.state == "new") {
-            let element = this.searchBox.list.children[this.serving.selected];
+            let element = this.searchBox.getliElementById(this.serving.selected);
             element.disable();
             this.disabledElement = element;
             this.makeBrowser();
             this.searchBox.browser = this.browser;
             this.browser.new(this.serving, this.serving.lastEdit);
-            element.addChild(this.browser);
+            this.addChild(this.browser);
         }
-        else if (this.serving.state == "read") {
-            let element = this.searchBox.list.children[this.serving.selected];
-            element.disable();
-            this.disabledElement = element;
-            this.makeBrowser();
-            this.searchBox.browser = this.browser;
-            this.browser.read(this.serving);
-            element.addChild(this.browser);
-        }      
-        else if (this.serving.state == "search") {
-            if (!this.serving.multiple) {
-                if (this.browser) {
-                    this.browser.close();
+        else if (this.serving.state == "read") {         
+            if (this.serving.selected > -1 && this.serving.selected < this.serving.data.length) {
+                let element = this.searchBox.getliElementById(this.serving.selected);
+                if (element) {
+                    element.disable();
+                    this.disabledElement = element;
+                    this.makeBrowser();
+                    this.searchBox.browser = this.browser;
+                    this.browser.read(this.serving);
+                    // element.addChild(this.browser);
+                    this.addChild(this.browser);
                 }
-                this.serving.selected = 0;
-                this.serving.state = "read";
-                let element = this.searchBox.list.children[0];
-                element.disable();
-                this.disabledElement = element;
-                this.makeBrowser();
-                this.browser.read(this.serving);
-                element.addChild(this.browser);
             }
-        }
+        }     
     }  
 }

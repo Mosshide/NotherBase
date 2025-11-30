@@ -1,3 +1,12 @@
+body {
+    height: auto;
+}
+
+main {
+    height: auto;
+    margin-bottom: 25px;
+}
+
 details {
     width: 100%;
     border: var(--standardBorder);

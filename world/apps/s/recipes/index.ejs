@@ -19,7 +19,7 @@
     const metaBrowser = new MetaBrowser({
         header: ""
     });
-    metaBrowser.addService("pantry", {
+    metaBrowser.addService("kitchen-pantry", {
         fields: new NBField({
             name: "item",
             label: "Pantry Item: ",
@@ -44,15 +44,9 @@
         ]),
         label: "Pantry",
         editable: true,
-        multiple: true,
-        toLoad: async () => {
-            return await base.loadAll("kitchen-pantry");
-        },
-        toSave: async (item, deleting) => {
-            return await base.do("save-kitchen", { item, deleting, part: "pantry" });
-        }
+        multiple: true
     });
-    metaBrowser.addService("freezer", {
+    metaBrowser.addService("kitchen-freezer", {
         fields: new NBField({
             name: "item",
             label: "Freezer Item: ",
@@ -77,15 +71,9 @@
         ]),
         label: "Freezer",
         editable: true,
-        multiple: true,
-        toLoad: async () => {
-            return await base.loadAll("kitchen-freezer");
-        },
-        toSave: async (item, deleting) => {
-            return await base.do("save-kitchen", { item, deleting, part: "freezer" });
-        }
+        multiple: true
     });
-    metaBrowser.addService("meats", {
+    metaBrowser.addService("kitchen-meats", {
         fields: new NBField({
             name: "item",
             label: "Meat: ",
@@ -110,15 +98,9 @@
         ]),
         label: "Meats",
         editable: true,
-        multiple: true,
-        toLoad: async () => {
-            return await base.loadAll("kitchen-meats");
-        },
-        toSave: async (item, deleting) => {
-            return await base.do("save-kitchen", { item, deleting, part: "meats" });
-        }
+        multiple: true
     });
-    metaBrowser.addService("veggies", {
+    metaBrowser.addService("kitchen-veggies", {
         fields: new NBField({
             name: "item",
             label: "Veggie: ",
@@ -143,15 +125,9 @@
         ]),
         label: "Veggies",
         editable: true,
-        multiple: true,
-        toLoad: async () => {
-            return await base.loadAll("kitchen-veggies");
-        },
-        toSave: async (item, deleting) => {
-            return await base.do("save-kitchen", { item, deleting, part: "veggies" });
-        }
+        multiple: true
     });
-    metaBrowser.addService("drinks", {
+    metaBrowser.addService("kitchen-drinks", {
         fields: new NBField({
             name: "item",
             label: "Drink: ",
@@ -176,15 +152,9 @@
         ]),
         label: "Drinks",
         editable: true,
-        multiple: true,
-        toLoad: async () => {
-            return await base.loadAll("kitchen-drinks");
-        },
-        toSave: async (item, deleting) => {
-            return await base.do("save-kitchen", { item, deleting, part: "drinks" });
-        }
+        multiple: true
     });
-    metaBrowser.addService("snacks", {
+    metaBrowser.addService("kitchen-snacks", {
         fields: new NBField({
             name: "item",
             label: "Snack: ",
@@ -209,15 +179,9 @@
         ]),
         label: "Snacks",
         editable: true,
-        multiple: true,
-        toLoad: async () => {
-            return await base.loadAll("kitchen-snacks");
-        },
-        toSave: async (item, deleting) => {
-            return await base.do("save-kitchen", { item, deleting, part: "snacks" });
-        }
+        multiple: true
     });
-    metaBrowser.addService("other", {
+    metaBrowser.addService("kitchen-other", {
         fields: new NBField({
             name: "item",
             label: "Item: ",
@@ -242,13 +206,7 @@
         ]),
         label: "Other",
         editable: true,
-        multiple: true,
-        toLoad: async () => {
-            return await base.loadAll("kitchen-other");
-        },
-        toSave: async (item, deleting) => {
-            return await base.do("save-kitchen", { item, deleting, part: "other" });
-        }
+        multiple: true
     });
     metaBrowser.render();
 </script>

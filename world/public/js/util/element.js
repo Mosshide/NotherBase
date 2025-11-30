@@ -436,8 +436,15 @@ class CheckBox extends Element {
 
     // renders the element
     render = () => {
-        this.$div = super.render();
+       // create the element
+        if (!this.$div) {
+            this.$div = $(`<div>${this.settings.header || "Checkbox"}</div>`);
+            this.initModifiers();
+        }
+
+        this.$div.empty();
         this.$div.addClass("checkbox");
+        if (this.settings.header) this.$div.append(`<h4>${this.settings.header}</h4>`);
 
         // create the element
         this.$input = $(`<input type="checkbox">`).appendTo(this.$div);
@@ -464,6 +471,26 @@ class CheckBox extends Element {
     getValue = () => {
         this.value = this.$input.prop("checked");
         return this.value;
+    }
+
+    enable = (onChange = this.settings.onChange) => {
+        this.enabled = true;
+        this.$div.off();
+
+        if (onChange) this.settings.onChange = onChange;
+        
+        if (this.settings.onClick) {
+            this.$div.on("click", (e) => {
+                this.settings.onClick(e, this);
+                e.stopPropagation();
+            });
+        }
+
+        if (this.settings.onChange) this.$input.on("change", (e) => { 
+            return this.settings.onChange(this.$input.prop("checked")); 
+        });
+
+        this.$div.removeClass("disabled");
     }
 }
 

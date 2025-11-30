@@ -335,11 +335,15 @@ class BibleViewer extends Container {
 
         this.setBooks();
         this.setChapters();
-        this.openTo({
-            book: this.settings.initialBook,
-            chapter: this.settings.initialChapter != null ? this.settings.initialChapter - 1 : null,
-            verse: this.settings.initialVerse != null ? this.settings.initialVerse - 1 : null,
-            verseEnd: this.settings.initialVerseEnd != null ? this.settings.initialVerseEnd - 1 : null
+        base.load("last-notherBible-location", "local").then((location) => {
+            location = location.memory?.data || {};
+            
+            this.openTo({
+                book: location.book != null ? location.book : this.settings.initialBook,
+                chapter: location.chapter != null ? location.chapter : this.settings.initialChapter != null ? this.settings.initialChapter - 1 : null,
+                verse: location.verse != null ? location.verse : this.settings.initialVerse != null ? this.settings.initialVerse - 1 : null,
+                verseEnd: location.verseEnd != null ? location.verseEnd : this.settings.initialVerseEnd != null ? this.settings.initialVerseEnd - 1 : null
+            });
         });
 
         this.settings.defaultClasses = "bible-viewer";
@@ -397,6 +401,8 @@ class BibleViewer extends Container {
             book: (Object.keys(this.bibleInfo)).indexOf(this.location.book)
         }
 
+        await base.save("last-notherBible-location", "local", this.location);
+
         let res = await base.do("get-bible", {
             ...outLocation,
             route: "/global"
@@ -431,9 +437,9 @@ class BibleViewer extends Container {
         }
 
         this.content.setValue(text);
-        this.bookSelect.setValue(this.newLocation.book);
+        this.bookSelect.setValue(this.location.book);
         this.setChapters();
-        this.newLocation.chapter = this.location.chapter;
+        this.newLocation = this.location;
         this.chapterSelect.setValue((this.location.chapter + 1).toString());
 
         this.$div.find("h4").text(`${this.location.book} ${this.location.chapter + 1}${this.location.verse != null ? `:${this.location.verse + 1}` : ""}${this.location.verseEnd != null ? `-${this.location.verseEnd}` : ""}`);
