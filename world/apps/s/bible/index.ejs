@@ -22,7 +22,9 @@
 <script src="/js/bible-viewer.js"></script>
 <script src="/js/entity.js"></script>
 <script>   
-    const bibleViewer = new BibleViewer();
+    const bibleViewer = new BibleViewer({
+        bookmark: "default"
+    });
     bibleViewer.render();
 
     const metaResearch = new MetaBrowser({
