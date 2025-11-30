@@ -1,5 +1,5 @@
 .meta, .meta>.browser {
-    padding-top: 25vh !important;
+    padding-top: max(25svh, 175px) !important;
 }
 
 .browser .shared h4 {
@@ -30,9 +30,8 @@
 }
 
 .nested.timeHours {
-    width: 10% !important;
+    width: auto !important;
     flex-wrap: nowrap !important;
-    min-width: 100px;
 }
 
 .nested.timeHours p {
@@ -40,7 +39,7 @@
 }
 
 .nested.timeMinutes {
-    width: 10% !important;
+    width: auto !important;
     flex-wrap: nowrap !important;
     min-width: 50px;
 }
@@ -68,9 +67,15 @@
 }
 
 .nested.date {
-    width: 30% !important;
+    width: auto !important;
     flex-wrap: nowrap !important;
     min-width: 150px;
+    max-width: 50svw;
+}
+
+.date input {
+    width: auto;
+    max-width: 40svw;
 }
 
 .nested h4 {

@@ -69,7 +69,7 @@
     justify-content: flex-start;
     margin: 0;
     overflow: auto;
-    align-items: center;
+    align-items: flex-start;
 }
 
 .browser .read.nested, .browser .edit.nested {
@@ -77,11 +77,16 @@
     margin: 0;
     padding: 0;
     background: none;
+    flex-direction: row;
+}
+
+.browser .read.multiple.nested, .browser .edit.multiple.nested {
+    flex-direction: column;
 }
 
 .browser h4 {
     background: none;
-    width: 100%;
+    width: auto;
     margin: 0;
     height: 40px;
     padding: 2px;
@@ -116,15 +121,18 @@
     overflow: auto;
     display: flex;
     height: auto;
-    align-content: center;
+    align-content: flex-start;
     justify-content: flex-start;
     align-items: center;
     margin: 0;
     padding: var(--padding);
-    flex-direction: column;
 }
 
 .meta>.browser>.read, .meta>.browser>.edit {
+    height: calc(100% - 40px);
+}
+
+.meta>.tree.browser>.read, .meta>.tree.browser>.edit {
     height: calc(100% - 80px);
 }
 
@@ -243,8 +251,10 @@
 }
 
 .browser select {
-    width: 100%;
+    width: auto;
     height: var(--inputHeight);
+    margin: 0;
+    margin-right: 5px;
 }
 
 .browser>#child-buttons {
