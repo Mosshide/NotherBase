@@ -34,29 +34,29 @@ class ThemeApplicator {
         //     <img src="/img/events/thanksgiving/Website Graphic.jpg" alt="" srcset="">
         //     <button>Continue to Love INC of Lewis County</button>
         // </div>
-        if (this.path == "") {
-            this.$main.addClass("invisible"); // hide main content initially
-            let currentMonth = new Date().toLocaleString('default', { month: 'long' });
+        // if (this.path == "") {
+        //     this.$main.addClass("invisible"); // hide main content initially
+        //     let currentMonth = new Date().toLocaleString('default', { month: 'long' });
             
-            if (currentMonth == "November") this.$landing = $(`<div class="landing">
-                                    <img class="bg" src="/img/events/thanksgiving/Website Graphic.jpg" alt="30 Days of thanks 2025">
-                                    <button>Continue to Love INC of Lewis County</button>
-                                </div>`).prependTo(this.$body);
-            else this.$landing = $(`<div class="landing">
-                                <img class="end" src="/img/events/thanksgiving/end.webp" alt="End of 30 Days">
-                                <button>Continue to Love INC of Lewis County</button>
-                            </div>`).prependTo(this.$body);
-            // $('.landing img').hide().fadeIn('slow');
-            $('.landing button').hide().delay(500).fadeIn('slow');
-            // Landing page button functionality using jQuery
-            $('.landing button').click(() => {
-                this.$main.removeClass("invisible"); // show main content
-                $('.landing').fadeOut('slow', function() {
-                    // Optionally, you can remove the landing div from the DOM after fading out
-                    $(this).remove();
-                });
-            });
-        }
+        //     if (currentMonth == "November") this.$landing = $(`<div class="landing">
+        //                             <img class="bg" src="/img/events/thanksgiving/Website Graphic.jpg" alt="30 Days of thanks 2025">
+        //                             <button>Continue to Love INC of Lewis County</button>
+        //                         </div>`).prependTo(this.$body);
+        //     else this.$landing = $(`<div class="landing">
+        //                         <img class="end" src="/img/events/thanksgiving/end.webp" alt="End of 30 Days">
+        //                         <button>Continue to Love INC of Lewis County</button>
+        //                     </div>`).prependTo(this.$body);
+        //     // $('.landing img').hide().fadeIn('slow');
+        //     $('.landing button').hide().delay(500).fadeIn('slow');
+        //     // Landing page button functionality using jQuery
+        //     $('.landing button').click(() => {
+        //         this.$main.removeClass("invisible"); // show main content
+        //         $('.landing').fadeOut('slow', function() {
+        //             // Optionally, you can remove the landing div from the DOM after fading out
+        //             $(this).remove();
+        //         });
+        //     });
+        // }
 
         // add the nav button for mobile
         this.$navButton = $("<button id='nav-button'>Navigation<i class='fa-solid fa-bars'></i></button>").prependTo(this.$main);
