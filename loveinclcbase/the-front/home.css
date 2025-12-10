@@ -235,7 +235,7 @@ section iframe.side.right {
     z-index: 1001;
 }
 
-.thanksgiving-daily-event {
+.advent-daily-event {
     width: 100%;
     height: 50vw;
     display: flex;
@@ -245,9 +245,9 @@ section iframe.side.right {
     padding: 0;
 }
 
-.thanksgiving-daily-event .event-day {
+.advent-daily-event .event-day {
     padding: var(--thickPadding);
-    width: 43%;
+    width: 25%;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -255,22 +255,22 @@ section iframe.side.right {
     justify-content: center;
 }
 
-.thanksgiving-daily-event img {
-    width: 50%;
+.advent-daily-event img {
+    width: 65vw;
     height: 100%;
     object-fit: cover;
 }
 
-.thanksgiving-daily-event .content {
+.advent-daily-event .content {
     font-size: 1.9vw;
 }
 
-.thanksgiving-daily-event .action {
+.advent-daily-event .action {
     font-size: 1.9vw;
     color: var(--main-color);
 }
 
-.thanksgiving-daily-event .previous {
+.advent-daily-event .previous {
     position: absolute;
     left: 5px;
     top: 30%;
@@ -287,7 +287,7 @@ section iframe.side.right {
     pointer-events: initial;
 }
 
-.thanksgiving-daily-event .next {
+.advent-daily-event .next {
     position: absolute;
     right: 5px;
     top: 30%;
@@ -304,7 +304,7 @@ section iframe.side.right {
     pointer-events: initial;
 }
 
-.thanksgiving-daily-event .button-holder {
+.advent-daily-event .button-holder {
     position: absolute;
     left: 0;
     top: 0;
@@ -326,28 +326,28 @@ section iframe.side.right {
         content: url('/img/events/thanksgiving/Website Graphic square.webp');
     }
 
-    .thanksgiving-daily-event {
+    .advent-daily-event {
         flex-direction: column;
         height: auto;
     }
 
-    .thanksgiving-daily-event img {
+    .advent-daily-event img {
         width: 100%;
         height: auto;
     }
 
-    .thanksgiving-daily-event .event-day {
+    .advent-daily-event .event-day {
         width: 100%;
         height: auto;
     }
 
-    .thanksgiving-daily-event .content,
-    .thanksgiving-daily-event .action {
+    .advent-daily-event .content,
+    .advent-daily-event .action {
         font-size: 4vw;
     }
 
-    .thanksgiving-daily-event .previous,
-    .thanksgiving-daily-event .next {
+    .advent-daily-event .previous,
+    .advent-daily-event .next {
         display: initial;
         position: initial;
         width: 50%;
@@ -357,7 +357,7 @@ section iframe.side.right {
         pointer-events: initial;
     }
 
-    .thanksgiving-daily-event .button-holder {
+    .advent-daily-event .button-holder {
         position: initial;
         display: flex;
         height: 10vh;
