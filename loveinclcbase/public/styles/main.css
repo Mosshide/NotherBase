@@ -1236,6 +1236,21 @@ section.showcase img {
     border-radius: 25px;
 }
 
+.give-bar {
+    background: var(--main-color);
+    color: white;
+    text-shadow: var(--text-shadow);
+    padding: var(--padding);
+    padding-right: 30px;
+    text-align: right;
+    width: 100%;
+}
+
+.give-bar p {
+    margin: 0;
+    padding: 0;
+}
+
 /* temp */
 h3.ff {
     font-family: "Ubuntu", sans-serif;
@@ -1336,7 +1351,7 @@ h3.ff {
         flex-wrap: wrap;
         align-content: flex-start;
         position: absolute !important;
-        top: 55px;
+        top: 85px;
         left: 0;
         justify-content: center;
     }
