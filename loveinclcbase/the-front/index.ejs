@@ -2,10 +2,6 @@
     <%- include('./home.css'); %>
 </style>
 
-<script>
-    $("main").addClass("invisible");
-</script>
-
 <!-- Hero -->
 <section class="hero">
     <img src="/img/office/chehalis_sky_web_medium.webp" alt="">
@@ -24,8 +20,8 @@
 </section>
 
 <!-- a 30 day event where each day has a picture and some text. Click the left or right arrow button to navigate between days, up to the current day of the month -->
-<section class="thanksgiving-daily-event invisible">
-    <img src="/img/events/thanksgiving/Day 1 Post.jpg" alt="Day 1 Post">
+<section class="advent-daily-event invisible">
+    <img src="/img/events/advent/2025/Day 2.png" alt="Day 2 Post">
     <div class="button-holder">
         <button class="previous"><i class="fa-solid fa-chevron-left"></i></button>
         <button class="next"><i class="fa-solid fa-chevron-right"></i></button>
@@ -166,188 +162,100 @@
         }, 30000);
     }, 3000);
 
-    // Thankgiving Daily Event Script using Jquery
+    // Daily Event Script using Jquery
     // Replace the image and text based on the day of the month
-    // There are 30 days in the event
-    // The images are named Day 1 Post.jpg, Day 2 Post.jpg, etc.
-    // The text for each day is stored in two arrays: content and action
-    // hide the previous button on day 1 and the next button on day 30 or on the current day of the month
     const content = [
-        `What simple blessings are you thankful for today? (Example: A loving family, a warm home, etc.)`,
-        `How does the righteousness of the Lord inspire your gratitude and praise?
-            (Example: It motivates me to live a more righteous and virtuous life.)`,
-        `What special places in nature do you find most peaceful and inspiring for gratitude? (Example: Sandy
-            beaches, lush gardens, desert landscapes, etc.)`,
-        `What brings gratitude to your heart on this beautiful day?
-            (Example: A peaceful walk in nature, a phone call from a friend, etc.)`,
-        `How do you express reverence and awe in your worship, and how does it lead to a heart full of
-            thankfulness? (Example: Practicing silence and contemplation, participating in acts of service, etc.)`,
-        `Selah.`,
-        `How have you personally experienced the hope, joy, and peace that comes from trusting in God, and
-            how does it inspire your gratitude? (Example: Through answered prayers and guidance in difficult times,
-            In the support of a faith community, etc.)`,
-        `What simple blessings are you thankful for today? (Example: Family, friends, health, food, shelter, etc.)`,
-        `How can you glorify God's name and express your gratitude through music and song today? (Example:
-            Listening to/singing worship songs, playing a musical instrument, etc.)`,
-        `How does the knowledge of the Lord being your strength and shield inspire your trust, joy, and
-            gratitude? (Example: It provides comfort and security in times of difficulty; It gives me the confidence to
-            face challenges with resilience, etc.)`,
-        `How does allowing the peace of Christ to rule in your heart lead to a sense of unity, and how does it
-            inspire your gratitude? (Example: It encourages you to resolve conflicts and differences; It reminds you
-            of the importance of empathy and understanding, etc.)`,
-        `How can you deepen your faith and unity with others, leading to overflowing thankfulness? (Example:
-            Praying for unity and understanding; Engaging in interfaith dialogue, etc.)`,
-        `How can you fulfill your vows of gratitude and acknowledge that salvation comes from the Lord?
-            (Example: By volunteering your time to a charitable cause.)`,
-        `How does the act of presenting your requests to God with thanksgiving alleviate anxiety and bring peace
-            to your life? (Example: It helps you focus on the positive aspects of your life, etc.)`,
-        `How does acknowledging that the Lord is good and His love endures forever inspire your gratitude and faith?`,
-        `How can you incorporate songs from the Spirit into your daily life as a means of expressing gratitude for everything in your life?`,
-        `How can you offer your shouts of grateful praise and sacrifices to the Lord, acknowledging that salvation
-            comes from Him?`,
-        `How can you declare God's steadfast love and faithfulness in your life, both in the morning and by night?
-            (Example: Through morning prayers and expressions of gratitude. By reflecting on God's love and
-            faithfulness before bed, etc.)`,
-        `What are the simple blessings and gifts for which you can give thanks today?
-            (Example: Good health and well-being. Acts of kindness and compassion from others.)`,
-        `How can you be generous and help someone today? (Example: Donate to a charity, volunteer your time,
-            offer a kind word to someone in need, etc.)`,
-        `How have you seen the Lord satisfy your soul with good things?`,
-        `How can you give thanks to the Lord with your whole heart and recount His wonderful deeds in your
-            life?`,
-        `What are some daily practices or habits you can adopt to cultivate a heart of gratitude and carry the
-            spirit of Thanksgiving throughout the year?`,
-        `How does devoting yourself to prayer, being watchful, and thankful impact your spiritual journey and
-            daily life? (Example: It deepens your connection with God. It cultivates a sense of mindfulness and
-            awareness.)`,
-        `How can you allow the message of Christ to dwell among you richly and use music to teach, admonish,
-            and express gratitude in your life?`,
-        `How can you incorporate the practice of doing everything in the name of the Lord Jesus and giving
-            thanks into your daily life? (Example: Through acts of kindness and service to others. By living a life
-            aligned with your faith and values.)`,
-        `How has the counsel of the Lord and His guidance in the quiet moments of the night impacted your life
-            and inspired gratitude? (Example: It provides comfort and solace in times of need. It offers guidance and
-            wisdom in decision-making, etc.)`,
-        `How does the recognition of God's steadfast love enduring forever inspire your thanksgiving and faith?
-            (Example: It fills me with a sense of security and hope. It fosters gratitude for the blessings in my life,
-            etc.)`,
-        `How can you practice rejoicing always, praying continually, and giving thanks in all circumstances as a
-            way to align with God's will in Christ Jesus? (Example: By making prayer a constant part of your day. By
-            sharing your blessings with others to bring them joy, etc.)`,
-        `How does the idea of receiving an unshakable kingdom inspire your thankfulness and reverence, and
-            how can you worship God acceptably with reverence and awe?`
+        `What needs clearing out in your heart?`,
+        'Where do you need reassurance of God’s presence?',
+        'Where are you struggling to wait?',
+        'Where do you see His light today?',
+        'What gives you joy in Christ?',
+        'What fear can you hand to Him?',
+        'How do you sense God with you?',
+        'What noise distracts you from Him?',
+        'Where do you see His life at work?',
+        'What direction do you need?',
+        'What can you simplify in your heart today?',
+        'How do you need Him to be near?',
+        'What step of obedience can you take today?',
+        'What promise of God are you waiting on right now?',
+        'Where do you need courage?',
+        'Where do you need peace?',
+        'Where do you need renewed hope today?',
+        'Where do you need His grace?',
+        'What worry do you need to hand over?',
+        'What do you need to trust Him for?',
+        'What hope are you clinging to?',
+        'Where do you need saving or strength?',
+        'How can you draw near to Him tonight?',
+        'How will you celebrate Jesus today?'
     ];
 
     const action = [
-        `Write a heartfelt thank-you note to someone who has made a positive impact in your life. Let them know you appreciate their presence.`,
-        `Write a heartfelt letter or message to someone in your life who embodies the qualities of righteousness,
-            and express your gratitude for their presence.`,
-        `Plan a visit to a peaceful natural spot, whether a park, garden, or forest, and take time to reflect and
-            give thanks amidst the beauty of creation.`,
-        `Today, choose a challenging circumstance or difficult situation in your life and find a reason to be
-            thankful for it. Write down your gratitude and reflect on how it aligns with God's will for you.`,
-        `Spend some time in prayer or meditation, focusing on the awe-inspiring nature of God's kingdom, and
-            offer heartfelt thanks for the unshakable foundation of faith.`,
-        `Take a moment to ask another Christian about their day, their thoughts, or their interests. Practice
-            actively listening to their response and look for opportunities to ask follow-up questions.`,
-        `Today, take a moment to express your gratitude for the hope, joy, and peace you've found through
-            trusting in God. Write a heartfelt thank-you note to God, acknowledging these blessings in your life.`,
-        `Take a moment to share this post and mention someone you're thankful for, expressing your gratitude.`,
-        `Find a song that resonates with your heart's gratitude and play it, singing along or even dancing to it as a
-            joyful expression of thanks.`,
-        `Today, take a moment to express your trust and gratitude to the Lord for being your strength and shield.
-            Sing a song of praise or write a note of thanksgiving, focusing on the ways in which God's presence has
-            empowered and protected you.`,
-        `Today, take a moment to embrace the peace of Christ in your heart and seek unity with others. Reach
-            out to someone with whom you may have differences, offering a message of peace and gratitude for
-            their presence in your life.`,
-        `Reflect on your spiritual journey and the truths you've embraced. Write a letter or message to someone
-            who has been instrumental in teaching you these truths, expressing your gratitude for their guidance in
-            your faith journey.`,
-        `Today, consider making a commitment to serve others through a specific act of kindness or volunteer
-            opportunity. Reflect on the significance of salvation in your life and express your gratitude for it.`,
-        `Today, take a moment to pray and present your requests to God, focusing on gratitude for His presence
-            in your life. Acknowledge the peace that comes from entrusting your concerns to Him.`,
-        `Today, take a moment to reflect on the enduring love of the Lord. Write a thank-you note to someone
-            who has shown you unconditional love and express your gratitude for their presence in your life.`,
-        `Today, immerse yourself in a song that fills you with gratitude. Sing along or listen deeply, using music as
-            a way to express your thankfulness for the many blessings in your life.`,
-        `Find a song that resonates with your heart's gratitude and play it, singing along or even dancing to it as a
-            joyful expression of thanks. Additionally, consider sharing your personal testimony of God's saving grace
-            with someone who may benefit from your story.`,
-        `Start and end your day with a prayer of gratitude, declaring God's love and faithfulness in your life. Take
-            time to share these sentiments with someone close to you, emphasizing the steadfast love and
-            faithfulness of the Lord that fills your life.`,
-        `Write a list of these simple blessings and express gratitude for each one in your own words or through a
-            simple thank-you note to God. Take time today to appreciate the everyday gifts that enrich your life.`,
-        `Take one of the actions you selected, and share your experience with your friends and family. Encourage
-            them to do a similar act of generosity.`,
-        `Consider reaching out to help someone in need and share the love you've experienced from
-            the Lord.`,
-        `Today, give thanks to the Lord with your whole heart. Spend time in prayer, reflection, or journaling,
-            recounting His wonderful deeds in your life.`,
-        `Share a specific moment or experience from the past year that has left you feeling grateful or
-            appreciative.`,
-        `Today, devote yourself to prayer, focusing on being watchful and thankful. As you pray, seek
-            mindfulness and awareness of the blessings in your life. Reflect on how gratitude enhances your
-            spiritual journey and strengthens your connection with God.`,
-        `Today, allow the message of Christ to dwell richly among you through music. Spend time singing songs
-            of gratitude and praise, whether in private reflection or in a communal setting.`,
-        `Today, make a conscious effort to dedicate your words and deeds to the Lord Jesus and express
-            gratitude in all your actions. As you go about your day, be mindful of the presence of God in your life
-            and strive to align your actions with your faith and values.`,
-        `Today, take a moment to reflect on the counsel and guidance you've received from the Lord. Express
-            your gratitude through prayer and praise. Consider how you can seek God's wisdom and guidance in
-            your daily life.`,
-        `Today, give thanks to the God of heaven for His steadfast love that endures forever. Reflect on the
-            constancy of His love in your life and express your gratitude through prayer and acts of love and
-            kindness toward others.`,
-        `Today, make a conscious effort to practice these verses from 1 Thessalonians 5:16-18. Find moments to
-            rejoice, pray, and give thanks throughout the day, regardless of the circumstances. Reflect on how this
-            practice aligns with God's will and brings joy, peace, and gratitude into your life.`,
-        `Today, take time to reflect on the unshakable nature of God's kingdom and the eternal promises you
-            have received. In your worship and reverence for God, consider how you can share the warmth of His
-            love with others.`
+        `Spend five quiet minutes with God.`,
+        `Thank Him for one promise He has already kept.`,
+        `Practice stillness for two minutes.`,
+        `Encourage one person who needs hope.`,
+        `Send a gratitude text to someone.`,
+        `Write one fear, then pray over it.`,
+        `Notice one moment of His nearness today.`,
+        `Turn off one device for ten minutes.`,
+        `Share one hopeful word with someone.`,
+        `Read one Psalm slowly tonight.`,
+        `Let go of one unhelpful thought.`,
+        `Pray honestly for one minute.`,
+        `Choose one simple act of kindness.`,
+        `Write it down and ask God to strengthen your heart as you wait..`,
+        `Speak one truth you need to remember.`,
+        `Take three deep breaths and pray for calm.`,
+        `Pause for one minute and ask God to restore your hope in one specific area.`,
+        `Offer grace to someone today.`,
+        `Say a short prayer releasing it.`,
+        `Thank Him for one way He has provided.`,
+        `Write one hope filled prayer.`,
+        `Pray for His mighty help today.`,
+        `Light a candle and pray for His presence.`,
+        `Share one blessing God has given you this year.`
     ];
 
     let currentDay = new Date().getDate();
     let currentMonth = new Date().toLocaleString('default', { month: 'long' });
-    if (currentDay > 30 || currentMonth !== "November") currentDay = 30; // limit to day 30
+    if (currentDay > 25 || currentMonth !== "December") currentDay = 25; // limit to day 25
 
     let updateEvent = (day) => {
-        $(".thanksgiving-daily-event img").attr("src", `/img/events/thanksgiving/Day ${day} Post.jpg`);
-        $(".thanksgiving-daily-event .event-day .content").text(content[day - 1]);
-        $(".thanksgiving-daily-event .event-day .action").text(action[day - 1]);
+        $(".advent-daily-event img").attr("src", `/img/events/advent/2025/Day ${day}.webp`);
+        $(".advent-daily-event .event-day .content").text(content[day - 1]);
+        $(".advent-daily-event .event-day .action").text(action[day - 1]);
 
-        if (day <= 1) {
-            $(".thanksgiving-daily-event .previous").addClass("inactive");
+        if (day <= 2) {
+            $(".advent-daily-event .previous").addClass("inactive");
         } 
         else {
-            $(".thanksgiving-daily-event .previous").removeClass("inactive");
+            $(".advent-daily-event .previous").removeClass("inactive");
         }
 
-        if ((currentMonth === "November" && day >= new Date().getDate()) || day >= 30) {
-            $(".thanksgiving-daily-event .next").addClass("inactive");
+        if ((currentMonth === "December" && day >= new Date().getDate()) || day >= 25) {
+            $(".advent-daily-event .next").addClass("inactive");
         } 
         else {
-            $(".thanksgiving-daily-event .next").removeClass("inactive");
+            $(".advent-daily-event .next").removeClass("inactive");
         }
 
-        if (currentMonth === "November" || currentMonth === "December") $(".thanksgiving-daily-event").removeClass("invisible");
+        if (currentMonth === "December" || currentMonth === "January") $(".advent-daily-event").removeClass("invisible");
     };
 
-    $(".thanksgiving-daily-event .previous").click(() => {
-        if (currentDay > 1) {
+    $(".advent-daily-event .previous").click(() => {
+        if (currentDay > 2) {
             currentDay--;
-            if (currentDay < 1) currentDay = 1;
+            if (currentDay < 2) currentDay = 2;
             updateEvent(currentDay);
         }
     });
 
-    $(".thanksgiving-daily-event .next").click(() => {
-        if (currentDay < 30) {
+    $(".advent-daily-event .next").click(() => {
+        if (currentDay < 25) {
             currentDay++;
-            if (currentDay > 30) currentDay = 30;
+            if (currentDay > 25) currentDay = 25;
             updateEvent(currentDay);
         }
     });
