@@ -113,9 +113,10 @@ header {
     width: 70%;
     position: absolute;
     right: 0;
-    background-image: url("/img/portfolio/fancy-me.jpg");
+    background-image: url("/img/portfolio/bible.webp");
     background-size: cover;
-    background-position-x: center;
+    background-position-x: left;
+    background-position-y: center;
     background-repeat: no-repeat;
     z-index: 0;
 }
