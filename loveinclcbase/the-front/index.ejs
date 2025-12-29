@@ -233,8 +233,6 @@
         else {
             $(".advent-daily-event .previous").removeClass("inactive");
         }
-
-        console.log(currentMonth, day, currentDay);
         
         if ((currentMonth === "December" && day >= currentDay) || day >= 25) {
             $(".advent-daily-event .next").addClass("inactive");
