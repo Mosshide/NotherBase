@@ -224,8 +224,8 @@
 
     let updateEvent = (day) => {
         $(".advent-daily-event img").attr("src", `/img/events/advent/2025/Day ${day}.webp`);
-        $(".advent-daily-event .event-day .content").text(content[day - 1]);
-        $(".advent-daily-event .event-day .action").text(action[day - 1]);
+        $(".advent-daily-event .event-day .content").text(content[day - 2]);
+        $(".advent-daily-event .event-day .action").text(action[day - 2]);
 
         if (day <= 2) {
             $(".advent-daily-event .previous").addClass("inactive");
@@ -234,7 +234,7 @@
             $(".advent-daily-event .previous").removeClass("inactive");
         }
 
-        if ((currentMonth === "December" && day >= new Date().getDate()) || day >= 25) {
+        if ((currentMonth === "December" && day >= currentDay) || day >= 25) {
             $(".advent-daily-event .next").addClass("inactive");
         } 
         else {
@@ -261,5 +261,7 @@
     });
 
     updateEvent(currentDay);
+    console.log(currentDay);
+    
 
 </script>
