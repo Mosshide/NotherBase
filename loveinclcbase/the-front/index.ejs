@@ -234,6 +234,8 @@
             $(".advent-daily-event .previous").removeClass("inactive");
         }
 
+        console.log(currentMonth, day, currentDay);
+        
         if ((currentMonth === "December" && day >= currentDay) || day >= 25) {
             $(".advent-daily-event .next").addClass("inactive");
         } 
@@ -244,24 +246,24 @@
         if (currentMonth === "December" || currentMonth === "January") $(".advent-daily-event").removeClass("invisible");
     };
 
+    let viewingDay = currentDay;
     $(".advent-daily-event .previous").click(() => {
-        if (currentDay > 2) {
-            currentDay--;
-            if (currentDay < 2) currentDay = 2;
-            updateEvent(currentDay);
+        if (viewingDay > 2) {
+            viewingDay--;
+            if (viewingDay < 2) viewingDay = 2;
+            updateEvent(viewingDay);
         }
     });
 
     $(".advent-daily-event .next").click(() => {
-        if (currentDay < 25) {
-            currentDay++;
-            if (currentDay > 25) currentDay = 25;
-            updateEvent(currentDay);
+        if (viewingDay < 25) {
+            viewingDay++;
+            if (viewingDay > 25) viewingDay = 25;
+            updateEvent(viewingDay);
         }
     });
 
-    updateEvent(currentDay);
-    console.log(currentDay);
+    updateEvent(viewingDay);
     
 
 </script>
