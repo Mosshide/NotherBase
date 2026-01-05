@@ -486,7 +486,7 @@ nav a p {
 .mailing-list {
     padding: 70px 0;
     flex-direction: row;
-    background: url('/img/bg/spring/rb3.jpeg');
+    background: url('/img/bg/winter/med1.jpeg');
     background-size: auto 100%;
     background-repeat: repeat-x;
 }
@@ -1262,6 +1262,10 @@ h3.ff {
     box-shadow: 1px 5px 14px 1px rgb(169, 169, 169);
     font-size: var(--h1Size);
     width: 90%;
+}
+
+h3.ff .sub {
+    font-weight: normal;
 }
 
 .training .raised {
