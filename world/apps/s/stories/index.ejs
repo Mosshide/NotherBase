@@ -2,13 +2,16 @@
     <%- include("./index.css") %>
 </style>
 
+<div class="nav">
+    <a class="home" href="/apps/s/home">
+        &lt; Home
+    </a>
+    <p>
+        &lt; Stories
+    </p>
+</div>
+
 <div class="meta" id="stories"></div>
-
-<hr>
-
-<a class="return" href="/forest/eye/library/lobby">
-    Return to the Lobby
-</a>
 
 <script src="/js/util/element.js"></script>
 <script src="/js/util/buttons.js"></script>
@@ -46,13 +49,7 @@
         ]),
         label: "Story:",
         editable: true,
-        multiple: true,
-        toLoad: async () => {
-            return await base.loadAll("stories");
-        },
-        toSave: async (item, deleting) => {
-            return await base.do("save-story", { item, deleting });
-        }
+        multiple: true
     });
     metaBrowser.render();
 </script>

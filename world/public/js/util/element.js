@@ -201,6 +201,10 @@ class Element {
     css = (style, value = null) => {
         if (this.$div) this.$div.css(style, value);
     }
+
+    scrollTop = () => {
+        if (this.$div) this.$div.scrollTop(0);
+    }
 }
 
 // a class called Text that can be used to display text
