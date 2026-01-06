@@ -14,9 +14,9 @@ class BibleViewer extends Container {
         
         this.location = {
             book: this.settings.initialBook,
-            chapter: this.settings.initialChapter != null ? this.settings.initialChapter - 1 : null,
-            verse: this.settings.initialVerse != null ? this.settings.initialVerse - 1 : null,
-            verseEnd: this.settings.initialVerseEnd != null ? this.settings.initialVerseEnd - 1 : null
+            chapter: this.settings.initialChapter != null ? this.settings.initialChapter : null,
+            verse: this.settings.initialVerse != null ? this.settings.initialVerse : null,
+            verseEnd: this.settings.initialVerseEnd != null ? this.settings.initialVerseEnd : null
         };
         this.newLocation = {
             ...this.location
@@ -116,7 +116,7 @@ class BibleViewer extends Container {
                 40, 22, 33, 37, 16, 33, 24, 41, 30, 32,
                 26, 17
             ],
-            "Psalm": [
+            "Psalms": [
                 6, 12, 8, 8, 12, 10, 17, 9, 20, 18,
                 7, 8, 6, 7, 5, 11, 15, 50, 14, 9,
                 13, 31, 6, 10, 22, 12, 14, 9, 11, 12,
@@ -331,9 +331,9 @@ class BibleViewer extends Container {
         }));
 
         this.goButton = this.ui.addChild(new Button("go", async () => { 
-            this.location.verse = null;
-            this.location.verseEnd = null;
-            if (this.settings.bookmark) await base.save(`last-notherBible-location-${this.settings.bookmark}`, "local", this.location);
+            this.newLocation.verse = null;
+            this.newLocation.verseEnd = null;
+            if (this.settings.bookmark) await base.save(`last-notherBible-location-${this.settings.bookmark}`, "local", this.newLocation);
             this.openTo();
         }, { 
             placeholder: "Go"
@@ -372,11 +372,10 @@ class BibleViewer extends Container {
             this.chapterSelect.close();
             this.chapterSelect = null;
         }
-        this.newLocation.chapter = 0;
         let chapters = [];
         
-        for (let i = 0; i < this.bibleInfo[this.newLocation.book].length; i++) {
-            chapters.push(i + 1);
+        for (let i = 1; i <= this.bibleInfo[this.newLocation.book].length; i++) {
+            chapters.push(i);
         }
 
         this.chapterSelect = this.ui.addChild(new Select({
@@ -387,12 +386,12 @@ class BibleViewer extends Container {
 
     selectBook = (book, e, self) => {
         this.newLocation.book = book;
-
+        this.newLocation.chapter = 1;
         this.setChapters();
     }
 
     selectChapter = (chapter, e, self) => {
-        this.newLocation.chapter = parseInt(chapter) - 1;
+        this.newLocation.chapter = parseInt(chapter);
     }
 
     openTo = async (location = this.newLocation) => {
@@ -404,48 +403,39 @@ class BibleViewer extends Container {
         // convert location book name to integer
         let outLocation = {
             ...this.location,
-            book: (Object.keys(this.bibleInfo)).indexOf(this.location.book)
+            book: this.location.book
         }
 
         let res = await base.do("get-bible", {
             ...outLocation,
             route: "/global"
-        });        
+        });     
         
-        let text = `${this.location.book} ${this.location.chapter + 1}${this.location.verse != null ? `:${this.location.verse + 1}` : ""}${this.location.verseEnd != null ? `-${this.location.verseEnd}` : ""}<br /><br />`;
+        let text = `${this.location.book} ${this.location.chapter}${this.location.verse != null ? `:${this.location.verse}` : ""}${this.location.verseEnd != null ? `-${this.location.verseEnd}` : ""}<br /><br />`;
         if (this.location.verseEnd != null) {
-            for (let i = 0; i < res.data.length; i++) {
-                text += this.location.verse + i + 1;
+            for (let i = 1; i <= Object.keys(res.data).length; i++) {
+                text += this.location.verse;
                 text += '. ';
-                text += res.data[i].text;
+                text += res.data[i];
                 text += '  ';
             }
         }
-        else if (this.location.verse != null) text += res.data.text;
+        else if (this.location.verse != null) text += res.data;
         else if (this.location.chapter != null) {
-            for (let i = 0; i < res.data.verses.length; i++) {
-                text += i + 1;
+            for (let i = 1; i <= Object.keys(res.data).length; i++) {
+                text += i;
                 text += '. ';
-                text += res.data.verses[i].text;
-                text += '<br /><br />  ';
-            }
-        }
-        else for (let i = 0; i < res.data.chapters.length; i++) {
-            text += `Chapter ${i + 1}<br /><br />`;
-            for (let j = 0; j < res.data.chapters[i].verses.length; j++) {
-                text += j + 1;
-                text += '. ';
-                text += res.data.chapters[i].verses[j].text;
+                text += res.data[i];
                 text += '<br /><br />  ';
             }
         }
 
         this.content.setValue(text);
         this.bookSelect.setValue(this.location.book);
-        this.setChapters();
         this.newLocation = this.location;
-        this.chapterSelect.setValue((this.location.chapter + 1).toString());
+        this.setChapters();
+        this.chapterSelect.setValue((this.location.chapter).toString());
 
-        this.$div.find("h4").text(`${this.location.book} ${this.location.chapter + 1}${this.location.verse != null ? `:${this.location.verse + 1}` : ""}${this.location.verseEnd != null ? `-${this.location.verseEnd}` : ""}`);
+        this.$div.find("h4").text(`${this.location.book} ${this.location.chapter}${this.location.verse != null ? `:${this.location.verse}` : ""}${this.location.verseEnd != null ? `-${this.location.verseEnd }` : ""}`);
     }
 }

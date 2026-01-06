@@ -1,8 +1,9 @@
 import NotherBaseFS from "notherbase-fs";
 import nkjvBible from "./globals/NKJV.js";
+import nltBible from "./globals/nlt.js";
 import { fileURLToPath } from "url";
 
-const notherBaseFS = new NotherBaseFS({ nkjvBible }, {
+const notherBaseFS = new NotherBaseFS({ nkjvBible, nltBible }, {
     notherbase: {
         title: 'NotherBase',
         directory: fileURLToPath(new URL('./world', import.meta.url)),
