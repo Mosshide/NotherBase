@@ -413,8 +413,8 @@ class BibleViewer extends Container {
         
         let text = `${this.location.book} ${this.location.chapter}${this.location.verse != null ? `:${this.location.verse}` : ""}${this.location.verseEnd != null ? `-${this.location.verseEnd}` : ""}<br /><br />`;
         if (this.location.verseEnd != null) {
-            for (let i = 1; i <= Object.keys(res.data).length; i++) {
-                text += this.location.verse;
+            for (let i = 0; i < Object.keys(res.data).length; i++) {
+                text += this.location.verse + i;
                 text += '. ';
                 text += res.data[i];
                 text += '  ';
@@ -431,6 +431,7 @@ class BibleViewer extends Container {
         }
 
         this.content.setValue(text);
+        this.content.scrollTop();
         this.bookSelect.setValue(this.location.book);
         this.newLocation = this.location;
         this.setChapters();
