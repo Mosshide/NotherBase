@@ -813,6 +813,9 @@ a.external, button.external {
     margin: 0;
     box-shadow: var(--boxShadow);
     text-shadow: var(--text-shadow);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 a.external:hover, button.external:hover {
