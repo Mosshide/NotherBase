@@ -205,6 +205,10 @@ class Element {
     scrollTop = () => {
         if (this.$div) this.$div.scrollTop(0);
     }
+
+    scrollBottom = () => {
+        if (this.$div) this.$div.scrollTop(this.$div[0].scrollHeight);
+    }
 }
 
 // a class called Text that can be used to display text
