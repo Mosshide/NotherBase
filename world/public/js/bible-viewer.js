@@ -413,19 +413,21 @@ class BibleViewer extends Container {
         
         let text = `${this.location.book} ${this.location.chapter}${this.location.verse != null ? `:${this.location.verse}` : ""}${this.location.verseEnd != null ? `-${this.location.verseEnd}` : ""}<br /><br />`;
         if (this.location.verseEnd != null) {
-            for (let i = 0; i < Object.keys(res.data).length; i++) {
-                text += this.location.verse + i;
+            let keys = Object.keys(res.data);
+            for (let i = 0; i < keys.length; i++) {
+                text += this.location.verse + keys[i];
                 text += '. ';
-                text += res.data[i];
+                text += res.data[keys[i]];
                 text += '  ';
             }
         }
         else if (this.location.verse != null) text += res.data;
         else if (this.location.chapter != null) {
-            for (let i = 1; i <= Object.keys(res.data).length; i++) {
-                text += i;
+            let keys = Object.keys(res.data);
+            for (let i = 1; i <= keys.length; i++) {
+                text += keys[i - 1];
                 text += '. ';
-                text += res.data[i];
+                text += res.data[keys[i - 1]];
                 text += '<br /><br />  ';
             }
         }
