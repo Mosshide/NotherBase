@@ -1,0 +1,482 @@
+<!-- an idle game about living life on the rock (the rock is Jesus) -->
+<!-- the player will be taught to collect resources to afford to eat -->
+<!-- buying things and businesses will quickly gain resale value and generate more resources -->
+<!-- once the player reaches a softcap of wealth/income, suddenly crises will begin to happen that drain resources -->
+<!-- the faster the player generates wealth, the more frequent and severe the crises become -->
+<!-- such that afk play is risky, more often than not leading to bankruptcy -->
+<!-- there is a solution! if the player sells all they have and gives it to the poor, -->
+<!-- they will eventually be rewarded with blessings that over time return far more than was given -->
+<!-- building churches and giving to the poor is the true idle game -->
+
+<!-- for the site code: use ejs and jquery -->
+<!-- for the game code: use the element.js and buttons.js classes in /js/util -->
+
+<style>
+    <%- include("./index.css"); %>
+</style>
+
+<section class="game">
+
+</section>
+
+<script src="/js/util/element.js"></script>
+<script src="/js/util/buttons.js"></script>
+<script>
+    // game code here
+    class LifeOnTheRockGame extends Container {
+        constructor() {
+            super();
+
+            this.logstrings = [];
+
+            // test settings
+            this.settings = {
+                tickInterval: 10000, 
+                foodCost: 25,
+                carCost: 500,
+                houseCost: 5000,
+                businessCost: 10000,
+                churchCost: 2500,
+                workEarnings: 5
+            };
+
+            // release settings
+            // this.settings = {
+            //     tickInterval: 10000, 
+            //     foodCost: 25,
+            //     carCost: 50000,
+            //     houseCost: 500000,
+            //     businessCost: 1000000,
+            //     churchCost: 250000,
+            //     workEarnings: 5
+            // };
+            
+            // initialize game state
+            this.state = {
+                money: 0,
+                food: 0,
+                blessings: 0,
+                cars: [],
+                houses: [],
+                businesses: [],
+                churches: []
+            };
+
+            // create UI elements
+            this.header = new Element("div", { defaultClasses: "game-header", header: "Life on the Rock" });
+            this.addChild(this.header);
+            this.description = new Text("h2", { placeholder: "An idle game about living life on the rock (Jesus)." });
+            this.header.addChild(this.description);
+            this.gameLog = new Text("div", { defaultClasses: "game-log", placeholder: "Welcome to Life on the Rock! Start by earning some money.", header: "Game Log" });
+            this.header.addChild(this.gameLog);
+
+            this.playerStats = new Element("div", { defaultClasses: "player-stats", header: "Your Stats" });
+            this.addChild(this.playerStats);
+            this.moneyDisplay = new Text("p", { placeholder: "Money: 0" });
+            this.playerStats.addChild(this.moneyDisplay);
+            this.foodDisplay = new Text("p", { placeholder: "Food: 0" });
+            this.playerStats.addChild(this.foodDisplay);
+            this.eatButton = new Button("eat-food", () => this.eatFood(), { placeholder: "Eat Food" });
+            this.playerStats.addChild(this.eatButton);
+            this.carInventory = new Element("div", { defaultClasses: "car-inventory", header: "Your Cars" });
+            this.playerStats.addChild(this.carInventory);
+            this.houseInventory = new Element("div", { defaultClasses: "house-inventory", header: "Your Houses" });
+            this.playerStats.addChild(this.houseInventory);
+            this.businessInventory = new Element("div", { defaultClasses: "business-inventory", header: "Your Businesses" });
+            this.playerStats.addChild(this.businessInventory);
+
+            this.marketplace = new Element("div", { defaultClasses: "marketplace", header: "The Marketplace" });
+            this.addChild(this.marketplace);
+            this.foodStore = new Element("div", { defaultClasses: "food-store" });
+            this.marketplace.addChild(this.foodStore);
+            this.buyFoodButton = new Button("buy-food", () => this.buyFood(), { placeholder: `Buy Food (Cost: $${this.settings.foodCost})` });
+            this.foodStore.addChild(this.buyFoodButton);
+            this.buyBulkFoodButton = new Button("buy-bulk-food", () => this.buyBulkFood(), { placeholder: `Buy Bulk Food (Cost: $${this.settings.foodCost * 4 - 1})` });
+            this.foodStore.addChild(this.buyBulkFoodButton);
+            this.sellFoodButton = new Button("sell-food", () => this.sellFood(), { placeholder: `Sell Food (Gain: $${this.settings.foodCost * 4 / 5})` });
+            this.foodStore.addChild(this.sellFoodButton);
+
+            this.carStore = new Element("div", { defaultClasses: "car-store", header: "The Dealership" });
+            this.marketplace.addChild(this.carStore);
+            this.buyCarButton = new Button("buy-car", () => this.buyCar(), { placeholder: `Buy Car (Cost: $${this.settings.carCost})` });
+            this.carStore.addChild(this.buyCarButton);
+            this.sellCarButton = new Button("sell-car", () => this.sellCar(), { placeholder: "Sell Car (Gain: Market Price)" });
+            this.carStore.addChild(this.sellCarButton);
+
+            this.houseStore = new Element("div", { defaultClasses: "house-store", header: "The Realty" });
+            this.marketplace.addChild(this.houseStore);
+            this.buyHouseButton = new Button("buy-house", () => this.buyHouse(), { placeholder: `Buy House (Cost: $${this.settings.houseCost})` });
+            this.houseStore.addChild(this.buyHouseButton);
+            this.sellHouseButton = new Button("sell-house", () => this.sellHouse(), { placeholder: "Sell House (Gain: Market Price)" });
+            this.houseStore.addChild(this.sellHouseButton);
+            
+            this.streets = new Element("div", { defaultClasses: "streets", header: "The Streets" });
+            this.marketplace.addChild(this.streets);
+            this.buyBusinessButton = new Button("buy-business", () => this.buyBusiness(), { placeholder: `Buy Business (Cost: $${this.settings.businessCost})` });
+            this.streets.addChild(this.buyBusinessButton);
+            this.sellBusinessButton = new Button("sell-business", () => this.sellBusiness(), { placeholder: `Sell Business (Gain: $${this.settings.businessCost * 0.8})` });
+            this.streets.addChild(this.sellBusinessButton);
+
+            this.charity = new Element("div", { defaultClasses: "charity", header: "Charity" });
+            this.marketplace.addChild(this.charity);
+            this.giveAmount = new Input("number", { defaultClasses: "give-amount", header: "Give: $", placeholder: "0" });
+            this.charity.addChild(this.giveAmount);
+            this.giveToPoorButton = new Button("give-to-poor", () => this.giveToPoor(), { placeholder: "Give to Poor" });
+            this.charity.addChild(this.giveToPoorButton);
+
+            this.workplace = new Element("div", { defaultClasses: "workplace", header: "The Workplace" });
+            this.addChild(this.workplace);
+            this.weakWorkButton = new Button("weak-work", () => this.weakWork(), { placeholder: "Work as You Are Able to Earn Money (0 Food)" });
+            this.workplace.addChild(this.weakWorkButton);
+            this.mediumWorkButton = new Button("medium-work", () => this.mediumWork(), { placeholder: "Work Moderately to Earn More Money (5 Food)" });
+            this.workplace.addChild(this.mediumWorkButton);
+            this.strongWorkButton = new Button("strong-work", () => this.strongWork(), { placeholder: "Work Strongly to Earn More Money (25 Food)" });
+            this.workplace.addChild(this.strongWorkButton);
+
+
+            // start game loop
+            setInterval(() => this.update(this.settings.tickInterval), this.settings.tickInterval);
+        }
+
+        pickRandom(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
+        update(deltaTime) {
+            // possible crisis events that drain resources
+            if (Math.random() < 0.1) {
+                const crisisType = Math.floor(Math.random() * 3);
+                switch (crisisType) {
+                    case 0: // car crash payment
+                        if (this.state.cars.length > 0) {
+                            const courtCost = Math.floor(this.state.cars[0].value * 10);
+                            if (this.state.money >= courtCost) {
+                                this.state.money -= courtCost;
+                                this.log(`You got into a car crash. You paid $${courtCost}.`);
+                            } else {
+                                this.log(`You got into a car crash, but you couldn't afford the lawsuit and had to sell a car.`);
+                                this.sellCar();
+                                console.log(this.state.money, courtCost, this.state.cars);
+                                while (this.state.money < courtCost && this.state.cars.length > 0) {
+                                    this.sellCar();
+                                }
+                                if (this.state.money >= courtCost) {
+                                    this.state.money -= courtCost;
+                                    this.log(`After selling cars, you were able to pay the lawsuit cost of $${courtCost}.`);
+                                }
+                                else {
+                                    this.state.money = 0;
+                                    this.log(`You couldn't afford the lawsuit even after selling all your cars, so they took what you had.`);
+                                }
+                            }
+                        }
+                        break;
+                    case 1: // house injury lawsuit
+                        if (this.state.houses.length > 0) {
+                            const lawsuitCost = Math.floor(this.state.houses[0].value * 10);
+                            if (this.state.money >= lawsuitCost) {
+                                this.state.money -= lawsuitCost;
+                                this.log(`Someone got injured on your property. You paid $${lawsuitCost}.`);
+                            } else {
+                                this.log(`Someone got injured on your property, but you couldn't afford the lawsuit and had to sell a house.`);
+                                this.sellHouse();
+                                console.log(this.state.money, lawsuitCost, this.state.houses);
+                                while (this.state.money < lawsuitCost && this.state.houses.length > 0) {
+                                    this.sellHouse();
+                                }
+                                if (this.state.money >= lawsuitCost) {
+                                    this.state.money -= lawsuitCost;
+                                    this.log(`After selling houses, you were able to pay the lawsuit cost of $${lawsuitCost}.`);
+                                }
+                                else {
+                                    this.state.money = 0;
+                                    this.log(`You couldn't afford the lawsuit even after selling all your houses, so they took what you had.`);
+                                }
+                            }
+                        }
+                        break;
+                    case 2: // business malpractice lawsuit
+                        if (this.state.businesses.length > 0) {
+                            const lawsuitCost = Math.floor(this.state.businesses[0].value * 10);
+                            if (this.state.money >= lawsuitCost) {
+                                this.state.money -= lawsuitCost;
+                                this.log(`An employee at one of your businesses has done something illegal. You paid $${lawsuitCost} in lawsuit costs.`);
+                            } else {
+                                this.log(`An employee at one of your businesses has done something illegal, but you couldn't afford the lawsuit and had to sell a business.`);
+                                this.sellBusiness();
+                                console.log(this.state.money, lawsuitCost, this.state.businesses);
+                                
+                                while (this.state.money < lawsuitCost && this.state.businesses.length > 0) {
+                                    this.sellBusiness();
+                                }
+                                if (this.state.money >= lawsuitCost) {
+                                    this.state.money -= lawsuitCost;
+                                    this.log(`After selling businesses, you were able to pay the lawsuit cost of $${lawsuitCost}.`);
+                                }
+                                else {
+                                    this.state.money = 0;
+                                    this.log(`You couldn't afford the lawsuit even after selling all your businesses, so they took what you had.`);
+                                }
+                            }
+                        }
+                        break;
+                }
+            }
+
+            // generate passive income from blessings
+            if (Math.random() < 0.1) {
+                const blessingIncome = this.state.blessings;
+                this.state.money += blessingIncome;
+                if (blessingIncome > 0) this.log(`Your blessings generated $${blessingIncome.toFixed(2)} in passive income.`);
+            }
+
+            // eat food occasionally
+            if (Math.random() < 0.1) { 
+                this.eatFood();
+            }
+
+            // appreciate value on cars
+            for (let car of this.state.cars) {
+                car.value *= 1.05; 
+                car.element.setValue(`${car.name} - Value: $${car.value.toFixed(2)}`);
+            }
+
+            // appreciate value on houses
+            for (let house of this.state.houses) {
+                house.value *= 1.05; 
+                house.element.setValue(`${house.name} - Value: $${house.value.toFixed(2)}`);
+            }
+
+            // gather income from businesses
+            let totalIncome = 0;
+            for (let business of this.state.businesses) {
+                const income = this.settings.businessCost * 0.05; 
+                totalIncome += income;
+            }
+            this.state.money += totalIncome;
+            if (totalIncome > 0) this.log(`Your businesses generated a total of $${totalIncome.toFixed(2)} income.`);
+            
+            // update player stats display
+            this.updateStatsDisplay();
+        }
+
+        log(message) {
+            this.logstrings.push(message);
+            if (this.logstrings.length > 100) {
+                this.logstrings.shift();
+            }
+            this.gameLog.setValue(this.logstrings.join("\n"));
+            this.gameLog.scrollBottom();
+        }
+
+        updateStatsDisplay() {
+            this.moneyDisplay.setValue(`Money: $${this.state.money.toFixed(2)}`);
+            this.foodDisplay.setValue(`Food: ${this.state.food}`);
+        }
+
+        buyFood() {
+            if (this.state.money >= this.settings.foodCost) {
+                this.state.money -= this.settings.foodCost;
+                this.state.food += 1;
+                this.log("You bought 1 food.");
+                this.updateStatsDisplay();
+            } else {
+                this.log(`Not enough money to buy food.`);
+            }
+        }
+
+        buyBulkFood() {
+            const bulkCost = this.settings.foodCost * 4 - 1;
+            if (this.state.money >= bulkCost) {
+                this.state.money -= bulkCost;
+                this.state.food += 6;
+                this.log(`You bought 6 food.`);
+                this.updateStatsDisplay();
+            } else {
+                this.log(`Not enough money to buy bulk food.`);
+            }
+        }
+
+        sellFood() {
+            if (this.state.food >= 1) {
+                this.state.food -= 1;
+                const sellPrice = Math.floor(this.settings.foodCost * 4 / 5);
+                this.state.money += sellPrice;
+                this.log(`You sold 1 food for $${sellPrice}.`);
+                this.updateStatsDisplay();
+            } else {
+                this.log(`Not enough food to sell.`);
+            }
+        }
+
+        eatFood() {
+            if (this.state.food >= 1) {
+                this.state.food -= 1;
+                this.log(`You ate 1 food.`);
+                this.updateStatsDisplay();
+            } else {
+                this.log(`Not enough food to eat.`);
+            }
+        }
+
+        weakWork() {
+            this.state.money += this.settings.workEarnings;
+            this.log(`You worked as you are able and earned $${this.settings.workEarnings}.`);
+            this.updateStatsDisplay();
+        }
+
+        mediumWork() {
+            if (this.state.food >= 5) {
+                this.state.food -= 1;
+                const earnings = this.settings.workEarnings * 10;
+                this.state.money += earnings;
+                this.log(`You worked moderately and earned $${earnings}.`);
+                this.updateStatsDisplay();
+            } else {
+                this.log(`Not enough food to work moderately.`);
+            }
+        }
+
+        strongWork() {
+            if (this.state.food >= 25) {
+                this.state.food -= 2;
+                const earnings = this.settings.workEarnings * 99;
+                this.state.money += earnings;
+                this.log(`You worked strongly and earned $${earnings}.`);
+                this.updateStatsDisplay();
+            } else {
+                this.log(`Not enough food to work strongly.`);
+            }
+        }
+
+        buyCar() {
+            if (this.state.money >= this.settings.carCost) {
+                this.state.money -= this.settings.carCost;
+                this.updateStatsDisplay();
+                this.state.cars.push({ name: this.getRandomCarName(), value: this.settings.carCost * 4 / 5 });
+                this.log(`You bought a car: ${this.state.cars[this.state.cars.length - 1].name}.`);
+                let newCar = new Text("p", { placeholder: `${this.state.cars[this.state.cars.length - 1].name} - Value: $${this.state.cars[this.state.cars.length - 1].value.toFixed(2)}` });
+                this.state.cars[this.state.cars.length - 1].element = newCar;
+                this.carInventory.addChild(newCar);
+            } else {
+                this.log(`Not enough money to buy a car.`);
+            }
+        }
+
+        sellCar() {
+            if (this.state.cars.length > 0) {
+                const car = this.state.cars.shift();
+                this.state.money += car.value;
+                this.updateStatsDisplay();
+                this.log(`You sold your oldest car: ${car.name} for $${car.value}.`);
+                car.element.close();
+                return car;
+            } else {
+                this.log(`No cars to sell.`);
+            }
+        }
+
+        getRandomCarName() {
+            const namePrefixes = ["Toy", "Hon", "Fo", "Che", "Nis", "BM", "Mer", "Volks", "Aud", "Hyun"];
+            const nameSuffixes = ["ota", "nda", "rd", "vrolet", "san", "wagen", "cedes", "vo", "i", "dai"];
+
+            const modelPrefixes = ["Coro", "Acc", "Must", "Imp", "Alt", "Cam", "Jet", "A", "Son", "Elan", "Tuc"];
+            const modelSuffixes = ["lla", "ord", "ang", "reza", "ima", "ry", "ta", "4", "da", "tra", "son"];
+
+            return `${2026 - Math.floor(Math.random() * 70)} ${this.pickRandom(namePrefixes)}${this.pickRandom(nameSuffixes)} ${this.pickRandom(modelPrefixes)}${this.pickRandom(modelSuffixes)}`;
+        }
+
+        buyHouse() {
+            if (this.state.money >= this.settings.houseCost) {
+                this.state.money -= this.settings.houseCost;
+                this.updateStatsDisplay();
+                this.state.houses.push({ name: this.getRandomHouseName(), value: this.settings.houseCost * 4 / 5 });
+                this.log(`You bought a house: ${this.state.houses[this.state.houses.length - 1].name}.`);
+                let newHouse = new Text("p", { placeholder: `${this.state.houses[this.state.houses.length - 1].name} - Value: $${this.state.houses[this.state.houses.length - 1].value.toFixed(2)}` });
+                this.state.houses[this.state.houses.length - 1].element = newHouse;
+                this.houseInventory.addChild(newHouse);
+            } else {
+                this.log(`Not enough money to buy a house.`);
+            }
+        }
+
+        sellHouse() {
+            if (this.state.houses.length > 0) {
+                const house = this.state.houses.shift();
+                this.state.money += house.value;
+                this.log(`You sold your oldest house: ${house.name} for $${house.value}.`);
+                this.updateStatsDisplay();
+                house.element.close();
+                return house;
+            } else {
+                this.log(`No houses to sell.`);
+            }
+        }
+
+        getRandomHouseName() {
+            const adjectives = ["Sunny", "Cozy", "Spacious", "Modern", "Charming", "Elegant", "Rustic", "Luxurious", "Peaceful", "Vibrant"];
+            const nouns = ["Villa", "Cottage", "Mansion", "Bungalow", "Estate", "Residence", "Manor", "Dwelling", "Abode", "Homestead"];
+            const locationNames = ["Springfield", "Rivertown", "Lakeside", "Hillsdale", "Maplewood", "Cedarville", "Oakmont", "Pinehurst", "Fairview", "Brookside"];
+            const locationTypes = ["Hills", "Gardens", "Lakeside", "Meadows", "Parkview", "Riverside", "Heights", "Terrace", "Oaks", "Grove"];
+
+            return `${this.pickRandom(adjectives)} ${this.pickRandom(nouns)} in ${this.pickRandom(locationNames)} ${this.pickRandom(locationTypes)}`;
+        }
+
+        buyBusiness() {
+            if (this.state.money >= this.settings.businessCost) {
+                this.state.money -= this.settings.businessCost;
+                this.updateStatsDisplay();
+                this.state.businesses.push({ name: this.getRandomBusinessName(),  value: this.settings.businessCost * 4 / 5 });
+                this.log(`You bought a business: ${this.state.businesses[this.state.businesses.length - 1].name}.`);
+                let newBusiness = new Text("p", { placeholder: `${this.state.businesses[this.state.businesses.length - 1].name} - Value: $${this.state.businesses[this.state.businesses.length - 1].value.toFixed(2)}` });
+                this.state.businesses[this.state.businesses.length - 1].element = newBusiness;
+                this.businessInventory.addChild(newBusiness);
+            } else {
+                this.log(`Not enough money to buy a business.`);
+            }
+        }
+
+        sellBusiness() {
+            if (this.state.businesses.length > 0) {
+                const business = this.state.businesses.shift();
+                const sellPrice = business.value;
+                this.state.money += sellPrice;
+                this.updateStatsDisplay();
+                this.log(`You sold your oldest business: ${business.name} for $${sellPrice}.`);
+                business.element.close();
+                return business;
+            } else {
+                this.log(`No businesses to sell.`);
+            }
+        }
+
+        getRandomBusinessName() {
+            const adjectives = ["Happy", "Cozy", "Sunny", "Fresh", "Golden", "Lucky", "Bright", "Sweet", "Charming", "Vibrant"];
+            const businessTypes = ["Bakery", "Bookstore", "Cafe", "Diner", "Florist", "Grocery Store", "Hardware Store", "Ice Cream Shop", "Jewelry Store", "Karaoke Bar"];
+            const locationNames = ["Springfield", "Rivertown", "Lakeside", "Hillsdale", "Maplewood", "Cedarville", "Oakmont", "Pinehurst", "Fairview", "Brookside"];
+            const locationTypes = ["Hills", "Gardens", "Lakeside", "Meadows", "Parkview", "Riverside", "Heights", "Terrace", "Oaks", "Grove"];
+
+            return `${this.pickRandom(adjectives)} ${this.pickRandom(businessTypes)} in ${this.pickRandom(locationNames)} ${this.pickRandom(locationTypes)}`;
+        }
+
+        giveToPoor() {
+            const amount = parseInt(this.giveAmount.getValue());
+            if (isNaN(amount) || amount <= 0) {
+                this.log(`Please enter a valid amount to give.`);
+                return;
+            }
+            if (this.state.money >= amount) {
+                this.state.money -= amount;
+                const blessingsGained = amount * 100;
+                this.state.blessings += blessingsGained;
+                this.log(`You gave $${amount} to the poor and gained God's blessing.`);
+                this.updateStatsDisplay();
+            } else {
+                this.log(`Not enough money to give that amount.`);
+            }
+        }
+    }
+
+    const game = new LifeOnTheRockGame();
+    game.render($(".game"));
+</script>
