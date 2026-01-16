@@ -29,6 +29,36 @@
                 super(settings);
             }
 
+            makeBrowser = () => {
+                if (this.settings.useBrowser) {
+                    this.browser = new this.settings.useBrowser(this.serving, {
+                        onSave: this.save,
+                        onEdit: this.edit,
+                        onCancel: this.cancel,
+                        onDelete: this.delete,
+                        onClose: () => {
+                            if (this.disabledElement) {
+                                if (this.serving.state == "new") {
+                                    this.serving.data.splice(this.serving.selected, 1);
+                                    this.disabledElement.close();
+                                }
+                                else if (this.serving.state == "delete") {
+                                    this.disabledElement.close();
+                                }
+                                else  {
+                                    this.disabledElement.enable();
+                                    this.disabledElement.setValue(this.searchBox.extractLabel(this.serving.data[this.serving.selected]));
+                                }
+                                this.searchBox.$div.removeClass("humble");
+                            }
+                            this.disabledElement = null;
+                            this.browser = null;
+                        }
+                    });
+                    this.searchBox.$div.addClass("humble");
+                }
+            }
+
             save = async (item) => {
                 this.serving.state = "read";
                 this.serving.data[this.serving.selected] = item;
@@ -43,7 +73,7 @@
                 let res = null;
                 
                 if (this.serving.saveToCloud) {
-                    res = await base.do("save-it", { item, deleting: false, route: "/the-front/it-admin", which: this.services["it"].filter });
+                    res = await base.do("save-it", { item: { data: item, id: this.serving.loadedData[this.serving.selected]?.memory._id}, deleting: false, route: "/the-front/it-admin", which: this.services["it"].filter });
                 }
             
                 if (res) this.serving.loadedData[this.serving.selected].memory._id = res;
@@ -52,7 +82,7 @@
             delete = async () => {
                 this.serving.state = "delete";
                 if (this.serving.saveToCloud) {
-                    base.do("save-it", { item, deleting: true, route: "/the-front/it-admin", which: this.services["it"].filter });
+                    base.do("save-it", { item: { id: this.serving.loadedData[this.serving.selected]?.memory._id}, deleting: true, route: "/the-front/it-admin", which: this.services["it"].filter });
                 }
                 this.serving.data.splice(this.serving.selected, 1);
                 this.serving.loadedData.splice(this.serving.selected, 1);
