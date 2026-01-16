@@ -24,17 +24,111 @@
 <script src="/js/util/browser.js"></script>
 <script>
     <% if (user && user.memory.data.authLevels.includes("ITAD")) { %>
-        const metaBrowser = new MetaBrowser({ header: "it admin" });
+        class ITAdminBrowser extends MetaBrowser {
+            constructor(settings = {}) {
+                super(settings);
+            }
+
+            save = async (item) => {
+                this.serving.state = "read";
+                this.serving.data[this.serving.selected] = item;
+                if (!this.serving.loadedData[this.serving.selected]) {
+                    this.serving.loadedData[this.serving.selected] = { memory: { _id: "new", data: {}, backups: [] } };
+                }
+                this.serving.loadedData[this.serving.selected].memory.backups.unshift({
+                    _lastUpdate: Date.now(),
+                    data: item
+                });
+
+                let res = null;
+                
+                if (this.serving.saveToCloud) {
+                    res = await base.do("save-it", { item, deleting: false, route: "/the-front/it-admin", which: this.services["it"].filter });
+                }
+            
+                if (res) this.serving.loadedData[this.serving.selected].memory._id = res;
+            }
+
+            delete = async () => {
+                this.serving.state = "delete";
+                if (this.serving.saveToCloud) {
+                    base.do("save-it", { item, deleting: true, route: "/the-front/it-admin", which: this.services["it"].filter });
+                }
+                this.serving.data.splice(this.serving.selected, 1);
+                this.serving.loadedData.splice(this.serving.selected, 1);
+                this.serving.selected = -1;
+                this.searchBox.renderSearchResults();
+            }
+
+            load = async (service = this.selectedService, select = true) => {
+                let serving = this.services[service];
+
+                if (serving.loadFromCloud) {                    
+                    await base.do("load-it", { which: this.services["it"].filter, route: "/the-front/it-admin" }).then((res) => {                
+                        serving.loadedData = res.data;
+                        console.log(res);
+                        
+                        if (!Array.isArray(serving.loadedData)) serving.loadedData = [serving.loadedData];
+                        serving.data = [];
+                        for (let i = 0; i < serving.loadedData.length; i++) {
+                            serving.data.push({
+                                ...structuredClone(serving.loadedData[i].memory.data),
+                                _id: serving.loadedData[i].memory._id
+                            });
+                        }
+                        this.sortData(serving);
+                        
+                        if (select) this.selectService(service);
+                    });
+                }
+            }
+
+            addService = (service, settings) => {
+                this.services[service] = {
+                    name: service,
+                    selected: -1,
+                    state: "read",
+                    lastFilter: "",
+                    lastEdit: {},
+                    label: "Service",
+                    data: [],
+                    loadedData: [],
+                    fields: new NBField(),
+                    editable: true,
+                    multiple: false,
+                    showID: false,
+                    max: -1,
+                    enableBackups: true,
+                    loadFromCloud: true, 
+                    saveToCloud: true, 
+                    ...settings
+                };
+
+                this.buttons.addButton(new Button(service, () => { this.selectService(service); }, {
+                    placeholder: `Switch to ${this.services[service].label ? this.services[service].label : service}`
+                }));
+
+                let keys = Object.keys(this.services);
+                if (keys.length < 2) {
+                    this.buttons.hideButton(service);
+                    this.searchBox.setItems([], null);
+                    this.load(service);
+                }
+                else this.load(service, false);
+            }
+        }
+        
+        const metaBrowser = new ITAdminBrowser({ header: "it admin" });
 
         const load = () => {
             let filter = $("#filter").val();
 
             metaBrowser.addService("it", {
                 fields: new NBField({
-                name: "ticket",
-                label: "Ticket: ",
-                placeholder: "No Ticket"
-            }, [
+                    name: "ticket",
+                    label: "Ticket: ",
+                    placeholder: "No Ticket"
+                }, [
                     new NBField({
                         name: "title",
                         label: "Title: ",
@@ -81,6 +175,7 @@
                 label: filter,
                 editable: true,
                 multiple: true,
+                filter: filter,
                 toLoad: async () => {
                     let res = await base.do("load-it", {
                         which: filter,
