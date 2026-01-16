@@ -415,7 +415,7 @@ class BibleViewer extends Container {
         if (this.location.verseEnd != null) {
             let keys = Object.keys(res.data);
             for (let i = 0; i < keys.length; i++) {
-                text += this.location.verse + keys[i];
+                text += this.location.verse + parseInt(keys[i]);
                 text += '. ';
                 text += res.data[keys[i]];
                 text += '  ';
