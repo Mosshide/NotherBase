@@ -344,15 +344,6 @@ class ViewBox extends Element {
  */
 class Browser extends Element {
     /**
-     * Represents spirit data with fields, settings, and buttons.
-     * @constructor
-     * @param {string} id - The ID of the browser.
-     * @param {NBField} [fields=new NBField()] - The fields of the spirit data.
-     * @param {Object} [settings={}] - The settings of the browser.
-     * @param {Function} [settings.onSave=null] - The function to call when the spirit data is saved.
-     * @param {Function} [settings.onEdit=null] - The function to call when the spirit data is edited.
-     * @param {Function} [settings.onCancel=null] - The function to call when the edit is cancelled.
-     * @param {boolean} [settings.disableSave=false] - Whether to disable the save button.
      */
     constructor(serving = null, settings = {}) {
         super("div", {
@@ -915,10 +906,7 @@ class MetaBrowser extends Container {
     /**
      * Represents a browser utility for browsing and managing services.
      * @constructor
-     * @param {string} [label="Browse"] - The label for the browser.
-     * @param {Object} [browser=null] - The browser object.
-     * @param {Object} [searchBox=null] - The search box object.
-     * @param {string} [id=null] - The ID for the browser.
+
      */
     constructor(settings = {}) {
         super({
@@ -1019,10 +1007,10 @@ class MetaBrowser extends Container {
         this.serving.state = "read";
     }
 
-    delete = () => {
+    delete = async () => {
         this.serving.state = "delete";
         if (this.serving.saveToCloud) {
-            base.delete(this.selectedService, "local", {}, this.serving.loadedData[this.serving.selected].memory._id);
+            await base.delete(this.selectedService, "local", {}, this.serving.loadedData[this.serving.selected].memory._id);
         }
         // if (this.serving.toSave) this.serving.toSave({ 
         //     id: this.serving.loadedData[this.serving.selected].memory._id 
@@ -1030,7 +1018,7 @@ class MetaBrowser extends Container {
         this.serving.data.splice(this.serving.selected, 1);
         this.serving.loadedData.splice(this.serving.selected, 1);
         this.serving.selected = -1;
-        if (this.serving.saveToCloud) base.save(`${this.selectedService}-notherLastSelected`, "local", { selected: this.serving.selected });
+        if (this.serving.saveToCloud) await base.save(`${this.selectedService}-notherLastSelected`, "local", { selected: this.serving.selected });
         this.searchBox.renderSearchResults();
     }
 
