@@ -90,6 +90,7 @@ main .hud .time {
 @media screen and (max-width: 570px) {
     .bible-viewer {
         max-width: 100% !important;
+        margin-top: -35px !important;
     }
 
     .hud .date {
