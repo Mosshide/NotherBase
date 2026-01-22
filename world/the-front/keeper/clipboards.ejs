@@ -18,7 +18,7 @@
                 <button onclick="sendOTP()" id="otp-button">Send OTP to Your Email</button>
                 <h6>Change Your Email</h6>
                 <input type="password" name="password" placeholder="password" id="email-password">
-                <input type="email" name="email" placeholder="<%= user.memory.data.email %>" id="change-email">
+                <input type="email" name="email" placeholder="<%= user.data.email %>" id="change-email">
                 <button onclick="changeEmail()" id="email-button">Change Email</button>
                 <p id="email-info"></p>
                 <button onclick="toPass()" class="to-pass">Manage Password</button>
@@ -58,10 +58,10 @@
                 <h5>NotherBase</h5>
                 <h6>Manage Your Sessions</h6>
                 <ul class="active-sessions">
-                    <%  let keys = Object.keys(user.memory.data.sessions);
+                    <%  let keys = Object.keys(user.data.sessions);
                         for (let key of keys) { %>
                         <li>
-                            <%= key %>: <%= (new Date(user.memory.data.sessions[key])).toLocaleString() %>
+                            <%= key %>: <%= (new Date(user.data.sessions[key])).toLocaleString() %>
                             <button onclick='destroySession("<%= key %>")'>X</button>
                         </li>
                     <% } %>

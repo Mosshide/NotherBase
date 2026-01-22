@@ -18,66 +18,75 @@
 <script src="/js/util/search-box.js"></script>
 <script src="/js/util/browser.js"></script>
 <script src="/js/entity.js"></script>
+<script src="/js/login-form.js"></script>
 <script>
-    const metaBrowser = new MetaBrowser({
-        header: "Your Recipes"
-    });
-    metaBrowser.addService("recipes", {
-        fields: new NBField({
-            name: "recipe",
-            label: "Recipe: ",
-            placeholder: "No Recipe"
-        }, [
-            new NBField({
-                name: "name",
-                placeholder: "Recipe Name",
-                type: "string"
-            }),
-            new NBField({
-                name: "img",
-                label: "Image URL: ",
-                placeholder: "/img/food/default.jpg",
-                type: "image"
-            }),
-            new NBField({
-                name: "source",
-                label: "From: ",
-                placeholder: "Recipe Source",
-                type: "string"
-            }),
-            new NBField({
-                name: "ingredients",
-                label: "Ingredients: ",
-                placeholder: "No Ingredients",
-                multiple: true
+    <% if (user?.data?.username) { %>
+        const metaBrowser = new MetaBrowser({
+            header: "Your Recipes"
+        });
+        metaBrowser.addService("recipes", {
+            fields: new NBField({
+                name: "recipe",
+                label: "Recipe: ",
+                placeholder: "No Recipe"
             }, [
                 new NBField({
-                    name: "amount",
-                    placeholder: "",
-                    type: "number"
-                }),
-                new NBField({
-                    name: "measure",
-                    placeholder: "measure",
+                    name: "name",
+                    placeholder: "Recipe Name",
                     type: "string"
                 }),
                 new NBField({
-                    name: "ingredient",
-                    placeholder: "ingredient",
+                    name: "img",
+                    label: "Image URL: ",
+                    placeholder: "/img/food/default.jpg",
+                    type: "image"
+                }),
+                new NBField({
+                    name: "source",
+                    label: "From: ",
+                    placeholder: "Recipe Source",
                     type: "string"
-                })
+                }),
+                new NBField({
+                    name: "ingredients",
+                    label: "Ingredients: ",
+                    placeholder: "No Ingredients",
+                    multiple: true
+                }, [
+                    new NBField({
+                        name: "amount",
+                        placeholder: "",
+                        type: "number"
+                    }),
+                    new NBField({
+                        name: "measure",
+                        placeholder: "measure",
+                        type: "string"
+                    }),
+                    new NBField({
+                        name: "ingredient",
+                        placeholder: "ingredient",
+                        type: "string"
+                    })
+                ]),
+                new NBField({
+                    name: "directions",
+                    label: "Directions: ",
+                    placeholder: "No Directions",
+                    multiple: true,
+                    type: "long-string"
+                }) 
             ]),
-            new NBField({
-                name: "directions",
-                label: "Directions: ",
-                placeholder: "No Directions",
-                multiple: true,
-                type: "long-string"
-            }) 
-        ]),
-        label: "Your Recipes",
-        editable: true,
-        multiple: true
-    });
-    metaBrowser.render();
+            label: "Your Recipes",
+            editable: true,
+            multiple: true,
+            onSave: async (item, deleting = false) => { 
+                return await base.do("save-recipe", { item, deleting }); 
+            }
+        });
+        metaBrowser.render();
+    <% } else { %>
+        const loginForm = new LoginForm();
+        loginForm.render(".meta");
+    <% } %>
 </script>

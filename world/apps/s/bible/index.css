@@ -1,5 +1,5 @@
 .bible-viewer {
-    height: 60svh;
+    height: 100%;
     position: absolute;
     left: 0;
     top: 0;
@@ -15,28 +15,4 @@
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.meta, .meta>.browser {
-    margin-top: 0;
-    padding-top: calc(60svh - 25px);
-}
-
-.meta .search-box {
-    padding: 0;
-}
-
-.meta>.buttons {
-    margin: 0;
-}
-
-.browser {
-    height: 100% !important;
-}
-
-/* for smaller screens */
-@media screen and (max-width: 570px) {
-    /* .meta {
-        padding-top: 60svh;
-    } */
 }

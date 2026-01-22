@@ -2,19 +2,15 @@
     <%- include("./index.css"); %>
 </style>
 
-<% if (user && user.memory.data.authLevels.includes("LINCLCAD")) { %>
 <div class="meta" id="mailing-list"></div>
-<% } else { %>
-<p>Administrator authority required.</p>
-<% } %>
 
 <script src="/js/util/element.js"></script>
 <script src="/js/util/buttons.js"></script>
 <script src="/js/util/search-box.js"></script>
 <script src="/js/util/browser.js"></script>
-
+<script src="/js/login-form.js"></script>
 <script>
-    <% if (user && user.memory.data.authLevels.includes("LINCLCAD")) { %>
+    <% if (user && user.data.authLevels.includes("LINCLCAD")) { %>
     let metaMailingList = new MetaBrowser({ id: "mailing-list", header: "Love INC of Lewis County Mailing List" });
     metaMailingList.render();
     metaMailingList.addService("loveinclc-mailing-list", {
@@ -74,12 +70,11 @@
         ]),
         editable: true,
         multiple: true,
-        toLoad: async () => {
-            let res = await base.loadAll("loveinclc-mailing-list", "global");
-            return res;
-        },
-        toSave: async (item, deleting) => {
+        onSave: async (item, deleting = false) => {
             return await base.do("save-mailing-list", { item, deleting });
+        },
+        onLoad: async () => {
+            return await base.load("loveinclc-mailing-list", "global");
         }
     });
     // add a button that compiles all signups into an email
@@ -132,5 +127,8 @@
     }, {
         placeholder: "Check All"
     }));
+    <% } else { %>
+        let loginForm = new LoginForm();
+        loginForm.render(".meta");
     <% } %>
 </script>

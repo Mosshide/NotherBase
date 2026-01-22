@@ -260,6 +260,7 @@ class Input extends Element {
         super("div", {
             inputType: inputType,
             step: null,
+            onKeyup: null,
             ...settings
         });
     }
@@ -302,6 +303,10 @@ class Input extends Element {
 
         if (this.settings.onInput && this.$input) this.$input.on("input", (e) => { 
             return this.settings.onInput(e.currentTarget.value.toLowerCase()); 
+        });
+
+        if (this.settings.onKeyup && this.$input) this.$input.on("keyup", (e) => { 
+            return this.settings.onKeyup(e); 
         });
 
         this.$div.removeClass("disabled");

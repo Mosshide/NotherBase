@@ -17,39 +17,48 @@
 <script src="/js/util/buttons.js"></script>
 <script src="/js/util/search-box.js"></script>
 <script src="/js/util/browser.js"></script>
+<script src="/js/login-form.js"></script>
 <script src="/js/entity.js"></script>
 <script>
-    const metaBrowser = new MetaBrowser({
-        header: "Your Stories"
-    });
-    metaBrowser.addService("stories", {
-        fields: new NBField({
-            name: "story",
-            label: "Story: ",
-            placeholder: "No Story"
-        }, [
-            new NBField({
-                name: "title",
-                label: "Title: ",
-                placeholder: "Story Title",
-                type: "string"
-            }),
-            new NBField({
-                name: "source",
-                label: "Source: ",
-                placeholder: "Story Source",
-                type: "string"
-            }),
-            new NBField({
-                name: "content",
-                label: "Content: ",
-                placeholder: "Story Content",
-                type: "long-string"
-            })
-        ]),
-        label: "Story:",
-        editable: true,
-        multiple: true
-    });
-    metaBrowser.render();
+    <% if (user?.data?.username) { %>
+        const metaBrowser = new MetaBrowser({
+            header: "Your Stories"
+        });
+        metaBrowser.addService("stories", {
+            fields: new NBField({
+                name: "story",
+                label: "Story: ",
+                placeholder: "No Story"
+            }, [
+                new NBField({
+                    name: "title",
+                    label: "Title: ",
+                    placeholder: "Story Title",
+                    type: "string"
+                }),
+                new NBField({
+                    name: "source",
+                    label: "Source: ",
+                    placeholder: "Story Source",
+                    type: "string"
+                }),
+                new NBField({
+                    name: "content",
+                    label: "Content: ",
+                    placeholder: "Story Content",
+                    type: "long-string"
+                })
+            ]),
+            label: "Story:",
+            editable: true,
+            multiple: true,
+            onSave: async (item, deleting = false) => { 
+                return await base.do("save-story", { item, deleting }); 
+            }
+        });
+        metaBrowser.render();
+    <% } else { %>
+        const loginForm = new LoginForm();
+        loginForm.render(".meta");
+    <% } %>
 </script>
