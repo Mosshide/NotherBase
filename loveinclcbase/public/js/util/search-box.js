@@ -10,36 +10,81 @@ class Filters extends Element {
         this.defaults = defaults;
         this.filter = this.defaults;
         this.onFilterChange = onFilterChange;
+        this.service = null;
 
-        this.search = this.addChild(new Input("text", {
-            header: "Search",
-            onInput: (filter) => { this.updateFilter(filter, "search"); }
-        }));
+        // add inputs for each filter based on its type
+        for (let key in this.defaults) {
+            if (this.defaults.hasOwnProperty(key)) {
+                let filter = this.defaults[key];
+                switch (typeof filter) {
+                    case "string":
+                        this[key] = this.addChild(new Input("text", {
+                            header: key,
+                            onInput: (value) => { this.updateFilter({ [key]: value }); }
+                        }));
+                        break;
+                    case "boolean":
+                        this[key] = this.addChild(new CheckBox({
+                            header: key,
+                            onChange: (value) => { this.updateFilter({ [key]: value }); }
+                        }));
+                        break;
+                    case "array":
+                        this[key] = this.addChild(new Select({
+                            header: key,
+                            options: filter.options,
+                            onChange: (value) => { this.updateFilter({ [key]: value }); }
+                        }));
+                        break;
+                }
+            }
+        }
+
+        // this.search = this.addChild(new Input("text", {
+        //     header: "Search",
+        //     onInput: (filter) => { this.updateFilter(filter, "search"); }
+        // }));
     }
 
-    setValue = (filter, which = "search") => {
-        // update the filter
-        this.updateFilter(filter, which);
+    setService = async (service) => {
+        // save the current filters if there is a current service
+        // let oldFilters = this.filter;
+        // if (this.service) {
+        //     await base.do("save-browser-filters", { 
+        //         route: "/scripts", 
+        //         service: this.service, 
+        //         filters: oldFilters
+        //     });
+        // }
+
+        // load the filters for the new service
+        this.service = service;
+        await base.load(`${this.service}-notherFilters`, "local").then((loadedFilter) => {
+            // update the filter
+            this.updateFilter(loadedFilter[0]?.data?.filters || this.defaults, false);
+        });
+    }
+
+    // updates a specific filter or all filters if which is not null
+    updateFilter = async (filter, saveToCloud = true) => {
+        this.filter = { ...this.filter, ...filter };
+        // if it has been set, call the onFilterChange function
+        if (this.onFilterChange) this.onFilterChange();
 
         // update all child filters
         let keys = Object.keys(this.filter);
         for (let i = 0; i < keys.length; i++) {
             this[keys[i]].setValue(this.filter[keys[i]]);
         }
-    }
 
-    getValue = (which = "search") => {
-        if (which) return this.filter[which];
-        return this.filter;
-    }
-
-    // updates a specific filter or all filters if which is not null
-    updateFilter = (filter, which = null) => {
-        if (which) this.filter[which] = filter;
-        else this.filter = filter;
-
-        // if it has been set, call the onFilterChange function
-        if (this.onFilterChange) this.onFilterChange();
+        // if saveToCloud is true, save the filter to the cloud
+        if (saveToCloud) {
+            await base.do("save-browser-filters", { 
+                route: "/scripts", 
+                service: this.service, 
+                filters: this.filter
+            });
+        }
     }
 
     setDefaults = (defaults = this.defaults) => {
@@ -54,7 +99,8 @@ class SearchBox extends Element {
             onNew: null,
             onLiClick: null,
             styles: "search-box",
-            filters: "default",
+            filters: { search: "" },
+            filtersDefaults: settings.filtersDefaults || { search: "" },
             ...settings
         }); 
         
@@ -67,7 +113,7 @@ class SearchBox extends Element {
             if (this.filters) this.filters.toggle(); 
         }, { placeholder: "Filters" }));
 
-        if (this.settings.filters === "default") this.filters = this.addChild(new Filters(this.renderSearchResults));
+        if (this.settings.filters !== null) this.filters = this.addChild(new Filters(this.renderSearchResults, this.settings.filtersDefaults));
         else this.filters = null;
         if (this.settings.filters === "none") this.buttons.hideButton("toggleFilters");
 
@@ -81,7 +127,7 @@ class SearchBox extends Element {
         
         if (typeof item === "string") label = item;
         else label = item?.name || item?.username || item?.title || 
-                item?.header || item?.whenSearched || item?.note || item?.text;
+                item?.header || item?.whenSearched || item?.note || item?.text || item?.design;
         if (!label) label = "Unnamed Item";
 
         if (typeof label !== "string") label = String(label);
@@ -92,8 +138,9 @@ class SearchBox extends Element {
         this.filters = this.addChild(new filters(onFilterChange));
     }
 
-    setFilters = (filters) => {
-        if (this.filters) this.filters.setValue(filters);
+    setService = async (service, saveToCloud = true) => {
+        this.service = service;
+        if (this.filters) await this.filters.setService(service, saveToCloud);
     }
 
     getFilters = () => {
@@ -101,7 +148,7 @@ class SearchBox extends Element {
         return null;
     }
 
-    setItems = (items, onNew = this.settings.onNew, max = -1) => {
+    setItems = async (items, onNew = this.settings.onNew, max = -1) => {
         this.items = items;
         this.max = max;
         
@@ -116,6 +163,12 @@ class SearchBox extends Element {
             this.settings.onNew = null;
         }
         this.renderSearchResults();
+
+        if (this.service) {
+            let loaded = await base.load(`${this.service}-notherLastSelected`, "local");
+            return typeof loaded[0]?.data?.selected == "number" ? loaded[0].data.selected : -1;
+        }
+        else return -1;
     }
 
     renderSearchResults = () => {
@@ -125,7 +178,7 @@ class SearchBox extends Element {
         }
         this.list.closeChildren();
 
-        this.filter = this.filters ? this.filters.getValue("search") : "";
+        this.filter = this.filters ? this.filters.filter : {};
 
         for (let i = 0; i < this.items.length; i++) {
             this.renderItem(this.items[i], i);
@@ -159,7 +212,8 @@ class SearchBox extends Element {
 
     renderItem = (item, i, newItem = false) => {
         let label = this.extractLabel(item);
-        if (label.toLowerCase().includes(this.filter) || newItem) {
+        
+        if (label.toLowerCase().includes(this.filter.search) || newItem) {
             return this.list.addChild(new Text("li", { 
                 placeholder: label,
                 id: i,
@@ -168,5 +222,9 @@ class SearchBox extends Element {
                 }
             }));
         }
+    }
+
+    getliElementById = (id) => {
+        return this.list.children.find((child) => child.settings.id == id);
     }
 }

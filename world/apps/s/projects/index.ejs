@@ -15,33 +15,42 @@
 <script src="/js/util/search-box.js"></script>
 <script src="/js/util/browser.js"></script>
 <script src="/js/entity.js"></script>
+<script src="/js/login-form.js"></script>
 <script>
-    const metaBrowser = new MetaBrowser({
-        header: "",
-        useBrowser: TreeBrowser
-    });
-    metaBrowser.addService("projects", {
-        fields: new NBField({
-            name: "project-node",
-            placeholder: "No Info",
-            label: "Node: "
-        }, [
-            new NBField({
-                name: "name",
-                placeholder: "No Name",
-                label: "Name: ",
-                type: "string"
-            }),
-            new NBField({
-                name: "description",
-                placeholder: "No Description",
-                label: "Description: ",
-                type: "long-string",
-                multiple: true
-            })
-        ]),
-        editable: true,
-        multiple: true
-    });
-    metaBrowser.render();
+    <% if (user?.data?.username) { %>
+        const metaBrowser = new MetaBrowser({
+            header: "",
+            useBrowser: TreeBrowser
+        });
+        metaBrowser.addService("projects", {
+            fields: new NBField({
+                name: "project-node",
+                placeholder: "No Info",
+                label: "Node: "
+            }, [
+                new NBField({
+                    name: "name",
+                    placeholder: "No Name",
+                    label: "Name: ",
+                    type: "string"
+                }),
+                new NBField({
+                    name: "description",
+                    placeholder: "No Description",
+                    label: "Description: ",
+                    type: "long-string",
+                    multiple: true
+                })
+            ]),
+            editable: true,
+            multiple: true,
+            onSave: async (item, deleting = false) => { 
+                return await base.do("save-project", { item, deleting }); 
+            }
+        });
+        metaBrowser.render();
+    <% } else { %>
+        const loginForm = new LoginForm();
+        loginForm.render(".meta");
+    <% } %>
 </script>

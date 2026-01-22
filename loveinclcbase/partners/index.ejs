@@ -1,0 +1,132 @@
+<style>
+    <%- include('index.css') %>
+</style>
+
+<h2>Church Partners</h2>
+
+<section>
+    <div class="card-grid">
+        <div class="card header">
+            <h3>Chehalis Church Partners</h3>
+            <p>Hide</p>
+        </div>
+        <div class="card">
+            <h5>Bethel Church</h5>
+            <a target="_blank" href="https://www.bethel-church.com/">Bethel Church Website</a>
+        </div>
+        <div class="card">
+            <h5>Chehalis Foursquare Church</h5>
+            <p>990 NW State Ave, Chehalis, WA 98532</p>
+            <p>(360) 748-4746</p>
+        </div>
+        <div class="card">
+            <h5>Chehalis SDA Church</h5>
+            <a target="_blank" href="https://chehalissda.org/">Chehalis SDA Church Website</a>
+        </div>
+        <div class="card">
+            <h5>Cornerstone Fellowship Chehalis</h5>
+            <a target="_blank" href="https://www.facebook.com/p/Cornerstone-Fellowship-100066677468365/">Cornerstone Fellowship Chehalis FaceBook Page</a>
+        </div>
+        <div class="card">
+            <h5>Grace Church</h5>
+            <a target="_blank" href="https://www.gracechehalis.com/">Grace Church Website</a>
+        </div>
+        <div class="card">
+            <h5>Heritage Community Church</h5>
+            <a target="_blank" href="https://heritagecc.church/">Heritage Community Church Website</a>
+        </div>
+        <div class="card">
+            <h5>Jackson Prairie Church</h5>
+            <a target="_blank" href="https://www.facebook.com/JacksonPrairieChurch">Jackson Prairie Church FaceBook Page</a>
+        </div>
+        <div class="card">
+            <h5>Peace Evangelical Lutheran Church, U.A.C.</h5>
+            <a target="_blank" href="https://www.chehalislutheran.org/">Peace Evangelical Lutheran Church, U.A.C. Website</a>
+        </div>
+        <div class="card">
+            <h5>Trinity Christian Fellowship</h5>
+            <a target="_blank" href="https://www.trinitychehalis.org/">Trinity Christian Fellowship Website</a>
+        </div>
+        <div class="card">
+            <h5>Westminster Presbyterian Church</h5>
+            <a target="_blank" href="https://www.chehaliswpc.org/">Westminster Presbyterian Church Website</a>
+        </div>
+    </div>
+    <div class="card-grid">
+        <div class="card header">
+            <h3>Centralia Church Partners</h3>
+            <p>Hide</p>
+        </div>
+        <div class="card">
+            <h5>Centralia Community Church of God</h5>
+            <a target="_blank" href="https://cccog.com/">Centralia Community Church of God Website</a>
+        </div>
+        <div class="card">
+            <h5>Centralia Christian Church</h5>
+            <a target="_blank" href="https://centraliachristian.org/">Centralia Christian Church Website</a>
+        </div>
+        <div class="card">
+            <h5>Centralia Grace Foursquare</h5>
+            <a target="_blank" href="https://gracefoursquarechurch.com/">Centralia Grace Foursquare Website</a>
+        </div>
+        <div class="card">
+            <h5>Chesed V' Shalom</h5>
+            <a target="_blank" href="http://www.cvsm.us/">Chesed V' Shalom Community Website</a>
+        </div>
+        <div class="card">
+            <h5>Centralia Church of the Nazarene</h5>
+            <a target="_blank" href="https://www.centraliachurch.com/">Centralia Church of the Nazarene Website</a>
+        </div>
+        <div class="card">
+            <h5>Harrison Square Presbyterian Church</h5>
+            <a target="_blank" href="https://www.harrisonsquarepc.com/">Harrison Square Presbyterian Church Website</a>
+        </div>
+        <div class="card">
+            <h5>Mountain View Baptist Church</h5>
+            <a target="_blank" href="https://mountainviewcentralia.church/">Mountain View Baptist Church Website</a>
+        </div>
+    </div>
+    <div class="card-grid">
+        <div class="card header">
+            <h3>More Church Partners</h3>
+            <p>Hide</p>
+        </div>
+        <div class="card">
+            <h5>Christian Fellowship of Winlock</h5>
+            <a target="_blank" href="https://cfwinlock.org/">Christian Fellowship of Winlock Website</a>
+        </div>
+        <div class="card">
+            <h5>Mossyrock Assembly of God and Foothills Church</h5>
+            <a target="_blank" href="https://www.foothills-church.net/">Mossyrock Assembly of God and Foothills Church Website</a>
+        </div>
+        <div class="card">
+            <h5>Napavine Assembly of God</h5>
+            <a target="_blank" href="https://napavine-assembly-of-god-457588.churchcenter.com/home">Napavine Assembly of God Website</a>
+        </div>
+        <div class="card">
+            <h5>Onalaska First Church of God</h5>
+            <p>133 3rd Ave, Onalaska, WA 98570</p>
+            <p>(360) 978-4161</p>
+        </div>
+    </div>
+</section>
+
+<script src="/js/themeApplicator.js"></script>
+<script>
+    const themeApplicator = new ThemeApplicator();
+
+    base.do("tally", { route: "/scripts" });
+    setTimeout(() => {
+        setInterval(() => {
+            base.do("tally-extra", { route: "/scripts" });
+        }, 30000);
+    }, 3000);
+
+    // Toggle visibility of card grid when the header is clicked
+    $(".card.header").on("click", function() {
+        let $grid = $(this).parent();
+        let $cards = $grid.find(".card:not(.header)");
+        $cards.toggleClass("invisible");
+        $(this).find("p").text($cards.hasClass("invisible") ? "Show" : "Hide");
+    });
+</script>

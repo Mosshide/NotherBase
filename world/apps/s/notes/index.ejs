@@ -17,33 +17,42 @@
 <script src="/js/util/buttons.js"></script>
 <script src="/js/util/search-box.js"></script>
 <script src="/js/util/browser.js"></script>
+<script src="/js/login-form.js"></script>
 <script src="/js/entity.js"></script>
 <script>
-    const metaBrowser = new MetaBrowser({
-        header: ""
-    });
-    metaBrowser.addService("notes", {
-        fields: new NBField({
-            name: "note",
-            label: "Note: ",
-            placeholder: "No Note"
-        }, [
-            new NBField({
-                name: "title",
-                label: "Title: ",
-                placeholder: "No Title",
-                type: "string"
-            }),
-            new NBField({
-                name: "content",
-                label: "Content: ",
-                placeholder: "No Content",
-                type: "long-string"
-            })
-        ]),
-        label: "Notes",
-        editable: true,
-        multiple: true
-    });
-    metaBrowser.render();
+    <% if (user?.data?.username) { %>
+        const metaBrowser = new MetaBrowser({
+            header: ""
+        });
+        metaBrowser.addService("notes", {
+            fields: new NBField({
+                name: "note",
+                label: "Note: ",
+                placeholder: "No Note"
+            }, [
+                new NBField({
+                    name: "title",
+                    label: "Title: ",
+                    placeholder: "No Title",
+                    type: "string"
+                }),
+                new NBField({
+                    name: "content",
+                    label: "Content: ",
+                    placeholder: "No Content",
+                    type: "long-string"
+                })
+            ]),
+            label: "Notes",
+            editable: true,
+            multiple: true,
+            onSave: async (item, deleting = false) => { 
+                return await base.do("save-note", { item, deleting }); 
+            }
+        });
+        metaBrowser.render();
+    <% } else { %>
+        const loginForm = new LoginForm();
+        loginForm.render(".meta");
+    <% } %>
 </script>

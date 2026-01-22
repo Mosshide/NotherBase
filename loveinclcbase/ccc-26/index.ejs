@@ -1,0 +1,30 @@
+<!-- a page dedicated to the job description for ccc 2026 -->
+<!-- include the ad img and buttons for downloading the descrion pdf and the job application pdf -->
+<!-- make sure to use the theme applicator and visit tally-->
+
+<style>
+    <%- include('./index.css'); %>
+</style>
+
+<section>
+    <div class="ccc-26-job-description">
+        <a href="/" class="back external inverted"><i class="fa-solid fa-left-long"></i> Return to Home</a>
+        <img src="/img/jobs/ccc ad 2026.webp" alt="CCC 2026 Job Advertisement" />
+        <div class="download-buttons">
+            <a href="/documents/jobs/ccc 2026 job description.pdf" class="button external" download>Download Job Description (PDF)</a>
+            <a href="/documents/jobs/2026 Employment Application.pdf" class="button external" download>Download Job Application (PDF)</a>
+        </div>
+    </div>
+</section>
+
+<script src="/js/themeApplicator.js"></script>
+<script>
+    const themeApplicator = new ThemeApplicator();
+
+    base.do("tally", { route: "/scripts" });
+    setTimeout(() => {
+        setInterval(() => {
+            base.do("tally-extra", { route: "/scripts" });
+        }, 30000);
+    }, 3000);
+</script>

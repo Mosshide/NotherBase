@@ -48,16 +48,20 @@ class Filters extends Element {
 
     setService = async (service) => {
         // save the current filters if there is a current service
-        let oldFilters = this.filter;
-        if (this.service) {
-            await base.save(`${this.service}-notherFilters`, "local", oldFilters);
-        }
+        // let oldFilters = this.filter;
+        // if (this.service) {
+        //     await base.do("save-browser-filters", { 
+        //         route: "/scripts", 
+        //         service: this.service, 
+        //         filters: oldFilters
+        //     });
+        // }
 
         // load the filters for the new service
         this.service = service;
         await base.load(`${this.service}-notherFilters`, "local").then((loadedFilter) => {
             // update the filter
-            this.updateFilter(loadedFilter.memory?.data || this.defaults, false);
+            this.updateFilter(loadedFilter[0]?.data?.filters || this.defaults, false);
         });
     }
 
@@ -75,7 +79,11 @@ class Filters extends Element {
 
         // if saveToCloud is true, save the filter to the cloud
         if (saveToCloud) {
-            await base.save(`${this.service}-notherFilters`, "local", this.filter);
+            await base.do("save-browser-filters", { 
+                route: "/scripts", 
+                service: this.service, 
+                filters: this.filter
+            });
         }
     }
 
@@ -157,9 +165,8 @@ class SearchBox extends Element {
         this.renderSearchResults();
 
         if (this.service) {
-            let loadedFilter = await base.load(`${this.service}-notherLastSelected`, "local");
-            
-            return typeof loadedFilter?.memory?.data?.selected == "number" ? loadedFilter.memory.data.selected : -1;
+            let loaded = await base.load(`${this.service}-notherLastSelected`, "local");
+            return typeof loaded[0]?.data?.selected == "number" ? loaded[0].data.selected : -1;
         }
         else return -1;
     }
