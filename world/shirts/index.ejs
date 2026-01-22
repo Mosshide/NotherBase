@@ -1,0 +1,710 @@
+<style>
+    <%- include("./index.css") %>
+</style>
+
+<h1>Nother Shirts</h1>
+
+<% if (query.o) { %>
+    <h5>Your Order ID: <%= query.o %></h5>
+    <p>Thank you for your order! Bookmark this page or save your order ID. Return to this page for updates on your order.</p>
+    <div class="meta" id="order"></div>
+    <hr class="cart-divider">
+    <p class="cart-total">Subtotal: $0</p>
+    <a href="/shirts">Return to Shirt Ordering</a>
+<% } else { %>
+    <div class="meta" id="orders"></div>
+    <div class="meta" id="inventory"></div>
+    
+    <section class="inventory hud"></section>
+    
+    <h2>Cart</h2>
+    <section class="cart">
+    </section>
+    <hr class="cart-divider">
+    <p class="cart-total">Subtotal: $0</p>
+    
+    <h2>Your Info</h2>
+    <section class="info">
+        <p>Fields marked with * are required to be filled out.</p>
+        <label>
+            Name*: 
+            <input type="text" placeholder="Name" id="name">
+        </label>
+        <label>
+            Location for Delivery*:
+            <input type="text" placeholder="Location or address" id="location">
+        </label>
+        <label>
+            Email:
+            <input type="text" placeholder="Email" id="email">
+        </label>
+        <label>
+            Payment Method:
+            <select id="payment">
+                <option value="cash">Cash</option>
+                <option value="card">Card</option>
+            </select>
+        </label>
+        <label>
+            Order Notes:
+            <textarea id="notes" placeholder="Notes"></textarea>
+        </label>
+        <button id="submit">Submit Order</button>
+        <p class="alert"></p>
+    </section>
+
+    <h2>Look Up Order</h2>
+    <section class="lookup">
+        <label>
+            Order ID:
+            <input type="text" placeholder="Order ID" id="orderID">
+        </label>
+        <button id="lookup">Look Up Order</button>
+    </section>
+<% } %>
+
+<script src="/js/util/element.js"></script>
+<script src="/js/util/buttons.js"></script>
+<script src="/js/util/search-box.js"></script>
+<script src="/js/util/browser.js"></script>
+<script>
+    <% if (query.o) { %>
+        const orderID = "<%= query.o %>";
+        const inventory = {
+            items: []
+        };
+        let $total = $(".cart-total");
+
+        base.load("shirt-inventory", "global").then((res) => {
+            inventory.items = res;
+
+            const metaOrder = new MetaBrowser({
+                header: "Your Order",
+                id: "order"
+            });
+            metaOrder.render();
+            metaOrder.addService("shirt-orders", {
+                fields: new NBField({
+                    name: "order",
+                    label: "",
+                    placeholder: "No order"
+                }, [
+                    new NBField({
+                        name: "name",
+                        label: "Name: ",
+                        placeholder: "Name",
+                        type: "string"
+                    }),
+                    new NBField({
+                        name: "location",
+                        label: "Location: ",
+                        placeholder: "Location",
+                        type: "string"
+                    }),
+                    new NBField({
+                        name: "email",
+                        label: "Email: ",
+                        placeholder: "Email",
+                        type: "string"
+                    }),
+                    new NBField({
+                        name: "payment",
+                        label: "Payment: ",
+                        placeholder: "Payment",
+                        type: "string"
+                    }),
+                    new NBField({
+                        name: "notes",
+                        label: "Notes: ",
+                        placeholder: "Notes",
+                        type: "string"
+                    }),
+                    new NBField({
+                        name: "cart",
+                        label: "Cart: ",
+                        placeholder: "Cart",
+                        multiple: true
+                    }, [
+                        new NBField({
+                            name: "imageFront",
+                            // label: "Front Image: ",
+                            placeholder: "No image",
+                            type: "image"
+                        }),
+                        new NBField({
+                            name: "design",
+                            label: "Design: ",
+                            placeholder: "No Design",
+                            type: "string"
+                        }),
+                        new NBField({
+                            name: "color",
+                            label: "Color: ",
+                            placeholder: "No Color",
+                            type: "string"
+                        }),
+                        new NBField({
+                            name: "size",
+                            label: "Size: ",
+                            placeholder: "No Size",
+                            type: "string"
+                        }),
+                        new NBField({
+                            name: "amount",
+                            label: "Amount: ",
+                            placeholder: "0",
+                            type: "number"
+                        }),
+                        new NBField({
+                            name: "price",
+                            label: "Price Each: ",
+                            placeholder: "0",
+                            type: "number"
+                        })
+                    ]),
+                    new NBField({
+                        name: "messages",
+                        label: "Messages: ",
+                        placeholder: "No Messages",
+                        multiple: true,
+                        readOnly: true
+                    }, [
+                        new NBField({
+                            name: "date",
+                            label: "Date: ",
+                            placeholder: "No Date",
+                            type: "date-time",
+                            readOnly: true
+                        }),
+                        new NBField({
+                            name: "from",
+                            label: "From: ",
+                            placeholder: "No Origin",
+                            type: "string",
+                            readOnly: true
+                        }),
+                        new NBField({
+                            name: "message",
+                            label: "Message: ",
+                            placeholder: "No Message",
+                            type: "string",
+                            readOnly: true
+                        })
+                    ]),
+                    new NBField({
+                        name: "paid",
+                        label: "Paid: ",
+                        placeholder: false,
+                        type: "boolean"
+                    }),
+                    new NBField({
+                        name: "delivered",
+                        label: "Delivered: ",
+                        placeholder: false,
+                        type: "boolean"
+                    })
+                ]),
+                label: "Orders",
+                editable: false,
+                showID: true,
+                toLoad: async () => {
+                    let total = 0;
+                    let res = await base.load("shirt-orders", "global", null, orderID);               
+                    if (Array.isArray(res.data.cart)) res.data.cart.forEach(item => {
+                        let shirt = inventory.items.find(shirt => shirt._id === item.id);                            
+                        if (shirt) {
+                            total += shirt.data.price * item.amount;
+                            item.design = shirt.data.design;
+                            item.color = shirt.data.color;
+                            item.size = shirt.data.size;
+                            item.imageFront = shirt.data.imageFront;
+                            item.price = shirt.data.price;
+                        }
+                    });
+                    else res.data.cart = [{ design: "No Design", color: "No Color", size: "No Size", amount: 0 }];
+                    $total.text(`Subtotal: $${total}`);
+                    return res;
+                },
+                toSave: async (item, deleting) => { return null; }
+            });
+        });
+        
+    <% } else { %>
+        const $orderAlert = $(".alert");
+
+        // a class called "cart" to store the cart items that extends the container class
+        class Cart extends Container {
+            constructor() {
+                super({
+                    defaultClasses: "cart"
+                });
+                this.items = {};
+                this.renderItems = {};
+                this.total = 0;
+                this.$total = $(".cart-total");
+            }
+
+            // a method called "addItem" to add an item to the cart
+            addItem(shirt, amount) {
+                let id = shirt._id;
+                if (!amount || amount < 1) {
+                    alert("Please enter a valid amount to add to cart.");
+                }
+                else {
+                    this.items[id] = this.items[id] ? this.items[id] + amount : amount;
+
+                    if (this.renderItems[id]) {
+                        this.renderItems[id].content.setValue(`${shirt.data.design} - ${shirt.data.color} - ${shirt.data.size} - ${this.items[id]}`);
+                        this.renderItems[id].image.src = shirt.data.imageFront;
+                        this.renderItems[id].image.initModifiers();
+                    }
+                    else {
+                        this.renderItems[id] = this.addChild(new Element("div", {
+                            defaultClasses: "item"
+                        }));
+                        this.renderItems[id].image = this.renderItems[id].addChild(new Element("img", {
+                            src: shirt.data.imageFront,
+                            defaultClasses: "shirt"
+                        }));
+                        this.renderItems[id].content = this.renderItems[id].addChild(new Text("p", {
+                            placeholder: `${shirt.data.design} - ${shirt.data.color} - ${shirt.data.size} - ${amount}`
+                        }));
+                        this.renderItems[id].removeButton = this.renderItems[id].addChild(new Button("remove", () => { this.removeItem(id); }, { placeholder: "Remove" }));
+                    }
+
+                    this.total += shirt.data.price * amount;
+                    this.$total.text(`Subtotal: $${this.total}`);
+                }
+            }
+
+            // a method called "removeItem" to remove an item from the cart
+            removeItem(id) {
+                this.total -= inventory.items.find(item => item._id === id).data.price * this.items[id];
+                this.$total.text(`Subtotal: $${this.total}`);
+                delete this.items[id];
+                this.renderItems[id].close();
+                this.renderItems[id] = null;
+            }
+        }
+        const cart = new Cart();
+
+        // a class called "Inventory" to store the inventory items that extends the container class
+        class Inventory extends Container {
+            constructor() {
+                super({
+                    defaultClasses: "inventory hud"
+                });
+                this.items = [];
+                this.showingFront = true;
+
+                this.shirtImg = this.addChild(new Element("img", {
+                    src: "/img/shirts/antique_sapphire.jpg",
+                    defaultClasses: "left design shirt"
+                }));            
+                this.righthud = this.addChild(new Element("div", {
+                    defaultClasses: "right"
+                }));
+                this.header = this.righthud.addChild(new Text("h2", {
+                    value: "Inventory"
+                }));
+                this.design = this.righthud.addChild(new Select({
+                    id: "design",
+                    options: [
+                        "Loading..."
+                    ]
+                }));
+                this.color = this.righthud.addChild(new Select({
+                    id: "color",
+                    options: [
+                        "Loading..."
+                    ]
+                }));
+                this.size = this.righthud.addChild(new Select({
+                    id: "size",
+                    options: [
+                        "Loading..."
+                    ]
+                }));
+                this.price = this.righthud.addChild(new Text("p", {
+                    defaultClasses: "price",
+                    placeholder: "Price Each: $0"
+                }));
+                this.amount = this.righthud.addChild(new Input("number", {
+                    placeholder: "0",
+                    header: "Amount: "
+                }));
+                // this.stock = this.righthud.addChild(new Text("p", {
+                //     defaultClasses: "stock",
+                //     placeholder: "Out of Stock!"
+                // }));
+                this.switch = this.righthud.addChild(new Button("switch", () => {
+                    this.showingFront = !this.showingFront;
+                    this.shirtImg.settings.src = this.items.find(item => item.data.design === this.design.getValue() && item.data.color === this.color.getValue()).data[this.showingFront ? "imageFront" : "imageBack"];
+                    this.shirtImg.initModifiers();
+                    this.switch.setValue(this.showingFront ? "View Back" : "View Front");
+                }, { placeholder: "View Back" }));
+                this.add = this.righthud.addChild(new Button("add", () => {              
+                    let shirt = this.items.find(item => item.data.design === this.design.getValue() && item.data.color === this.color.getValue() && item.data.size === this.size.getValue());
+                    if (shirt) {
+                        cart.addItem(shirt, parseInt(this.amount.getValue()));
+                    }
+                    else {
+                        alert("Shirt not found in inventory!");
+                    }
+                },{ placeholder: "Add to Cart" }));
+            }
+
+            // a method called "loadItems" to load the inventory items
+            loadItems(items) {
+                this.items = items;
+                this.designs = {};
+                if (items.length > 0) {
+                    items.forEach(item => {
+                        if (!this.designs[item.data.design]) {
+                            this.designs[item.data.design] = [];
+                        }
+                        if (!this.designs[item.data.design].includes(item.data.color)) this.designs[item.data.design].push(item.data.color);
+                    });
+                    this.design.setOptions(Object.keys(this.designs));
+                    this.color.setOptions(this.designs[items[0].data.design]);
+                    this.size.setOptions(["S", "M", "L", "XL", "XXL", "3XL"]);
+                    this.price.setValue(`Price Each: $${items[0].data.price}`);
+                    this.shirtImg.settings.src = this.items[0].data.imageFront;
+                    this.shirtImg.initModifiers();
+    
+                    this.design.enable(() => {
+                        this.color.setOptions(this.designs[this.design.getValue()]);
+                        this.price.setValue(`Price Each: $${this.items.find(item => item.data.design === this.design.getValue() && item.data.color === this.color.getValue()).data.price}`);
+                        this.shirtImg.settings.src = this.items.find(item => item.data.design === this.design.getValue() && item.data.color === this.color.getValue()).data[this.showingFront ? "imageFront" : "imageBack"];
+                        this.shirtImg.initModifiers();
+                    });
+
+                    this.color.enable(() => {
+                        this.price.setValue(`Price Each: $${this.items.find(item => item.data.design === this.design.getValue() && item.data.color === this.color.getValue()).data.price}`);
+                        this.shirtImg.settings.src = this.items.find(item => item.data.design === this.design.getValue() && item.data.color === this.color.getValue()).data[this.showingFront ? "imageFront" : "imageBack"];
+                        this.shirtImg.initModifiers();
+                    });
+                }
+            }
+        }
+        const inventory = new Inventory();
+
+        const $submit = $("#submit");
+
+        const submitOrder = async () => {
+            $submit.off();
+            $submit.text("Submitting Order...");
+
+            let toGoCart = [];
+
+            for (let id in cart.items) {
+                toGoCart.push({
+                    id,
+                    amount: cart.items[id]
+                });
+            }
+
+            let res = await base.do("submit-order", { 
+                name: $("#name").val(),
+                location: $("#location").val(),
+                email: $("#email").val(),
+                payment: $("#payment").find(`option:selected`).text(),
+                notes: $("#notes").val(),
+                cart: toGoCart
+            });
+            
+            if (res.status == "success") {
+                if (res.data.newID) window.location.href = `/shirts?o=${res.data.newID}`;
+                else {
+                    $orderAlert.text(res.data.message);
+                }
+            } else {
+                $orderAlert.text("Order Failed due to an error! Please try again later");
+            }
+
+            $submit.on("click", submitOrder);
+            $submit.text("Submit Order");
+        }
+
+        // Using Jquery, use base to load all "shirt-inventory"
+        base.load("shirt-inventory", "global").then((res) => {
+            $submit.on("click", submitOrder);
+
+            cart.render(".cart");
+            inventory.loadItems(res);
+            inventory.render(".inventory");
+            
+            <% if (user && user.data.authLevels.includes("SHIRTSAD")) { %>
+                class InventorySearch extends SearchBox {
+                    constructor(settings = {}) {
+                        super({
+                            defaultClasses: "search-box inventory-list",
+                            ...settings
+                        });
+                    }
+
+                    extractLabel = (item) => {
+                        let label = "No Design - No Color - No Size - 0";
+                        label = `${item?.design} - ${item?.color} - ${item?.size} - ${item?.stock}`;
+
+                        return label;
+                    }
+                }
+
+                const metaOrders = new MetaBrowser({
+                    header: "Orders",
+                    id: "orders"
+                });
+                metaOrders.render();
+                metaOrders.addService("shirt-orders", {
+                    fields: new NBField({
+                        name: "order",
+                        label: "Order: ",
+                        placeholder: "No order"
+                    }, [
+                        new NBField({
+                            name: "name",
+                            label: "Name: ",
+                            placeholder: "Name",
+                            type: "string"
+                        }),
+                        new NBField({
+                            name: "location",
+                            label: "Location: ",
+                            placeholder: "Location",
+                            type: "string"
+                        }),
+                        new NBField({
+                            name: "email",
+                            label: "Email: ",
+                            placeholder: "Email",
+                            type: "string"
+                        }),
+                        new NBField({
+                            name: "payment",
+                            label: "Payment: ",
+                            placeholder: "Payment",
+                            type: "string"
+                        }),
+                        new NBField({
+                            name: "notes",
+                            label: "Notes: ",
+                            placeholder: "Notes",
+                            type: "string"
+                        }),
+                        new NBField({
+                            name: "cart",
+                            label: "Cart: ",
+                            placeholder: "Cart",
+                            multiple: true
+                        }, [
+                            new NBField({
+                                name: "imageFront",
+                                // label: "Front Image: ",
+                                placeholder: "/img/shirts/antique_sapphire.jpg",
+                                type: "image"
+                            }),
+                            new NBField({
+                                name: "design",
+                                label: "Design: ",
+                                placeholder: "No Design",
+                                type: "string"
+                            }),
+                            new NBField({
+                                name: "color",
+                                label: "Color: ",
+                                placeholder: "No Color",
+                                type: "string"
+                            }),
+                            new NBField({
+                                name: "size",
+                                label: "Size: ",
+                                placeholder: "No Size",
+                                type: "string"
+                            }),
+                            new NBField({
+                                name: "amount",
+                                label: "Amount: ",
+                                placeholder: "0",
+                                type: "number"
+                            }),
+                            new NBField({
+                                name: "price",
+                                label: "Price Each: ",
+                                placeholder: "0",
+                                type: "number"
+                            })
+                        ]),
+                        new NBField({
+                            name: "messages",
+                            label: "Messages: ",
+                            placeholder: "No Messages",
+                            multiple: true,
+                            readOnly: true
+                        }, [
+                            new NBField({
+                                name: "date",
+                                label: "Date: ",
+                                placeholder: "No Date",
+                                type: "date-time",
+                                readOnly: true
+                            }),
+                            new NBField({
+                                name: "from",
+                                label: "From: ",
+                                placeholder: "No Origin",
+                                type: "string",
+                                readOnly: true
+                            }),
+                            new NBField({
+                                name: "message",
+                                label: "Message: ",
+                                placeholder: "No Message",
+                                type: "string",
+                                readOnly: true
+                            })
+                        ]),
+                        new NBField({
+                            name: "paid",
+                            label: "Paid: ",
+                            placeholder: false,
+                            type: "boolean"
+                        }),
+                        new NBField({
+                            name: "delivered",
+                            label: "Delivered: ",
+                            placeholder: false,
+                            type: "boolean"
+                        }),
+                        new NBField({
+                            name: "notherNotes",
+                            label: "Nother Notes: ",
+                            placeholder: "No notes",
+                            type: "long-string"
+                        })
+                    ]),
+                    label: "Orders",
+                    editable: true,
+                    multiple: true,
+                    showID: true,
+                    toLoad: async () => {
+                        let res = await base.loadAll("shirt-orders", "global");               
+                        // add shirt inventory info to orders by shirt id
+                        res.forEach(order => {
+                            if (Array.isArray(order.data.cart)) order.data.cart.forEach(item => {
+                                let shirt = inventory.items.find(shirt => shirt._id === item.id);                            
+                                if (shirt) {
+                                    item.design = shirt.data.design;
+                                    item.color = shirt.data.color;
+                                    item.size = shirt.data.size;
+                                    item.imageFront = shirt.data.imageFront;
+                                    item.price = shirt.data.price;
+                                }
+                            });
+                            else order.data.cart = [{ design: "No Design", color: "No Color", size: "No Size", amount: 0 }];
+                        });
+                        return res;
+                    },
+                    toSave: async (item, deleting) => {
+                        let res = await base.do("save-order", { item, deleting });
+                        return res;
+                    }
+                });
+        
+                const metaInventory = new MetaBrowser({
+                    header: "Inventory",
+                    useSearchBox: InventorySearch,
+                    id: "inventory"
+                });
+                metaInventory.render();
+                metaInventory.addService("shirt-inventory", {
+                    fields: new NBField({
+                        name: "item",
+                        label: "Item: ",
+                        placeholder: "No item"
+                    }, [
+                        new NBField({
+                            name: "design",
+                            label: "Design: ",
+                            placeholder: "No Design",
+                            type: "string"
+                        }),
+                        new NBField({
+                            name: "short",
+                            label: "Short Description: ",
+                            placeholder: "No Description",
+                            type: "string"
+                        }),
+                        new NBField({
+                            name: "long",
+                            label: "Long Description: ",
+                            placeholder: "No Description",
+                            type: "string"
+                        }),
+                        
+                        new NBField({
+                            name: "color",
+                            label: "Color: ",
+                            placeholder: "No color",
+                            type: "string"
+                        }),
+                        new NBField({
+                            name: "size",
+                            label: "Size: ",
+                            placeholder: "No size",
+                            type: "string"
+                        }),
+                        new NBField({
+                            name: "price",
+                            label: "Price: ",
+                            placeholder: "0",
+                            type: "number"
+                        }),
+                        new NBField({
+                            name: "stock",
+                            label: "Stock: ",
+                            placeholder: "0",
+                            type: "number"
+                        }),
+                        new NBField({
+                            name: "verse",
+                            label: "Verse: ",
+                            placeholder: "No verse",
+                            type: "string"
+                        }),
+                        new NBField({
+                            name: "imageFront",
+                            label: "Front Image: ",
+                            placeholder: "No image URL",
+                            type: "image"
+                        }),
+                        new NBField({
+                            name: "imageBack",
+                            label: "Back Image: ",
+                            placeholder: "No image URL",
+                            type: "image"
+                        })                
+                    ]),
+                    label: "Inventory",
+                    editable: true,
+                    multiple: true,
+                    toLoad: async () => {
+                        // let res = await base.loadAll("shirt-inventory", "global");
+                        return inventory.items;
+                        // return res;
+                    },
+                    toSave: async (item, deleting) => {
+                        let res = await base.do("save-inventory", { item, deleting });
+                        return res;
+                    }
+                });
+            <% } %>
+        });
+    
+        // using jquery, when the lookup button is clicked, use redirect to go to the order page with the order id
+        $("#lookup").click(() => {
+            window.location.href = `/shirts?o=${$("#orderID").val()}`;
+        });
+    <% } %>
+
+</script>

@@ -93,7 +93,7 @@
     $(".if-yes button.submit").click(() => {
         let email = $(".if-yes input").val();
         $(".if-yes").addClass("invisible");
-        base.do("add-to-waitlist", { route: "/the-front/scripts", email: email }).then((res) => {
+        base.do("add-to-waitlist", { route: "/scripts", email: email }).then((res) => {
             if (res.status == "success") $(".alert").text("Email submitted to waitlist. Thank you!");
             else {
                 $(".alert").text("There was an error submitting your email. Please try again later.");
@@ -110,7 +110,7 @@
     $(".if-not-really button.submit").click(() => {
         let feedback = $(".if-not-really textarea").val();
         $(".if-not-really").addClass("invisible");
-        base.do("add-feedback", { route: "/the-front/scripts", feedback: feedback }).then((res) => {
+        base.do("add-feedback", { route: "/scripts", feedback: feedback }).then((res) => {
             if (res.status == "success") $(".alert").text("Feedback submitted. Thank you!");
             else {
                 $(".alert").text("There was an error submitting your feedback. Please try again later.");

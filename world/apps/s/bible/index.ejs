@@ -12,47 +12,21 @@
 </div>
 
 <div class="bible-viewer"></div>
-<div class="meta" id="bible-research"></div>
-
 
 <script src="/js/util/element.js"></script>
 <script src="/js/util/buttons.js"></script>
 <script src="/js/util/search-box.js"></script>
 <script src="/js/util/browser.js"></script>
 <script src="/js/bible-viewer.js"></script>
+<script src="/js/login-form.js"></script>
 <script src="/js/entity.js"></script>
 <script>   
     const bibleViewer = new BibleViewer({
-        bookmark: "default"
+        <% if (user?.data?.username) { %>
+            bookmark: "default"
+        <% } %>
     });
     bibleViewer.render();
 
-    const metaResearch = new MetaBrowser({
-        header: "",
-        id: "bible-research",
-        useBrowser: TreeBrowser
-    });
-    metaResearch.render();
-    metaResearch.addService("bible-notes", {
-        fields: new NBField({
-            name: "note-node",
-            placeholder: "No Info"
-        }, [
-            new NBField({
-                name: "name",
-                placeholder: "No Name",
-                label: "Name: ",
-                type: "string"
-            }),
-            new NBField({
-                name: "description",
-                placeholder: "No Description",
-                label: "Description: ",
-                type: "long-string",
-                multiple: true
-            })
-        ]),
-        editable: true,
-        multiple: true
-    });
+    base.do("migrate-bible-entries");
 </script>

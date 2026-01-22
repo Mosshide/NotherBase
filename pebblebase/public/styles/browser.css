@@ -1,21 +1,31 @@
 .meta {
     width: 100%;
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    flex-direction: column;
     position: relative;
     min-height: 200px;
     align-content: flex-start;
+    overflow: auto;
+    height: 100% !important;
+    padding-top: 35px;
+    /* backdrop-filter: blur(5px); */
 }
 
 .browser {
     width: 100%;
-    height: auto;
+    height: 100%;
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-content: flex-start;
     opacity: 1;
     transition: all 0.3s ease-in-out;
-    background: var(--mediumBgColorGradient);
-    position: relative;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    background: var(--bgColor);
+    padding: var(--padding);
+    padding-top: 35px;
 }
 
 .browser div {
@@ -51,14 +61,15 @@
 
 .browser .edit {
     width: 100%;
-    background: var(--mediumBgColorGradient);
+    height: auto;
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    flex-direction: column;
     align-content: center;
     justify-content: flex-start;
     margin: 0;
     overflow: auto;
-    align-items: center;
+    align-items: flex-start;
 }
 
 .browser .read.nested, .browser .edit.nested {
@@ -66,11 +77,16 @@
     margin: 0;
     padding: 0;
     background: none;
+    flex-direction: row;
+}
+
+.browser .read.multiple.nested, .browser .edit.multiple.nested {
+    flex-direction: column;
 }
 
 .browser h4 {
     background: none;
-    width: 100%;
+    width: auto;
     margin: 0;
     height: 40px;
     padding: 2px;
@@ -103,28 +119,44 @@
 .browser .read {
     width: 100%;
     overflow: auto;
-    background: var(--mediumBgColorGradient);
     display: flex;
-    flex-wrap: wrap;
-    align-content: center;
+    height: auto;
+    align-content: flex-start;
     justify-content: flex-start;
     align-items: center;
     margin: 0;
+    padding: var(--padding);
+}
+
+.meta>.browser>.read, .meta>.browser>.edit {
+    height: calc(100% - 40px);
+}
+
+.meta>.tree.browser>.read, .meta>.tree.browser>.edit {
+    height: calc(100% - 80px);
 }
 
 .browser .read p, .browser .edit p {
     background: none;
     width: 100%;
-    background: var(--tint);
     border-radius: 4px;
     margin-bottom: 0;
 }
 
 .browser .buttons {
-    height: auto;
+    height: 55px;
     width: 100%;
     padding: 0;
     margin: 0;
+    align-items: center;
+    align-content: flex-start;
+    overflow: auto;
+    flex-direction: column;
+}
+
+.browser button {
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 .browser button.moveUp {
@@ -219,16 +251,32 @@
 }
 
 .browser select {
-    width: 100%;
+    width: auto;
     height: var(--inputHeight);
+    margin: 0;
+    margin-right: 5px;
 }
 
 .browser>#child-buttons {
     order: 99;
+    flex-wrap: wrap;
+    flex-direction: column;
+    overflow: auto;
+}
+
+.browser>#child-buttons button {
+    width: auto;
+    height: 40px;
+    margin: 0;
+    margin-right: 5px;
 }
 
 .meta .search-box {
-    height: calc(100% - 50px);
+    height: 100%;
+}
+
+.search-box.humble {
+    overflow: hidden;
 }
 
 .browser .popup {
@@ -236,18 +284,32 @@
     left: 0;
     top: 0;
     width: 100%;
-    height: 100%;
-    background: var(--bgColor);
+    height: calc(100% - 30px);
     overflow: auto;
     padding: 50px 20px;
+    margin-top: 30px;
+    background: var(--bgColor);
 }
 
 .browser .popup #close {
     position: absolute;
     top: 5px;
-    left: 5px;
+    right: 5px;
     width: 30px;
     height: 30px;
+}
+
+.meta .loading-block {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bgColor);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 5;
 }
 
 @media screen and (min-width: 570px) {

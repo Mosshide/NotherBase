@@ -24,38 +24,6 @@
 
 <div class="meta"></div>
 
-<!-- <a class="go" href="/forest/eye/filter/tree-house">
-    Climb up the nearby Tree House
-</a> -->
-
-<!-- <hr class="forced"> -->
-
-<!-- <a class="to" href="/forest/eye/filter/cave">
-    Go to Cave
-</a>
-
-<a class="to" href="/forest/eye/filter/tower">
-    Go to the Tower
-</a>
-
-<a class="to" href="/forest/eye/town-hall">
-    Go to the Town Hall
-</a>
-
-<hr class="forced">
-
-<a class="return" href="/forest/eye/library">
-    Return to the Library
-</a>
-
-<a class="return" href="/forest/eye/church">
-    Return to the Church
-</a>
-
-<hr class="forced"> -->
-
-
-
 <script src="/js/util/date-ext.js"></script>
 <script src="/js/util/weather.js"></script>
 <script src="/js/util/element.js"></script>
@@ -64,29 +32,8 @@
 <script src="/js/util/browser.js"></script>
 <script src="/js/bible-viewer.js"></script>
 <script src="/js/entity.js"></script>
+<script src="/js/login-form.js"></script>
 <script>
-    // const weather = new WeatherSystem();
-
-    // const $mailbox = $(".mailbox");
-    // let mailboxCD = 1000;
-    // let lastMailboxUpdate = 0;
-
-    // base.loadAll("house-mailbox").then((res) => {
-    //     if (typeof res[0]?.memory?.data == "string") $mailbox.val(res[0].memory.data);
-    // });
-
-    // $mailbox.on("input", (e) => { 
-    //     lastMailboxUpdate = Date.now();
-
-    //     setTimeout(() => {
-    //         let now = Date.now();
-    //         if (now - lastMailboxUpdate > mailboxCD) {
-    //             console.log("set-mailbox", e.currentTarget.value);
-    //             base.do("set-mailbox", { item: e.currentTarget.value });
-    //         }
-    //     }, mailboxCD);
-    // });
-
     //date
     //const weekday = ["Sun", "Mon"," Tue", "Wed", "Thu", "Fri", "Sat"];
     const weekday = ["Sunday", "Monday"," Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -112,5 +59,10 @@
     });
     bibleViewer.render();
 
-    <%- include("./agenda.js"); %>
+    <% if (user?.data?.username) { %>
+        <%-  include("./agenda.js"); %>
+    <% } else { %>
+        const loginForm = new LoginForm();
+        loginForm.render(".meta");
+    <% } %>
 </script>

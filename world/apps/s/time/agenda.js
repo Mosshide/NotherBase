@@ -392,5 +392,8 @@ metaBrowser.addService("schedule", {
         })
     ]),
     label: "Your Tasks",
-    multiple: true
+    multiple: true,
+    onSave: async (item, deleting = false) => { 
+        return await base.do("save-task", { item, deleting }); 
+    }
 });

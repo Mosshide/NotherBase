@@ -172,7 +172,7 @@ class ThemeApplicator {
                 state: state,
                 zip: zip,
                 email: email,
-                route: "/the-front"
+                route: "/scripts"
             }).then((res) => {
                 if (res.status == "success") {
                     this.$mailingAlert.text(res.data);
