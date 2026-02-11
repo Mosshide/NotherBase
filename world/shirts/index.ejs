@@ -2,7 +2,8 @@
     <%- include("./index.css") %>
 </style>
 
-<h1>Nother Shirts</h1>
+<p class="jesus">Jesus died for our sins and resurrected on the third day.</p>
+<h1><img src="/img/the-front/logo.png" alt="Nother Shirts Logo">Nother Shirts</h1>
 
 <% if (query.o) { %>
     <h5>Your Order ID: <%= query.o %></h5>
@@ -12,19 +13,31 @@
     <p class="cart-total">Subtotal: $0</p>
     <a href="/shirts">Return to Shirt Ordering</a>
 <% } else { %>
-    <div class="meta" id="orders"></div>
-    <div class="meta" id="inventory"></div>
-    
-    <section class="inventory hud"></section>
-    
-    <h2>Cart</h2>
-    <section class="cart">
+    <section class="start">
+        <button class="admin"><span class="icon">🔑</span> Admin Functions</button>
+        <button class="start-order"><span class="icon">👕</span> View Shirts</button>
+        <button class="info"><span class="icon">ℹ️</span> Your Info</button>
+        <button class="cart"><span class="icon">🛒</span> View Cart</button>
+        <button class="lookup"><span class="icon">🔍</span> Look Up Order</button>
     </section>
-    <hr class="cart-divider">
-    <p class="cart-total">Subtotal: $0</p>
+
+    <section class="invisible admin">
+        <div class="meta" id="orders"></div>
+        <div class="meta" id="inventory"></div>
+    </section>
     
-    <h2>Your Info</h2>
-    <section class="info">
+    <section class="invisible inventory hud">
+    </section>
+    
+    <section class="invisible cart">
+        <h2>Cart</h2>
+        <p class="cart-total">Subtotal: $0</p>
+        <hr class="cart-divider">
+    </section>
+    
+    <section class="invisible info">
+        <h2>Your Info</h2>
+
         <p>Fields marked with * are required to be filled out.</p>
         <label>
             Name*: 
@@ -53,8 +66,8 @@
         <p class="alert"></p>
     </section>
 
-    <h2>Look Up Order</h2>
-    <section class="lookup">
+    <section class="invisible lookup">
+        <h2>Look Up Order</h2>
         <label>
             Order ID:
             <input type="text" placeholder="Order ID" id="orderID">
@@ -230,13 +243,13 @@
         });
         
     <% } else { %>
-        const $orderAlert = $(".alert");
+        
 
         // a class called "cart" to store the cart items that extends the container class
         class Cart extends Container {
             constructor() {
                 super({
-                    defaultClasses: "cart"
+                    defaultClasses: "invisible cart"
                 });
                 this.items = {};
                 this.renderItems = {};
@@ -292,7 +305,7 @@
         class Inventory extends Container {
             constructor() {
                 super({
-                    defaultClasses: "inventory hud"
+                    defaultClasses: "invisible inventory hud"
                 });
                 this.items = [];
                 this.showingFront = true;
@@ -386,45 +399,43 @@
                     });
                 }
             }
+
+            submitOrder = async () => {
+                $submit.off();
+                $submit.text("Submitting Order...");
+
+                let toGoCart = [];
+
+                for (let id in cart.items) {
+                    toGoCart.push({
+                        id,
+                        amount: cart.items[id]
+                    });
+                }
+
+                let res = await base.do("submit-order", { 
+                    name: $("#name").val(),
+                    location: $("#location").val(),
+                    email: $("#email").val(),
+                    payment: $("#payment").find(`option:selected`).text(),
+                    notes: $("#notes").val(),
+                    cart: toGoCart
+                });
+                
+                if (res.status == "success") {
+                    if (res.data.newID) window.location.href = `/shirts?o=${res.data.newID}`;
+                    else {
+                        $orderAlert.text(res.data.message);
+                    }
+                } else {
+                    $orderAlert.text("Order Failed due to an error! Please try again later");
+                }
+
+                $submit.on("click", submitOrder);
+                $submit.text("Submit Order");
+            }
         }
         const inventory = new Inventory();
-
-        const $submit = $("#submit");
-
-        const submitOrder = async () => {
-            $submit.off();
-            $submit.text("Submitting Order...");
-
-            let toGoCart = [];
-
-            for (let id in cart.items) {
-                toGoCart.push({
-                    id,
-                    amount: cart.items[id]
-                });
-            }
-
-            let res = await base.do("submit-order", { 
-                name: $("#name").val(),
-                location: $("#location").val(),
-                email: $("#email").val(),
-                payment: $("#payment").find(`option:selected`).text(),
-                notes: $("#notes").val(),
-                cart: toGoCart
-            });
-            
-            if (res.status == "success") {
-                if (res.data.newID) window.location.href = `/shirts?o=${res.data.newID}`;
-                else {
-                    $orderAlert.text(res.data.message);
-                }
-            } else {
-                $orderAlert.text("Order Failed due to an error! Please try again later");
-            }
-
-            $submit.on("click", submitOrder);
-            $submit.text("Submit Order");
-        }
 
         // Using Jquery, use base to load all "shirt-inventory"
         base.load("shirt-inventory", "global").then((res) => {
