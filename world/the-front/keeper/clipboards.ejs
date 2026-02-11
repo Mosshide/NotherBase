@@ -18,7 +18,7 @@
                 <button onclick="sendOTP()" id="otp-button">Send OTP to Your Email</button>
                 <h6>Change Your Email</h6>
                 <input type="password" name="password" placeholder="password" id="email-password">
-                <input type="email" name="email" placeholder="<%= user.data.email %>" id="change-email">
+                <input type="email" name="email" placeholder="<%= user.data?.email ? user.data.email : 'Error' %>" id="change-email">
                 <button onclick="changeEmail()" id="email-button">Change Email</button>
                 <p id="email-info"></p>
                 <button onclick="toPass()" class="to-pass">Manage Password</button>

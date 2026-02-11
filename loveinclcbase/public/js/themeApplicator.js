@@ -63,7 +63,7 @@ class ThemeApplicator {
         this.$navButton.click(() => this.enableNavMobile());
 
         // add text to give bar
-        this.$giveBar = $(`<div class="give-bar"><p>Text GIFT2025 to 44-321 to Give</p></div>`).prependTo(this.$body);
+        this.$giveBar = $(`<div class="give-bar"><p>Text LOVEINCLC to 44-321 to Give</p></div>`).prependTo(this.$body);
 
         // add the nav
         this.$nav = $(`<nav></nav>`).prependTo(this.$body);
