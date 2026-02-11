@@ -58,6 +58,11 @@ section.news .card-list {
     text-shadow: 1px 1px 1px var(--shadow-color);
 }
 
+.Christ-centered img.side {
+    object-position: center 25%;
+    min-height: 40vh;
+}
+
 .souper {
     position: relative;
     background: rgb(17,37,88);
