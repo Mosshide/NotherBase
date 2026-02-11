@@ -205,9 +205,7 @@ git fetch origin
         <h6>The Front</h6>
         <p>
             Create a new directory in the world directory
-            and name it "the-front." This is the region
-            where users who are not logged in can access
-            the base. Create a file named "index.ejs" in the new directory.
+            and name it "the-front." This is the default region. Create a file named "index.ejs" in the new directory.
             Insert the code below, save and restart the server.
         </p>
 <pre class="code">
@@ -292,161 +290,38 @@ let context = {
 
         <article>
             <details>
-                <summary>class Spirit</summary>
+                <summary>Spirit (Mongoose Model)</summary>
 
                 <article>
                     <details>
                         <summary>Static Properties</summary>
 <pre class="code">
-static db = mongoose.model('spirits', new mongoose.Schema({
-_lastUpdate: Number,
-service: String,
-parent: { 
-type: mongoose.Schema.Types.ObjectId, 
-ref: "spirits",
-required: false
-},
-data: {}
-}));
-</pre>
-                    </details>
-                    <details>
-                        <summary>Constructor</summary>
-<pre class="code">
-constructor(memory = {}) {
-this.memory = {
-data: {},
-...memory
-};
-}
+let spiritSchema = new mongoose.Schema({
+    _lastUpdate: Number,
+    service: String,
+    parent: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: "spirits",
+        required: false
+    },
+    data: {},
+    backups: []
+});
+let Spirit = mongoose.model('spirits', spiritSchema);
 </pre>
                     </details>
 
                     <details>
-                        <summary>static buildQuery = (service, data = null, parent = null, id = null) => {}</summary>
-                        <article>
-                            <div class="purpose">
-                                Builds a query object to find a spirit in the database.
-                            </div>
-                            <div class="input">
-                                service (String): The name of the spirit.
-                            </div>
-                            <div class="input">
-                                data (Object): Data to match.
-                            </div>
-                            <div class="input">
-                                parent (ObjectId): The spirit's parent.
-                            </div>
-                            <div class="input">
-                                id (ObjectId): The exact spirit by id.
-                            </div>
-                            <div class="output">
-                                Returns: an object to use as input for Mongoose queries.
-                            </div>
-                        </article>
-                    </details>
-
-                    <details>
-                        <summary>static create = async (service, data = {}, parent = null) => {}</summary>
-                        <article>
-                            <div class="purpose">
-                                Creates a spirit in the database.
-                            </div>
-                            <div class="input">
-                                service (String): The name of the spirit.
-                            </div>
-                            <div class="input">
-                                data (Object): Data to initialize with.
-                            </div>
-                            <div class="input">
-                                parent (ObjectId): The spirit's parent.
-                            </div>
-                            <div class="output">
-                                Returns: the spirit created.
-                            </div>
-                        </article>
-                    </details>
-
-                    <details>
-                        <summary>static recallAll = async (service, parent = null, data = {}, id = null) => {}</summary>
-                        <article>
-                            <div class="purpose">
-                                Recalls all spirits of a given service in the database.
-                            </div>
-                            <div class="input">
-                                service (String): The name of the spirit.
-                            </div>
-                            <div class="input">
-                                parent (ObjectId): The spirit's parent.
-                            </div>
-                            <div class="input">
-                                data (Object): Data to match.
-                            </div>
-                            <div class="input">
-                                id (ObjectId): The exact spirit by id.
-                            </div>
-                            <div class="output">
-                                Returns: the spirits found.
-                            </div>
-                        </article>
-                    </details>
-
-                    <details>
-                        <summary>static recallOne = async (service, parent = null, data = {}, id = null) => {}</summary>
-                        <article>
-                            <div class="purpose">
-                                Recalls a spirit in the database.
-                            </div>
-                            <div class="input">
-                                service (String): The name of the spirit.
-                            </div>
-                            <div class="input">
-                                data (Object): Data to match.
-                            </div>
-                            <div class="input">
-                                parent (ObjectId): The spirit's parent.
-                            </div>
-                            <div class="input">
-                                id (ObjectId): The exact spirit by id.
-                            </div>
-                            <div class="output">
-                                Returns: the spirit found or null.
-                            </div>
-                        </article>
-                    </details>
-
-                    <details>
-                        <summary>static recallOrCreateOne = async (service, parent = null, data = {}, id = null) => {}</summary>
-                        <article>
-                            <div class="purpose">
-                                Recalls a spirit in the database.
-                            </div>
-                            <div class="input">
-                                service (String): The name of the spirit.
-                            </div>
-                            <div class="input">
-                                data (Object): Data to match.
-                            </div>
-                            <div class="input">
-                                parent (ObjectId): The spirit's parent.
-                            </div>
-                            <div class="input">
-                                id (ObjectId): The exact spirit by id.
-                            </div>
-                            <div class="output">
-                                Returns: the spirit found or a new spirit is created.
-                            </div>
-                        </article>
-                    </details>
-
-                    <details>
-                        <summary>static commit = async (data = this.memory.data) => {}</summary>
+                        <summary>static commit = async (data = this.memory.data, maxBackups = 5) => {}</summary>
                         <article>
                             <div class="purpose">
                                 Saves a document's updated data to the database.
                             </div>
                             <div class="input">
                                 data (Object): The data to overrride with.
+                            </div>
+                            <div class="input">
+                                maxBackups (Number): The maximum number of backups to keep.
                             </div>
                             <div class="output">
                                 Returns: "Updated"
@@ -455,49 +330,19 @@ data: {},
                     </details>
 
                     <details>
-                        <summary>static delete = async (service, parent = null, data = {}, id = null) => {}</summary>
+                        <summary>restoreBackup = (backupIndex = 0, maxBackups = 5) => {}</summary>
                         <article>
                             <div class="purpose">
-                                Deletes spirits in the database.
+                                Restores the latest backup of the spirit's data.
                             </div>
                             <div class="input">
-                                service (String): The name of the spirit.
+                                backupIndex (Number): The index of the backup to restore, starting with 0 for the latest backup.
                             </div>
                             <div class="input">
-                                parent (ObjectId): The spirit's parent.
-                            </div>
-                            <div class="input">
-                                data (Object): Data to match.
-                            </div>
-                            <div class="input">
-                                id (ObjectId): The exact spirit by id.
+                                maxBackups (Number): The maximum number of backups to keep.
                             </div>
                             <div class="output">
-                                Returns: the number of spirits deleted.
-                            </div>
-                        </article>
-                    </details>
-
-                    <details>
-                        <summary>normalizeDataToArray = () => {} </summary>
-                        <article>
-                            <div class="purpose">
-                                Overrides the spirit's data object to an array if it isn't one.
-                            </div>
-                    </details>
-
-                    <details>
-                        <summary>addBackup = (data, max = 5) => {}</summary>
-                        <article>
-                            <div class="purpose">
-                                Adds a backup of the spirit's data to the spirit's backups. Then overrides
-                                the spirit's data object to the input data. Keeps max number of backups.
-                            </div>
-                            <div class="input">
-                                data (Object): The data to backup.
-                            </div>
-                            <div class="input">
-                                max (Number): The maximum number of backups to keep.
+                                Returns: "Restored"
                             </div>
                     </details>
                 </article>
