@@ -19,7 +19,7 @@
 </style>
 
 <h1>NotherBase Documentation</h1>
-<h2>notherbase-fs Version: 4.3.6</h2>
+<h2>notherbase-fs Version: 4.5.11</h2>
 
 <details>
     <summary><h3>General Web Development Setup</h3></summary>
@@ -199,7 +199,7 @@ git fetch origin
         <summary><h5>Explorer</h5></summary>
         <p>
             The server now needs some content. Create a new directory in your base's directory
-            and name it "yourBase-world." 
+            and name it yourBase. 
         </p>
 
         <h6>The Front</h6>
@@ -246,14 +246,12 @@ git fetch origin
 <pre class="code">
 let context = {
     user: {
-        memory: {
-            data: user.memory.data,
-            backups: user.memory.backups,
-            _id: user.memory._id,
-            parent: user.memory.parent,
-            service: user.memory.service,
-            _lastUpdate: user.memory._lastUpdate
-        }
+        data: user.memory.data,
+        backups: user.memory.backups,
+        _id: user.memory._id,
+        parent: user.memory.parent,
+        service: user.memory.service,
+        _lastUpdate: user.memory._lastUpdate
     },
     siteTitle: req.siteTitle,
     main: req.main,
@@ -268,7 +266,7 @@ let context = {
     <details>
         <summary><h5>Basic Pages and the Void</h5></summary>
         <p>
-            Add a /void directory in the /the-front directory. 
+            Add a /void directory in the same level as the /the-front directory. 
             Create an "index.ejs" file in the void directory. This directory 
             and others like it will automatically create the simple routes of http://yourbase.local:PORT/name, 
             where "name" is the name of the directory.
@@ -383,17 +381,17 @@ let Spirit = mongoose.model('spirits', spiritSchema);
     <details>
         <summary><h5>Server Scripts and Database Access</h5></summary>
         
-        <p>Use loadAll() to grab saved files from the specified spirit.</p>
+        <p>Use load() to grab saved files from the specified service.</p>
 <pre class="code">
-base.loadAll(service).then((res) => {});
+base.load(service).then((res) => {});
 </pre>
         <p>
             Many scripts need to be ran on the server to enable features like multiplayer
             interaction and data security. Use base.do() to run "script-name.js", a file
-            that should be in the same directory as the current path.
+            that should be in the same directory as the current page's path.
         </p>
         <p>
-            Include route: "desired-path" in the data object to override the script's path.
+            Include { route: "desired-path" } in the data object to override the script's path.
         </p>
 <pre class="code">
 let res = await base.do("script-name", data);
@@ -541,27 +539,6 @@ constructor() {}
         </details>
 
         <details>
-            <summary>loadAll = async (service, scope = "local", data = {}, id = null) => {}</summary>
-            <article>
-                <div class="purpose"></div>
-                <div class="input">
-                    service (String): the name of the spirit to load
-                </div>
-                <div class="input">
-                    scope (String): "local" or "global". Load the user's personal spirits or
-                    the spirits shared by all users.
-                </div>
-                <div class="input">
-                    data (Object): Data to match.
-                </div>
-                <div class="input">
-                    id (ObjectId): The exact spirit by id.
-                </div>
-                <div class="output">Returns: the spirits that were found.</div>
-            </article>
-        </details>
-
-        <details>
             <summary>load = async (service, scope = "local", data = {}, id = null) => {}</summary>
             <article>
                 <div class="purpose">Loads a single spirit.</div>
@@ -586,16 +563,6 @@ constructor() {}
             <summary>createToggleViewButton = async () => {}</summary>
             <article>
                 <div class="purpose">Creates a button that toggles the main element width.</div>
-            </article>
-        </details>
-
-        <details>
-            <summary>toggleView = async (save = true) => {} </summary>
-            <article>
-                <div class="purpose">Toggles the main element width.</div>
-                <div class="input">
-                    save (Boolean): If true, the view state will be saved in the user's spirit.
-                </div>
             </article>
         </details>
 
@@ -689,8 +656,8 @@ constructor() {}
         
         <p>
             Nother uses GitHub to store our code in the cloud and
-            Git for version control. Fork the NotherBase repository linked
-            below.
+            Git for version control. Look at the NotherBase repository linked
+            below for an example of how to set up your base, which includes multiple domains.
         </p>
         <a href="https://github.com/Mosshide/NotherBase">NotherBase GitHub Repository</a>
         <p>
