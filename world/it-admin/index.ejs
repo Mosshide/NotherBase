@@ -1,0 +1,145 @@
+<% if (user && user.data.authLevels.includes("ITAD")) { %>
+    <input type="text" id="filter">
+    <button onclick="load()">Load</button>
+    <div class="meta"></div>
+<% } else { %>
+    <div class="login form">
+        <label>
+            Organization Email: <input type="text" id="email">
+        </label>
+        <label>
+            Password: <input type="password" id="password">
+            <input type="checkbox" id="unhide" onclick="tracker.toggleShowPassword()"> Show Password
+        </label>
+        <button onclick="tracker.attemptLogin()">Login</button>
+    </div>
+<% } %>
+
+<button class="logout invisible" onclick="tracker.logout()">Logout</button>
+<p id="alert"></p>
+
+<script src="/js/util/element.js"></script>
+<script src="/js/util/buttons.js"></script>
+<script src="/js/util/search-box.js"></script>
+<script src="/js/util/browser.js"></script>
+<script>
+    <% if (user && user.data.authLevels.includes("ITAD")) { %>      
+        const metaBrowser = new MetaBrowser({ header: "it admin" });
+
+        const load = () => {
+            let filter = $("#filter").val();
+
+            metaBrowser.addService("it", {
+                fields: new NBField({
+                    name: "ticket",
+                    label: "Ticket: ",
+                    placeholder: "No Ticket"
+                }, [
+                    new NBField({
+                        name: "title",
+                        label: "Title: ",
+                        placeholder: "Ticket Title",
+                        type: "string"
+                    }),
+                    new NBField({
+                        name: "id",
+                        label: "id: ",
+                        placeholder: 0,
+                        type: "number"
+                    }),
+                    new NBField({
+                        name: "date",
+                        label: "Created On: ",
+                        placeholder: Date.now(),
+                        type: "date"
+                    }),
+                    new NBField({
+                        name: "quoted",
+                        label: "Hours Quoted: ",
+                        placeholder: 0,
+                        type: "number"
+                    }),
+                    new NBField({
+                        name: "resolved",
+                        label: "Resolved On: ",
+                        placeholder: Date.now(),
+                        type: "date"
+                    }),
+                    new NBField({
+                        name: "used",
+                        label: "Hours Used: ",
+                        placeholder: 0,
+                        type: "number"
+                    }),
+                    new NBField({
+                        name: "description",
+                        label: "Description: ",
+                        placeholder: "Description",
+                        type: "long-string"
+                    }),
+                ]),
+                label: filter,
+                editable: true,
+                multiple: true,
+                filter: filter,
+                onLoad: async () => {
+                    let res = await base.do("load-it", {
+                        which: filter
+                    });
+                    return res.data;
+                },
+                onSave: async (item, deleting) => {
+                    return await base.do("save-it", { item, deleting, which: filter });
+                }
+            });
+        }
+        metaBrowser.render();
+    <% } %>
+
+    class Tracker {
+        constructor() {
+            //general
+            this.$alert = $("#alert");
+            this.$logout = $(".logout");
+
+            //login
+            this.$loginForm = $(".login.form");
+            this.$email = $("#email");
+            this.$password = $("#password");
+
+            <% if (user) { %>
+                this.$logout.removeClass("invisible");
+            <% } %>
+        }
+
+        toggleShowPassword() {
+            let hidden = this.$password.attr("type");
+            if (hidden === "password") this.$password.attr("type", "text");
+            else this.$password.attr("type", "password");
+        }
+
+        attemptLogin = async () => {
+            let response = await base.attemptLogin(this.$email.val(), this.$password.val());
+
+            if (response.status === "success") {
+                location.reload();
+            }
+            else {
+                this.$alert.text(response.message);
+            }
+        }
+
+        logout = async () => {
+            let response = await base.logout();
+
+            if (response.status === "success") {
+                location.reload();
+            }
+            else {
+                this.$alert.text(response.message);
+            }
+        }
+    }
+
+    let tracker = new Tracker();
+</script>

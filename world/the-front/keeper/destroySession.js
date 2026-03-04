@@ -1,7 +1,7 @@
 export default async function destroySession(req, user) {
-    if (user?.memory?.data?.sessions?.[req.body.sessionID]) {
-        delete user.memory.data.sessions[req.body.sessionID];
-        user.memory.markModified('data.sessions');
+    if (user?.data?.sessions?.[req.body.sessionID]) {
+        delete user.data.sessions[req.body.sessionID];
+        user.markModified('data.sessions');
         await user.commit();
         return "Destroyed.";
     }

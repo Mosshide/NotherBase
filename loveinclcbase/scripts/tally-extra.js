@@ -1,0 +1,44 @@
+export default async (req, user) => {
+    let spirit = await req.Spirit.findOne({ service: "stats" });
+    if (spirit) {
+        let date = new Date();
+
+        req.session.tallied ?  null : req.session.tallied = true;
+
+        if (!spirit.data.tally) spirit.data.tally = {};
+
+        if (!spirit.data.tally[req.session.id]) spirit.data.tally[req.session.id] = { 
+            month: date.getUTCMonth(),
+            year: date.getUTCFullYear(),
+            time: 30000,
+            lastAdd: 0,
+            lastMonth: {
+                month: null,
+                year: null,
+                time: null
+            }
+        };
+        else {
+            if (spirit.data.tally[req.session.id].month === date.getUTCMonth() && spirit.data.tally[req.session.id].year === date.getUTCFullYear()) {
+                if (Date.now() - spirit.data.tally[req.session.id].lastAdd > 30000) {
+                    spirit.data.tally[req.session.id].time += 30000;
+                    spirit.data.tally[req.session.id].lastAdd = spirit.data.tally[req.session.id].lastAdd + 30000;
+                }
+            }
+            else {
+                spirit.data.tally[req.session.id].lastMonth = {
+                    month: spirit.data.tally[req.session.id].month,
+                    year: spirit.data.tally[req.session.id].year,
+                    time: spirit.data.tally[req.session.id].time
+                };
+                spirit.data.tally[req.session.id].month = date.getUTCMonth();
+                spirit.data.tally[req.session.id].year = date.getUTCFullYear();
+                spirit.data.tally[req.session.id].time = 30000;
+            }
+        }
+
+        await spirit.commit();
+
+        return spirit.data.tally[req.session.id].time;
+    }
+}

@@ -27,9 +27,9 @@ class Buttons extends Element {
         return button;
     }
 
-    hideButton = (which = null) => {
-        if (which) this.buttons[which].hide();
-        else {
+    hideButton = (which = null) => {        
+        if (this.buttons[which]) this.buttons[which].hide();
+        else if (which === null) {
             let keys = Object.keys(this.buttons);
 
             for (let i = 0; i < keys.length; i++) {
@@ -39,8 +39,8 @@ class Buttons extends Element {
     }
 
     showButton = (which) => {
-        if (which) this.buttons[which].show();
-        else {
+        if (this.buttons[which]) this.buttons[which].show();
+        else if (which === null) {
             let keys = Object.keys(this.buttons);
 
             for (let i = 0; i < keys.length; i++) {

@@ -1,18 +1,24 @@
-export default async function (req, user, service, individual) {
-    if (!req.body.item?.id) {
-        let spirit = await req.db.Spirit.create(service, {}, null);
-        spirit.addBackup(req.body.item.data);
-        await spirit.commit();
-        return { newID: spirit.memory._id, message: `created` };
+export default async function (req, user, service) {
+    if (!req.body.item?._id) {
+        let spirit = new req.Spirit({
+            service, 
+            data: req.body.item.data, 
+            parent: null
+        });
+        await spirit.save();
+        return { newID: spirit._id, message: `created` };
     }
     else if (req.body.deleting) {
-        let del = await req.db.Spirit.delete(service, null, {}, req.body.item.id);
+        let del = await req.Spirit.deleteOne({ service, parent: null, _id: req.body.item._id});
         return `deleted.`;
     }
     else {
-        let spirit = await req.db.Spirit.recallOne(service, null, {}, req.body.item.id);
-        spirit.addBackup(req.body.item.data);
-        await spirit.commit();
+        let spirit = await req.Spirit.findOne({ 
+            service, 
+            parent: null, 
+            _id: req.body.item._id 
+        });
+        await spirit.commit(req.body.item.data);
         return `saved`;
     }
 }

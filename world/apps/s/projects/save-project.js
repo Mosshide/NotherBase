@@ -1,5 +1,5 @@
-import basicCrud from "../../scripts/crud.js";
+import crud from "../../../scripts/crud.js";
 
 export default async (req, user) => {
-    return await basicCrud(req, user, "projects", "Node");
+    return await crud(req, user, "projects");
 }

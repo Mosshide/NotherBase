@@ -1,5 +1,5 @@
 
-    <% if (user && user.memory.data.authLevels.includes("TPAD")) { %>
+    <% if (user && user.data.authLevels.includes("TPAD")) { %>
         <h1 class="title" id="aj">The Pebble Admin Page</h1>
 
         <div class="meta" id="waitlist"></div>
@@ -29,7 +29,7 @@
     <script src="/js/util/search-box.js"></script>
     <script src="/js/util/browser.js"></script>
     <script>
-        <% if (user && user.memory.data.authLevels.includes("TPAD")) { %>
+        <% if (user && user.data.authLevels.includes("TPAD")) { %>
             const metaWaitlist = new MetaBrowser({ id: "waitlist", header: "Waitlist" });
             metaWaitlist.render();
             metaWaitlist.addService("the-pebble-waitlist", {
@@ -59,12 +59,11 @@
                 ]),
                 editable: true,
                 multiple: true,
-                toLoad: async () => {
-                    let res = await base.loadAll("the-pebble-waitlist", "global");
-                    console.log(res);
+                onLoad: async () => {
+                    let res = await base.load("the-pebble-waitlist", "global");
                     return res;
                 },
-                toSave: async (item, deleting) => {
+                onSave: async (item, deleting = false) => {
                     return await base.do("save-waitlist", { item, deleting});
                 }
             });
@@ -104,12 +103,11 @@
                 ]),
                 editable: true,
                 multiple: true,
-                toLoad: async () => {
-                    let res = await base.loadAll("the-pebble-feedback", "global");
-                    console.log(res);
+                onLoad: async () => {
+                    let res = await base.load("the-pebble-feedback", "global");
                     return res;
                 },
-                toSave: async (item, deleting) => {
+                onSave: async (item, deleting = false) => {
                     return await base.do("save-feedback", { item, deleting});
                 }
             });

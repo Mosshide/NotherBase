@@ -486,7 +486,7 @@ nav a p {
 .mailing-list {
     padding: 70px 0;
     flex-direction: row;
-    background: url('/img/bg/spring/rb3.jpeg');
+    background: url('/img/bg/winter/med1.jpeg');
     background-size: auto 100%;
     background-repeat: repeat-x;
 }
@@ -813,6 +813,9 @@ a.external, button.external {
     margin: 0;
     box-shadow: var(--boxShadow);
     text-shadow: var(--text-shadow);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 a.external:hover, button.external:hover {
@@ -1236,6 +1239,21 @@ section.showcase img {
     border-radius: 25px;
 }
 
+.give-bar {
+    background: var(--main-color);
+    color: white;
+    text-shadow: var(--text-shadow);
+    padding: var(--padding);
+    padding-right: 30px;
+    text-align: right;
+    width: 100%;
+}
+
+.give-bar p {
+    margin: 0;
+    padding: 0;
+}
+
 /* temp */
 h3.ff {
     font-family: "Ubuntu", sans-serif;
@@ -1247,6 +1265,10 @@ h3.ff {
     box-shadow: 1px 5px 14px 1px rgb(169, 169, 169);
     font-size: var(--h1Size);
     width: 90%;
+}
+
+h3.ff .sub {
+    font-weight: normal;
 }
 
 .training .raised {
@@ -1336,7 +1358,7 @@ h3.ff {
         flex-wrap: wrap;
         align-content: flex-start;
         position: absolute !important;
-        top: 55px;
+        top: 85px;
         left: 0;
         justify-content: center;
     }

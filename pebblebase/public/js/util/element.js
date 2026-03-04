@@ -8,6 +8,7 @@ class Element {
             defaultCSS: {},
             id: null,
             src: null,
+            alt: null,
             placeholder: "",
             hidden: false,
             onClick: null,
@@ -43,7 +44,7 @@ class Element {
             this.$div = $(`<${this.type}></${this.type}>`);
             this.initModifiers();
         }
-
+        
         this.$div.empty();
         if (this.settings.header) this.$div.append(`<h4>${this.settings.header}</h4>`);
 
@@ -82,6 +83,10 @@ class Element {
             else this.$div.removeAttr("id");
             // add the src
             if (this.settings.src) this.$div.attr("src", this.settings.src);
+            else this.$div.removeAttr("src");
+            // add the alt
+            if (this.settings.alt) this.$div.attr("alt", this.settings.alt);
+            else this.$div.removeAttr("alt");
         }
     }
 
@@ -196,6 +201,14 @@ class Element {
     css = (style, value = null) => {
         if (this.$div) this.$div.css(style, value);
     }
+
+    scrollTop = () => {
+        if (this.$div) this.$div.scrollTop(0);
+    }
+
+    scrollBottom = () => {
+        if (this.$div) this.$div.scrollTop(this.$div[0].scrollHeight);
+    }
 }
 
 // a class called Text that can be used to display text
@@ -211,7 +224,7 @@ class Text extends Element {
     render = () => {
         this.$div = super.render();
 
-        if (this.value != null) this.$div.append(this.value);
+        if (this.value != null) this.$div.append(this.value.replace(/(?:\r\n|\r|\n)/g, '<br />'));
         else this.$div.append(this.settings.placeholder);
 
         return this.$div;
@@ -220,7 +233,6 @@ class Text extends Element {
     setValue = (value) => {
         if (value) {
             this.value = value.toString();
-            this.value = this.value.replace(/(?:\r\n|\r|\n)/g, '<br />');
         }
         this.render();
     }
@@ -248,6 +260,7 @@ class Input extends Element {
         super("div", {
             inputType: inputType,
             step: null,
+            onKeyup: null,
             ...settings
         });
     }
@@ -290,6 +303,10 @@ class Input extends Element {
 
         if (this.settings.onInput && this.$input) this.$input.on("input", (e) => { 
             return this.settings.onInput(e.currentTarget.value.toLowerCase()); 
+        });
+
+        if (this.settings.onKeyup && this.$input) this.$input.on("keyup", (e) => { 
+            return this.settings.onKeyup(e); 
         });
 
         this.$div.removeClass("disabled");
@@ -415,6 +432,11 @@ class Select extends Element {
 
         this.$div.removeClass("disabled");
     }
+
+    setOptions = (options) => {
+        this.settings.options = options;
+        this.render();
+    }
 }
 
 // a class called CheckBox that can be used to get user input
@@ -427,7 +449,15 @@ class CheckBox extends Element {
 
     // renders the element
     render = () => {
-        this.$div = super.render();
+       // create the element
+        if (!this.$div) {
+            this.$div = $(`<div>${this.settings.header || "Checkbox"}</div>`);
+            this.initModifiers();
+        }
+
+        this.$div.empty();
+        this.$div.addClass("checkbox");
+        if (this.settings.header) this.$div.append(`<h4>${this.settings.header}</h4>`);
 
         // create the element
         this.$input = $(`<input type="checkbox">`).appendTo(this.$div);
@@ -455,8 +485,27 @@ class CheckBox extends Element {
         this.value = this.$input.prop("checked");
         return this.value;
     }
-}
 
+    enable = (onChange = this.settings.onChange) => {
+        this.enabled = true;
+        this.$div.off();
+
+        if (onChange) this.settings.onChange = onChange;
+        
+        if (this.settings.onClick) {
+            this.$div.on("click", (e) => {
+                this.settings.onClick(e, this);
+                e.stopPropagation();
+            });
+        }
+
+        if (this.settings.onChange) this.$input.on("change", (e) => { 
+            return this.settings.onChange(this.$input.prop("checked")); 
+        });
+
+        this.$div.removeClass("disabled");
+    }
+}
 
 // a class called Container that can be used to contain other Elements
 class Container extends Element {
@@ -474,20 +523,22 @@ class Container extends Element {
             this.initModifiers();
         }
         
-        if (this.$div) this.$div.empty();
+        if (this.$div) {
+            this.$div.empty();
 
-        if (this.settings.header) this.$div.append(`<h4>${this.settings.header}</h4>`);
+            if (this.settings.header) this.$div.append(`<h4>${this.settings.header}</h4>`);
 
-        // render the children
-        this.children.forEach((child) => {
-            child.render().appendTo(this.$div);
-        });
+            // render the children
+            this.children.forEach((child) => {
+                child.render().appendTo(this.$div);
+            });
 
-        if (this.settings.hidden) this.hide();
-        else this.show();
+            if (this.settings.hidden) this.hide();
+            else this.show();
 
-        if (this.settings.onClick) this.enable();
+            if (this.settings.onClick) this.enable();
 
-        return this.$div;
+            return this.$div;
+        }
     }
 }

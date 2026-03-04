@@ -1,0 +1,160 @@
+<style>
+    <%- include('index.css') %>
+</style>
+
+<section class="training">
+    <h3 class="ff">Faith and Finance <br><span class="sub">Feb-Apr 2026 10 Week Course</span></h3>
+    <div class="details">
+        <p>
+            The course is free which includes participants' guidebook, and you have the ability to earn incentive points while attending each class. 
+            These earned incentive points could off-set costs for your rent, utilities, gasoline, food or other expenses. 
+        </p>
+        <p>When: Begins on Wednesday, February 4th, then every Wednesday for 10 weeks from 7:00pm-8:30pm</p>
+        <p>Where: Life Center Church - 201 N Rock St, Centralia, WA 98531</p>
+        <p>This training is open to everyone and is free of charge. We hope to see you there!</p>
+        <p>Topics include:</p>
+        <ol>
+            <li>Connecting Money and Relationships</li>
+            <li>Exploring Values and Attitudes</li>
+            <li>Overcoming Financial Challenges</li>
+            <li>Setting Savings Goals</li>
+            <li>Creating a Spending Plan</li>
+            <li>Living Simply</li>
+            <li>Giving Joyfully</li>
+            <li>Managing Debt</li>
+            <li>Taking Loans</li>
+            <li>Getting Banked</li>
+            <li>Preparing for Emergencies</li>
+            <li>Planning for Long-Term Change</li>
+        </ol>
+    </div>
+    <div class="registration info">
+        <h3>Faith and Finance Class Registration Form</h3>
+        <p>Faith and Finance Class is a 10-week course.</p>
+        <p>By signing this form, you agree to the schedule above and will participate as directed by the instructor.</p>
+        <p>
+            Fields marked with an asterisk (*) are required.
+        </p>
+        <label>
+            *Name (Printed):
+            <input type="text" class="name" placeholder="First and Last">
+        </label>
+        <label>
+            *Name (Signature):
+            <input type="text" class="signature" placeholder="First and Last">
+        </label>
+        <label>
+            Address:
+            <input type="text" class="address" placeholder="123 Main St.">
+        </label>
+        <label>
+            City:
+            <input type="text" class="city" placeholder="City">
+        </label>
+        <label>
+            State:
+            <input type="text" class="state" placeholder="State">
+        </label>
+        <label>
+            Phone Number:
+            <input type="text" class="phone" placeholder="123-456-7890">
+        </label>
+        <!-- if childcare is needed (radio) and the age of the children (text input) -->
+        <div class="row">
+            <p>Do you need childcare?</p>
+            <div class="row">
+                <label>
+                    <input type="radio" class="childcare-needed" name="childcare" value="yes"> Yes
+                </label>
+                <label>
+                    <input type="radio" class="childcare-needed" name="childcare" value="no"> No
+                </label>
+            </div>
+        </div>
+        <label class="childcare-age">
+            If yes, please provide the ages of your children:
+            <input type="text" class="childcare-age-input" placeholder="Ages of children">
+        </label>
+        <div class="waiver">
+            <h4>Participant Form</h4>
+            <p>
+                Fields marked with an asterisk (*) are required.
+            </p>
+            <p>
+                The Faith and Finance class will open and close each session with a prayer.
+                Also, scripture references from the Bible will be used in teaching this class.
+            </p>
+            <p>
+                In signing this form, you acknowledge and agree to this information being
+                shared regardless of your personal religious or non-religious preferences.
+            </p>
+            <p>
+                Photographs of the class may be taken for promotional purposes. By signing
+                this form, you agree to have your photo taken for these purposes.
+            </p>
+            <p>
+                You will be provided with a Participants Guide for Faith and Finance which is
+                yours to keep however you will be required to bring this book with you for each
+                class.
+            </p>
+            <label>
+                *Name (Printed):
+                <input type="text" class="waiver-name" placeholder="First and Last">
+            </label>
+            <label>
+                *Name (Signature):
+                <input type="text" class="waiver-signature" placeholder="First and Last">
+            </label>
+            <label>
+                *Date:
+                <input type="date" class="waiver-date">
+            </label>
+        </div>
+        <button class="submit">Register</button>
+        <p class="alert"></p>
+    </div>
+</section>
+
+<script src="/js/themeApplicator.js"></script>
+<script>
+    const themeApplicator = new ThemeApplicator({});
+
+    base.do("tally", { route: "/scripts" });
+    setTimeout(() => {
+        setInterval(() => {
+            base.do("tally-extra", { route: "/scripts" });
+        }, 30000);
+    }, 3000);
+
+    let $register = $(".training .registration button");
+    $register.click(() => {
+        let $alert = $(".training .registration .alert");
+        let registration = {
+            name: $(".training .registration .name").val(),
+            signature: $(".training .registration .signature").val(),
+            address: $(".training .registration .address").val(),
+            city: $(".training .registration .city").val(),
+            state: $(".training .registration .state").val(),
+            phone: $(".training .registration .phone").val(),
+            childcareNeeded: $(".training .registration input[name='childcare']:checked").val() === "yes",
+            childcareAges: $(".training .registration .childcare-age-input").val()
+        };
+        let waiver = {
+            name: $(".training .registration .waiver-name").val(),
+            signature: $(".training .registration .waiver-signature").val(),
+            date: $(".training .registration .waiver-date").val()
+        };        
+
+        if (registration.name && registration.signature && waiver.name && waiver.signature && waiver.date) {
+            base.do("register-ff", { registration, waiver }).then((res) => {
+                if (res.status == "success") {
+                    $alert.text(res.data);
+                }
+                else $alert.text("Server Error. Please try again later.");
+            });
+        }
+        else {
+            $alert.text("Please fill out all required fields.");
+        }
+    });
+</script>

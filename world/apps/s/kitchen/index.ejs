@@ -1,0 +1,211 @@
+<div class="nav">
+    <a class="home" href="/apps/s/home">
+        &lt; Home
+    </a>
+    <p>
+        &lt; Recipes
+    </p>
+</div>
+
+<div class="meta"></div>
+
+<script src="/js/util/element.js"></script>
+<script src="/js/util/buttons.js"></script>
+<script src="/js/util/search-box.js"></script>
+<script src="/js/util/browser.js"></script>
+<script src="/js/entity.js"></script>
+<script>
+    const metaBrowser = new MetaBrowser({
+        header: ""
+    });
+    metaBrowser.addService("kitchen-pantry", {
+        fields: new NBField({
+            name: "item",
+            label: "Pantry Item: ",
+            placeholder: "No Item"
+        }, [
+            new NBField({
+                name: "amount",
+                placeholder: 1,
+                type: "number"
+            }),
+            new NBField({
+                name: "name",
+                placeholder: "Item",
+                type: "string"
+            }),
+            new NBField({
+                name: "expiration",
+                label: "Expires: ",
+                placeholder: Date.now(),
+                type: "date"
+            })
+        ]),
+        label: "Pantry",
+        editable: true,
+        multiple: true
+    });
+    metaBrowser.addService("kitchen-freezer", {
+        fields: new NBField({
+            name: "item",
+            label: "Freezer Item: ",
+            placeholder: "No Item"
+        }, [
+            new NBField({
+                name: "amount",
+                placeholder: 1,
+                type: "number"
+            }),
+            new NBField({
+                name: "name",
+                placeholder: "Item",
+                type: "string"
+            }),
+            new NBField({
+                name: "expiration",
+                label: "Expires: ",
+                placeholder: Date.now(),
+                type: "date"
+            })
+        ]),
+        label: "Freezer",
+        editable: true,
+        multiple: true
+    });
+    metaBrowser.addService("kitchen-meats", {
+        fields: new NBField({
+            name: "item",
+            label: "Meat: ",
+            placeholder: "No Item"
+        }, [
+            new NBField({
+                name: "amount",
+                placeholder: 1,
+                type: "number"
+            }),
+            new NBField({
+                name: "name",
+                placeholder: "Item",
+                type: "string"
+            }),
+            new NBField({
+                name: "expiration",
+                label: "Expires: ",
+                placeholder: Date.now(),
+                type: "date"
+            })
+        ]),
+        label: "Meats",
+        editable: true,
+        multiple: true
+    });
+    metaBrowser.addService("kitchen-veggies", {
+        fields: new NBField({
+            name: "item",
+            label: "Veggie: ",
+            placeholder: "No Item"
+        }, [
+            new NBField({
+                name: "amount",
+                placeholder: 1,
+                type: "number"
+            }),
+            new NBField({
+                name: "name",
+                placeholder: "Item",
+                type: "string"
+            }),
+            new NBField({
+                name: "expiration",
+                label: "Expires: ",
+                placeholder: Date.now(),
+                type: "date"
+            })
+        ]),
+        label: "Veggies",
+        editable: true,
+        multiple: true
+    });
+    metaBrowser.addService("kitchen-drinks", {
+        fields: new NBField({
+            name: "item",
+            label: "Drink: ",
+            placeholder: "No Item"
+        }, [
+            new NBField({
+                name: "amount",
+                placeholder: 1,
+                type: "number"
+            }),
+            new NBField({
+                name: "name",
+                placeholder: "Item",
+                type: "string"
+            }),
+            new NBField({
+                name: "expiration",
+                label: "Expires: ",
+                placeholder: Date.now(),
+                type: "date"
+            })
+        ]),
+        label: "Drinks",
+        editable: true,
+        multiple: true
+    });
+    metaBrowser.addService("kitchen-snacks", {
+        fields: new NBField({
+            name: "item",
+            label: "Snack: ",
+            placeholder: "No Item"
+        }, [
+            new NBField({
+                name: "amount",
+                placeholder: 1,
+                type: "number"
+            }),
+            new NBField({
+                name: "name",
+                placeholder: "Item",
+                type: "string"
+            }),
+            new NBField({
+                name: "expiration",
+                label: "Expires: ",
+                placeholder: Date.now(),
+                type: "date"
+            })
+        ]),
+        label: "Snacks",
+        editable: true,
+        multiple: true
+    });
+    metaBrowser.addService("kitchen-other", {
+        fields: new NBField({
+            name: "item",
+            label: "Item: ",
+            placeholder: "No Item"
+        }, [
+            new NBField({
+                name: "amount",
+                placeholder: 1,
+                type: "number"
+            }),
+            new NBField({
+                name: "name",
+                placeholder: "Item",
+                type: "string"
+            }),
+            new NBField({
+                name: "expiration",
+                label: "Expires: ",
+                placeholder: Date.now(),
+                type: "date"
+            })
+        ]),
+        label: "Other",
+        editable: true,
+        multiple: true
+    });
+    metaBrowser.render();
+</script>

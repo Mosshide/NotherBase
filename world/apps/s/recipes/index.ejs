@@ -1,3 +1,7 @@
+<style>
+    <%- include("./recipes.css"); %>
+</style>
+
 <div class="nav">
     <a class="home" href="/apps/s/home">
         &lt; Home
@@ -9,246 +13,80 @@
 
 <div class="meta"></div>
 
-
 <script src="/js/util/element.js"></script>
 <script src="/js/util/buttons.js"></script>
 <script src="/js/util/search-box.js"></script>
 <script src="/js/util/browser.js"></script>
 <script src="/js/entity.js"></script>
+<script src="/js/login-form.js"></script>
 <script>
-    const metaBrowser = new MetaBrowser({
-        header: ""
-    });
-    metaBrowser.addService("pantry", {
-        fields: new NBField({
-            name: "item",
-            label: "Pantry Item: ",
-            placeholder: "No Item"
-        }, [
-            new NBField({
-                name: "amount",
-                placeholder: 1,
-                type: "number"
-            }),
-            new NBField({
-                name: "name",
-                placeholder: "Item",
-                type: "string"
-            }),
-            new NBField({
-                name: "expiration",
-                label: "Expires: ",
-                placeholder: Date.now(),
-                type: "date"
-            })
-        ]),
-        label: "Pantry",
-        editable: true,
-        multiple: true,
-        toLoad: async () => {
-            return await base.loadAll("kitchen-pantry");
-        },
-        toSave: async (item, deleting) => {
-            return await base.do("save-kitchen", { item, deleting, part: "pantry" });
-        }
-    });
-    metaBrowser.addService("freezer", {
-        fields: new NBField({
-            name: "item",
-            label: "Freezer Item: ",
-            placeholder: "No Item"
-        }, [
-            new NBField({
-                name: "amount",
-                placeholder: 1,
-                type: "number"
-            }),
-            new NBField({
-                name: "name",
-                placeholder: "Item",
-                type: "string"
-            }),
-            new NBField({
-                name: "expiration",
-                label: "Expires: ",
-                placeholder: Date.now(),
-                type: "date"
-            })
-        ]),
-        label: "Freezer",
-        editable: true,
-        multiple: true,
-        toLoad: async () => {
-            return await base.loadAll("kitchen-freezer");
-        },
-        toSave: async (item, deleting) => {
-            return await base.do("save-kitchen", { item, deleting, part: "freezer" });
-        }
-    });
-    metaBrowser.addService("meats", {
-        fields: new NBField({
-            name: "item",
-            label: "Meat: ",
-            placeholder: "No Item"
-        }, [
-            new NBField({
-                name: "amount",
-                placeholder: 1,
-                type: "number"
-            }),
-            new NBField({
-                name: "name",
-                placeholder: "Item",
-                type: "string"
-            }),
-            new NBField({
-                name: "expiration",
-                label: "Expires: ",
-                placeholder: Date.now(),
-                type: "date"
-            })
-        ]),
-        label: "Meats",
-        editable: true,
-        multiple: true,
-        toLoad: async () => {
-            return await base.loadAll("kitchen-meats");
-        },
-        toSave: async (item, deleting) => {
-            return await base.do("save-kitchen", { item, deleting, part: "meats" });
-        }
-    });
-    metaBrowser.addService("veggies", {
-        fields: new NBField({
-            name: "item",
-            label: "Veggie: ",
-            placeholder: "No Item"
-        }, [
-            new NBField({
-                name: "amount",
-                placeholder: 1,
-                type: "number"
-            }),
-            new NBField({
-                name: "name",
-                placeholder: "Item",
-                type: "string"
-            }),
-            new NBField({
-                name: "expiration",
-                label: "Expires: ",
-                placeholder: Date.now(),
-                type: "date"
-            })
-        ]),
-        label: "Veggies",
-        editable: true,
-        multiple: true,
-        toLoad: async () => {
-            return await base.loadAll("kitchen-veggies");
-        },
-        toSave: async (item, deleting) => {
-            return await base.do("save-kitchen", { item, deleting, part: "veggies" });
-        }
-    });
-    metaBrowser.addService("drinks", {
-        fields: new NBField({
-            name: "item",
-            label: "Drink: ",
-            placeholder: "No Item"
-        }, [
-            new NBField({
-                name: "amount",
-                placeholder: 1,
-                type: "number"
-            }),
-            new NBField({
-                name: "name",
-                placeholder: "Item",
-                type: "string"
-            }),
-            new NBField({
-                name: "expiration",
-                label: "Expires: ",
-                placeholder: Date.now(),
-                type: "date"
-            })
-        ]),
-        label: "Drinks",
-        editable: true,
-        multiple: true,
-        toLoad: async () => {
-            return await base.loadAll("kitchen-drinks");
-        },
-        toSave: async (item, deleting) => {
-            return await base.do("save-kitchen", { item, deleting, part: "drinks" });
-        }
-    });
-    metaBrowser.addService("snacks", {
-        fields: new NBField({
-            name: "item",
-            label: "Snack: ",
-            placeholder: "No Item"
-        }, [
-            new NBField({
-                name: "amount",
-                placeholder: 1,
-                type: "number"
-            }),
-            new NBField({
-                name: "name",
-                placeholder: "Item",
-                type: "string"
-            }),
-            new NBField({
-                name: "expiration",
-                label: "Expires: ",
-                placeholder: Date.now(),
-                type: "date"
-            })
-        ]),
-        label: "Snacks",
-        editable: true,
-        multiple: true,
-        toLoad: async () => {
-            return await base.loadAll("kitchen-snacks");
-        },
-        toSave: async (item, deleting) => {
-            return await base.do("save-kitchen", { item, deleting, part: "snacks" });
-        }
-    });
-    metaBrowser.addService("other", {
-        fields: new NBField({
-            name: "item",
-            label: "Item: ",
-            placeholder: "No Item"
-        }, [
-            new NBField({
-                name: "amount",
-                placeholder: 1,
-                type: "number"
-            }),
-            new NBField({
-                name: "name",
-                placeholder: "Item",
-                type: "string"
-            }),
-            new NBField({
-                name: "expiration",
-                label: "Expires: ",
-                placeholder: Date.now(),
-                type: "date"
-            })
-        ]),
-        label: "Other",
-        editable: true,
-        multiple: true,
-        toLoad: async () => {
-            return await base.loadAll("kitchen-other");
-        },
-        toSave: async (item, deleting) => {
-            return await base.do("save-kitchen", { item, deleting, part: "other" });
-        }
-    });
-    metaBrowser.render();
+    <% if (user?.data?.username) { %>
+        const metaBrowser = new MetaBrowser({
+            header: "Your Recipes"
+        });
+        metaBrowser.addService("recipes", {
+            fields: new NBField({
+                name: "recipe",
+                label: "Recipe: ",
+                placeholder: "No Recipe"
+            }, [
+                new NBField({
+                    name: "name",
+                    placeholder: "Recipe Name",
+                    type: "string"
+                }),
+                new NBField({
+                    name: "img",
+                    label: "Image URL: ",
+                    placeholder: "/img/food/default.jpg",
+                    type: "image"
+                }),
+                new NBField({
+                    name: "source",
+                    label: "From: ",
+                    placeholder: "Recipe Source",
+                    type: "string"
+                }),
+                new NBField({
+                    name: "ingredients",
+                    label: "Ingredients: ",
+                    placeholder: "No Ingredients",
+                    multiple: true
+                }, [
+                    new NBField({
+                        name: "amount",
+                        placeholder: "",
+                        type: "number"
+                    }),
+                    new NBField({
+                        name: "measure",
+                        placeholder: "measure",
+                        type: "string"
+                    }),
+                    new NBField({
+                        name: "ingredient",
+                        placeholder: "ingredient",
+                        type: "string"
+                    })
+                ]),
+                new NBField({
+                    name: "directions",
+                    label: "Directions: ",
+                    placeholder: "No Directions",
+                    multiple: true,
+                    type: "long-string"
+                }) 
+            ]),
+            label: "Your Recipes",
+            editable: true,
+            multiple: true,
+            onSave: async (item, deleting = false) => { 
+                return await base.do("save-recipe", { item, deleting }); 
+            }
+        });
+        metaBrowser.render();
+    <% } else { %>
+        const loginForm = new LoginForm();
+        loginForm.render(".meta");
+    <% } %>
 </script>

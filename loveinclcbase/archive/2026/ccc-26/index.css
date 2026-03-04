@@ -1,0 +1,16 @@
+.download-buttons {
+    width: 100%;
+    height: 100px;
+    display: flex;
+}
+
+.download-buttons .button {
+    width: 50%;
+    height: 100%;
+    margin: 0;
+}
+
+.ccc-26-job-description .back {
+    text-align: left;
+    width: fit-content;
+}
