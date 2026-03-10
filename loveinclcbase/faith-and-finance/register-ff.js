@@ -13,8 +13,7 @@ export default async function submitApplication(req, user) {
                 city: req.body.registration.city,
                 state: req.body.registration.state,
                 phone: req.body.registration.phone,
-                childcareNeeded: req.body.registration.childcareNeeded || false,
-                childcareAges: req.body.registration.childcareAges || ""
+                email: req.body.registration.email
             },
             waiver: {
                 name: req.body.waiver.name,
@@ -23,12 +22,12 @@ export default async function submitApplication(req, user) {
             }
         }
 
-        let spirit = new req.Spirit({ service: "faith-and-finances-feb-26", data: newRegistration });
+        let spirit = new req.Spirit({ service: "faith-and-finances-apr-26", data: newRegistration });
         await spirit.commit();
 
-        // req.SendMail.send("wyattsushi@gmail.com", `New Registration for Faith and Finance Course Feb 2026`, `
-        req.SendMail.send("exec.director@loveincoflewiscounty.org", `New Registration for Faith and Finance Course Feb 2026`, `
-            <h1>New Registration for Faith and Finance Course Feb 2026</h1>
+        // req.SendMail.send("wyattsushi@gmail.com", `New Registration for Faith and Finance Course Apr 2026`, `
+        req.SendMail.send("exec.director@loveincoflewiscounty.org", `New Registration for Faith and Finance Course Apr 2026`, `
+            <h1>New Registration for Faith and Finance Course Apr 2026</h1>
             <h3>Registration Information:</h3>
             <p>Name: ${newRegistration.registration.name}</p>
             <p>Signature: ${newRegistration.registration.signature}</p>
@@ -36,8 +35,7 @@ export default async function submitApplication(req, user) {
             <p>City: ${newRegistration.registration.city || "N/A"}</p>
             <p>State: ${newRegistration.registration.state || "N/A"}</p>
             <p>Phone: ${newRegistration.registration.phone || "N/A"}</p>
-            <p>Childcare Needed: ${newRegistration.registration.childcareNeeded ? "Yes" : "No"}</p>
-            <p>Childcare Ages: ${newRegistration.registration.childcareAges || "N/A"}</p>
+            <p>Email: ${newRegistration.registration.email || "N/A"}</p>
             <br>
             <h3>Waiver Information:</h3>
             <p>Name: ${newRegistration.waiver.name}</p>
