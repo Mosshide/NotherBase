@@ -4,7 +4,6 @@
 
 section.impact {
     aspect-ratio: 16/9;
-    max-height: 100vh;
 }
 
 section.impact img {
@@ -26,6 +25,23 @@ section.impact .verse {
     font-size: 26px;
     opacity: 0;
 }
+
+section.ccca-ad {
+    aspect-ratio: 16/9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+}
+
+section.ccca-ad img {
+    aspect-ratio: 1200/628;
+    width: 100%;
+    max-width: 1800px;
+    max-height: 100%;
+    object-fit: cover;
+}
+
 
 .fade-in {
     animation: fade-in 2s forwards;
