@@ -3,15 +3,18 @@
 </style>
 
 <section class="training">
-    <h3 class="ff">Faith and Finance <br><span class="sub">Feb-Apr 2026 10 Week Course</span></h3>
+    <h3 class="ff">Faith and Finance <br><span class="sub">April-June 2026 12 Week Course</span></h3>
     <div class="details">
         <p>
             The course is free which includes participants' guidebook, and you have the ability to earn incentive points while attending each class. 
             These earned incentive points could off-set costs for your rent, utilities, gasoline, food or other expenses. 
         </p>
-        <p>When: Begins on Wednesday, February 4th, then every Wednesday for 10 weeks from 7:00pm-8:30pm</p>
-        <p>Where: Life Center Church - 201 N Rock St, Centralia, WA 98531</p>
-        <p>This training is open to everyone and is free of charge. We hope to see you there!</p>
+        <p>When: Begins on Wednesday, April 8th, then every Wednesday 4:30pm-6:00pm for 12 weeks through June 24th</p>
+        <p>Where: Centralia College located at 600 Centralia College Blvd., Centralia, WA 98531</p>
+        <p>Registration Fee: $25. If needed, we can reimburse this fee, however you must make a request.</p>
+        <p>
+            Link to Register: <a href="https://www.campusce.net/centralia/course/course.aspx?catId=29" target="_blank">https://www.campusce.net/centralia/course/course.aspx?catId=29</a>
+        </p>
         <p>Topics include:</p>
         <ol>
             <li>Connecting Money and Relationships</li>
@@ -30,7 +33,7 @@
     </div>
     <div class="registration info">
         <h3>Faith and Finance Class Registration Form</h3>
-        <p>Faith and Finance Class is a 10-week course.</p>
+        <p>Faith and Finance Class is a 12-week course.</p>
         <p>By signing this form, you agree to the schedule above and will participate as directed by the instructor.</p>
         <p>
             Fields marked with an asterisk (*) are required.
@@ -59,21 +62,10 @@
             Phone Number:
             <input type="text" class="phone" placeholder="123-456-7890">
         </label>
-        <!-- if childcare is needed (radio) and the age of the children (text input) -->
-        <div class="row">
-            <p>Do you need childcare?</p>
-            <div class="row">
-                <label>
-                    <input type="radio" class="childcare-needed" name="childcare" value="yes"> Yes
-                </label>
-                <label>
-                    <input type="radio" class="childcare-needed" name="childcare" value="no"> No
-                </label>
-            </div>
-        </div>
-        <label class="childcare-age">
-            If yes, please provide the ages of your children:
-            <input type="text" class="childcare-age-input" placeholder="Ages of children">
+        <!-- email -->
+        <label>
+            Email:
+            <input type="email" class="email" placeholder="you@example.com">
         </label>
         <div class="waiver">
             <h4>Participant Form</h4>
@@ -136,8 +128,7 @@
             city: $(".training .registration .city").val(),
             state: $(".training .registration .state").val(),
             phone: $(".training .registration .phone").val(),
-            childcareNeeded: $(".training .registration input[name='childcare']:checked").val() === "yes",
-            childcareAges: $(".training .registration .childcare-age-input").val()
+            email: $(".training .registration .email").val()
         };
         let waiver = {
             name: $(".training .registration .waiver-name").val(),
