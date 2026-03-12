@@ -12,18 +12,13 @@
     </p>
 </section>
 
-<section class="ccca-ad">
-    <img src="/img/volunteer/cc and ca volunteer ad.png" alt="CC and CA Volunteer Notice">
-</section>
-
-<!-- <div class="mentor row">
+<div class="mentor row">
     <img src="/img/volunteer/Ally-Mentor flyer.webp" alt="Ally Mentor flyer">
-    <div class="registration info">
+    <div class="registration info" id="ally">
         <h3>Ally (Mentor) Training for Faith & Finance Classes Registration Form</h3>
-        <p>The Faith and Finance Program is a 12-week course.</p>
-        <p>By signing this form, you agree to attend the training date scheduled for Saturday, August 9
-            from 9am-3:30pm at the Love INC office located at 783 SW Pacific Ave. in Chehalis.
-            Lunch will be provided.</p>
+        <p>The Faith and Finance Program is a 10-12 week course.</p>
+        <p>By signing this form, you agree to attend the training date scheduled for Saturday, April 18
+            from Noon-4:00pm at the Love INC office located at 783 SW Pacific Ave, Chehalis, WA 98532.</p>
         <p>
             Fields marked with an asterisk (*) are required.
         </p>
@@ -51,10 +46,19 @@
             Phone Number:
             <input type="text" class="phone" placeholder="123-456-7890">
         </label>
+        <label>
+            Email:
+            <input type="text" class="email" placeholder="you@example.com">
+        </label>
         <button class="submit">Register</button>
         <p class="alert"></p>
+        <img src="/img/events/ff ally/training apr 2026.webp" alt="Ally Mentor training flyer">
     </div>
-</div> -->
+</div>
+
+<section class="ccca-ad">
+    <img src="/img/volunteer/cc and ca volunteer ad.png" alt="CC and CA Volunteer Notice">
+</section>
 
 <section>
     <h3>Volunteer Opportunities</h3>
@@ -173,11 +177,12 @@
             address: $(".mentor .registration .address").val(),
             city: $(".mentor .registration .city").val(),
             state: $(".mentor .registration .state").val(),
-            phone: $(".mentor .registration .phone").val()
+            phone: $(".mentor .registration .phone").val(),
+            email: $(".mentor .registration .email").val()
         };
 
         if (registration.name && registration.signature) {
-            base.do("register-ff-ally", { registration, route: "/the-front/getInvolved" }).then((res) => {
+            base.do("register-ff-ally", { registration }).then((res) => {
                 if (res.status == "success") {
                     $alert.text(res.data);
                 }

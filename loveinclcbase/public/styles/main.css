@@ -199,6 +199,7 @@ button {
     border: none;
     display: flex;
     justify-content: center;
+    align-items: center;
     text-shadow: var(--text-shadow);
 }
 
@@ -486,9 +487,8 @@ nav a p {
 .mailing-list {
     padding: 70px 0;
     flex-direction: row;
-    background: url('/img/bg/winter/med1.jpeg');
-    background-size: auto 100%;
-    background-repeat: repeat-x;
+    background: url('/img/bg/spring/rose garden.webp');
+    background-size: 100% auto;
 }
 
 .mailing-list h3 {
@@ -1038,6 +1038,10 @@ div.footer i {
     font-size: 35px;
 }
 
+.tall.bar {
+    height: auto;
+}
+
 .from-left {
     margin-left: calc((100% - var(--max-main-width)) / -2 - 20px);
     border-radius: 0 var(--border-radius) var(--border-radius) 0;
@@ -1050,6 +1054,14 @@ div.footer i {
     border-radius: var(--border-radius) 0 0 var(--border-radius);
     padding-left: 5%;
     justify-content: flex-start;
+}
+
+.from-center {
+    margin: 0 20px;
+    border-radius: var(--border-radius);
+    padding: 30px 50px;
+    width: auto;
+    max-width: 1000px;
 }
 
 .central-info {
@@ -1442,6 +1454,7 @@ h3.ff .sub {
 
     .row {
         flex-wrap: wrap;
+        height: auto;
     }
 
     .hero h2 {
@@ -1519,6 +1532,10 @@ h3.ff .sub {
         width: 100%;
     }
 
+    .mailing-list {
+        background-size: auto 100%;
+    }
+
     .mailing-list .sign-up {
         margin: 0 20px;
     }
@@ -1534,6 +1551,10 @@ h3.ff .sub {
 
     section.showcase img {
         margin-top: 0;
+    }
+
+    .main-vid {
+        width: 100%;
     }
 
     /* temp */

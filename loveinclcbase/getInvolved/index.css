@@ -60,13 +60,23 @@ section.ccca-ad img {
     margin-top: 40px;
 }
 
+.mentor.row {
+    gap: 0;
+}
+
 .mentor.row .info {
     width: 50%;
     justify-content: center;
-    padding: 5%;
+    padding: 20px;
+    height: 100%;
 }
 
-.mentor.row img {
+.mentor.row .info img {
+    width: calc(100% + 40px);
+    margin-bottom: -20px;
+}
+
+.mentor.row>img {
     width: 50%;
     height: auto;
 }
@@ -111,9 +121,14 @@ section.ccca-ad img {
     .mentor.row .info {
         width: 100%;
         justify-content: center;
+        height: auto;
     }
 
-    .mentor.row img {
+    .mentor.row .info img {
+        margin-bottom: 0;
+    }
+
+    .mentor.row>img {
         width: 100%;
         height: auto;
     }
