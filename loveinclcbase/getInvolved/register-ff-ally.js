@@ -12,15 +12,17 @@ export default async function submitApplication(req, user) {
                 address: req.body.registration.address,
                 city: req.body.registration.city,
                 state: req.body.registration.state,
-                phone: req.body.registration.phone
+                phone: req.body.registration.phone,
+                email: req.body.registration.email
             }
         }
 
-        req.db.Spirit.create("faith-and-finances-ally-09-25", newRegistration);
+        let spirit = new req.Spirit({ service: "faith-and-finances-ally-apr-26", data: newRegistration });
+        await spirit.commit();
 
-        //req.db.SendMail.send("wyattsushi@gmail.com", `New Registration for Ally (Mentor) for Faith and Finance Course September 2025`, `
-        req.db.SendMail.send("exec.director@loveincoflewiscounty.org", `New Registration for Ally (Mentor) for Faith and Finance Course September 2025`, `
-            <h1>New Registration for Ally (Mentor) for Faith and Finance Course September 2025</h1>
+        //req.SendMail.send("wyattsushi@gmail.com", `New Registration for Ally (Mentor) for Faith and Finance Course Test`, `
+        req.db.SendMail.send("exec.director@loveincoflewiscounty.org", `New Registration for Ally (Mentor) for Faith and Finance Course Apr 2026`, `
+            <h1>New Registration for Ally (Mentor) for Faith and Finance Course Apr 2026</h1>
             <h3>Registration Information:</h3>
             <p>Name: ${newRegistration.registration.name}</p>
             <p>Signature: ${newRegistration.registration.signature}</p>
@@ -28,6 +30,7 @@ export default async function submitApplication(req, user) {
             <p>City: ${newRegistration.registration.city || "N/A"}</p>
             <p>State: ${newRegistration.registration.state || "N/A"}</p>
             <p>Phone: ${newRegistration.registration.phone || "N/A"}</p>
+            <p>Email: ${newRegistration.registration.email || "N/A"}</p>
             <br>
             <br><br>
             <p>This is an automated message. Please do not reply.</p>
