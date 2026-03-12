@@ -1,5 +1,5 @@
 .central-info {
     font-size: 26px;
     font-weight: bold;
-    color: rgb(65, 65, 65);
+    color: var(--bgColor);
 }
