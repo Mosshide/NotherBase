@@ -328,6 +328,26 @@ section iframe.side.right {
     display: none !important;
 }
 
+section.ccca-ad {
+    padding: 0;
+}
+
+section.ccca-ad img {
+    aspect-ratio: 1200/628;
+    width: 100%;
+    max-width: 1800px;
+    max-height: 100%;
+    object-fit: cover;
+}
+
+section.ccca-ad a {
+    margin-top: -75px;
+}
+
+section.ff-ally {
+    padding: 20px;
+}
+
 
 @media (orientation: portrait) {
     .landing img.bg {
