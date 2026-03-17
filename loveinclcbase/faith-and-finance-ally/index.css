@@ -1,0 +1,47 @@
+section.training {
+    padding: 0;
+}
+
+.mentor.row {
+    gap: 0;
+}
+
+.mentor.row .info {
+    width: 50%;
+    justify-content: center;
+    padding: 20px;
+    height: 100%;
+}
+
+.mentor.row .info img {
+    width: calc(100% + 40px);
+    margin-top: -20px;
+}
+
+.mentor.row>img {
+    width: 50%;
+    height: auto;
+}
+
+.mentor label {
+    width: 100%;
+}
+
+
+/* styles for screens under 1000px wide */
+@media only screen and (max-width: 1100px) {
+    .mentor.row .info {
+        width: 100%;
+        justify-content: center;
+        height: auto;
+    }
+
+    .mentor.row .info img {
+        margin-bottom: 0;
+    }
+
+    .mentor.row>img {
+        width: 100%;
+        height: auto;
+    }
+}

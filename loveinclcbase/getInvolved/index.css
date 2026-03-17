@@ -27,7 +27,6 @@ section.impact .verse {
 }
 
 section.ccca-ad {
-    aspect-ratio: 16/9;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -58,31 +57,6 @@ section.ccca-ad img {
 
 .hiring a {
     margin-top: 40px;
-}
-
-.mentor.row {
-    gap: 0;
-}
-
-.mentor.row .info {
-    width: 50%;
-    justify-content: center;
-    padding: 20px;
-    height: 100%;
-}
-
-.mentor.row .info img {
-    width: calc(100% + 40px);
-    margin-bottom: -20px;
-}
-
-.mentor.row>img {
-    width: 50%;
-    height: auto;
-}
-
-.mentor label {
-    width: 100%;
 }
 
 @keyframes fade-in {
