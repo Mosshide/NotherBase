@@ -341,11 +341,11 @@ section.ccca-ad img {
 }
 
 section.ccca-ad a {
-    margin-top: -75px;
+    margin: var(--margin);
 }
 
 section.ff-ally {
-    padding: 20px;
+    padding: 60px;
 }
 
 
