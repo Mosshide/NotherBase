@@ -51,12 +51,38 @@ section.ccca-ad img {
     margin-bottom: 0;
 }
 
+.hiring {
+    max-height: 90vh;
+    padding: 20px;
+}
+
 .hiring img {
     max-width: 1000px;
+    height: 100%;
+    width: auto;
+    border: 3px solid #e0e0e0;
+    border-radius: 25px;
 }
 
 .hiring a {
-    margin-top: 40px;
+    margin: 10px;
+}
+
+.hiring.row {
+    align-items: stretch;
+    background: var(--main-color);
+}
+
+.hiring .action {
+    width: 100%;
+    min-height: 200px;
+    max-width: calc(var(--max-main-width) *.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--main-color);
+    flex-direction: column;
+    padding: var(--thickPadding);
 }
 
 @keyframes fade-in {
@@ -103,6 +129,15 @@ section.ccca-ad img {
     }
 
     .mentor.row>img {
+        width: 100%;
+        height: auto;
+    }
+
+    .hiring {
+        max-height: initial;
+    }
+
+    .hiring img {
         width: 100%;
         height: auto;
     }

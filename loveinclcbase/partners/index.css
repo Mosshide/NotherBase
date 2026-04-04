@@ -67,6 +67,44 @@ a.kacs p {
     width: 25%;
 }
 
+section.call-out {
+    background: var(--main-color);
+    flex-direction: row;
+    padding: 0;
+    color: white;
+}
+
+.call-out h3 {
+    font-size: 45px;
+    width: 100%;
+    margin-top: 0;
+    padding: var(--thickPadding);
+    box-shadow: var(--shadow);
+    background: var(--fourth-color);
+}
+
+.call-out .detail {
+    width: 100%;
+    padding: var(--thickPadding);
+}
+
+.call-out .detail p {
+    font-size: 20px;
+}
+
+.call-out img {
+    height: 100%;
+    width: auto;
+    max-width: 35%;
+    object-fit: cover;
+}
+
+.call-out a {
+    width: 250px;
+    height: 75px;
+    margin: 40px;
+}
+
 @media only screen and (max-width: 1000px) {
     .card-grid .card.header {
         width: 90%;
@@ -81,5 +119,11 @@ a.kacs p {
     .card.header p {
         text-align: center;
         width: 100%;
+    }
+
+    .call-out img {
+        width: 100%;
+        height: auto;
+        max-width: initial;
     }
 }
