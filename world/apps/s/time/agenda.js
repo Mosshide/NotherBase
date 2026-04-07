@@ -150,49 +150,46 @@ class Agenda extends SearchBox {
 
     // Override renderSearchResults method
     renderSearchResults = () => {
-        this.clearLists();
+        this.clearLists();        
         
         this.filter = this.filters.filter;
 
         if (this.items.length < 1) {
-            this.list.$div.append(`<p>No Items</p>`);
+            this.list.addChild(new Element("p", { 
+                placeholder: "No Items"
+            }));
         }
-        else {
-            for (let i = 0; i < this.items.length; i++) {
-                if (this.items[i]) {       
-                    this.renderItem(this.items[i], i);
-                }
-                else $(`<p>Item Error</p>`).appendTo(this.list.$div);
-            };
+        else for (let i = 0; i < this.items.length; i++) {
+            this.renderItem(this.items[i], i);
         }
     }   
 
     extractLabel = (item) => {
         let label = null;
-        label = item?.name || item?.username || item?.title || item?.header || item?.whenSearched;
+        label = item?.data?.name || item?.data?.username || item?.data?.title || item?.data?.header || item?.data?.whenSearched;
         if (!label) label = "Unnamed Task";
 
         if (typeof label !== "string") label = String(label);
 
-        if (item && !item.workingDate) Agenda.getWorkingDate(item);
-        if (item && item.workingDate) {
-            if (item.workingDate.getTime() < dayStart.getTime()) {
-                label = `${item.workingDate.toLocaleDateString()} - ${label}`;
+        if (item && !item.data.workingDate) Agenda.getWorkingDate(item);
+        if (item && item.data.workingDate) {
+            if (item.data.workingDate.getTime() < dayStart.getTime()) {
+                label = `${item.data.workingDate.toLocaleDateString()} - ${label}`;
             }
-            else if (item.workingDate.getTime() < dayEnd.getTime()) {
-                label = `${item.timeHours ? item.timeHours : "00"}:${item.timeMinutes ? item.timeMinutes : "00"} - ${label}`;
+            else if (item.data.workingDate.getTime() < dayEnd.getTime()) {
+                label = `${item.data.timeHours ? item.data.timeHours : "00"}:${item.data.timeMinutes ? item.data.timeMinutes : "00"} - ${label}`;
             }
-            else if (item.workingDate.getTime() < weekEnd.getTime()) {
-                label = `${item.workingDate.getDayOfTheWeek(true)} - ${label}`;
+            else if (item.data.workingDate.getTime() < weekEnd.getTime()) {
+                label = `${item.data.workingDate.getDayOfTheWeek(true)} - ${label}`;
             }
-            else if (item.workingDate.getTime() < monthEnd.getTime()) {
-                label = `${item.workingDate.getMonth() + 1}/${item.workingDate.getDate()} - ${label}`;
+            else if (item.data.workingDate.getTime() < monthEnd.getTime()) {
+                label = `${item.data.workingDate.getMonth() + 1}/${item.data.workingDate.getDate()} - ${label}`;
             }
-            else if (item.workingDate.getTime() < yearEnd.getTime()) {
-                label = `${item.workingDate.getMonth() + 1}/${item.workingDate.getDate()} - ${label}`;
+            else if (item.data.workingDate.getTime() < yearEnd.getTime()) {
+                label = `${item.data.workingDate.getMonth() + 1}/${item.data.workingDate.getDate()} - ${label}`;
             }
             else {
-                label = `${item.workingDate.toLocaleDateString()} - ${label}`;
+                label = `${item.data.workingDate.toLocaleDateString()} - ${label}`;
             }
         };
 
@@ -202,20 +199,20 @@ class Agenda extends SearchBox {
     getList = (item) => {
         let list = this.todoList;
 
-        if (item && item.workingDate) {
-            if (item.workingDate.getTime() < dayStart.getTime()) {
+        if (item && item.data.workingDate) {
+            if (item.data.workingDate.getTime() < dayStart.getTime()) {
                 list = this.oldList;
             }
-            else if (item.workingDate.getTime() < dayEnd.getTime()) {
+            else if (item.data.workingDate.getTime() < dayEnd.getTime()) {
                 list = this.todayList;
             }
-            else if (item.workingDate.getTime() < weekEnd.getTime()) {
+            else if (item.data.workingDate.getTime() < weekEnd.getTime()) {
                 list = this.weekList;
             }
-            else if (item.workingDate.getTime() < monthEnd.getTime()) {
+            else if (item.data.workingDate.getTime() < monthEnd.getTime()) {
                 list = this.monthList;
             }
-            else if (item.workingDate.getTime() < yearEnd.getTime()) {
+            else if (item.data.workingDate.getTime() < yearEnd.getTime()) {
                 list = this.yearList;
             }
             else {
@@ -228,7 +225,7 @@ class Agenda extends SearchBox {
 
     renderItem = (item, i) => {
         let label = this.extractLabel(item);
-        let list = this.getList(item);
+        let list = this.getList(item);        
         
         let filtered = false;
         if (this.filter) {
@@ -249,7 +246,7 @@ class Agenda extends SearchBox {
             list.show();
             return list.addChild(new Text("li", { 
                 placeholder: label,
-                id: `${i}`,
+                id: `${item._id}`,
                 onClick: (e, element) => {
                     if (this.settings.onLiClick) this.settings.onLiClick(e, element);
                 }
