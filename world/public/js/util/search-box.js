@@ -125,9 +125,9 @@ class SearchBox extends Element {
     extractLabel = (item) => {
         let label = null;
         
-        if (typeof item.data === "string") label = item.data;
-        else label = item?.data?.name || item?.data?.username || item?.data?.title || 
-                item?.data?.header || item?.data?.whenSearched || item?.data?.note || item?.data?.text || item?.data?.design;
+        if (typeof item === "string") label = item;
+        else label = item?.name || item?.username || item?.title || 
+                item?.header || item?.whenSearched || item?.note || item?.text || item?.design;
         if (!label) label = "Unnamed Item";
 
         if (typeof label !== "string") label = String(label);
@@ -166,9 +166,9 @@ class SearchBox extends Element {
 
         if (this.service) {
             let loaded = await base.load(`${this.service}-notherLastSelected`, "local");
-            return loaded[0]?.data?.selected;
+            return typeof loaded[0]?.data?.selected == "number" ? loaded[0].data.selected : -1;
         }
-        else return null;
+        else return -1;
     }
 
     renderSearchResults = () => {
@@ -179,15 +179,15 @@ class SearchBox extends Element {
         this.list.closeChildren();
 
         this.filter = this.filters ? this.filters.filter : {};
-        
+
+        for (let i = 0; i < this.items.length; i++) {
+            this.renderItem(this.items[i], i);
+        };
         if (this.items.length < 1) {
             this.list.addChild(new Element("p", { 
                 placeholder: "No Items"
             }));
         }
-        else for (let i = 0; i < this.items.length; i++) {
-            this.renderItem(this.items[i], i);
-        };
 
         if (this.settings.onNew && (this.max < 0 || this.items.length < this.max)) {
             this.buttons.show("new");
@@ -216,7 +216,7 @@ class SearchBox extends Element {
         if (label.toLowerCase().includes(this.filter.search) || newItem) {
             return this.list.addChild(new Text("li", { 
                 placeholder: label,
-                id: item._id,
+                id: i,
                 onClick: (e, element) => {
                     if (this.settings.onLiClick) this.settings.onLiClick(e, element);
                 }
