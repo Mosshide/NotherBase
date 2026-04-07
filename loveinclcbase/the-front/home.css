@@ -348,6 +348,50 @@ section.ff-ally {
     padding: 60px;
 }
 
+.hiring {
+    max-height: 90vh;
+    padding: 20px;
+    background: var(--main-color);
+    align-items: stretch;
+}
+
+.hiring img.post {
+    max-width: 1000px;
+    height: 100%;
+    width: auto;
+    border: 3px solid #e0e0e0;
+    border-radius: 25px;
+    z-index: 1;
+}
+
+.hiring a {
+    margin: 10px;
+}
+
+.hiring .action {
+    width: 100%;
+    min-height: 200px;
+    max-width: calc(var(--max-main-width) *.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: var(--thickPadding);
+    z-index: 1;
+}
+
+.hiring .bg {
+    position: absolute;
+    top: 15%;
+    right: 7.5%;
+    width: auto;
+    height: 75%;
+    object-fit: cover;
+    z-index: 0;
+    filter: blur(5px) sepia(1) hue-rotate(135deg);
+    opacity: 0.3;
+}
+
 
 @media (orientation: portrait) {
     .landing img.bg {
@@ -414,6 +458,15 @@ section.ff-ally {
         height: auto;
         padding: 55px;
         padding-bottom: 75px;
+    }
+
+    .hiring {
+        max-height: initial;
+    }
+
+    .hiring img {
+        width: 100%;
+        height: auto;
     }
 }
 
