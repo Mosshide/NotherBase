@@ -19,3 +19,65 @@
     padding: 10px;
     text-shadow: var(--blue-text-shadow);
 }
+
+/* John */
+
+.john.love-story {
+    background: rgb(12,28,67);
+    color: rgb(235,236,239);
+}
+
+.john.love-story .quote {
+    color: rgb(209, 198, 44);
+    position: absolute;
+    bottom: -25px;
+    left: 50%;
+    transform: rotate(-7deg);
+    max-width: 500px;
+    font-family: Brush Script MT, cursive;
+}
+
+.john.love-story .quote span {
+    color: rgb(235,236,239);
+}
+
+.john.love-story img {
+    max-width: 500px;
+    width: 100%;
+    height: auto;
+    margin: 25px;
+}
+
+.john.love-story .row {
+    max-width: var(--max-main-width);
+}
+
+.john.love-story .top {
+    position: relative;
+    padding-bottom: 70px;
+}
+
+.john.love-story .final {
+    max-width: 60%;
+}
+
+
+
+/* styles for screens under 1000px wide */
+@media only screen and (max-width: 1000px) {
+    .john.love-story .quote {
+        position: initial;
+        transform: rotate(0deg);
+        width: 100%;
+        max-width: 500px;
+        font-family: Brush Script MT, cursive;
+    }
+
+    .john.love-story .top {
+        padding-bottom: 20px;
+    }
+
+    .john.love-story .final {
+        max-width: 100%;
+    }
+}

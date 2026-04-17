@@ -392,6 +392,44 @@ section.ff-ally {
     opacity: 0.3;
 }
 
+section.love-story {
+    background: rgb(12,28,67);
+    color: rgb(235,236,239);
+}
+
+section.love-story .quote {
+    color: rgb(209, 198, 44);
+    position: absolute;
+    bottom: -25px;
+    left: 50%;
+    transform: rotate(-7deg);
+    max-width: 500px;
+    font-family: Brush Script MT, cursive;
+}
+
+section.love-story .quote span {
+    color: rgb(235,236,239);
+}
+
+section.love-story img {
+    max-width: 500px;
+    width: 100%;
+    height: auto;
+    margin: 25px;
+}
+
+section.love-story .row {
+    max-width: var(--max-main-width);
+}
+
+section.love-story .top {
+    position: relative;
+    padding-bottom: 70px;
+}
+
+section.love-story .final {
+    max-width: 60%;
+}
 
 @media (orientation: portrait) {
     .landing img.bg {
@@ -464,9 +502,25 @@ section.ff-ally {
         max-height: initial;
     }
 
-    .hiring img {
+    .hiring img.post {
         width: 100%;
         height: auto;
+    }
+
+    section.love-story .quote {
+        position: initial;
+        transform: rotate(0deg);
+        width: 100%;
+        max-width: 500px;
+        font-family: Brush Script MT, cursive;
+    }
+
+    section.love-story .top {
+        padding-bottom: 20px;
+    }
+
+    section.love-story .final {
+        max-width: 100%;
     }
 }
 
