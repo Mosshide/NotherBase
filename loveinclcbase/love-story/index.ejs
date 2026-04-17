@@ -3,18 +3,13 @@
 </style>
 
 <section>
-    <div class="love-story">
+    <div class="love-story <%= query.story ? query.story : '' %>">
         <a href="/" class="external inverted"><i class="fa-solid fa-left-long"></i>Return to Home</a>
         <% if (query.story) { %>
             <!-- add more cases to publish a story -->
-            <% switch (query.story) { 
-                case 'original': %>
-                    <%- include(`./stories/${query.story}.ejs`); %>
-                    <% break; 
-                default: %>
-                    <%- "<h3>Not Found</h3>" %>
-                    <% break;
-             } %>
+            <%- include(`./stories/${query.story}.ejs`); %>
+        <% } else { %>
+            <h3>Not Found</h3>
         <% } %>
     </div>
 </section>
