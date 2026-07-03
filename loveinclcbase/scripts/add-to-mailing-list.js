@@ -24,7 +24,7 @@ export default async (req, user) => {
                 <p>This is an automated message. Please do not reply.</p>`;
 
     // req.SendMail.send("wyattsushi@gmail.com", `New Sign Up for the Mailing List`, body, "Love INC of Lewis County");
-    req.SendMail.send("exec.director@loveincoflewiscounty.org", `New Sign Up for the Mailing List`, body, "Love INC of Lewis County");
+    req.SendMail.send("admin.assist@loveincoflewiscounty.org", `New Sign Up for the Mailing List`, body, "Love INC of Lewis County");
 
     // also send a confirmation to the user
     req.SendMail.send(req.body.email, `Thank you for signing up for the Love INC of Lewis County Mailing List`, `
