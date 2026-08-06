@@ -170,3 +170,12 @@ h2, h3 {
     width: 100%;
     padding: var(--thickPadding);
 }
+
+.icon i {
+    font-size: 50px;
+    color: #000a29;
+}
+
+.soc {
+    text-align: center;
+}
