@@ -1,92 +1,21 @@
 <style>
     <%- include("./wizard-tower.css"); %>
-    <%- include("./yard.css"); %>
 </style>
 
-<div class="yard">
-    <div class="sky">
-        <h4>The Yard</h4>
-        
-        <div class="ray"></div>
-        <div class="ray"></div>
-        <div class="ray"></div>
-        <div class="ray"></div>
-        <div class="ray"></div>
-        <div class="sun"></div>
-    </div>
+<div class="meta"></div>
 
-    <div class="ground">
-    </div>
-</div>
 
-<p>
-    The tower stands before you, wooden door locked.
-</p>
-
-<div class="tower">
-    <div class="meta"></div>
-
-    <div id="cover"></div>
-</div>
-
-<p>
-    "Blessed is the one who reads aloud the words of this prophecy, 
-    hears it and takes to heart what is written in it, because the 
-    time is near," is inscribed on the marble tablet embedded in 
-    the center of the door.
-</p>
-
-<p id="extra"></p>
-
-<hr>
-
-<button class="to" id="knock">
-    Knock on the Tower's Door
-</button>
-
-<hr>
-
-<a class="to" href="/forest/eye/filter/house">
-    Go to the House
-</a>
-
-<a class="to" href="/forest/eye/filter/pond">
-    Go to the Pond
-</a>
-
-<a class="to" href="/forest/eye/town-hall">
-    Go to the Town Hall
-</a>
-
-<hr>
-
-<a class="return" href="/forest/eye/school">
-    Return to the School
-</a>
-
-<a class="return" href="/forest/eye/inn">
-    Return to the Inn
-</a>
 
 <script src="/js/util/element.js"></script>
 <script src="/js/util/buttons.js"></script>
 <script src="/js/util/search-box.js"></script>
 <script src="/js/util/browser.js"></script>
 <script src="/js/entity.js"></script>
-<script src="/js/plants/part.js"></script>
+<script src="/js/login-form.js"></script>
 <script>
-    //yard
-    <%- include("./yard.js"); %>
-    let yard = new Yard();
-
-    $("#knock").on("click", function knock() {
-        $("#extra").text("You knocked on the tower's door. Surely you've been heard.");
-        $("#knock").toggleClass("invisible");
-    });
-
-    <% if (user.memory.data.authLevels.includes("Creator")) { %>
-        $("#knock").toggleClass("invisible");
-        $("#cover").toggleClass("invisible");
+    <% if (user?.data?.authLevels?.includes("Creator")) { %>
+        $("#knock").addClass("invisible");
+        $("#cover").addClass("invisible");
         $(".floor button#toggle").on("click", function (e) {
             $(e.target.parentElement).find(".content").toggleClass("invisible");
         });
@@ -95,42 +24,42 @@
             header: "Tower"
         });
         metaTower.render();
-        metaTower.addService("items", {
-            fields: new NBField({
-                name: "item",
-                label: "Item: ",
-                placeholder: "No item"
-            }, [
-                new NBField({
-                    name: "name",
-                    label: "Name: ",
-                    placeholder: "Name",
-                type: "string"
-            }),
-                new NBField({
-                    name: "short",
-                    label: "Short Description: ",
-                    placeholder: "No Description",
-                    type: "string"
-                }),
-                new NBField({
-                    name: "long",
-                    label: "Long Description: ",
-                    placeholder: "No Description",
-                    type: "string"
-                })
-            ]),
-            label: "Items",
-            editable: true,
-            multiple: true,
-            toLoad: async () => {
-                let res = await base.loadAll("items", "global");
-                return res;
-            },
-            toSave: async (item, deleting) => {
-                return await base.do("save-item", { item, deleting });
-            }
-        });
+        // metaTower.addService("items", {
+        //     fields: new NBField({
+        //         name: "item",
+        //         label: "Item: ",
+        //         placeholder: "No item"
+        //     }, [
+        //         new NBField({
+        //             name: "name",
+        //             label: "Name: ",
+        //             placeholder: "Name",
+        //         type: "string"
+        //     }),
+        //         new NBField({
+        //             name: "short",
+        //             label: "Short Description: ",
+        //             placeholder: "No Description",
+        //             type: "string"
+        //         }),
+        //         new NBField({
+        //             name: "long",
+        //             label: "Long Description: ",
+        //             placeholder: "No Description",
+        //             type: "string"
+        //         })
+        //     ]),
+        //     label: "Items",
+        //     editable: true,
+        //     multiple: true,
+        //     toLoad: async () => {
+        //         let res = await base.loadAll("items", "global");
+        //         return res;
+        //     },
+        //     toSave: async (item, deleting) => {
+        //         return await base.do("save-item", { item, deleting });
+        //     }
+        // });
         metaTower.addService("users", {
             fields: new NBField({
                 name: "user",
@@ -161,73 +90,76 @@
             label: "Users",
             editable: true,
             multiple: true,
-            toLoad: async () => {
-                let res = await base.loadAll("user", "global");
+            onLoad: async () => {
+                let res = await base.load("user", "global");
                 return res;
             },
-            toSave: async (item, deleting) => {
+            onSave: async (item, deleting) => {
                 return await base.do("save-user", { item, deleting });
             }
         });
-        metaTower.addService("cards-against-Bible-prompts", {
-            fields: new NBField({
-                name: "prompt",
-                label: "Prompt: ",
-                placeholder: "No Prompt"
-            }, [
-                new NBField({
-                    name: "text",
-                    label: "Text: ",
-                    placeholder: "No Text",
-                    type: "string"
-                }),
-                new NBField({
-                    name: "category",
-                    label: "Category: ",
-                    placeholder: "No Category",
-                    type: "options",
-                    options: ["No Category", "Place", "Person", "Time"]
-                })
-            ]),
-            label: "Prompts",
-            editable: true,
-            multiple: true,
-            toLoad: async () => {
-                return await base.loadAll("cards-against-Bible-prompts", "global");
-            },
-            toSave: async (item, deleting) => {
-                return await base.do("save-prompt", { item, deleting });
-            }
-        });
-        metaTower.addService("cards-against-Bible-answers", {
-            fields: new NBField({
-                name: "answer",
-                label: "Answer: ",
-                placeholder: "No Answer"
-            }, [
-                new NBField({
-                    name: "text",
-                    label: "Text: ",
-                    placeholder: "No Text",
-                    type: "string"
-                }),
-                new NBField({
-                    name: "category",
-                    label: "Category: ",
-                    placeholder: "No Category",
-                    type: "options",
-                    options: ["No Category", "Place", "Person", "Time"]
-                })
-            ]),
-            label: "Answers",
-            editable: true,
-            multiple: true,
-            toLoad: async () => {
-                return await base.loadAll("cards-against-Bible-answers", "global");
-            },
-            toSave: async (item, deleting) => {
-                return await base.do("save-answer", { item, deleting });
-            }
-        });
+        // metaTower.addService("cards-against-Bible-prompts", {
+        //     fields: new NBField({
+        //         name: "prompt",
+        //         label: "Prompt: ",
+        //         placeholder: "No Prompt"
+        //     }, [
+        //         new NBField({
+        //             name: "text",
+        //             label: "Text: ",
+        //             placeholder: "No Text",
+        //             type: "string"
+        //         }),
+        //         new NBField({
+        //             name: "category",
+        //             label: "Category: ",
+        //             placeholder: "No Category",
+        //             type: "options",
+        //             options: ["No Category", "Place", "Person", "Time"]
+        //         })
+        //     ]),
+        //     label: "Prompts",
+        //     editable: true,
+        //     multiple: true,
+        //     toLoad: async () => {
+        //         return await base.loadAll("cards-against-Bible-prompts", "global");
+        //     },
+        //     toSave: async (item, deleting) => {
+        //         return await base.do("save-prompt", { item, deleting });
+        //     }
+        // });
+        // metaTower.addService("cards-against-Bible-answers", {
+        //     fields: new NBField({
+        //         name: "answer",
+        //         label: "Answer: ",
+        //         placeholder: "No Answer"
+        //     }, [
+        //         new NBField({
+        //             name: "text",
+        //             label: "Text: ",
+        //             placeholder: "No Text",
+        //             type: "string"
+        //         }),
+        //         new NBField({
+        //             name: "category",
+        //             label: "Category: ",
+        //             placeholder: "No Category",
+        //             type: "options",
+        //             options: ["No Category", "Place", "Person", "Time"]
+        //         })
+        //     ]),
+        //     label: "Answers",
+        //     editable: true,
+        //     multiple: true,
+        //     toLoad: async () => {
+        //         return await base.loadAll("cards-against-Bible-answers", "global");
+        //     },
+        //     toSave: async (item, deleting) => {
+        //         return await base.do("save-answer", { item, deleting });
+        //     }
+        // });
+    <% } else { %>
+        const loginForm = new LoginForm();
+        loginForm.render(".meta");
     <% } %>
 </script>
