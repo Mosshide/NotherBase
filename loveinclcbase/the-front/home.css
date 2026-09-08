@@ -431,6 +431,17 @@ section.love-story .final {
     max-width: 60%;
 }
 
+section.fundraisers {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    padding: 0;
+}
+
+section.fundraisers img {
+    max-width: 45%;
+}
+
 @media (orientation: portrait) {
     .landing img.bg {
         width: 100%;
@@ -482,6 +493,17 @@ section.love-story .final {
         opacity: 0.5 !important;
         display: initial !important;
     }
+
+    section.fundraisers {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+    }
+
+    section.fundraisers img {
+        max-width: 100%;
+    }
+
 }
 
 /* styles for screens under 1000px wide */
