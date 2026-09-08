@@ -11,6 +11,7 @@ section.training {
     justify-content: center;
     padding: 20px;
     height: 100%;
+    align-content: flex-start;
 }
 
 .mentor.row .info img {

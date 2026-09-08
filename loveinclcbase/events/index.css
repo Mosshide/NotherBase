@@ -32,7 +32,6 @@
 
 .event img {
     border-radius: var(--border-radius);
-    box-shadow: 0 0 10px 5px rgb(100, 130, 188);
 }
 
 .panda img {
@@ -79,3 +78,28 @@
     transition: all 0.1s;
     transform: scale(1.01);
 }
+
+/* .fundraisers {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    padding: 0;
+    width: 90%;
+}
+
+.fundraisers img {
+    max-width: 45%;
+}
+
+@media (orientation: portrait) {
+    .fundraisers {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+    }
+
+    .fundraisers img {
+        max-width: 100%;
+    }
+
+} */
