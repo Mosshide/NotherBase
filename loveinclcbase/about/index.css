@@ -3,3 +3,9 @@
     font-weight: bold;
     color: var(--bgColor);
 }
+
+.main-vid {
+    border: none;
+    border-radius: 15px;
+    background: var(--second-color);
+}
