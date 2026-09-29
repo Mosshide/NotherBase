@@ -488,7 +488,7 @@ nav a p {
     padding: 70px 0;
     flex-direction: row;
     background: url('/img/bg/fall/2026_0.webp');
-    background-size: 100% auto;
+    background-size: cover;
 }
 
 .mailing-list h3 {
@@ -1567,7 +1567,5 @@ h3.ff .sub {
 
 /* styles for vertical screens */
 @media (orientation: portrait) {
-    .mailing-list {
-        background-size: auto 100%;
-    }
+    
 }
