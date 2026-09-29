@@ -119,7 +119,7 @@ class ThemeApplicator {
         this.$mailingList = $(`<section class="mailing-list"></section>`);
         this.$mailingStyle = $(`<style>
                                     section.mailing-list {
-                                        background: url("/img/bg/fall/2026_${Math.floor(Math.random() * 3)}.webp");
+                                        background-image: url("/img/bg/fall/2026_${Math.floor(Math.random() * 3)}.webp");
                                     }
                                 </style>`).prependTo(this.$body);
         this.$signupForm = $(`<div class="sign-up"></div>`).appendTo(this.$mailingList);
