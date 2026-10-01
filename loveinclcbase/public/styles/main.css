@@ -487,8 +487,8 @@ nav a p {
 .mailing-list {
     padding: 70px 0;
     flex-direction: row;
-    background: url('/img/bg/spring/rose garden.webp');
-    background-size: 100% auto;
+    background: url('/img/bg/fall/2026_0.webp');
+    background-size: cover;
 }
 
 .mailing-list h3 {
@@ -1563,4 +1563,9 @@ h3.ff .sub {
         width: 100%;
         padding: 30px 5px;
     }
+}
+
+/* styles for vertical screens */
+@media (orientation: portrait) {
+    
 }
