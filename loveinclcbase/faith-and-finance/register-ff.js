@@ -22,12 +22,12 @@ export default async function submitApplication(req, user) {
             }
         }
 
-        let spirit = new req.Spirit({ service: "faith-and-finances-apr-26", data: newRegistration });
+        let spirit = new req.Spirit({ service: "faith-and-finances", data: newRegistration });
         await spirit.commit();
 
-        // req.SendMail.send("wyattsushi@gmail.com", `New Registration for Faith and Finance Course Apr 2026`, `
-        req.SendMail.send("exec.director@loveincoflewiscounty.org", `New Registration for Faith and Finance Course Apr 2026`, `
-            <h1>New Registration for Faith and Finance Course Apr 2026</h1>
+        // req.SendMail.send("wyattsushi@gmail.com", `New Registration for Faith and Finance Course Winter 2027`, `
+        req.SendMail.send("exec.director@loveincoflewiscounty.org", `New Registration for Faith and Finance Course Winter 2027`, `
+            <h1>New Registration for Faith and Finance Course Winter 2027</h1>
             <h3>Registration Information:</h3>
             <p>Name: ${newRegistration.registration.name}</p>
             <p>Signature: ${newRegistration.registration.signature}</p>

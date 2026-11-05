@@ -431,7 +431,7 @@ section.love-story .final {
     max-width: 60%;
 }
 
-section.fundraisers {
+section.poster {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -439,7 +439,7 @@ section.fundraisers {
     background: rgb(57, 181, 255);
 }
 
-section.fundraisers img {
+section.poster img {
     max-width: 45%;
 }
 
