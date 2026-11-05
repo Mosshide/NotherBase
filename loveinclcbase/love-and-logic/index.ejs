@@ -1,0 +1,146 @@
+<style>
+    <%- include('index.css') %>
+</style>
+
+<section class="training">
+    <h3 class="ll">Love & Logic<br><span class="sub">Jan-Feb 2027 6-Week Course</span></h3>
+    <div class="details">
+        <p>
+            Love & Logic Class is a 6-week course. Earn incentive points as you participate in this program.
+        </p>
+        <p>When: Begins on Tuesday, January 12th, then every Tuesday 5:30pm-7:00pm for 6 weeks through February 16th</p>
+        <p>Where: Westminster Presbyterian Church in Chehalis located at 349 N Market Blvd, Chehalis, WA 98532</p>
+        <!-- <p>Topics include:</p>
+        <ol>
+            <li>Connecting Money and Relationships</li>
+            <li>Exploring Values and Attitudes</li>
+            <li>Overcoming Financial Challenges</li>
+            <li>Setting Savings Goals</li>
+            <li>Creating a Spending Plan</li>
+            <li>Living Simply</li>
+            <li>Giving Joyfully</li>
+            <li>Managing Debt</li>
+            <li>Taking Loans</li>
+            <li>Getting Banked</li>
+            <li>Preparing for Emergencies</li>
+            <li>Planning for Long-Term Change</li>
+        </ol> -->
+    </div>
+    <div class="registration info">
+        <h3>Love & Logic Class Registration Form</h3>
+        <p>Love & Logic Class is a 6-week course.</p>
+        <p>By signing this form, you agree to the schedule above and will participate as directed by the instructor.</p>
+        <p>
+            Fields marked with an asterisk (*) are required.
+        </p>
+        <label>
+            *Name (Printed):
+            <input type="text" class="name" placeholder="First and Last">
+        </label>
+        <label>
+            *Name (Signature):
+            <input type="text" class="signature" placeholder="First and Last">
+        </label>
+        <label>
+            Address:
+            <input type="text" class="address" placeholder="123 Main St.">
+        </label>
+        <label>
+            City:
+            <input type="text" class="city" placeholder="City">
+        </label>
+        <label>
+            State:
+            <input type="text" class="state" placeholder="State">
+        </label>
+        <label>
+            Phone Number:
+            <input type="text" class="phone" placeholder="123-456-7890">
+        </label>
+        <!-- email -->
+        <label>
+            Email:
+            <input type="email" class="email" placeholder="you@example.com">
+        </label>
+        <div class="waiver">
+            <h4>Participant Form</h4>
+            <p>
+                Fields marked with an asterisk (*) are required.
+            </p>
+            <p>
+                The Love & Logic class will open and close each session with a prayer.
+                Also, scripture references from the Bible will be used in teaching this class.
+            </p>
+            <p>
+                In signing this form, you acknowledge and agree to this information being
+                shared regardless of your personal religious or non-religious preferences.
+            </p>
+            <p>
+                Photographs of the class may be taken for promotional purposes. By signing
+                this form, you agree to have your photo taken for these purposes.
+            </p>
+            <p>
+                You will be provided with a Participants Guide for Love & Logic which is
+                yours to keep however you will be required to bring this book with you for each
+                class.
+            </p>
+            <label>
+                *Name (Printed):
+                <input type="text" class="waiver-name" placeholder="First and Last">
+            </label>
+            <label>
+                *Name (Signature):
+                <input type="text" class="waiver-signature" placeholder="First and Last">
+            </label>
+            <label>
+                *Date:
+                <input type="date" class="waiver-date">
+            </label>
+        </div>
+        <button class="submit">Register</button>
+        <p class="alert"></p>
+    </div>
+</section>
+
+<script src="/js/themeApplicator.js"></script>
+<script>
+    const themeApplicator = new ThemeApplicator({});
+
+    base.do("tally", { route: "/scripts" });
+    setTimeout(() => {
+        setInterval(() => {
+            base.do("tally-extra", { route: "/scripts" });
+        }, 30000);
+    }, 3000);
+
+    let $register = $(".training .registration button");
+    $register.click(() => {
+        let $alert = $(".training .registration .alert");
+        let registration = {
+            name: $(".training .registration .name").val(),
+            signature: $(".training .registration .signature").val(),
+            address: $(".training .registration .address").val(),
+            city: $(".training .registration .city").val(),
+            state: $(".training .registration .state").val(),
+            phone: $(".training .registration .phone").val(),
+            email: $(".training .registration .email").val()
+        };
+        let waiver = {
+            name: $(".training .registration .waiver-name").val(),
+            signature: $(".training .registration .waiver-signature").val(),
+            date: $(".training .registration .waiver-date").val()
+        };        
+
+        if (registration.name && registration.signature && waiver.name && waiver.signature && waiver.date) {
+            base.do("register-ll", { registration, waiver }).then((res) => {
+                if (res.status == "success") {
+                    $alert.text(res.data);
+                }
+                else $alert.text("Server Error. Please try again later.");
+            });
+        }
+        else {
+            $alert.text("Please fill out all required fields.");
+        }
+    });
+</script>

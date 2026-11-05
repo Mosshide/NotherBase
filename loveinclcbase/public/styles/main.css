@@ -1267,7 +1267,7 @@ section.showcase img {
 }
 
 /* temp */
-h3.ff {
+h3.ff, h3.ll {
     font-family: "Ubuntu", sans-serif;
     color: var(--second-color);
     background: linear-gradient(0deg, var(--main-color), rgb(154, 181, 250));
@@ -1279,8 +1279,13 @@ h3.ff {
     width: 90%;
 }
 
-h3.ff .sub {
+h3.ff .sub,
+h3.ll .sub {
     font-weight: normal;
+}
+
+h3.ll {
+    background: linear-gradient(0deg, rgb(192, 69, 69), rgb(253, 133, 133));
 }
 
 .training .raised {

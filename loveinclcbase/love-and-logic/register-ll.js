@@ -1,0 +1,52 @@
+export default async function submitApplication(req, user) {
+    // require a cooldown between applications of 1 minute
+    // if (!req.session.lastLLRegistration) req.session.lastLLRegistration = 0;
+    //if (Date.now() - req.session.lastLLRegistration < 1000) return "You've already registered. Please wait before trying to register for this course again.";
+    if (Date.now() - req.session.lastLLRegistration < 60 * 1000) return "You've already registered. Please wait before trying to register for this course again.";
+    else {
+        let newRegistration = {
+            dateCreated: Date.now(),
+            registration: {
+                name: req.body.registration.name,
+                signature: req.body.registration.signature,
+                address: req.body.registration.address,
+                city: req.body.registration.city,
+                state: req.body.registration.state,
+                phone: req.body.registration.phone,
+                email: req.body.registration.email
+            },
+            waiver: {
+                name: req.body.waiver.name,
+                signature: req.body.waiver.signature,
+                date: req.body.waiver.date
+            }
+        }
+
+        let spirit = new req.Spirit({ service: "love-and-logic-jan-feb-27", data: newRegistration });
+        await spirit.commit();
+
+        //req.SendMail.send("wyattsushi@gmail.com", `New Registration for Love & Logic Course Jan-Feb 2027`, `
+        req.SendMail.send("exec.director@loveincoflewiscounty.org", `New Registration for Love & Logic Course Jan-Feb 2027`, `
+            <h1>New Registration for Love & Logic Course Jan-Feb 2027</h1>
+            <h3>Registration Information:</h3>
+            <p>Name: ${newRegistration.registration.name}</p>
+            <p>Signature: ${newRegistration.registration.signature}</p>
+            <p>Address: ${newRegistration.registration.address || "N/A"}</p>
+            <p>City: ${newRegistration.registration.city || "N/A"}</p>
+            <p>State: ${newRegistration.registration.state || "N/A"}</p>
+            <p>Phone: ${newRegistration.registration.phone || "N/A"}</p>
+            <p>Email: ${newRegistration.registration.email || "N/A"}</p>
+            <br>
+            <h3>Waiver Information:</h3>
+            <p>Name: ${newRegistration.waiver.name}</p>
+            <p>Signature: ${newRegistration.waiver.signature}</p>
+            <p>Date: ${newRegistration.waiver.date}</p>
+            <br><br>
+            <p>This is an automated message. Please do not reply.</p>
+        `, "Love INC of Lewis County");
+
+        req.session.lastLLRegistration = Date.now();
+
+        return "Thank you for registering for the Love & Logic course! We will see you there!";
+    }
+}
