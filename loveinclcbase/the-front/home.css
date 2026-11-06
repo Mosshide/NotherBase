@@ -441,6 +441,15 @@ section.poster {
 
 section.poster img {
     max-width: 45%;
+    min-width: 500px;
+}
+
+.end {
+    background: rgb(255, 255, 255) !important;
+}
+
+.end img {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 @media (orientation: portrait) {
