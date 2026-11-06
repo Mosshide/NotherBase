@@ -554,6 +554,11 @@ section.poster img {
     section.love-story .final {
         max-width: 100%;
     }
+
+    section.poster img {
+        max-width: initial;
+        min-width: initial;
+    }
 }
 
 /* styles for screens under 1500px wide */
