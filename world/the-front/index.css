@@ -16,15 +16,16 @@ main {
 
 .logo {
     border-radius: 50%;
-    box-shadow: 15px 15px 5px var(--shadowColor);
-    width: 200px;
-    height: 200px;
-    border-bottom: 100px solid var(--gateColor);
-    border-top: 100px solid var(--notherColor);
+    box-shadow: 5px 5px 5px var(--shadowColor);
+    width: auto;
+    height: 100%;
+    border-bottom: calc(var(--h1Size) / 2) solid var(--gateColor);
+    border-top: calc(var(--h1Size) / 2) solid var(--notherColor);
     background: var(--gateColor);
-    margin: 30px;
+    margin: 0;
+    padding: 0;
     color: white;
-    font-size: 150px;
+    font-size: var(--h1Size);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -46,8 +47,19 @@ main {
     transition: all .2s ease;
 }
 
+.cross .fa-cross {
+    font-size: 150px;
+    color: rgb(255, 255, 255);
+}
+
 .sign {
     min-width: 45%;
+}
+
+.sign h1 {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
 }
 
 .sign .default, .sign .about {
@@ -159,6 +171,14 @@ main {
 
 h2, h3 {
     text-align: center;
+}
+
+.hud {
+    background: #FAFAFA;
+    background: linear-gradient(0deg,rgba(250, 250, 250, 1) 22%, rgba(94, 100, 255, 1) 100%);
+    margin-top: calc(-1 * var(--thickPadding));
+    padding-top: var(--thickPadding);
+    flex-direction: column;
 }
 
 .hud>.right {
